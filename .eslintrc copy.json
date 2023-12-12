@@ -1,0 +1,16 @@
+{
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": "standard-with-typescript",
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "@typescript-eslint/consistent-type-imports": "off",
+        "@typescript-eslint/no-unsafe-argument": "off"
+      }
+    }
+  ]
+}
