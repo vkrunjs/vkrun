@@ -14,8 +14,8 @@ describe('Validator', () => {
   })
 
   it('Should be able to validate the required method and return false if the value is not provided', () => {
-    const value = undefined
-    const sut = validator.required(value)
+    const hasNoValue = undefined
+    const sut = validator.required(hasNoValue)
     expect(sut).toBeFalsy()
   })
 
