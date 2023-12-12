@@ -1,4 +1,14 @@
 {
+  "name": "validator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "scripts": {
+    "test": "jest --passWithNoTests --watch"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.4",
