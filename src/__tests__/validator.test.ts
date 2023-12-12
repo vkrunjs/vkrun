@@ -6,4 +6,10 @@ describe('Validator', () => {
     const sut = validator.required(example)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the required method and return false if the value is not provided', () => {
+    const example = undefined
+    const sut = validator.required(example)
+    expect(sut).toBeFalsy()
+  })
 })
