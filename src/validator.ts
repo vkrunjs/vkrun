@@ -1,5 +1,5 @@
 export class Validator {
-  required (value: unknown, returnError?: Error): boolean | Error {
+  required (value: any, returnError?: Error): boolean | Error {
     const isEmpty = !value || value === undefined
     if (typeof value === 'boolean') {
       return true

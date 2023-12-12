@@ -1,8 +1,14 @@
 import { validator } from '../index'
 
 describe('Validator', () => {
-  it('Should be able to validate the required method and return true if the value is provided', () => {
+  it('Should be able to validate the required method and return true if the value is boolean', () => {
     const value = false
+    const sut = validator.required(value)
+    expect(sut).toBeTruthy()
+  })
+
+  it('Should be able to validate the required method and return true if the value is provided and nod is boolean', () => {
+    const value = 'any_value'
     const sut = validator.required(value)
     expect(sut).toBeTruthy()
   })
