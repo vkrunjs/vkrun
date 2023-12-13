@@ -31,4 +31,17 @@ describe('Validator', () => {
     const sut = validator.minWord(value, 2)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the minWord method and return false if the value does not have the minimum number of words', () => {
+    const value = 'primary'
+    const sut = validator.minWord(value, 2)
+    expect(sut).toBeFalsy()
+  })
+
+  it('Should be able to validate the minWord method and return error if the value does not have the minimum number of words', () => {
+    const value = 'primary '
+    const error = new Error('any_error')
+    const sut = validator.minWord(value, 2, error)
+    expect(sut).toEqual(error)
+  })
 })
