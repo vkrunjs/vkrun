@@ -4,7 +4,7 @@ export class Validator {
     if (typeof value === 'boolean') {
       return true
     } else if (isEmpty && returnError) {
-      return returnError
+      throw new Error(returnError.message)
     } else if (isEmpty && !returnError) {
       return false
     }
@@ -16,7 +16,7 @@ export class Validator {
     const words = trimmedValue.split(/\s+/)
     const notHasMinOfWords = words.length < minWord
     if (notHasMinOfWords && returnError) {
-      return returnError
+      throw new Error(returnError.message)
     } else if (notHasMinOfWords && !returnError) {
       return false
     }
@@ -28,7 +28,7 @@ export class Validator {
       /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
     const emailFormatIsInvalid = !regEmail.test(String(email))
     if (emailFormatIsInvalid && returnError) {
-      return returnError
+      throw new Error(returnError.message)
     } else if (emailFormatIsInvalid && !returnError) {
       return false
     }

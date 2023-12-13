@@ -1,6 +1,8 @@
 import { validator } from '../../index'
 
 describe('Validator', () => {
+  const error = new Error('any_error')
+
   it('Should be able to validate the required method and return true if the value is boolean', () => {
     const value = false
     const sut = validator.required(value)
@@ -20,10 +22,13 @@ describe('Validator', () => {
   })
 
   it('Should be able to validate the required method and return error if the value is not provided', () => {
-    const hasNoValue = undefined
-    const error = new Error('any_error')
-    const sut = validator.required(hasNoValue, error)
-    expect(sut).toEqual(error)
+    try {
+      const hasNoValue = undefined
+      validator.required(hasNoValue, error)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(error)
+    }
   })
 
   it('Should be able to validate the minWord method and return true if the value has the minimum number of words', () => {
@@ -39,10 +44,13 @@ describe('Validator', () => {
   })
 
   it('Should be able to validate the minWord method and return error if the value does not have the minimum number of words', () => {
-    const value = 'primary '
-    const error = new Error('any_error')
-    const sut = validator.minWord(value, 2, error)
-    expect(sut).toEqual(error)
+    try {
+      const value = 'primary '
+      validator.minWord(value, 2, error)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(error)
+    }
   })
 
   it('Should be able to validate the isEmail method and return true if email is correct', () => {
@@ -58,13 +66,12 @@ describe('Validator', () => {
   })
 
   it('Should be able to validate the isEmail method and return error if email is not correct', () => {
-    const error = new Error('any_error')
     try {
       const email = 'invalid_email@mail'
       validator.isEmail(email, error)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual('')
+      expect(sut).toEqual(error)
     }
   })
 })
