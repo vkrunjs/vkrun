@@ -50,4 +50,10 @@ describe('Validator', () => {
     const sut = validator.isEmail(email)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the isEmail method and return false if email is not correct', () => {
+    const email = 'invalid_email@mail'
+    const sut = validator.isEmail(email)
+    expect(sut).toBeFalsy()
+  })
 })
