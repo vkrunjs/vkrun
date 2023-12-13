@@ -22,4 +22,16 @@ export class Validator {
     }
     return true
   }
+
+  isEmail (email: string, returnError?: Error): boolean | Error {
+    const regEmail =
+      /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+    const emailFormatIsInvalid = !regEmail.test(String(email))
+    if (emailFormatIsInvalid && returnError) {
+      return returnError
+    } else if (emailFormatIsInvalid && !returnError) {
+      return false
+    }
+    return true
+  }
 }
