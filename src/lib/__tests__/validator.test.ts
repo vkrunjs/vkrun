@@ -56,4 +56,15 @@ describe('Validator', () => {
     const sut = validator.isEmail(email)
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the isEmail method and return error if email is not correct', () => {
+    const error = new Error('any_error')
+    try {
+      const email = 'invalid_email@mail'
+      validator.isEmail(email, error)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual('')
+    }
+  })
 })
