@@ -44,4 +44,10 @@ describe('Validator', () => {
     const sut = validator.minWord(value, 2, error)
     expect(sut).toEqual(error)
   })
+
+  it('Should be able to validate the isEmail method and return true if email is correct', () => {
+    const email = 'any_email@mail.com'
+    const sut = validator.isEmail(email)
+    expect(sut).toBeTruthy()
+  })
 })
