@@ -75,4 +75,14 @@ export class Validator {
     }
     return false
   }
+
+  isNumber (value: number, returnError?: Error): boolean | Error {
+    const isNumber = typeof value === 'number'
+    if (isNumber) {
+      return true
+    } else if (!isNumber && returnError) {
+      throw new Error(returnError.message)
+    }
+    return false
+  }
 }
