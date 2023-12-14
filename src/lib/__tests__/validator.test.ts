@@ -130,4 +130,14 @@ describe('Validator', () => {
     const sut = validator.minLength(value, 20)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the minLength method and return error if value length exceed the limit', () => {
+    try {
+      const value = 'exceed_the_limit'
+      validator.minLength(value, 20)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(error)
+    }
+  })
 })
