@@ -152,4 +152,14 @@ describe('Validator', () => {
     const sut = validator.isString(value)
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the isString method and return error if the value is not of type string', () => {
+    try {
+      const value: any = false
+      validator.isString(value)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(error)
+    }
+  })
 })
