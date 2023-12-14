@@ -202,4 +202,14 @@ describe('Validator', () => {
     const sut = validator.isFloat(value)
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the isFloat method and return error if the value is number and is not float', () => {
+    try {
+      const value = 1
+      validator.isFloat(value, error)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(error)
+    }
+  })
 })
