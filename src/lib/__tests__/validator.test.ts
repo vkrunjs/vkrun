@@ -74,4 +74,10 @@ describe('Validator', () => {
       expect(sut).toEqual(error)
     }
   })
+
+  it('Should be able to validate the isUuid method and return true if uuid is correct', () => {
+    const uuid = '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
+    const sut = validator.isUuid(uuid)
+    expect(sut).toBeTruthy()
+  })
 })
