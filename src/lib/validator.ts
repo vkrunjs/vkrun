@@ -60,4 +60,12 @@ export class Validator {
     else if (!isNumber && returnError) throw new Error(returnError.message)
     return false
   }
+
+  isFloat (value: number, returnError?: Error): boolean | Error {
+    const regex = /^-?\d+(\.\d+)?$/
+    const isFloat = regex.test(String(value))
+    if (isFloat && value % 1 !== 0) return true
+    else if (!isFloat && returnError) throw new Error(returnError.message)
+    return false
+  }
 }
