@@ -90,7 +90,7 @@ describe('Validator', () => {
   it('Should be able to validate the isUuid method and return error if uuid is not correct', () => {
     try {
       const uuid = 'invalid_uuid'
-      validator.isUuid(uuid)
+      validator.isUuid(uuid, error)
     } catch (error) {
       const sut = error
       expect(sut).toEqual(error)
@@ -112,7 +112,7 @@ describe('Validator', () => {
   it('Should be able to validate the maxLength method and return error if value length exceed the limit', () => {
     try {
       const value = 'exceed_the_limit'
-      validator.maxLength(value, 10)
+      validator.maxLength(value, 10, error)
     } catch (error) {
       const sut = error
       expect(sut).toEqual(error)
@@ -134,7 +134,7 @@ describe('Validator', () => {
   it('Should be able to validate the minLength method and return error if value length exceed the limit', () => {
     try {
       const value = 'exceed_the_limit'
-      validator.minLength(value, 20)
+      validator.minLength(value, 20, error)
     } catch (error) {
       const sut = error
       expect(sut).toEqual(error)
@@ -156,7 +156,7 @@ describe('Validator', () => {
   it('Should be able to validate the isString method and return error if the value is not of type string', () => {
     try {
       const value: any = false
-      validator.isString(value)
+      validator.isString(value, error)
     } catch (error) {
       const sut = error
       expect(sut).toEqual(error)
@@ -178,7 +178,7 @@ describe('Validator', () => {
   it('Should be able to validate the isNumber method and return error if the value is not of type number', () => {
     try {
       const value: any = false
-      validator.isNumber(value)
+      validator.isNumber(value, error)
     } catch (error) {
       const sut = error
       expect(sut).toEqual(error)
