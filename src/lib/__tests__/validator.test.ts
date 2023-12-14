@@ -168,4 +168,10 @@ describe('Validator', () => {
     const sut = validator.isNumber(value)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the isNumber method and return false if the value is not of type number', () => {
+    const value: any = false
+    const sut = validator.isNumber(value)
+    expect(sut).toBeFalsy()
+  })
 })
