@@ -62,6 +62,8 @@ export class Validator {
   }
 
   isFloat (value: number, returnError?: Error): boolean | Error {
+    const isNumber = typeof value === 'number'
+    if (!isNumber) return false
     const regex = /^-?\d+(\.\d+)?$/
     const isFloat = regex.test(String(value))
     if (isFloat && value % 1 !== 0) return true
