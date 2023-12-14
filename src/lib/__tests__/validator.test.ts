@@ -174,4 +174,14 @@ describe('Validator', () => {
     const sut = validator.isNumber(value)
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the isNumber method and return error if the value is not of type number', () => {
+    try {
+      const value: any = false
+      validator.isNumber(value)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(error)
+    }
+  })
 })
