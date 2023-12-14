@@ -11,7 +11,7 @@ export class Validator {
     return true
   }
 
-  minWord (value: any, minWord: number, returnError?: Error): boolean | Error {
+  minWord (value: string, minWord: number, returnError?: Error): boolean | Error {
     const trimmedValue = value.trim()
     const words = trimmedValue.split(/\s+/)
     const notHasMinOfWords = words.length < minWord
@@ -48,6 +48,16 @@ export class Validator {
 
   maxLength (value: any, maxLength: number, returnError?: Error): boolean | Error {
     const exceededLimit = String(value).length > maxLength
+    if (exceededLimit && returnError) {
+      throw new Error(returnError.message)
+    } else if (exceededLimit && !returnError) {
+      return true
+    }
+    return false
+  }
+
+  minLength (value: any, minLength: number, returnError?: Error): boolean | Error {
+    const exceededLimit = String(value).length < minLength
     if (exceededLimit && returnError) {
       throw new Error(returnError.message)
     } else if (exceededLimit && !returnError) {
