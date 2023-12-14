@@ -80,4 +80,10 @@ describe('Validator', () => {
     const sut = validator.isUuid(uuid)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the isUuid method and return false if uuid is not correct', () => {
+    const uuid = 'invalid_uuid'
+    const sut = validator.isUuid(uuid)
+    expect(sut).toBeFalsy()
+  })
 })
