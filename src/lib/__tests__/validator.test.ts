@@ -102,4 +102,10 @@ describe('Validator', () => {
     const sut = validator.maxLength(value, 20)
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the maxLength method and return true if value length exceed the limit', () => {
+    const value = 'exceed_the_limit'
+    const sut = validator.maxLength(value, 10)
+    expect(sut).toBeTruthy()
+  })
 })
