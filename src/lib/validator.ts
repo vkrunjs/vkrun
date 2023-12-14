@@ -65,4 +65,14 @@ export class Validator {
     }
     return false
   }
+
+  isString (value: string, returnError?: Error): boolean | Error {
+    const notStringType = typeof value !== 'string'
+    if (notStringType && returnError) {
+      throw new Error(returnError.message)
+    } else if (notStringType && !returnError) {
+      return false
+    }
+    return true
+  }
 }
