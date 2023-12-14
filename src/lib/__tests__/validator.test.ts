@@ -1,7 +1,7 @@
 import { validator } from '../../index'
 
 describe('Validator', () => {
-  const error = new Error('any_error')
+  const errorInjected = new Error('any_error')
 
   it('Should be able to validate the required method and return true if the value is boolean', () => {
     const value = false
@@ -24,10 +24,10 @@ describe('Validator', () => {
   it('Should be able to validate the required method and return error if the value is not provided', () => {
     try {
       const hasNoValue = undefined
-      validator.required(hasNoValue, error)
+      validator.required(hasNoValue, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -46,10 +46,10 @@ describe('Validator', () => {
   it('Should be able to validate the minWord method and return error if the value does not have the minimum number of words', () => {
     try {
       const value = 'primary '
-      validator.minWord(value, 2, error)
+      validator.minWord(value, 2, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -68,10 +68,10 @@ describe('Validator', () => {
   it('Should be able to validate the isEmail method and return error if email is not correct', () => {
     try {
       const email = 'invalid_email@mail'
-      validator.isEmail(email, error)
+      validator.isEmail(email, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -90,10 +90,10 @@ describe('Validator', () => {
   it('Should be able to validate the isUuid method and return error if uuid is not correct', () => {
     try {
       const uuid = 'invalid_uuid'
-      validator.isUuid(uuid, error)
+      validator.isUuid(uuid, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -112,10 +112,10 @@ describe('Validator', () => {
   it('Should be able to validate the maxLength method and return error if value length exceed the limit', () => {
     try {
       const value = 'exceed_the_limit'
-      validator.maxLength(value, 10, error)
+      validator.maxLength(value, 10, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -134,10 +134,10 @@ describe('Validator', () => {
   it('Should be able to validate the minLength method and return error if value length exceed the limit', () => {
     try {
       const value = 'exceed_the_limit'
-      validator.minLength(value, 20, error)
+      validator.minLength(value, 20, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -156,10 +156,10 @@ describe('Validator', () => {
   it('Should be able to validate the isString method and return error if the value is not of type string', () => {
     try {
       const value: any = false
-      validator.isString(value, error)
+      validator.isString(value, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -178,10 +178,10 @@ describe('Validator', () => {
   it('Should be able to validate the isNumber method and return error if the value is not of type number', () => {
     try {
       const value: any = false
-      validator.isNumber(value, error)
+      validator.isNumber(value, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 
@@ -206,10 +206,10 @@ describe('Validator', () => {
   it('Should be able to validate the isFloat method and return error if the value is number and is not float', () => {
     try {
       const value = 1
-      validator.isFloat(value, error)
+      validator.isFloat(value, errorInjected)
     } catch (error) {
       const sut = error
-      expect(sut).toEqual(error)
+      expect(sut).toEqual(errorInjected)
     }
   })
 })
