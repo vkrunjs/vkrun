@@ -234,4 +234,10 @@ describe('Validator', () => {
       expect(sut).toEqual(errorInjected)
     }
   })
+
+  it('Should be able to validate the isInteger method and return true if the value is number and integer', () => {
+    const value = 1
+    const sut = validator.isInteger(value)
+    expect(sut).toBeTruthy()
+  })
 })
