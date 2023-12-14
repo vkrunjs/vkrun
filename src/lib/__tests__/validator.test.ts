@@ -240,4 +240,16 @@ describe('Validator', () => {
     const sut = validator.isInteger(value)
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the isInteger method and return false if the value is number and is not integer', () => {
+    const value = 1.2
+    const sut = validator.isInteger(value)
+    expect(sut).toBeFalsy()
+  })
+
+  it('Should be able to validate the isInteger method and return false if the value is number and is not integer', () => {
+    const value = 1.2
+    const sut = validator.isInteger(value)
+    expect(sut).toBeFalsy()
+  })
 })
