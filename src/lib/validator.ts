@@ -61,6 +61,13 @@ export class Validator {
     return false
   }
 
+  isBoolean (value: boolean, returnError?: Error): boolean | Error {
+    const isBoolean = typeof value === 'boolean'
+    if (isBoolean) return true
+    else if (!isBoolean && returnError) throw new Error(returnError.message)
+    return false
+  }
+
   isFloat (value: number, returnError?: Error): boolean | Error {
     const isNumber = typeof value === 'number'
     if (!isNumber) return false
