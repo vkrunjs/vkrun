@@ -45,4 +45,14 @@ export class Validator {
     }
     return true
   }
+
+  maxLength (value: any, maxLength: number, returnError?: Error): boolean | Error {
+    const exceededLimit = String(value).length > maxLength
+    if (exceededLimit && returnError) {
+      throw new Error(returnError.message)
+    } else if (exceededLimit && !returnError) {
+      return true
+    }
+    return false
+  }
 }
