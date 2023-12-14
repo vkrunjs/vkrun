@@ -140,4 +140,10 @@ describe('Validator', () => {
       expect(sut).toEqual(error)
     }
   })
+
+  it('Should be able to validate the isString method and return true if the value is of type string', () => {
+    const value = 'string_value'
+    const sut = validator.isString(value)
+    expect(sut).toBeTruthy()
+  })
 })
