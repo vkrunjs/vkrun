@@ -197,6 +197,16 @@ describe('Validator', () => {
     expect(sut).toBeFalsy()
   })
 
+  it('Should be able to validate the isBoolean method and return error if the value is not of type boolean', () => {
+    try {
+      const value: any = 'false'
+      validator.isBoolean(value, errorInjected)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(errorInjected)
+    }
+  })
+
   it('Should be able to validate the isFloat method and return true if the value is number and float', () => {
     const value = 1.2
     const sut = validator.isFloat(value)
