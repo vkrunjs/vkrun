@@ -162,4 +162,10 @@ describe('Validator', () => {
       expect(sut).toEqual(error)
     }
   })
+
+  it('Should be able to validate the isNumber method and return true if the value is of type number', () => {
+    const value = 0
+    const sut = validator.isNumber(value)
+    expect(sut).toBeTruthy()
+  })
 })
