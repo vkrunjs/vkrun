@@ -185,6 +185,12 @@ describe('Validator', () => {
     }
   })
 
+  it('Should be able to validate the isBoolean method and return true if the value is of type boolean', () => {
+    const value = false
+    const sut = validator.isBoolean(value)
+    expect(sut).toBeTruthy()
+  })
+
   it('Should be able to validate the isFloat method and return true if the value is number and float', () => {
     const value = 1.2
     const sut = validator.isFloat(value)
