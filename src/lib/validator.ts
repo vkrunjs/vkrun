@@ -76,4 +76,11 @@ export class Validator {
     else if (!isFloat && returnError) throw new Error(returnError.message)
     return false
   }
+
+  isInteger (value: number, returnError?: Error): boolean | Error {
+    const isInteger = Number.isInteger(value)
+    if (isInteger) return true
+    else if (!isInteger && returnError) throw new Error(returnError.message)
+    return false
+  }
 }
