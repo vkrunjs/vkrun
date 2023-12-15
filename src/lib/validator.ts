@@ -83,4 +83,15 @@ export class Validator {
     else if (!isInteger && returnError) throw new Error(returnError.message)
     return false
   }
+
+  isDate (value: Date | string, returnError?: Error): boolean | Error {
+    const dateObject = new Date(value)
+    const isInvalidDate = isNaN(dateObject.getTime())
+    const isShortString = String(value).trim().length < 10
+    if (isInvalidDate || isShortString) {
+      if (returnError) throw new Error(returnError.message)
+      return false
+    }
+    return true
+  }
 }
