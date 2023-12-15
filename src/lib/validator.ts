@@ -81,17 +81,87 @@ export class Validator {
     const isInteger = Number.isInteger(value)
     if (isInteger) return true
     else if (!isInteger && returnError) throw new Error(returnError.message)
+    console.log('aqui 1')
     return false
   }
 
-  isDate (value: Date | string, returnError?: Error): boolean | Error {
-    const dateObject = new Date(value)
-    const isInvalidDate = isNaN(dateObject.getTime())
-    const isShortString = String(value).trim().length < 10
-    if (isInvalidDate || isShortString) {
+  isDate (
+    value: Date | string,
+    type: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM' |
+    'DD/MM/YY' | 'MM/DD/YY' | 'DD-MM-YY' | 'MM-DD-YY' | 'YY/MM/DD' | 'YY/DD/MM' | 'YY-MM-DD' | 'YY-DD-MM' | 'ISO8601',
+    returnError?: Error
+  ): boolean | Error {
+    let year: number, month: number, day: number
+
+    const parseDateString = (str: string): Date | null => {
+      switch (type) {
+        case 'DD/MM/YYYY':
+          [day, month, year] = str.split('/').map(Number)
+          return new Date(year, month - 1, day)
+        case 'MM/DD/YYYY':
+          [month, day, year] = str.split('/').map(Number)
+          return new Date(year, month - 1, day)
+        case 'DD-MM-YYYY':
+          [day, month, year] = str.split('-').map(Number)
+          return new Date(year, month - 1, day)
+        case 'MM-DD-YYYY':
+          [month, day, year] = str.split('-').map(Number)
+          return new Date(year, month - 1, day)
+        case 'YYYY/MM/DD':
+          [year, month, day] = str.split('/').map(Number)
+          return new Date(year, month - 1, day)
+        case 'YYYY/DD/MM':
+          [year, day, month] = str.split('/').map(Number)
+          return new Date(year, month - 1, day)
+        case 'YYYY-MM-DD':
+          [year, month, day] = str.split('-').map(Number)
+          return new Date(year, month - 1, day)
+        case 'YYYY-DD-MM':
+          [year, day, month] = str.split('-').map(Number)
+          return new Date(year, month - 1, day)
+        case 'DD/MM/YY':
+          [day, month, year] = str.split('/').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'MM/DD/YY':
+          [month, day, year] = str.split('/').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'DD-MM-YY':
+          [day, month, year] = str.split('-').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'MM-DD-YY':
+          [month, day, year] = str.split('-').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'YY/MM/DD':
+          [year, month, day] = str.split('/').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'YY/DD/MM':
+          [year, day, month] = str.split('/').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'YY-MM-DD':
+          [year, month, day] = str.split('-').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'YY-DD-MM':
+          [year, day, month] = str.split('-').map(Number)
+          return new Date(2000 + year, month - 1, day)
+        case 'ISO8601':
+          return new Date(str)
+        default:
+          return null
+      }
+    }
+
+    if (typeof value === 'string' && value.length < 10) {
       if (returnError) throw new Error(returnError.message)
       return false
     }
+
+    const parsedDate = typeof value === 'string' ? parseDateString(value) : value
+
+    if (!parsedDate || isNaN(parsedDate.getTime())) {
+      if (returnError) throw new Error(returnError.message)
+      return false
+    }
+
     return true
   }
 }
