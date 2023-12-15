@@ -262,4 +262,10 @@ describe('Validator', () => {
       expect(sut).toEqual(errorInjected)
     }
   })
+
+  it('Should be able to validate the isDate method and return true if the value is date', () => {
+    const value = new Date()
+    const sut = validator.isDate(value)
+    expect(sut).toBeTruthy()
+  })
 })
