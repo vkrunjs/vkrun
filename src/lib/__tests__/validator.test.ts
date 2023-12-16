@@ -458,6 +458,16 @@ describe('Validator', () => {
     expect(sut).toBeFalsy()
   })
 
+  it('Should be able to validate the isTime method and return error if the value is not in the time format HH:MM', () => {
+    try {
+      const value = '11:5'
+      validator.isTime(value, 'HH:MM', errorInjected)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(errorInjected)
+    }
+  })
+
   it('Should be able to validate the isTime method and return true if the value is in the time format HH:MM:SS', () => {
     const value = '11:05:03'
     const sut = validator.isTime(value, 'HH:MM:SS')
