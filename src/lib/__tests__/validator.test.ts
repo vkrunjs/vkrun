@@ -402,4 +402,11 @@ describe('Validator', () => {
       expect(sut).toEqual(errorInjected)
     }
   })
+
+  it('Should be able to validate the isDate method and return true if the date is less than the reference date', () => {
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    const refDate = new Date('2000-02-03T02:00:00.000Z')
+    const sut = validator.dateLessThan(date, refDate)
+    expect(sut).toBeTruthy()
+  })
 })
