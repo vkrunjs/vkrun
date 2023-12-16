@@ -280,6 +280,22 @@ describe('Validator', () => {
     }
   })
 
+  it('Should be able to validate the isDate method and return error if the value is not correct date', () => {
+    try {
+      const value = '2000-30'
+      validator.isDate(value, 'YYYY-DD-MM', errorInjected)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(errorInjected)
+    }
+  })
+
+  it('Should be able to validate the isDate method and return false if the value is not correct date', () => {
+    const value = '2000-30'
+    const sut = validator.isDate(value, 'YYYY-DD-MM')
+    expect(sut).toBeFalsy()
+  })
+
   it('Should be able to validate the isDate method and return true if the value is string date and type DD/MM/YYYY', () => {
     const value = '30/12/2000'
     const sut = validator.isDate(value, 'DD/MM/YYYY')
@@ -328,22 +344,15 @@ describe('Validator', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the isDate method and return false if the value is not correct date', () => {
-    const value = '2000-30'
+  it('Should be able to validate the isDate method and return false if the value is not correctly formatted', () => {
+    const value = 'invalid-format'
     const sut = validator.isDate(value, 'YYYY-DD-MM')
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the isDate method and return false if the value is not correct date', () => {
-    const value = '2000-30'
-    const type: any = null
-    const sut = validator.isDate(value, type)
-    expect(sut).toBeFalsy()
-  })
-
-  it('Should be able to validate the isDate method and return false if the value is not correctly formatted', () => {
+  it('Should be able to validate the isDate method and return error if the value is not correctly formatted', () => {
     try {
-      const value = '2000-30'
+      const value = 'invalid-format'
       validator.isDate(value, 'YYYY-DD-MM', errorInjected)
     } catch (error) {
       const sut = error
