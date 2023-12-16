@@ -154,12 +154,11 @@ export class Validator {
     returnError?: Error
   ): boolean | Error {
     const datesAreEqual = validateDate.getTime() === dateToCompare.getTime()
+    const deadlineExceeded = new Date(validateDate) < dateToCompare
     if (datesAreEqual) {
       if (returnError) throw new Error(returnError.message)
       return false
-    }
-    const deadlineExceeded = new Date(validateDate) < dateToCompare
-    if (deadlineExceeded) {
+    } else if (deadlineExceeded) {
       if (returnError) throw new Error(returnError.message)
       return false
     }
