@@ -381,6 +381,17 @@ describe('Validator', () => {
     expect(sut).toBeFalsy()
   })
 
+  it('Should be able to validate the isDate method and return error if the date is equal to the reference date', () => {
+    try {
+      const date = new Date('2000-02-02T02:00:00.000Z')
+      const refDate = new Date('2000-02-02T02:00:00.000Z')
+      validator.dateGreaterThan(date, refDate, errorInjected)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(errorInjected)
+    }
+  })
+
   it('Should be able to validate the isDate method and return error if the date is greater than the reference date', () => {
     try {
       const date = new Date('2000-02-02T02:00:00.000Z')
