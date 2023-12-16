@@ -121,7 +121,7 @@ export class Validator {
         case 'ISO8601':
           return new Date(str)
         default:
-          return null
+          throw new Error('isDate method received invalid parameter: type is mandatory!')
       }
     }
 
