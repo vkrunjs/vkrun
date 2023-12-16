@@ -506,4 +506,10 @@ describe('Validator', () => {
     const sut = validator.isTime(value, 'HH:MM:SS')
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the isTime method and return false if the minutes is greater than 60', () => {
+    const value = '12:61:60'
+    const sut = validator.isTime(value, 'HH:MM:SS')
+    expect(sut).toBeFalsy()
+  })
 })
