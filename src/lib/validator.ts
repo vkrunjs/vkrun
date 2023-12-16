@@ -81,7 +81,6 @@ export class Validator {
     const isInteger = Number.isInteger(value)
     if (isInteger) return true
     else if (!isInteger && returnError) throw new Error(returnError.message)
-    console.log('aqui 1')
     return false
   }
 
@@ -91,48 +90,57 @@ export class Validator {
     returnError?: Error
   ): boolean | Error {
     let year: number, month: number, day: number
-
-    const parseDateString = (str: string): Date | null => {
-      switch (type) {
-        case 'DD/MM/YYYY':
-          [day, month, year] = str.split('/').map(Number)
-          return new Date(year, month - 1, day)
-        case 'MM/DD/YYYY':
-          [month, day, year] = str.split('/').map(Number)
-          return new Date(year, month - 1, day)
-        case 'DD-MM-YYYY':
-          [day, month, year] = str.split('-').map(Number)
-          return new Date(year, month - 1, day)
-        case 'MM-DD-YYYY':
-          [month, day, year] = str.split('-').map(Number)
-          return new Date(year, month - 1, day)
-        case 'YYYY/MM/DD':
-          [year, month, day] = str.split('/').map(Number)
-          return new Date(year, month - 1, day)
-        case 'YYYY/DD/MM':
-          [year, day, month] = str.split('/').map(Number)
-          return new Date(year, month - 1, day)
-        case 'YYYY-MM-DD':
-          [year, month, day] = str.split('-').map(Number)
-          return new Date(year, month - 1, day)
-        case 'YYYY-DD-MM':
-          [year, day, month] = str.split('-').map(Number)
-          return new Date(year, month - 1, day)
-        case 'ISO8601':
-          return new Date(str)
-        default:
-          throw new Error('isDate method received invalid parameter: type is mandatory!')
-      }
-    }
+    let formattedDate: Date
 
     if (typeof value === 'string' && value.length < 10) {
-      if (returnError) throw new Error(returnError.message)
+      if (returnError) {
+        console.log('entrou')
+        throw new Error(returnError.message)
+      }
       return false
     }
 
-    const parsedDate = typeof value === 'string' ? parseDateString(value) : value
+    switch (type) {
+      case 'DD/MM/YYYY':
+        [day, month, year] = String(value).split('/').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'MM/DD/YYYY':
+        [month, day, year] = String(value).split('/').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'DD-MM-YYYY':
+        [day, month, year] = String(value).split('-').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'MM-DD-YYYY':
+        [month, day, year] = String(value).split('-').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'YYYY/MM/DD':
+        [year, month, day] = String(value).split('/').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'YYYY/DD/MM':
+        [year, day, month] = String(value).split('/').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'YYYY-MM-DD':
+        [year, month, day] = String(value).split('-').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'YYYY-DD-MM':
+        [year, day, month] = String(value).split('-').map(Number)
+        formattedDate = new Date(year, month - 1, day)
+        break
+      case 'ISO8601':
+        formattedDate = new Date(String(value))
+        break
+      default:
+        throw new Error('isDate method received invalid parameter: type is mandatory!')
+    }
 
-    if (!parsedDate || isNaN(parsedDate.getTime())) {
+    if (!formattedDate || isNaN(formattedDate.getTime())) {
       if (returnError) throw new Error(returnError.message)
       return false
     }
