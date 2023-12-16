@@ -359,4 +359,11 @@ describe('Validator', () => {
       expect(sut).toEqual(errorInjected)
     }
   })
+
+  it('Should be able to validate the isDate method and return true if the date is greater than the reference date', () => {
+    const date = new Date('2000-2-3')
+    const refDate = new Date('2000-2-2')
+    const sut = validator.dateGreaterThan(date, refDate)
+    expect(sut).toBeTruthy()
+  })
 })
