@@ -265,9 +265,19 @@ describe('Validator', () => {
 
   it('Should be able to validate the isDate method and return true if the value is date and type ISO8601', () => {
     const value = new Date().toISOString()
-    console.log({ value })
     const sut = validator.isDate(value, 'ISO8601')
     expect(sut).toBeTruthy()
+  })
+
+  it('Should be able to validate the isDate method and return error if the value is date and invalid type', () => {
+    try {
+      const value = new Date().toISOString()
+      const type: any = null
+      validator.isDate(value, type)
+    } catch (error) {
+      const sut = error as Error
+      expect(sut.message).toEqual('isDate method received invalid parameter: type is mandatory!')
+    }
   })
 
   it('Should be able to validate the isDate method and return true if the value is string date and type DD/MM/YYYY', () => {
