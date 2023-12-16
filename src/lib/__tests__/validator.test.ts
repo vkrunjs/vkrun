@@ -316,4 +316,20 @@ describe('Validator', () => {
     const sut = validator.isDate(value, 'YYYY-DD-MM')
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the isDate method and return false if the value is not correct date', () => {
+    const value = '2000-30'
+    const sut = validator.isDate(value, 'YYYY-DD-MM')
+    expect(sut).toBeFalsy()
+  })
+
+  it('Should be able to validate the isDate method and return false if the value is not correctly formatted', () => {
+    try {
+      const value = '2000-30'
+      validator.isDate(value, 'YYYY-DD-MM', errorInjected)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(errorInjected)
+    }
+  })
 })
