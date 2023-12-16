@@ -137,7 +137,7 @@ export class Validator {
         formattedDate = new Date(String(value))
         break
       default:
-        throw new Error('isDate method received invalid parameter: type is mandatory!')
+        throw new Error('isDate method received invalid parameter: type is required!')
     }
 
     if (!formattedDate || isNaN(formattedDate.getTime())) {
@@ -179,6 +179,24 @@ export class Validator {
       if (returnError) throw new Error(returnError.message)
       return false
     }
+    return true
+  }
+
+  isTime (value: string, type: 'HH:MM' | 'HH:MM:SS', returnError?: Error): boolean | Error {
+    const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
+    const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
+    let isValid = false
+
+    if (!type || typeof type !== 'string') {
+      throw new Error('isTime method received invalid parameter: type is required!')
+    } else if (type === 'HH:MM') isValid = regTimeHHMM.test(value)
+    else if (type === 'HH:MM:SS')isValid = regTimeHHMMSS.test(value)
+
+    if (!isValid) {
+      if (returnError) throw new Error(returnError.message)
+      return false
+    }
+
     return true
   }
 }
