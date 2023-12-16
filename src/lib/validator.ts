@@ -87,8 +87,7 @@ export class Validator {
 
   isDate (
     value: Date | string,
-    type: 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM' |
-    'DD/MM/YY' | 'MM/DD/YY' | 'DD-MM-YY' | 'MM-DD-YY' | 'YY/MM/DD' | 'YY/DD/MM' | 'YY-MM-DD' | 'YY-DD-MM' | 'ISO8601',
+    type: 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM',
     returnError?: Error
   ): boolean | Error {
     let year: number, month: number, day: number
@@ -119,30 +118,6 @@ export class Validator {
         case 'YYYY-DD-MM':
           [year, day, month] = str.split('-').map(Number)
           return new Date(year, month - 1, day)
-        case 'DD/MM/YY':
-          [day, month, year] = str.split('/').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'MM/DD/YY':
-          [month, day, year] = str.split('/').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'DD-MM-YY':
-          [day, month, year] = str.split('-').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'MM-DD-YY':
-          [month, day, year] = str.split('-').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'YY/MM/DD':
-          [year, month, day] = str.split('/').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'YY/DD/MM':
-          [year, day, month] = str.split('/').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'YY-MM-DD':
-          [year, month, day] = str.split('-').map(Number)
-          return new Date(2000 + year, month - 1, day)
-        case 'YY-DD-MM':
-          [year, day, month] = str.split('-').map(Number)
-          return new Date(2000 + year, month - 1, day)
         case 'ISO8601':
           return new Date(str)
         default:
