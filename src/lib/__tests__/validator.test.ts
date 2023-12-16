@@ -276,7 +276,7 @@ describe('Validator', () => {
       validator.isDate(value, type)
     } catch (error) {
       const sut = error as Error
-      expect(sut.message).toEqual('isDate method received invalid parameter: type is mandatory!')
+      expect(sut.message).toEqual('isDate method received invalid parameter: type is required!')
     }
   })
 
@@ -497,7 +497,7 @@ describe('Validator', () => {
       validator.isTime(value, type, errorInjected)
     } catch (error) {
       const sut = error as Error
-      expect(sut.message).toEqual('isTime method received invalid parameter: type is mandatory!')
+      expect(sut.message).toEqual('isTime method received invalid parameter: type is required!')
     }
   })
 
@@ -517,5 +517,15 @@ describe('Validator', () => {
     const value = '12:59:60'
     const sut = validator.isTime(value, 'HH:MM:SS')
     expect(sut).toBeFalsy()
+  })
+
+  it('Should be able to validate the isTime method and return error if hour, minutes or seconds are invalid', () => {
+    try {
+      const value = '12:59:60'
+      validator.isTime(value, 'HH:MM:SS', errorInjected)
+    } catch (error) {
+      const sut = error
+      expect(sut).toEqual(errorInjected)
+    }
   })
 })
