@@ -147,4 +147,17 @@ export class Validator {
 
     return true
   }
+
+  dateGreaterThan (
+    validateDate: Date,
+    dateToCompare: Date,
+    returnError?: Error
+  ): boolean | Error {
+    const deadlineExceeded = new Date(validateDate) < dateToCompare
+    if (deadlineExceeded) {
+      if (returnError) throw new Error(returnError.message)
+      return false
+    }
+    return true
+  }
 }
