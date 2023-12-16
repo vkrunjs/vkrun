@@ -361,9 +361,17 @@ describe('Validator', () => {
   })
 
   it('Should be able to validate the isDate method and return true if the date is greater than the reference date', () => {
-    const date = new Date('2000-2-3')
-    const refDate = new Date('2000-2-2')
+    const date = new Date('2000-02-03T02:00:00.000Z')
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
     const sut = validator.dateGreaterThan(date, refDate)
     expect(sut).toBeTruthy()
+  })
+
+  it('Should be able to validate the isDate method and return false if the date is greater than the reference date', () => {
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    console.log({ date })
+    const refDate = new Date('2000-02-03T02:00:00.000Z')
+    const sut = validator.dateGreaterThan(date, refDate)
+    expect(sut).toBeFalsy()
   })
 })
