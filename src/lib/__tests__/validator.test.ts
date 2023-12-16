@@ -304,4 +304,10 @@ describe('Validator', () => {
     const sut = validator.isDate(value, 'YYYY-MM-DD')
     expect(sut).toBeTruthy()
   })
+
+  it('Should be able to validate the isDate method and return true if the value is string date and type YYYY/DD/MM', () => {
+    const value = '2000/30/12'
+    const sut = validator.isDate(value, 'YYYY/DD/MM')
+    expect(sut).toBeTruthy()
+  })
 })
