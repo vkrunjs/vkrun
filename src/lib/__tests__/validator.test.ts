@@ -489,4 +489,15 @@ describe('Validator', () => {
       expect(sut).toEqual(errorInjected)
     }
   })
+
+  it('Should be able to validate isTime method and return error if value is in correct format and invalid type', () => {
+    try {
+      const value = '11:55'
+      const type: any = null
+      validator.isTime(value, type, errorInjected)
+    } catch (error) {
+      const sut = error as Error
+      expect(sut.message).toEqual('isTime method received invalid parameter: type is mandatory!')
+    }
+  })
 })
