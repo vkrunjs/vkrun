@@ -500,4 +500,10 @@ describe('Validator', () => {
       expect(sut.message).toEqual('isTime method received invalid parameter: type is mandatory!')
     }
   })
+
+  it('Should be able to validate the isTime method and return false if the time is greater than 23', () => {
+    const value = '24:55:60'
+    const sut = validator.isTime(value, 'HH:MM:SS')
+    expect(sut).toBeFalsy()
+  })
 })
