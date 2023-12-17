@@ -17,6 +17,7 @@ export class Validator implements IValidator {
     const isEmpty = !this.value || this.value === undefined
 
     if (typeof this.value === 'boolean') return true
+    else if (typeof this.value === 'number' && this.value === 0) return true
     else if (isEmpty) {
       const messageError = `${this.valueName} is required!`
       switch (this.typeError) {
