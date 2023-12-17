@@ -54,8 +54,17 @@ export class Validator implements IValidator {
     const regEmail =
       /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
     const emailFormatIsInvalid = !regEmail.test(String(this.value))
-    if (emailFormatIsInvalid && returnError) throw new Error(returnError.message)
-    else if (emailFormatIsInvalid && !returnError) return false
+    if (emailFormatIsInvalid) {
+      const messageError = `${this.valueName} format is invalid!`
+      switch (this.typeError) {
+        case 'MISSING_PARAM': throw new MissingParamError(messageError)
+        case 'INVALID_PARAM': throw new InvalidParamError(messageError)
+        case 'SERVER_ERROR': throw new ServerError()
+        default:
+          if (returnError) throw new Error(returnError.message)
+          return false
+      }
+    }
     return true
   }
 
