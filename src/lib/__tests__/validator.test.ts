@@ -94,6 +94,16 @@ describe('Validator', () => {
     }
   })
 
+  it('Should be able to validate the required method and return INVALID_PARAM type error if value is not provided', () => {
+    try {
+      const value = 'primary '
+      validator(value, 'value_name', 'INVALID_PARAM').minWord(2)
+    } catch (error) {
+      const sut = error as Error
+      expect(sut).toEqual(new InvalidParamError('value_name must have at least 2 words!'))
+    }
+  })
+
   it('Should be able to validate the isEmail method and return true if email is correct', () => {
     const email = 'any_email@mail.com'
     const sut = validator(email).isEmail()
