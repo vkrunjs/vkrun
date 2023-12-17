@@ -38,7 +38,7 @@ describe('Validator', () => {
       validator(hasNoValue, 'value_name', 'MISSING_PARAM').required()
     } catch (error) {
       const sut = error as Error
-      expect(sut).toEqual(new MissingParamError('value_name'))
+      expect(sut).toEqual(new MissingParamError('value_name is required!'))
     }
   })
 
@@ -48,7 +48,7 @@ describe('Validator', () => {
       validator(hasNoValue, 'value_name', 'INVALID_PARAM').required()
     } catch (error) {
       const sut = error as Error
-      expect(sut).toEqual(new InvalidParamError('value_name'))
+      expect(sut).toEqual(new InvalidParamError('value_name is required!'))
     }
   })
 
@@ -81,6 +81,16 @@ describe('Validator', () => {
     } catch (error) {
       const sut = error
       expect(sut).toEqual(errorInjected)
+    }
+  })
+
+  it('Should be able to validate the required method and return MISSING_PARAM type error if value is not provided', () => {
+    try {
+      const value = 'primary '
+      validator(value, 'value_name', 'MISSING_PARAM').minWord(2)
+    } catch (error) {
+      const sut = error as Error
+      expect(sut).toEqual(new MissingParamError('value_name must have at least 2 words!'))
     }
   })
 
