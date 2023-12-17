@@ -1,5 +1,5 @@
 import { InvalidParamError, MissingParamError, ServerError } from './errors'
-import { DateTypes, ErrorTypes, IValidator } from './validator.types'
+import { DateTypes, ErrorTypes, IValidator } from './types'
 
 export class Validator implements IValidator {
   private readonly value: any
@@ -51,7 +51,7 @@ export class Validator implements IValidator {
     }
   }
 
-  isEmail (returnError?: Error): boolean | Error {
+  email (returnError?: Error): boolean | Error {
     const regEmail =
       /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
     const emailFormatIsInvalid = !regEmail.test(String(this.value))
@@ -69,7 +69,7 @@ export class Validator implements IValidator {
     return true
   }
 
-  isUuid (returnError?: Error): boolean | Error {
+  uuid (returnError?: Error): boolean | Error {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     const isUuid = uuidRegex.test(this.value)
     if (!isUuid && returnError) throw new Error(returnError.message)
@@ -91,28 +91,28 @@ export class Validator implements IValidator {
     return false
   }
 
-  isString (returnError?: Error): boolean | Error {
+  string (returnError?: Error): boolean | Error {
     const isString = typeof this.value === 'string'
     if (isString) return true
     else if (!isString && returnError) throw new Error(returnError.message)
     return false
   }
 
-  isNumber (returnError?: Error): boolean | Error {
+  number (returnError?: Error): boolean | Error {
     const isNumber = typeof this.value === 'number'
     if (isNumber) return true
     else if (!isNumber && returnError) throw new Error(returnError.message)
     return false
   }
 
-  isBoolean (returnError?: Error): boolean | Error {
+  boolean (returnError?: Error): boolean | Error {
     const isBoolean = typeof this.value === 'boolean'
     if (isBoolean) return true
     else if (!isBoolean && returnError) throw new Error(returnError.message)
     return false
   }
 
-  isFloat (returnError?: Error): boolean | Error {
+  float (returnError?: Error): boolean | Error {
     const isNumber = typeof this.value === 'number'
     if (!isNumber) return false
     const isFloat = Number.isFinite(this.value) && !Number.isInteger(this.value)
@@ -121,20 +121,19 @@ export class Validator implements IValidator {
     return false
   }
 
-  isInteger (returnError?: Error): boolean | Error {
+  integer (returnError?: Error): boolean | Error {
     const isInteger = Number.isInteger(this.value)
     if (isInteger) return true
     else if (!isInteger && returnError) throw new Error(returnError.message)
     return false
   }
 
-  isDate (type: DateTypes, returnError?: Error): boolean | Error {
+  date (type: DateTypes, returnError?: Error): boolean | Error {
     let year: number, month: number, day: number
     let formattedDate: Date
 
     if (typeof this.value === 'string' && this.value.length < 10) {
       if (returnError) {
-        console.log('entrou')
         throw new Error(returnError.message)
       }
       return false
@@ -177,7 +176,7 @@ export class Validator implements IValidator {
         formattedDate = new Date(String(this.value))
         break
       default:
-        throw new Error('isDate method received invalid parameter: type is required!')
+        throw new Error('date method received invalid parameter: type is required!')
     }
 
     if (!formattedDate || isNaN(formattedDate.getTime())) {
@@ -220,13 +219,13 @@ export class Validator implements IValidator {
     return true
   }
 
-  isTime (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error): boolean | Error {
+  time (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error): boolean | Error {
     const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
     const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
     let isValid = false
 
     if (!type || typeof type !== 'string') {
-      throw new Error('isTime method received invalid parameter: type is required!')
+      throw new Error('time method received invalid parameter: type is required!')
     } else if (type === 'HH:MM') isValid = regTimeHHMM.test(this.value)
     else if (type === 'HH:MM:SS')isValid = regTimeHHMMSS.test(this.value)
 

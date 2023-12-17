@@ -1,19 +1,19 @@
 export interface IValidator {
   required: (returnError?: Error) => boolean | Error
   minWord: (minWord: number, returnError?: Error) => boolean | Error
-  isEmail: (returnError?: Error) => boolean | Error
-  isUuid: (returnError?: Error) => boolean | Error
+  email: (returnError?: Error) => boolean | Error
+  uuid: (returnError?: Error) => boolean | Error
   maxLength: (maxLength: number, returnError?: Error) => boolean | Error
   minLength: (minLength: number, returnError?: Error) => boolean | Error
-  isString: (returnError?: Error) => boolean | Error
-  isNumber: (returnError?: Error) => boolean | Error
-  isBoolean: (returnError?: Error) => boolean | Error
-  isFloat: (returnError?: Error) => boolean | Error
-  isInteger: (returnError?: Error) => boolean | Error
-  isDate: (type: DateTypes, returnError?: Error) => boolean | Error
+  string: (returnError?: Error) => boolean | Error
+  number: (returnError?: Error) => boolean | Error
+  boolean: (returnError?: Error) => boolean | Error
+  float: (returnError?: Error) => boolean | Error
+  integer: (returnError?: Error) => boolean | Error
+  date: (type: DateTypes, returnError?: Error) => boolean | Error
   dateGreaterThan: (dateToCompare: Date, returnError?: Error) => boolean | Error
   dateLessThan: (dateToCompare: Date, returnError?: Error) => boolean | Error
-  isTime: (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error) => boolean | Error
+  time: (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error) => boolean | Error
 }
 
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
