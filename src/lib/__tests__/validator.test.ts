@@ -95,7 +95,7 @@ describe('Validator', () => {
     }
   })
 
-  it('Should be able to validate the required method and return MISSING_PARAM type error if value is not provided', () => {
+  it('Should be able to validate the minWord method and return MISSING_PARAM type error if value is not provided', () => {
     try {
       const value = 'primary '
       validator(value, 'value_name', 'MISSING_PARAM').minWord(2)
@@ -105,7 +105,7 @@ describe('Validator', () => {
     }
   })
 
-  it('Should be able to validate the required method and return INVALID_PARAM type error if value is not provided', () => {
+  it('Should be able to validate the minWord method and return INVALID_PARAM type error if value is not provided', () => {
     try {
       const value = 'primary '
       validator(value, 'value_name', 'INVALID_PARAM').minWord(2)
@@ -115,7 +115,7 @@ describe('Validator', () => {
     }
   })
 
-  it('Should be able to validate the required method and return SERVER_ERROR type error if value is not provided', () => {
+  it('Should be able to validate the minWord method and return SERVER_ERROR type error if value is not provided', () => {
     try {
       const value = 'primary '
       validator(value, 'value_name', 'SERVER_ERROR').minWord(2)
@@ -144,6 +144,16 @@ describe('Validator', () => {
     } catch (error) {
       const sut = error
       expect(sut).toEqual(errorInjected)
+    }
+  })
+
+  it('Should be able to validate the isEmail method and return a MISSING_PARAM error if the email is not the correct format', () => {
+    try {
+      const email = 'invalid_email@mail'
+      validator(email, 'email', 'MISSING_PARAM').isEmail()
+    } catch (error) {
+      const sut = error as Error
+      expect(sut).toEqual(new MissingParamError('email format is invalid!'))
     }
   })
 
