@@ -1,2 +1,6 @@
 import { Validator } from './lib/validator'
-export const validator = new Validator()
+import { ErrorTypes } from './lib/validator.types'
+
+export const validator = (value: any, valueName: string, typeError?: ErrorTypes): Validator => {
+  return new Validator(value, valueName, typeError)
+}

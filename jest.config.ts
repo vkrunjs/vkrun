@@ -15,7 +15,11 @@ const config: Config = {
   testEnvironment: 'node',
   transform: {
     '.+\\.ts$': 'ts-jest'
-  }
+  },
+  testPathIgnorePatterns: ['<rootDir>/src/.*\\.types\\.ts$'],
+  coveragePathIgnorePatterns: [
+    '<rootDir>/src/lib/.*\\.types\\.ts$'
+  ]
 }
 
 export default config
