@@ -104,6 +104,16 @@ describe('Validator', () => {
     }
   })
 
+  it('Should be able to validate the required method and return SERVER_ERROR type error if value is not provided', () => {
+    try {
+      const value = 'primary '
+      validator(value, 'value_name', 'SERVER_ERROR').minWord(2)
+    } catch (error) {
+      const sut = error as Error
+      expect(sut).toEqual(new ServerError())
+    }
+  })
+
   it('Should be able to validate the isEmail method and return true if email is correct', () => {
     const email = 'any_email@mail.com'
     const sut = validator(email).isEmail()
