@@ -8,8 +8,9 @@ export class Validator implements IValidator {
 
   constructor (value: any, valueName: string, typeError?: ErrorTypes) {
     this.value = value
-    this.valueName = valueName
     this.typeError = typeError
+    if (typeError && !valueName) throw new Error('missing class param: valueName is required!')
+    this.valueName = valueName
   }
 
   required (returnError?: Error): boolean | Error {
@@ -33,9 +34,18 @@ export class Validator implements IValidator {
   minWord (minWord: number, returnError?: Error): boolean | Error {
     const trimmedValue = this.value.trim()
     const words = trimmedValue.split(/\s+/)
-    const notHasMinOfWords = words.length < minWord
-    if (notHasMinOfWords && returnError) throw new Error(returnError.message)
-    else if (notHasMinOfWords && !returnError) return false
+    const hasMinOfWords = words.length >= minWord
+    if (hasMinOfWords) return true
+    else if (!hasMinOfWords) {
+      switch (this.typeError) {
+        case 'MISSING_PARAM': throw new MissingParamError(this.valueName)
+        case 'INVALID_PARAM': throw new InvalidParamError(this.valueName)
+        case 'SERVER_ERROR': throw new ServerError()
+        default:
+          if (returnError) throw new Error(returnError.message)
+          return false
+      }
+    }
     return true
   }
 
