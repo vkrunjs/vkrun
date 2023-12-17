@@ -163,6 +163,16 @@ describe('Validator', () => {
     }
   })
 
+  it('Should be able to validate the email method and return a INVALID_PARAM error if the email is not the correct format', () => {
+    try {
+      const email = 'invalid_email@mail'
+      validator(email, 'email', 'INVALID_PARAM').email()
+    } catch (error) {
+      const sut = error as Error
+      expect(sut).toEqual(new InvalidParamError('email format is invalid!'))
+    }
+  })
+
   it('Should be able to validate the uuid method and return true if uuid is correct', () => {
     const uuid = '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
     const sut = validator(uuid).uuid()
