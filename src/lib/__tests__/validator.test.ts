@@ -16,6 +16,12 @@ describe('Validator', () => {
     expect(sut).toBeTruthy()
   })
 
+  it('Should be able to validate the required method and return true if the value is number type and equal to 0', () => {
+    const value = 0
+    const sut = validator(value).required()
+    expect(sut).toBeTruthy()
+  })
+
   it('Should be able to validate the required method and return false if the value is not provided', () => {
     const hasNoValue = undefined
     const sut = validator(hasNoValue).required()
@@ -27,6 +33,7 @@ describe('Validator', () => {
       const hasNoValue = undefined
       validator(hasNoValue).required(errorInjected)
     } catch (error) {
+      console.log({ error })
       const sut = error
       expect(sut).toEqual(errorInjected)
     }
