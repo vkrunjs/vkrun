@@ -1,5 +1,5 @@
 import { validator } from '../../index'
-import { InvalidParamError, MissingParamError } from '../errors'
+import { InvalidParamError, MissingParamError, ServerError } from '../errors'
 
 describe('Validator', () => {
   const errorInjected = new Error('any_error')
@@ -49,6 +49,16 @@ describe('Validator', () => {
     } catch (error) {
       const sut = error as Error
       expect(sut).toEqual(new InvalidParamError('value_name'))
+    }
+  })
+
+  it('Should be able to validate the required method and return SERVER_ERROR type error if value is not provided', () => {
+    try {
+      const hasNoValue = undefined
+      validator(hasNoValue, 'value_name', 'SERVER_ERROR').required()
+    } catch (error) {
+      const sut = error as Error
+      expect(sut).toEqual(new ServerError())
     }
   })
 
