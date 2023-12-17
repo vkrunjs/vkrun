@@ -32,6 +32,17 @@ describe('Validator', () => {
     }
   })
 
+  it('Should be able to validate the required method and return missing class param if value name is not provided', () => {
+    try {
+      const hasNoValue = undefined
+      const valueName: any = null
+      validator(hasNoValue, valueName, 'MISSING_PARAM').required()
+    } catch (error) {
+      const sut = error as Error
+      expect(sut.message).toEqual('missing class param: valueName is required!')
+    }
+  })
+
   it('Should be able to validate the required method and return MISSING_PARAM type error if value is not provided', () => {
     try {
       const hasNoValue = undefined
