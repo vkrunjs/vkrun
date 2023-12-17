@@ -18,9 +18,10 @@ export class Validator implements IValidator {
 
     if (typeof this.value === 'boolean') return true
     else if (isEmpty) {
+      const messageError = `${this.valueName} is required!`
       switch (this.typeError) {
-        case 'MISSING_PARAM': throw new MissingParamError(this.valueName)
-        case 'INVALID_PARAM': throw new InvalidParamError(this.valueName)
+        case 'MISSING_PARAM': throw new MissingParamError(messageError)
+        case 'INVALID_PARAM': throw new InvalidParamError(messageError)
         case 'SERVER_ERROR': throw new ServerError()
         default:
           if (returnError) throw new Error(returnError.message)
@@ -36,17 +37,17 @@ export class Validator implements IValidator {
     const words = trimmedValue.split(/\s+/)
     const hasMinOfWords = words.length >= minWord
     if (hasMinOfWords) return true
-    else if (!hasMinOfWords) {
+    else {
+      const messageError = `${this.valueName} must have at least ${minWord} words!`
       switch (this.typeError) {
-        case 'MISSING_PARAM': throw new MissingParamError(this.valueName)
-        case 'INVALID_PARAM': throw new InvalidParamError(this.valueName)
+        case 'MISSING_PARAM': throw new MissingParamError(messageError)
+        case 'INVALID_PARAM': throw new InvalidParamError(messageError)
         case 'SERVER_ERROR': throw new ServerError()
         default:
           if (returnError) throw new Error(returnError.message)
           return false
       }
     }
-    return true
   }
 
   isEmail (returnError?: Error): boolean | Error {
