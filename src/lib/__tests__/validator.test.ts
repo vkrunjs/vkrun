@@ -1,5 +1,6 @@
 import validator from '../index'
 import { InvalidParamError, MissingParamError, ServerError } from '../errors'
+import { Validator } from '../validator'
 
 describe('Validator', () => {
   const errorInjected = new Error('any_error')
@@ -10,7 +11,7 @@ describe('Validator', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the required method and return true if the value is provided and nod is boolean', () => {
+  it('Should be able to validate the required method and return true if the value is provided and not is boolean', () => {
     const value = 'any_value'
     const sut = validator(value).required().validate()
     expect(sut).toBeTruthy()
@@ -22,61 +23,48 @@ describe('Validator', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the required method and return false if the value is not provided', () => {
+  it('Should be able to validate the required method and return false if the value is undefined', () => {
     const hasNoValue = undefined
     const sut = validator(hasNoValue).required().validate()
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the required method and return error if the value is not provided', () => {
-    try {
-      const hasNoValue = undefined
-      validator(hasNoValue).required(errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the required method and throw custom error if the value is not provided', () => {
+    const hasNoValue = undefined
+    const sut = (): Validator => validator(hasNoValue).required(errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
-  it('Should be able to validate the required method and return missing class param if value name is not provided', () => {
-    try {
-      const hasNoValue = undefined
-      const valueName: any = null
-      validator(hasNoValue, valueName, 'MISSING_PARAM').required()
-    } catch (error) {
-      const sut = error as Error
-      expect(sut.message).toEqual('missing class param: valueName is required!')
-    }
+  it('Should be able to validate the required method and throw error missing class param if value name is not provided', () => {
+    const hasNoValue = undefined
+    const valueName: any = null
+    const sut = (): Validator => validator(hasNoValue, valueName, 'MISSING_PARAM').required()
+    expect(sut).toThrow('missing class param: valueName is required!')
   })
 
-  it('Should be able to validate the required method and return MISSING_PARAM type error if value is not provided', () => {
-    try {
-      const hasNoValue = undefined
-      validator(hasNoValue, 'value_name', 'MISSING_PARAM').required()
-    } catch (error) {
-      const sut = error as Error
-      expect(sut).toEqual(new MissingParamError('value_name is required!'))
-    }
+  it('Should be able to validate the required method and throw MISSING_PARAM if value is not provided', () => {
+    const hasNoValue = undefined
+    const sut = (): Validator => validator(hasNoValue, 'value_name', 'MISSING_PARAM').required()
+    expect(sut).toThrow(new MissingParamError('value_name is required!'))
   })
 
-  it('Should be able to validate the required method and return INVALID_PARAM type error if value is not provided', () => {
-    try {
-      const hasNoValue = undefined
-      validator(hasNoValue, 'value_name', 'INVALID_PARAM').required()
-    } catch (error) {
-      const sut = error as Error
-      expect(sut).toEqual(new InvalidParamError('value_name is required!'))
-    }
+  it('Should be able to validate the required method and throw INVALID_PARAM if value is not provided', () => {
+    const hasNoValue = undefined
+    const sut = (): Validator => validator(hasNoValue, 'value_name', 'INVALID_PARAM').required()
+    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
   })
 
-  it('Should be able to validate the required method and return SERVER_ERROR type error if value is not provided', () => {
-    try {
-      const hasNoValue = undefined
-      validator(hasNoValue, 'value_name', 'SERVER_ERROR').required()
-    } catch (error) {
-      const sut = error as Error
-      expect(sut).toEqual(new ServerError())
-    }
+  it('Should be able to validate the required method and throw SERVER_ERROR if value is not provided', () => {
+    const hasNoValue = undefined
+    const sut = (): Validator => validator(hasNoValue, 'value_name', 'SERVER_ERROR').required()
+    expect(sut).toThrow(new ServerError())
+  })
+
+  it('Should be able to validate the required method and throw error if errorType is invalid', () => {
+    const hasNoValue = undefined
+    const errorType: any = true
+    const sut = (): Validator => validator(hasNoValue, 'value_name', errorType).required()
+    expect(sut).toThrow('invalid class param: errorType provided is not valid!')
   })
 
   it('Should be able to validate the minWord method and return true if the value has the minimum number of words', () => {
