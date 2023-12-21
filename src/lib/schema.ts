@@ -1,5 +1,5 @@
-/* import validator from './index'
-import { Validator } from './validator'
+/* import validex from './index'
+import { Validex } from './validex'
 import {
   Schema,
   ObjectConfig,
@@ -28,21 +28,21 @@ class CreateSchema {
     value: ValidatePropertyValue,
     rules: ValidatePropertyRules
   ): boolean {
-    const validateItemArray = (value: ValidateItemArrayValue): Validator => {
-      let validatorItemArray: Validator
+    const validateItemArray = (value: ValidateItemArrayValue): Validex => {
+      let validatorItemArray: Validex
       if (this.config) {
-        validatorItemArray = validator(value, `all values in the ${key}`, this.config.errorType)
+        validatorItemArray = validex(value, `all values in the ${key}`, this.config.errorType)
       } else {
-        validatorItemArray = validator(value, `all values in the ${key}`)
+        validatorItemArray = validex(value, `all values in the ${key}`)
       }
       return validatorItemArray
     }
 
     let validate: boolean
     for (const rule of rules) {
-      let v: Validator
-      if (this.config) v = validator(value, key, this.config.errorType)
-      else v = validator(value, key)
+      let v: Validex
+      if (this.config) v = validex(value, key, this.config.errorType)
+      else v = validex(value, key)
 
       if (rule.method === 'string') {
         validate = v.string(rule.customError).validate()
@@ -318,4 +318,5 @@ export const array = (
 
 export const createSchema = (schema: ObjectType, config?: ObjectConfig): CreateSchema => {
   return new CreateSchema(schema, config)
-} */
+}
+*/

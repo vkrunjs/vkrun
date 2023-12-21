@@ -2,21 +2,21 @@ import { InvalidParamError, MissingParamError, ServerError } from './errors'
 import {
   // DateTypes,
   ErrorTypes,
-  // IValidator,
+  // IValidex,
   // TimeTypes,
-  ValidatorValue,
-  ValidatorValueName
+  ValidexValue,
+  ValidexValueName
 } from './types'
 
-export class Validator /* implements IValidator */ {
-  private readonly value: ValidatorValue
-  private readonly valueName: ValidatorValueName
+export class Validex /* implements IValidex */ {
+  private readonly value: ValidexValue
+  private readonly valueName: ValidexValueName
   private readonly errorType?: ErrorTypes
   private readonly isValid: boolean[]
 
   constructor (
-    value: ValidatorValue,
-    valueName: ValidatorValueName,
+    value: ValidexValue,
+    valueName: ValidexValueName,
     errorType?: ErrorTypes
   ) {
     this.value = value
@@ -76,7 +76,7 @@ export class Validator /* implements IValidator */ {
       this.isValid.push(false)
     }
     return this
-  }
+  } */
 
   email (customError?: Error): this {
     const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
@@ -93,7 +93,7 @@ export class Validator /* implements IValidator */ {
     }
     return this
   }
-
+  /*
   maxLength (maxLength: number, customError?: Error): this {
     const isString = typeof this.value === 'string'
     if (isString) {

@@ -1,13 +1,13 @@
-import { Validator } from './validator'
-import { ErrorTypes, ValidatorValue, ValidatorValueName } from './types'
+import { Validex } from './validex'
+import { ErrorTypes, ValidexValue, ValidexValueName } from './types'
 // export * from './schema'
 
-const validator = (
-  value: ValidatorValue,
-  valueName?: ValidatorValueName,
+const validex = (
+  value: ValidexValue,
+  valueName?: ValidexValueName,
   typeError?: ErrorTypes
-): Validator => {
-  return new Validator(value, valueName ?? '', typeError)
+): Validex => {
+  return new Validex(value, valueName ?? '', typeError)
 }
 
-export default validator
+export default validex

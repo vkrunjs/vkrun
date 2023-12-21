@@ -1,4 +1,4 @@
-export interface IValidator {
+export interface IValidex {
   required: (returnError?: Error) => this
   minWord: (minWord: number, returnError?: Error) => this
   email: (returnError?: Error) => this
@@ -16,8 +16,8 @@ export interface IValidator {
   time: (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error) => this
   validate: () => boolean
 }
-export type ValidatorValue = string | boolean | Date | number | undefined | null
-export type ValidatorValueName = string
+export type ValidexValue = string | boolean | Date | number | undefined | null
+export type ValidexValueName = string
 export interface ObjectConfig {
   errorType: ErrorTypes
 }
@@ -27,7 +27,7 @@ export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
+  arrayType: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -39,6 +39,6 @@ export type ValidatePropertyRules = Array<{
 }>
 export type ValidateItemArrayValue = string | boolean | Date | number
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
-export type Schema = Record<string, Validator[]>
+export type Schema = Record<string, Validex[]>
 export type ObjectType = Record<string, any>
 export type SchemaConfig = ObjectConfig
