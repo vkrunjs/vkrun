@@ -156,6 +156,12 @@ describe('Validex', () => {
     const sut = (): Validex => validex(uuid).uuid(errorInjected)
     expect(sut).toThrow(errorInjected)
   })
+
+  it('Should be able to validate the uuid method and throw INVALID_PARAM if uuid is not correct', () => {
+    const uuid = 'invalid_uuid'
+    const sut = (): Validex => validex(uuid, 'uuid', 'INVALID_PARAM').uuid()
+    expect(sut).toThrow('invalid param: uuid must be a uuid type!')
+  })
 /*
   it('Should be able to validate the maxLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
