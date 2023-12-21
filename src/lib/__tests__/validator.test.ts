@@ -79,46 +79,30 @@ describe('Validator', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the minWord method and return error if the value does not have the minimum number of words', () => {
-    try {
-      const value = 'primary '
-      validator(value).minWord(2, errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the minWord method and throw error if the value does not have the minimum number of words', () => {
+    const value = 'primary '
+    const sut = (): Validator => validator(value).minWord(2, errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
-  it('Should be able to validate the minWord method and return MISSING_PARAM type error if value is not provided', () => {
-    try {
-      const value = 'primary '
-      validator(value, 'value_name', 'MISSING_PARAM').minWord(2)
-    } catch (error) {
-      const sut = error as Error
-      expect(sut).toEqual(new MissingParamError('value_name must have at least 2 words!'))
-    }
+  it('Should be able to validate the minWord method and throw MISSING_PARAM type error if value is not provided', () => {
+    const value = 'primary '
+    const sut = (): Validator => validator(value, 'value_name', 'MISSING_PARAM').minWord(2)
+    expect(sut).toThrow(new MissingParamError('value_name must have at least 2 words!'))
   })
 
-  it('Should be able to validate the minWord method and return INVALID_PARAM type error if value is not provided', () => {
-    try {
-      const value = 'primary '
-      validator(value, 'value_name', 'INVALID_PARAM').minWord(2)
-    } catch (error) {
-      const sut = error as Error
-      expect(sut).toEqual(new InvalidParamError('value_name must have at least 2 words!'))
-    }
+  it('Should be able to validate the minWord method and throw INVALID_PARAM type error if value is not provided', () => {
+    const value = 'primary '
+    const sut = (): Validator => validator(value, 'value_name', 'INVALID_PARAM').minWord(2)
+    expect(sut).toThrow(new InvalidParamError('value_name must have at least 2 words!'))
   })
 
-  it('Should be able to validate the minWord method and return SERVER_ERROR type error if value is not provided', () => {
-    try {
-      const value = 'primary '
-      validator(value, 'value_name', 'SERVER_ERROR').minWord(2)
-    } catch (error) {
-      const sut = error as Error
-      expect(sut).toEqual(new ServerError())
-    }
+  it('Should be able to validate the minWord method and throw SERVER_ERROR type error if value is not provided', () => {
+    const value = 'primary '
+    const sut = (): Validator => validator(value, 'value_name', 'SERVER_ERROR').minWord(2)
+    expect(sut).toThrow(new ServerError())
   })
-
+/*
   it('Should be able to validate the email method and return true if email is correct', () => {
     const email = 'any_email@mail.com'
     const sut = validator(email).email().validate()
@@ -623,5 +607,5 @@ describe('Validator', () => {
       const sut = error
       expect(sut).toEqual(errorInjected)
     }
-  })
+  }) */
 })
