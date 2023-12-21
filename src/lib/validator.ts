@@ -1,142 +1,242 @@
 import { InvalidParamError, MissingParamError, ServerError } from './errors'
-import { DateTypes, ErrorTypes, IValidator } from './types'
+import {
+  DateTypes,
+  ErrorTypes,
+  IValidator,
+  TimeTypes,
+  ValidatorValue,
+  ValidatorValueName
+} from './types'
 
 export class Validator implements IValidator {
-  private readonly value: any
-  private readonly valueName: string
-  private readonly typeError?: ErrorTypes
+  private readonly value: ValidatorValue
+  private readonly valueName: ValidatorValueName
+  private readonly errorType?: ErrorTypes
+  private readonly isValid: boolean[]
 
-  constructor (value: any, valueName: string, typeError?: ErrorTypes) {
+  constructor (
+    value: ValidatorValue,
+    valueName: ValidatorValueName,
+    errorType?: ErrorTypes
+  ) {
     this.value = value
-    this.typeError = typeError
-    if (typeError && !valueName) throw new Error('missing class param: valueName is required!')
+    this.errorType = errorType
+    if (errorType && !valueName) throw new Error('missing class param: valueName is required!')
     this.valueName = valueName
+    this.isValid = []
   }
 
-  required (returnError?: Error): boolean | Error {
-    const isEmpty = !this.value || this.value === undefined
-
-    if (typeof this.value === 'boolean') return true
-    else if (typeof this.value === 'number' && this.value === 0) return true
-    else if (isEmpty) {
-      const messageError = `${this.valueName} is required!`
-      switch (this.typeError) {
-        case 'MISSING_PARAM': throw new MissingParamError(messageError)
-        case 'INVALID_PARAM': throw new InvalidParamError(messageError)
-        case 'SERVER_ERROR': throw new ServerError()
-        default:
-          if (returnError) throw new Error(returnError.message)
-          return false
+  string (returnError?: Error): this {
+    const isString = typeof this.value === 'string'
+    if (isString) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a string type!`
+        this.handleError(messageError)
       }
+      this.isValid.push(false)
     }
-
-    return true
+    return this
   }
 
-  minWord (minWord: number, returnError?: Error): boolean | Error {
-    const trimmedValue = this.value.trim()
+  minWord (minWord: number, returnError?: Error): this {
+    const trimmedValue = String(this.value).trim()
     const words = trimmedValue.split(/\s+/)
     const hasMinOfWords = words.length >= minWord
-    if (hasMinOfWords) return true
-    else {
-      const messageError = `${this.valueName} must have at least ${minWord} words!`
-      switch (this.typeError) {
-        case 'MISSING_PARAM': throw new MissingParamError(messageError)
-        case 'INVALID_PARAM': throw new InvalidParamError(messageError)
-        case 'SERVER_ERROR': throw new ServerError()
-        default:
-          if (returnError) throw new Error(returnError.message)
-          return false
+    if (hasMinOfWords) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must have at least ${minWord} words!`
+        this.handleError(messageError)
       }
+      this.isValid.push(false)
     }
+    return this
   }
 
-  email (returnError?: Error): boolean | Error {
-    const regEmail =
-      /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-    const emailFormatIsInvalid = !regEmail.test(String(this.value))
-    if (emailFormatIsInvalid) {
-      const messageError = `${this.valueName} format is invalid!`
-      switch (this.typeError) {
-        case 'MISSING_PARAM': throw new MissingParamError(messageError)
-        case 'INVALID_PARAM': throw new InvalidParamError(messageError)
-        case 'SERVER_ERROR': throw new ServerError()
-        default:
-          if (returnError) throw new Error(returnError.message)
-          return false
-      }
-    }
-    return true
-  }
-
-  uuid (returnError?: Error): boolean | Error {
+  uuid (returnError?: Error): this {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    const isUuid = uuidRegex.test(this.value)
-    if (!isUuid && returnError) throw new Error(returnError.message)
-    else if (!isUuid && !returnError) return false
-    return true
+    const isUuid = uuidRegex.test(String(this.value))
+    if (isUuid) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a uuid type!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    }
+    return this
   }
 
-  maxLength (maxLength: number, returnError?: Error): boolean | Error {
-    const exceededLimit = String(this.value).length > maxLength
-    if (exceededLimit && returnError) throw new Error(returnError.message)
-    else if (exceededLimit && !returnError) return true
-    return false
+  email (returnError?: Error): this {
+    const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+    const emailFormatIsValid = regEmail.test(String(this.value))
+    if (emailFormatIsValid) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = 'email format is invalid!'
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    }
+    return this
   }
 
-  minLength (minLength: number, returnError?: Error): boolean | Error {
-    const exceededLimit = String(this.value).length < minLength
-    if (exceededLimit && returnError) throw new Error(returnError.message)
-    else if (exceededLimit && !returnError) return true
-    return false
-  }
-
-  string (returnError?: Error): boolean | Error {
+  maxLength (maxLength: number, returnError?: Error): this {
     const isString = typeof this.value === 'string'
-    if (isString) return true
-    else if (!isString && returnError) throw new Error(returnError.message)
-    return false
+    if (isString) {
+      const exceededLimit = String(this.value).length > maxLength
+      if (exceededLimit) {
+        if (returnError) throw new Error(returnError.message)
+        else if (this.errorType) {
+          const messageError = `${this.valueName} must have a maximum of ${maxLength} characters!`
+          this.handleError(messageError)
+        }
+        this.isValid.push(true)
+        return this
+      }
+      this.isValid.push(false)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a string type!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(true)
+    }
+    return this
   }
 
-  number (returnError?: Error): boolean | Error {
+  minLength (minLength: number, returnError?: Error): this {
+    const isString = typeof this.value === 'string'
+    if (isString) {
+      const exceededLimit = String(this.value).length < minLength
+      if (exceededLimit) {
+        if (returnError) throw new Error(returnError.message)
+        else if (this.errorType) {
+          const messageError = `${this.valueName} must have a minimum of ${minLength} characters!`
+          this.handleError(messageError)
+        }
+        this.isValid.push(true)
+        return this
+      }
+      this.isValid.push(false)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a string type!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(true)
+    }
+    return this
+  }
+
+  number (returnError?: Error): this {
     const isNumber = typeof this.value === 'number'
-    if (isNumber) return true
-    else if (!isNumber && returnError) throw new Error(returnError.message)
-    return false
+    if (isNumber) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a number type!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    }
+    return this
   }
 
-  boolean (returnError?: Error): boolean | Error {
-    const isBoolean = typeof this.value === 'boolean'
-    if (isBoolean) return true
-    else if (!isBoolean && returnError) throw new Error(returnError.message)
-    return false
-  }
-
-  float (returnError?: Error): boolean | Error {
+  float (returnError?: Error): this {
     const isNumber = typeof this.value === 'number'
-    if (!isNumber) return false
     const isFloat = Number.isFinite(this.value) && !Number.isInteger(this.value)
-    if (isFloat && this.value % 1 !== 0) return true
-    else if (!isFloat && returnError) throw new Error(returnError.message)
-    return false
+
+    if (isNumber && isFloat && this.value % 1 !== 0) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a number and float!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    }
+
+    return this
   }
 
-  integer (returnError?: Error): boolean | Error {
+  integer (returnError?: Error): this {
     const isInteger = Number.isInteger(this.value)
-    if (isInteger) return true
-    else if (!isInteger && returnError) throw new Error(returnError.message)
-    return false
+
+    if (isInteger) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a number and integer!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    }
+
+    return this
   }
 
-  date (type: DateTypes, returnError?: Error): boolean | Error {
+  boolean (returnError?: Error): this {
+    const isBoolean = typeof this.value === 'boolean'
+    if (!isBoolean) {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} must be a boolean type!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    } else {
+      this.isValid.push(true)
+    }
+    return this
+  }
+
+  required (returnError?: Error): this {
+    const isEmpty = !this.value || this.value === undefined
+
+    if (typeof this.value === 'boolean') {
+      this.isValid.push(true)
+    } else if (typeof this.value === 'number' && this.value === 0) {
+      this.isValid.push(true)
+    } else if (isEmpty) {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `${this.valueName} is required!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    } else {
+      this.isValid.push(true)
+    }
+    return this
+  }
+
+  date (type: DateTypes, returnError?: Error): this {
     let year: number, month: number, day: number
     let formattedDate: Date
 
     if (typeof this.value === 'string' && this.value.length < 10) {
-      if (returnError) {
-        throw new Error(returnError.message)
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `the date ${this.valueName} is not in the format ${type}!`
+        this.handleError(messageError)
       }
-      return false
+      this.isValid.push(false)
+      return this
     }
 
     switch (type) {
@@ -176,64 +276,146 @@ export class Validator implements IValidator {
         formattedDate = new Date(String(this.value))
         break
       default:
-        throw new Error('date method received invalid parameter: type is required!')
+        if (returnError) throw new Error(returnError.message)
+        else if (this.errorType) {
+          const messageError = 'date method received invalid parameter: type is required!!'
+          this.handleError(messageError)
+        }
+        this.isValid.push(false)
+        return this
     }
-
-    if (!formattedDate || isNaN(formattedDate.getTime())) {
+    const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
+    if (isInvalidDate) {
       if (returnError) throw new Error(returnError.message)
-      return false
+      else if (this.errorType) {
+        const messageError = `the date ${this.valueName} is not in the format ${type}!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    } else {
+      this.isValid.push(true)
     }
-
-    return true
+    return this
   }
 
   dateGreaterThan (
     dateToCompare: Date,
     returnError?: Error
-  ): boolean | Error {
-    const datesAreEqual = this.value.getTime() === dateToCompare.getTime()
-    const deadlineExceeded = new Date(this.value) < dateToCompare
+  ): this {
+    const date = new Date(String(this.value))
+    const isInvalidDate = isNaN(date.getTime())
+
+    if (isInvalidDate) {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = 'the provided date is invalid!'
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+      return this
+    }
+
+    const datesAreEqual = date.getTime() === dateToCompare.getTime()
+    const deadlineExceeded = date < dateToCompare
+
     if (datesAreEqual) {
       if (returnError) throw new Error(returnError.message)
-      return false
+      else if (this.errorType) {
+        const messageError = `the date ${this.valueName} must be greater than the reference date!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+      return this
     } else if (deadlineExceeded) {
       if (returnError) throw new Error(returnError.message)
-      return false
+      this.isValid.push(false)
     }
-    return true
+    this.isValid.push(true)
+    return this
   }
 
   dateLessThan (
     dateToCompare: Date,
     returnError?: Error
-  ): boolean | Error {
-    const datesAreEqual = this.value.getTime() === dateToCompare.getTime()
-    const deadlineExceeded = new Date(this.value) > dateToCompare
+  ): this {
+    const date = new Date(String(this.value))
+    const isInvalidDate = isNaN(date.getTime())
+    if (isInvalidDate) {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = 'the provided date is invalid!'
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+      return this
+    }
+
+    const datesAreEqual = date.getTime() === dateToCompare.getTime()
+    const deadlineExceeded = date > dateToCompare
+
     if (datesAreEqual) {
       if (returnError) throw new Error(returnError.message)
-      return false
+      else if (this.errorType) {
+        const messageError = `the date ${this.valueName} must be less than the reference date!`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+      return this
     } else if (deadlineExceeded) {
       if (returnError) throw new Error(returnError.message)
-      return false
+      this.isValid.push(false)
     }
-    return true
+    this.isValid.push(true)
+    return this
   }
 
-  time (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error): boolean | Error {
+  time (type: TimeTypes, returnError?: Error): this {
     const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
     const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
-    let isValid = false
+    let isTime = false
 
     if (!type || typeof type !== 'string') {
-      throw new Error('time method received invalid parameter: type is required!')
-    } else if (type === 'HH:MM') isValid = regTimeHHMM.test(this.value)
-    else if (type === 'HH:MM:SS')isValid = regTimeHHMMSS.test(this.value)
-
-    if (!isValid) {
       if (returnError) throw new Error(returnError.message)
-      return false
+      else if (this.errorType) {
+        const messageError = 'time method received invalid parameter: type is required!'
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+      return this
+    } else if (type === 'HH:MM') {
+      isTime = regTimeHHMM.test(String(this.value))
+    } else if (type === 'HH:MM:SS') {
+      isTime = regTimeHHMMSS.test(String(this.value))
     }
 
-    return true
+    if (isTime) {
+      this.isValid.push(true)
+    } else {
+      if (returnError) throw new Error(returnError.message)
+      else if (this.errorType) {
+        const messageError = `the time ${String(this.value)} is not in the format ${type}`
+        this.handleError(messageError)
+      }
+      this.isValid.push(false)
+    }
+
+    return this
+  }
+
+  private handleError (messageError: string): this {
+    switch (this.errorType) {
+      case 'MISSING_PARAM':
+        throw new MissingParamError(messageError)
+      case 'INVALID_PARAM':
+        throw new InvalidParamError(messageError)
+      case 'SERVER_ERROR':
+        throw new ServerError()
+      default:
+        throw new Error(messageError)
+    }
+  }
+
+  validate (): boolean {
+    return this.isValid.every(isValid => isValid)
   }
 }
