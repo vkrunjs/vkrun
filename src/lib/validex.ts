@@ -62,7 +62,7 @@ export class Validex /* implements IValidex */ {
     return this
   }
 
-  /* uuid (customError?: Error): this {
+  uuid (customError?: Error): this {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     const isUuid = uuidRegex.test(String(this.value))
     if (isUuid) {
@@ -76,7 +76,7 @@ export class Validex /* implements IValidex */ {
       this.isValid.push(false)
     }
     return this
-  } */
+  }
 
   email (customError?: Error): this {
     const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/

@@ -138,7 +138,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(email, 'email', 'SERVER_ERROR').email()
     expect(sut).toThrow(new ServerError())
   })
-/*
+
   it('Should be able to validate the uuid method and return true if uuid is correct', () => {
     const uuid = '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
     const sut = validex(uuid).uuid().validate()
@@ -151,16 +151,12 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the uuid method and return error if uuid is not correct', () => {
-    try {
-      const uuid = 'invalid_uuid'
-      validex(uuid).uuid(errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the uuid method and throw error if uuid is not correct', () => {
+    const uuid = 'invalid_uuid'
+    const sut = (): Validex => validex(uuid).uuid(errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
-
+/*
   it('Should be able to validate the maxLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
     const sut = validex(value).maxLength(20).validate()
