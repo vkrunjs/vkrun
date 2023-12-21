@@ -35,7 +35,7 @@ export type ValidatePropertyRules = Array<{
   dateToCompare?: Date
   timeType?: TimeTypes
   private?: boolean
-  returnError?: Error
+  customError?: Error
 }>
 export type ValidateItemArrayValue = string | boolean | Date | number
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS'

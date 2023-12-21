@@ -1,5 +1,6 @@
 import { Validator } from './validator'
 import { ErrorTypes, ValidatorValue, ValidatorValueName } from './types'
+// export * from './schema'
 
 const validator = (
   value: ValidatorValue,

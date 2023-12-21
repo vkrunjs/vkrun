@@ -1,4 +1,4 @@
-import validator from './index'
+/* import validator from './index'
 import { Validator } from './validator'
 import {
   Schema,
@@ -45,49 +45,49 @@ class CreateSchema {
       else v = validator(value, key)
 
       if (rule.method === 'string') {
-        validate = v.string(rule.returnError).validate()
+        validate = v.string(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'minWord') {
-        validate = v.minWord(rule.minWord ?? 0, rule.returnError).validate()
+        validate = v.minWord(rule.minWord ?? 0, rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'uuid') {
-        validate = v.uuid(rule.returnError).validate()
+        validate = v.uuid(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'email') {
-        validate = v.email(rule.returnError).validate()
+        validate = v.email(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'maxLength') {
-        validate = v.maxLength(rule.maxLength ?? 0, rule.returnError).validate()
+        validate = v.maxLength(rule.maxLength ?? 0, rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'minLength') {
-        validate = v.minLength(rule.minLength ?? 0, rule.returnError).validate()
+        validate = v.minLength(rule.minLength ?? 0, rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'required') {
-        validate = v.required(rule.returnError).validate()
+        validate = v.required(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'number') {
-        validate = v.number(rule.returnError).validate()
+        validate = v.number(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'float') {
-        validate = v.float(rule.returnError).validate()
+        validate = v.float(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'integer') {
-        validate = v.integer(rule.returnError).validate()
+        validate = v.integer(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'boolean') {
-        validate = v.boolean(rule.returnError).validate()
+        validate = v.boolean(rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'date') {
-        validate = v.date(rule.dateType ?? 'ISO8601', rule.returnError).validate()
+        validate = v.date(rule.dateType ?? 'ISO8601', rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'dateGreaterThan') {
-        validate = v.dateGreaterThan(rule.dateToCompare ?? new Date(), rule.returnError).validate()
+        validate = v.dateGreaterThan(rule.dateToCompare ?? new Date(), rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'dateLessThan') {
-        validate = v.dateLessThan(rule.dateToCompare ?? new Date(), rule.returnError).validate()
+        validate = v.dateLessThan(rule.dateToCompare ?? new Date(), rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'time') {
-        validate = v.time(rule.timeType ?? 'HH:MM:SS', rule.returnError).validate()
+        validate = v.time(rule.timeType ?? 'HH:MM:SS', rule.customError).validate()
         this.isValid.push(validate)
       } else if (rule.method === 'array') {
         if (rule.arrayType === 'string') {
@@ -179,130 +179,130 @@ class CreateSchema {
   }
 }
 
-export const string = (returnError?: Error): any => {
+export const string = (customError?: Error): any => {
   return {
     method: 'string',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const minWord = (minWord: number, returnError?: Error): any => {
+export const minWord = (minWord: number, customError?: Error): any => {
   return {
     method: 'minWord',
     minWord,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const maxLength = (maxLength: number, returnError?: Error): any => {
+export const maxLength = (maxLength: number, customError?: Error): any => {
   return {
     method: 'maxLength',
     maxLength,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const minLength = (minLength: number, returnError?: Error): any => {
+export const minLength = (minLength: number, customError?: Error): any => {
   return {
     method: 'minLength',
     minLength,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const uuid = (returnError?: Error): any => {
+export const uuid = (customError?: Error): any => {
   return {
     method: 'uuid',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const email = (returnError?: Error): any => {
+export const email = (customError?: Error): any => {
   return {
     method: 'email',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const number = (returnError?: Error): any => {
+export const number = (customError?: Error): any => {
   return {
     method: 'number',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const float = (returnError?: Error): any => {
+export const float = (customError?: Error): any => {
   return {
     method: 'float',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const integer = (returnError?: Error): any => {
+export const integer = (customError?: Error): any => {
   return {
     method: 'integer',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const boolean = (returnError?: Error): any => {
+export const boolean = (customError?: Error): any => {
   return {
     method: 'boolean',
     private: true,
-    returnError
+    customError
   }
 }
 
-export const date = (type: DateTypes, returnError?: Error): any => {
+export const date = (type: DateTypes, customError?: Error): any => {
   return {
     method: 'date',
     dateType: type,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const dateGreaterThan = (dateToCompare: Date, returnError?: Error): any => {
+export const dateGreaterThan = (dateToCompare: Date, customError?: Error): any => {
   return {
     method: 'dateGreaterThan',
     dateToCompare,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const dateLessThan = (dateToCompare: Date, returnError?: Error): any => {
+export const dateLessThan = (dateToCompare: Date, customError?: Error): any => {
   return {
     method: 'dateLessThan',
     dateToCompare,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const time = (type: TimeTypes, returnError?: Error): any => {
+export const time = (type: TimeTypes, customError?: Error): any => {
   return {
     method: 'dateLessThan',
     timeType: type,
     private: true,
-    returnError
+    customError
   }
 }
 
-export const required = (returnError?: Error): any => {
+export const required = (customError?: Error): any => {
   return {
     method: 'required',
     private: true,
-    returnError
+    customError
   }
 }
 
@@ -318,4 +318,4 @@ export const array = (
 
 export const createSchema = (schema: ObjectType, config?: ObjectConfig): CreateSchema => {
   return new CreateSchema(schema, config)
-}
+} */
