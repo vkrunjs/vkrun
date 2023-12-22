@@ -318,7 +318,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').boolean()
     expect(sut).toThrow('invalid param: value_name must be a boolean type!')
   })
-/*
+
   it('Should be able to validate the float method and return true if the value is number and float', () => {
     const value = 1.2
     const sut = validex(value).float().validate()
@@ -337,16 +337,18 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the float method and return error if the value is number and is not float', () => {
-    try {
-      const value = 1
-      validex(value).float(errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the float method and throw error if the value is number and is not float', () => {
+    const value = 1
+    const sut = (): Validex => validex(value).float(errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the float method and throw INVALID_PARAM if the value is number and is not float', () => {
+    const value = 1
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').float()
+    expect(sut).toThrow('invalid param: value_name must be a number and float!')
+  })
+/*
   it('Should be able to validate the integer method and return true if the value is number and integer', () => {
     const value = 1
     const sut = validex(value).integer().validate()

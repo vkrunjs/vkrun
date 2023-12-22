@@ -158,7 +158,7 @@ export class Validex /* implements IValidex */ {
     }
     return this
   }
-  /*
+
   float (customError?: Error): this {
     const isNumber = typeof this.value === 'number'
     const isFloat = Number.isFinite(this.value) && !Number.isInteger(this.value)
@@ -176,7 +176,7 @@ export class Validex /* implements IValidex */ {
 
     return this
   }
-
+  /*
   integer (customError?: Error): this {
     const isInteger = Number.isInteger(this.value)
 
