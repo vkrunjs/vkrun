@@ -469,6 +469,19 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').date('YYYY-DD-MM')
     expect(sut).toThrow('invalid param: the date value_name is not in the format YYYY-DD-MM!')
   })
+
+  it('Should be able to validate the date method and throw error if the value is not correctly formatted', () => {
+    const value = 'invalid-format'
+    const sut = validex(value).date('YYYY-DD-MM').validate()
+    expect(sut).toBeFalsy()
+  })
+
+  it('Should be able to validate the date method and return false if the type is not correctly formatted', () => {
+    const value = '2023/10/15'
+    const type: any = 'invalid-format'
+    const sut = validex(value).date(type)
+    expect(sut).toBeFalsy()
+  })
 /*
   it('Should be able to validate the dateGreaterThan method and return true if the date is greater than the reference date', () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
