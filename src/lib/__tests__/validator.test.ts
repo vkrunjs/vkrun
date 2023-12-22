@@ -270,7 +270,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').string()
     expect(sut).toThrow('invalid param: value_name must be a string type!')
   })
-/*
+
   it('Should be able to validate the number method and return true if the value is of type number', () => {
     const value = 0
     const sut = validex(value).number().validate()
@@ -283,16 +283,18 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the number method and return error if the value is not of type number', () => {
-    try {
-      const value: any = false
-      validex(value).number(errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the number method and throw error if the value is not of type number', () => {
+    const value: any = false
+    const sut = (): Validex => validex(value).number(errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the number method and throw INVALID_PARAM if the value is not of type number', () => {
+    const value: any = false
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').number()
+    expect(sut).toThrow('invalid param: value_name must be a number type!')
+  })
+/*
   it('Should be able to validate the boolean method and return true if the value is of type boolean', () => {
     const value = false
     const sut = validex(value).boolean()
