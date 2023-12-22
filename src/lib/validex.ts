@@ -192,22 +192,22 @@ export class Validex /* implements IValidex */ {
     }
 
     return this
-  }
+  } */
 
   boolean (customError?: Error): this {
     const isBoolean = typeof this.value === 'boolean'
-    if (!isBoolean) {
+    if (isBoolean) {
+      this.isValid.push(true)
+    } else {
       if (customError) throw new Error(customError.message)
       else if (this.errorType) {
         const messageError = `${this.valueName} must be a boolean type!`
         this.handleError(messageError)
       }
       this.isValid.push(false)
-    } else {
-      this.isValid.push(true)
     }
     return this
-  } */
+  }
 
   required (customError?: Error): this {
     const isEmpty = !this.value || this.value === undefined
