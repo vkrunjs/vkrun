@@ -479,7 +479,7 @@ describe('Validex', () => {
   it('Should be able to validate the date method and return false if the type is not correctly formatted', () => {
     const value = '2023/10/15'
     const type: any = 'invalid-format'
-    const sut = validex(value).date(type)
+    const sut = validex(value).date(type).validate()
     expect(sut).toBeFalsy()
   })
 /*
