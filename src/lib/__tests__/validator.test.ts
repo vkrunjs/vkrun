@@ -193,6 +193,11 @@ describe('Validex', () => {
     expect(sut).toThrow('invalid param: value_name must be a string type!')
   })
 
+  it('Should be able to validate the maxLength method and throw error if value is invalid', () => {
+    const value = false
+    const sut = (): Validex => validex(value, 'value_name').maxLength(10, errorInjected)
+    expect(sut).toThrow(errorInjected)
+  })
 /*
   it('Should be able to validate the minLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
