@@ -199,6 +199,11 @@ describe('Validex', () => {
     expect(sut).toThrow(errorInjected)
   })
 /*
+it('Should be able to validate the maxLength method and return false if value is invalid', () => {
+  const value: any = undefined
+  const sut = validex(value).maxLength(10).validate()
+  expect(sut).toBeFalsy()
+})
   it('Should be able to validate the minLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
     const sut = validex(value).minLength(20).validate()
