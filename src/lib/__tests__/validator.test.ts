@@ -483,7 +483,14 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the date method and throw MISSING_PARAM if the type is not correctly formatted', () => {
+  it('Should be able to validate the date method and throw error if the type is not correctly formatted', () => {
+    const value = 'invalid-format'
+    const type: any = 'invalid-format'
+    const sut = (): Validex => validex(value).date(type, errorInjected)
+    expect(sut).toThrow(errorInjected)
+  })
+
+  it('Should be able to validate the date method and throw MISSING_PARAM if the value is not correctly formatted', () => {
     const value = 'invalid-format'
     const sut = (): Validex => validex(value, 'value_name', 'MISSING_PARAM').date('YYYY-DD-MM')
     expect(sut).toThrow('missing param: the date value_name is not in the format YYYY-DD-MM!')
