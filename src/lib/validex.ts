@@ -176,7 +176,7 @@ export class Validex /* implements IValidex */ {
 
     return this
   }
-  /*
+
   integer (customError?: Error): this {
     const isInteger = Number.isInteger(this.value)
 
@@ -192,7 +192,7 @@ export class Validex /* implements IValidex */ {
     }
 
     return this
-  } */
+  }
 
   boolean (customError?: Error): this {
     const isBoolean = typeof this.value === 'boolean'

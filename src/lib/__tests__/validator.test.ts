@@ -348,7 +348,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').float()
     expect(sut).toThrow('invalid param: value_name must be a number and float!')
   })
-/*
+
   it('Should be able to validate the integer method and return true if the value is number and integer', () => {
     const value = 1
     const sut = validex(value).integer().validate()
@@ -367,16 +367,18 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the integer method and return error if the value is number and is not integer', () => {
-    try {
-      const value = 1.2
-      validex(value).integer(errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the integer method and throw error if the value is number and is not integer', () => {
+    const value = 1.2
+    const sut = (): Validex => validex(value).integer(errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the integer method and throw INVALID_PARAM if the value is number and is not integer', () => {
+    const value = 1.2
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').integer()
+    expect(sut).toThrow('invalid param: value_name must be a number and integer!')
+  })
+/*
   it('Should be able to validate the date method and return true if the value is date and type ISO8601', () => {
     const value = new Date().toISOString()
     const sut = validex(value).date('ISO8601').validate()
