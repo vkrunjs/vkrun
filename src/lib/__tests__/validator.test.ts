@@ -234,6 +234,12 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name').minLength(10, errorInjected)
     expect(sut).toThrow(errorInjected)
   })
+
+  it('Should be able to validate the minLength method and return false if value is invalid', () => {
+    const value: any = undefined
+    const sut = validex(value).minLength(10).validate()
+    expect(sut).toBeFalsy()
+  })
 /*
   it('Should be able to validate the string method and return true if the value is of type string', () => {
     const value = 'string_value'
