@@ -75,5 +75,63 @@ try {
 }
 ```
 
+##### Multiples methods
+```ts
+const value = "Hello Worlds"
+const validated = validex(value)
+  .string()
+  .required()
+  .minWords(2)
+  .validate()
+console.log(validated) // false
+```
+
+```ts
+const userSchema = createSchema({
+  name: [string(), required(), minWords(2)],
+  email: [string(), required(), email()],
+  personalData: array({
+    perfil: [string(), required()],
+    website: [string(), required()],
+  })
+})
+
+const user = userSchema.validate({
+  name: 'Any Name',
+  email: 'email@mail.com',
+  personalData: [{
+    perfil: 'developer',
+    website: 'www.any.com'
+  }]
+})
+console.log(user) // true
+```
+
+```ts
+const userSchema = createSchema({
+  name: [string(), required(), minWords(2)],
+  email: [string(), required(), email()],
+  personalData: array({
+    perfil: [string(), required()],
+    website: [string(), required()],
+  })
+}, { errorType: 'INVALID_PARAM' })
+
+try {
+  const user = userSchema.validate({
+    name: 'Any Name',
+    email: 'email@mail.com',
+    personalData: [{
+      perfil: '',
+      website: 'www.any.com'
+    }]
+  })
+} catch (error) {
+  console.log(error.message) // invalid param: website is required!
+}
+
+console.log(user) // true
+``````
+
 ## License
 > This library is released under the MIT License.
