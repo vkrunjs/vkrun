@@ -118,7 +118,7 @@ export class Validex /* implements IValidex */ {
     }
     return this
   }
-  /*
+
   minLength (minLength: number, customError?: Error): this {
     const isString = typeof this.value === 'string'
     if (isString) {
@@ -143,7 +143,7 @@ export class Validex /* implements IValidex */ {
     }
     return this
   }
-
+  /*
   number (customError?: Error): this {
     const isNumber = typeof this.value === 'number'
     if (isNumber) {
