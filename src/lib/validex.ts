@@ -8,7 +8,7 @@ import {
   ValidexValueName
 } from './types'
 
-export class Validex /* implements IValidex */ {
+export class Validex implements IValidex {
   private readonly value: ValidexValue
   private readonly valueName: ValidexValueName
   private readonly errorType?: ErrorTypes
@@ -301,7 +301,7 @@ export class Validex /* implements IValidex */ {
     }
     return this
   }
-  /*
+
   dateGreaterThan (
     dateToCompare: Date,
     customError?: Error
@@ -404,7 +404,7 @@ export class Validex /* implements IValidex */ {
     }
 
     return this
-  } */
+  }
 
   private handleError (messageError: string): this {
     if (this.errorType === 'MISSING_PARAM') {

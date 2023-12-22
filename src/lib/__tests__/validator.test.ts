@@ -495,7 +495,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'MISSING_PARAM').date('YYYY-DD-MM')
     expect(sut).toThrow('missing param: the date value_name is not in the format YYYY-DD-MM!')
   })
-/*
+
   it('Should be able to validate the dateGreaterThan method and return true if the date is greater than the reference date', () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
@@ -518,25 +518,17 @@ describe('Validex', () => {
   })
 
   it('Should be able to validate the dateGreaterThan method and return error if the date is equal to the reference date', () => {
-    try {
-      const date = new Date('2000-02-02T02:00:00.000Z')
-      const refDate = new Date('2000-02-02T02:00:00.000Z')
-      validex(date).dateGreaterThan(refDate, errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
+    const sut = (): Validex => validex(date).dateGreaterThan(refDate, errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
   it('Should be able to validate the dateGreaterThan method and return error if the date is greater than the reference date', () => {
-    try {
-      const date = new Date('2000-02-02T02:00:00.000Z')
-      const refDate = new Date('2000-02-03T02:00:00.000Z')
-      validex(date).dateGreaterThan(refDate, errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    const refDate = new Date('2000-02-03T02:00:00.000Z')
+    const sut = (): Validex => validex(date).dateGreaterThan(refDate, errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
   it('Should be able to validate the dateLessThan method and return true if the date is less than the reference date', () => {
@@ -663,5 +655,5 @@ describe('Validex', () => {
       const sut = error
       expect(sut).toEqual(errorInjected)
     }
-  }) */
+  })
 })

@@ -1,6 +1,6 @@
 import { Validex } from './validex'
 import { ErrorTypes, ValidexValue, ValidexValueName } from './types'
-// export * from './schema'
+export * from './schema'
 
 const validex = (
   value: ValidexValue,

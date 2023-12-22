@@ -1,4 +1,4 @@
-/* import validex from './index'
+import validex from './index'
 import { Validex } from './validex'
 import {
   Schema,
@@ -319,4 +319,3 @@ export const array = (
 export const createSchema = (schema: ObjectType, config?: ObjectConfig): CreateSchema => {
   return new CreateSchema(schema, config)
 }
-*/
