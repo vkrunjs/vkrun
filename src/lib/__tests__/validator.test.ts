@@ -246,7 +246,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').minLength(10)
     expect(sut).toThrow('invalid param: value_name must have a minimum of 10 characters!')
   })
-/*
+
   it('Should be able to validate the string method and return true if the value is of type string', () => {
     const value = 'string_value'
     const sut = validex(value).string().validate()
@@ -259,16 +259,18 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the string method and return error if the value is not of type string', () => {
-    try {
-      const value: any = false
-      validex(value).string(errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the string method and throw error if the value is not of type string', () => {
+    const value: any = false
+    const sut = (): Validex => validex(value).string(errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the string method and throw INVALID_PARAM if the value is not of type string', () => {
+    const value: any = false
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').string()
+    expect(sut).toThrow('invalid param: value_name must be a string type!')
+  })
+/*
   it('Should be able to validate the number method and return true if the value is of type number', () => {
     const value = 0
     const sut = validex(value).number().validate()

@@ -30,7 +30,7 @@ export class Validex /* implements IValidex */ {
     }
   }
 
-  /* string (customError?: Error): this {
+  string (customError?: Error): this {
     const isString = typeof this.value === 'string'
     if (isString) {
       this.isValid.push(true)
@@ -43,7 +43,7 @@ export class Validex /* implements IValidex */ {
       this.isValid.push(false)
     }
     return this
-  } */
+  }
 
   minWord (minWord: number, customError?: Error): this {
     const trimmedValue = String(this.value).trim()
