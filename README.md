@@ -75,6 +75,16 @@ try {
 }
 ```
 
+```ts
+try {
+    const value = undefined
+    const customError = new Error("any_error")
+    validex(value, "value_name", "MISSING_PARAM").required(customError)
+} catch (error) {
+    console.log(error.message) // missing class param: valueName is required!
+}
+```
+
 ##### Multiples methods
 ```ts
 const value = "Hello Worlds"
@@ -131,7 +141,7 @@ try {
 }
 
 console.log(user) // true
-``````
+```
 
 ## License
 > This library is released under the MIT License.
