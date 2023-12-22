@@ -524,6 +524,13 @@ describe('Validex', () => {
     expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the dateGreaterThan method and throw INVALID_PARAM if the date is equal to the reference date', () => {
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
+    const sut = (): Validex => validex(date, 'value_name', 'INVALID_PARAM').dateGreaterThan(refDate)
+    expect(sut).toThrow('invalid param: the date value_name must be greater than the reference date!')
+  })
+
   it('Should be able to validate the dateGreaterThan method and throw error if the date is greater than the reference date', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
