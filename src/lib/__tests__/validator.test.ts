@@ -85,13 +85,13 @@ describe('Validex', () => {
     expect(sut).toThrow(errorInjected)
   })
 
-  it('Should be able to validate the minWord method and throw MISSING_PARAM type error if value is not provided', () => {
+  it('Should be able to validate the minWord method and throw MISSING_PARAM if value is not provided', () => {
     const value = 'primary '
     const sut = (): Validex => validex(value, 'value_name', 'MISSING_PARAM').minWord(2)
     expect(sut).toThrow(new MissingParamError('value_name must have at least 2 words!'))
   })
 
-  it('Should be able to validate the minWord method and throw INVALID_PARAM type error if value is not provided', () => {
+  it('Should be able to validate the minWord method and throw INVALID_PARAM if value is not provided', () => {
     const value = 'primary '
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').minWord(2)
     expect(sut).toThrow(new InvalidParamError('value_name must have at least 2 words!'))
@@ -186,6 +186,13 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').maxLength(10)
     expect(sut).toThrow('invalid param: value_name must have a maximum of 10 characters!')
   })
+
+  it('Should be able to validate the maxLength method and throw INVALID_PARAM if value is invalid', () => {
+    const value = false
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').maxLength(10)
+    expect(sut).toThrow('invalid param: value_name must be a string type!')
+  })
+
 /*
   it('Should be able to validate the minLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
@@ -199,7 +206,7 @@ describe('Validex', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the minLength method and return error if value length exceed the limit', () => {
+  it('Should be able to validate the minLength method and throw error if value length exceed the limit', () => {
     try {
       const value = 'exceed_the_limit'
       validex(value).minLength(20, errorInjected)

@@ -114,7 +114,7 @@ export class Validex /* implements IValidex */ {
         const messageError = `${this.valueName} must be a string type!`
         this.handleError(messageError)
       }
-      this.isValid.push(true)
+      this.isValid.push(false)
     }
     return this
   }
@@ -139,7 +139,7 @@ export class Validex /* implements IValidex */ {
         const messageError = `${this.valueName} must be a string type!`
         this.handleError(messageError)
       }
-      this.isValid.push(true)
+      this.isValid.push(false)
     }
     return this
   }
