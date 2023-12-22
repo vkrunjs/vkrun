@@ -240,6 +240,12 @@ describe('Validex', () => {
     const sut = validex(value).minLength(10).validate()
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the minLength method and throw INVALID_PARAM if value length exceed the limit', () => {
+    const value = 'invalid'
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').minLength(10)
+    expect(sut).toThrow('invalid param: value_name must have a minimum of 10 characters!')
+  })
 /*
   it('Should be able to validate the string method and return true if the value is of type string', () => {
     const value = 'string_value'
