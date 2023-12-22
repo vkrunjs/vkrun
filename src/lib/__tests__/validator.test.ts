@@ -378,32 +378,24 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').integer()
     expect(sut).toThrow('invalid param: value_name must be a number and integer!')
   })
-/*
+
   it('Should be able to validate the date method and return true if the value is date and type ISO8601', () => {
     const value = new Date().toISOString()
     const sut = validex(value).date('ISO8601').validate()
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the date method and return error if the value is date and invalid type', () => {
-    try {
-      const value = new Date().toISOString()
-      const type: any = null
-      validex(value).date(type)
-    } catch (error) {
-      const sut = error as Error
-      expect(sut.message).toEqual('date method received invalid parameter: type is required!')
-    }
+  it('Should be able to validate the date method and throw INVALID_PARAM if the value is date and invalid type', () => {
+    const value = new Date().toISOString()
+    const type: any = null
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').date(type)
+    expect(sut).toThrow('date method received invalid parameter: type is required!')
   })
 
-  it('Should be able to validate the date method and return error if the value is not correct date', () => {
-    try {
-      const value = '2000-30'
-      validex(value).date('YYYY-DD-MM', errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the date method and throw error if the value is not correct date', () => {
+    const value = '2000-30'
+    const sut = (): Validex => validex(value).date('YYYY-DD-MM', errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
   it('Should be able to validate the date method and return false if the value is not correct date', () => {
@@ -466,16 +458,12 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the date method and return error if the value is not correctly formatted', () => {
-    try {
-      const value = 'invalid-format'
-      validex(value).date('YYYY-DD-MM', errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the date method and throw error if the value is not correctly formatted', () => {
+    const value = 'invalid-format'
+    const sut = (): Validex => validex(value).date('YYYY-DD-MM', errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
-
+/*
   it('Should be able to validate the dateGreaterThan method and return true if the date is greater than the reference date', () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')

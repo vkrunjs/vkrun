@@ -1,9 +1,9 @@
 import { InvalidParamError, MissingParamError, ServerError } from './errors'
 import {
-  // DateTypes,
+  DateTypes,
   ErrorTypes,
-  // IValidex,
-  // TimeTypes,
+  IValidex,
+  TimeTypes,
   ValidexValue,
   ValidexValueName
 } from './types'
@@ -229,7 +229,7 @@ export class Validex /* implements IValidex */ {
     return this
   }
 
-  /* date (type: DateTypes, customError?: Error): this {
+  date (type: DateTypes, customError?: Error): this {
     let year: number, month: number, day: number
     let formattedDate: Date
 
@@ -301,7 +301,7 @@ export class Validex /* implements IValidex */ {
     }
     return this
   }
-
+  /*
   dateGreaterThan (
     dateToCompare: Date,
     customError?: Error
