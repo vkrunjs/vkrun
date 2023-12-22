@@ -162,7 +162,7 @@ describe('Validex', () => {
     const sut = (): Validex => validex(uuid, 'uuid', 'INVALID_PARAM').uuid()
     expect(sut).toThrow('invalid param: uuid must be a uuid type!')
   })
-/*
+
   it('Should be able to validate the maxLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
     const sut = validex(value).maxLength(20).validate()
@@ -175,16 +175,18 @@ describe('Validex', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method and return error if value length exceed the limit', () => {
-    try {
-      const value = 'exceed_the_limit'
-      validex(value).maxLength(10, errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the maxLength method and throw error if value length exceed the limit', () => {
+    const value = 'exceed_the_limit'
+    const sut = (): Validex => validex(value).maxLength(10, errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the maxLength method and throw INVALID_PARAM if value length exceed the limit', () => {
+    const value = 'exceed_the_limit'
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').maxLength(10)
+    expect(sut).toThrow('invalid param: value_name must have a maximum of 10 characters!')
+  })
+/*
   it('Should be able to validate the minLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
     const sut = validex(value).minLength(20).validate()
