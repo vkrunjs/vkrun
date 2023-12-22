@@ -517,14 +517,14 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the dateGreaterThan method and return error if the date is equal to the reference date', () => {
+  it('Should be able to validate the dateGreaterThan method and throw error if the date is equal to the reference date', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
     const sut = (): Validex => validex(date).dateGreaterThan(refDate, errorInjected)
     expect(sut).toThrow(errorInjected)
   })
 
-  it('Should be able to validate the dateGreaterThan method and return error if the date is greater than the reference date', () => {
+  it('Should be able to validate the dateGreaterThan method and throw error if the date is greater than the reference date', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
     const sut = (): Validex => validex(date).dateGreaterThan(refDate, errorInjected)
@@ -545,15 +545,11 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the dateLessThan method and return error if the date is greater than the reference date', () => {
-    try {
-      const date = new Date('2000-02-03T02:00:00.000Z')
-      const refDate = new Date('2000-02-02T02:00:00.000Z')
-      validex(date).dateLessThan(refDate, errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the dateLessThan method and throw error if the date is greater than the reference date', () => {
+    const date = new Date('2000-02-03T02:00:00.000Z')
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
+    const sut = (): Validex => validex(date).dateLessThan(refDate, errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
   it('Should be able to validate the dateLessThan method and return false if the date is equal to the reference date', () => {
@@ -564,14 +560,10 @@ describe('Validex', () => {
   })
 
   it('Should be able to validate the dateLessThan method and return false if the date is equal to the reference date', () => {
-    try {
-      const date = new Date('2000-02-02T02:00:00.000Z')
-      const refDate = new Date('2000-02-02T02:00:00.000Z')
-      validex(date).dateLessThan(refDate, errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
+    const sut = (): Validex => validex(date).dateLessThan(refDate, errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
   it('Should be able to validate the time method and return true if the value is in the time format HH:MM', () => {
@@ -586,14 +578,10 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the time method and return error if the value is not in the time format HH:MM', () => {
-    try {
-      const value = '11:5'
-      validex(value).time('HH:MM', errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the time method and throw error if the value is not in the time format HH:MM', () => {
+    const value = '11:5'
+    const sut = (): Validex => validex(value).time('HH:MM', errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
   it('Should be able to validate the time method and return true if the value is in the time format HH:MM:SS', () => {
@@ -608,25 +596,17 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the time method and return error if the value is not in the time format HH:MM:SS', () => {
-    try {
-      const value = '11:55:6'
-      validex(value).time('HH:MM:SS', errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the time method and throw error if the value is not in the time format HH:MM:SS', () => {
+    const value = '11:55:6'
+    const sut = (): Validex => validex(value).time('HH:MM:SS', errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 
-  it('Should be able to validate time method and return error if value is in correct format and invalid type', () => {
-    try {
-      const value = '11:55'
-      const type: any = null
-      validex(value).time(type)
-    } catch (error) {
-      const sut = error as Error
-      expect(sut.message).toEqual('time method received invalid parameter: type is required!')
-    }
+  it('Should be able to validate time method and throw error if value is in correct format and invalid type', () => {
+    const value = '11:55'
+    const type: any = null
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').time(type)
+    expect(sut).toThrow('invalid param: time method received invalid parameter: type is required!')
   })
 
   it('Should be able to validate the time method and return false if the time is greater than 23', () => {
@@ -647,13 +627,9 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the time method and return error if hour, minutes or seconds are invalid', () => {
-    try {
-      const value = '12:59:60'
-      validex(value).time('HH:MM:SS', errorInjected)
-    } catch (error) {
-      const sut = error
-      expect(sut).toEqual(errorInjected)
-    }
+  it('Should be able to validate the time method and throw error if hour, minutes or seconds are invalid', () => {
+    const value = '12:59:60'
+    const sut = (): Validex => validex(value).time('HH:MM:SS', errorInjected)
+    expect(sut).toThrow(errorInjected)
   })
 })
