@@ -703,6 +703,13 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
+  it('Should be able to validate the time method and throw error if the type is not string type', () => {
+    const value = '12:59:60'
+    const type: any = false
+    const sut = (): Validex => validex(value).time(type, errorInjected)
+    expect(sut).toThrow(errorInjected)
+  })
+
   it('Should be able to validate the time method and throw INVALID_PARAM if the value is not time', () => {
     const value = false
     const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').time('HH:MM:SS')
