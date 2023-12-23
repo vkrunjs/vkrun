@@ -688,4 +688,11 @@ describe('Validex', () => {
     const sut = (): Validex => validex(value).time('HH:MM:SS', errorInjected)
     expect(sut).toThrow(errorInjected)
   })
+
+  it('Should be able to validate the time method and return false if the type is not string type', () => {
+    const value = '12:59:60'
+    const type: any = false
+    const sut = validex(value).time(type).validate()
+    expect(sut).toBeFalsy()
+  })
 })
