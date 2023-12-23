@@ -538,6 +538,13 @@ describe('Validex', () => {
     expect(sut).toThrow(errorInjected)
   })
 
+  it('Should be able to validate the dateGreaterThan method and throw error if the date is in an invalid format', () => {
+    const date = 'invalid_data'
+    const refDate = new Date('2000-02-03T02:00:00.000Z')
+    const sut = (): Validex => validex(date).dateGreaterThan(refDate, errorInjected)
+    expect(sut).toThrow(errorInjected)
+  })
+
   it('Should be able to validate the dateGreaterThan method and throw INVALID_PARAM if the date is in an invalid format', () => {
     const date = 'invalid_data'
     const refDate = new Date('2000-02-03T02:00:00.000Z')
