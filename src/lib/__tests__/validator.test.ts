@@ -195,7 +195,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the maxLength method and throw error if value is invalid', () => {
     const value = false
-    const sut = (): Validex => validex(value, 'value_name').maxLength(10, errorInjected)
+    const sut = (): Validex => validex(value).maxLength(10, errorInjected)
     expect(sut).toThrow(errorInjected)
   })
 
@@ -231,7 +231,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the minLength method and throw error if value is invalid', () => {
     const value = false
-    const sut = (): Validex => validex(value, 'value_name').minLength(10, errorInjected)
+    const sut = (): Validex => validex(value).minLength(10, errorInjected)
     expect(sut).toThrow(errorInjected)
   })
 
@@ -590,7 +590,7 @@ describe('Validex', () => {
   it('Should be able to validate the dateLessThan method and return false if the date is equal to the reference date', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
-    const sut = (): Validex => validex(date, 'value_name').dateLessThan(refDate, errorInjected)
+    const sut = (): Validex => validex(date).dateLessThan(refDate, errorInjected)
     expect(sut).toThrow(errorInjected)
   })
 
@@ -619,7 +619,7 @@ describe('Validex', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
     const sut = (): Validex => validex(date, 'value_name', 'INVALID_PARAM').dateLessThan(refDate)
-    expect(sut).toThrow(errorInjected)
+    expect(sut).toThrow('invalid param: the date value_name must be less than the reference date!')
   })
 
   it('Should be able to validate the time method and return true if the value is in the time format HH:MM', () => {
