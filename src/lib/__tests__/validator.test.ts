@@ -608,6 +608,13 @@ describe('Validex', () => {
     expect(sut).toThrow('invalid param: the provided date is invalid!')
   })
 
+  it('Should be able to validate the dateLessThan method and return false if value is not date', () => {
+    const date = 'invalid_date'
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
+    const sut = validex(date).dateLessThan(refDate).validate()
+    expect(sut).toBeFalsy()
+  })
+
   it('Should be able to validate the time method and return true if the value is in the time format HH:MM', () => {
     const value = '11:05'
     const sut = validex(value).time('HH:MM').validate()
