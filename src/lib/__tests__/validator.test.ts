@@ -695,4 +695,10 @@ describe('Validex', () => {
     const sut = validex(value).time(type).validate()
     expect(sut).toBeFalsy()
   })
+
+  it('Should be able to validate the time method and throw INVALID_PARAM if the value is not time', () => {
+    const value = false
+    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').time('HH:MM:SS')
+    expect(sut).toThrow('invalid param: the time false is not in the format HH:MM:SS')
+  })
 })
