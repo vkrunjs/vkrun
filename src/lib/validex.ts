@@ -1,4 +1,3 @@
-import { InvalidParamError, MissingParamError, ServerError } from './errors'
 import {
   DateTypes,
   ErrorTypes,
@@ -23,11 +22,7 @@ export class Validex implements IValidex {
     this.errorType = errorType
     this.valueName = valueName
     this.isValid = []
-    const invalidErrorType = errorType &&
-                             errorType !== 'MISSING_PARAM' &&
-                             errorType !== 'INVALID_PARAM' &&
-                             errorType !== 'SERVER_ERROR' &&
-                             typeof errorType !== 'function'
+    const invalidErrorType = errorType && typeof errorType !== 'function'
     if (errorType && !valueName) {
       throw new Error('missing class param: valueName is required!')
     } else if (invalidErrorType) {
@@ -413,14 +408,7 @@ export class Validex implements IValidex {
 
   private handleError (messageError: string): this {
     const isCustomError = typeof this.errorType === 'function'
-
-    if (this.errorType === 'MISSING_PARAM') {
-      throw new MissingParamError(messageError)
-    } else if (this.errorType === 'INVALID_PARAM') {
-      throw new InvalidParamError(messageError)
-    } else if (this.errorType === 'SERVER_ERROR') {
-      throw new ServerError()
-    } else if (isCustomError) {
+    if (isCustomError) {
       const CustomError = this.errorType
       throw new CustomError(messageError)
     } else {

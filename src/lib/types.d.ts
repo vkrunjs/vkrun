@@ -23,7 +23,7 @@ export interface ObjectConfig {
 }
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
 export type ErrorClass<T extends Error> = new (message?: string) => T
-export type ErrorTypes = 'MISSING_PARAM' | 'INVALID_PARAM' | 'SERVER_ERROR' | ErrorClass
+export type ErrorTypes = ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{

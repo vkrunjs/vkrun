@@ -38,25 +38,25 @@ describe('Validex', () => {
   it('Should be able to validate the required method and throw error missing class param if value name is not provided', () => {
     const hasNoValue = undefined
     const valueName: any = null
-    const sut = (): Validex => validex(hasNoValue, valueName, 'MISSING_PARAM').required()
+    const sut = (): Validex => validex(hasNoValue, valueName, MissingParamError).required()
     expect(sut).toThrow('missing class param: valueName is required!')
   })
 
   it('Should be able to validate the required method and throw MISSING_PARAM if value is not provided', () => {
     const hasNoValue = undefined
-    const sut = (): Validex => validex(hasNoValue, 'value_name', 'MISSING_PARAM').required()
+    const sut = (): Validex => validex(hasNoValue, 'value_name', MissingParamError).required()
     expect(sut).toThrow(new MissingParamError('value_name is required!'))
   })
 
   it('Should be able to validate the required method and throw INVALID_PARAM if value is not provided', () => {
     const hasNoValue = undefined
-    const sut = (): Validex => validex(hasNoValue, 'value_name', 'INVALID_PARAM').required()
+    const sut = (): Validex => validex(hasNoValue, 'value_name', InvalidParamError).required()
     expect(sut).toThrow(new InvalidParamError('value_name is required!'))
   })
 
   it('Should be able to validate the required method and throw SERVER_ERROR if value is not provided', () => {
     const hasNoValue = undefined
-    const sut = (): Validex => validex(hasNoValue, 'value_name', 'SERVER_ERROR').required()
+    const sut = (): Validex => validex(hasNoValue, 'value_name', ServerError).required()
     expect(sut).toThrow(new ServerError())
   })
 
@@ -87,19 +87,19 @@ describe('Validex', () => {
 
   it('Should be able to validate the minWord method and throw MISSING_PARAM if value is not provided', () => {
     const value = 'primary '
-    const sut = (): Validex => validex(value, 'value_name', 'MISSING_PARAM').minWord(2)
+    const sut = (): Validex => validex(value, 'value_name', MissingParamError).minWord(2)
     expect(sut).toThrow(new MissingParamError('value_name must have at least 2 words!'))
   })
 
   it('Should be able to validate the minWord method and throw INVALID_PARAM if value is not provided', () => {
     const value = 'primary '
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').minWord(2)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).minWord(2)
     expect(sut).toThrow(new InvalidParamError('value_name must have at least 2 words!'))
   })
 
   it('Should be able to validate the minWord method and throw SERVER_ERROR type error if value is not provided', () => {
     const value = 'primary '
-    const sut = (): Validex => validex(value, 'value_name', 'SERVER_ERROR').minWord(2)
+    const sut = (): Validex => validex(value, 'value_name', ServerError).minWord(2)
     expect(sut).toThrow(new ServerError())
   })
 
@@ -123,19 +123,19 @@ describe('Validex', () => {
 
   it('Should be able to validate the email method and throw MISSING_PARAM error if the email is not the correct format', () => {
     const email = 'invalid_email@mail'
-    const sut = (): Validex => validex(email, 'email', 'MISSING_PARAM').email()
+    const sut = (): Validex => validex(email, 'email', MissingParamError).email()
     expect(sut).toThrow(new MissingParamError('email format is invalid!'))
   })
 
   it('Should be able to validate the email method and throw INVALID_PARAM error if the email is not the correct format', () => {
     const email = 'invalid_email@mail'
-    const sut = (): Validex => validex(email, 'email', 'INVALID_PARAM').email()
+    const sut = (): Validex => validex(email, 'email', InvalidParamError).email()
     expect(sut).toThrow(new InvalidParamError('email format is invalid!'))
   })
 
   it('Should be able to validate the email method and throw SERVER_ERROR error if the email is not the correct format', () => {
     const email = 'invalid_email@mail'
-    const sut = (): Validex => validex(email, 'email', 'SERVER_ERROR').email()
+    const sut = (): Validex => validex(email, 'email', ServerError).email()
     expect(sut).toThrow(new ServerError())
   })
 
@@ -159,7 +159,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the uuid method and throw INVALID_PARAM if uuid is not correct', () => {
     const uuid = 'invalid_uuid'
-    const sut = (): Validex => validex(uuid, 'uuid', 'INVALID_PARAM').uuid()
+    const sut = (): Validex => validex(uuid, 'uuid', InvalidParamError).uuid()
     expect(sut).toThrow('invalid param: uuid must be a uuid type!')
   })
 
@@ -183,13 +183,13 @@ describe('Validex', () => {
 
   it('Should be able to validate the maxLength method and throw INVALID_PARAM if value length exceed the limit', () => {
     const value = 'exceed_the_limit'
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').maxLength(10)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).maxLength(10)
     expect(sut).toThrow('invalid param: value_name must have a maximum of 10 characters!')
   })
 
   it('Should be able to validate the maxLength method and throw INVALID_PARAM if value is invalid', () => {
     const value = false
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').maxLength(10)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).maxLength(10)
     expect(sut).toThrow('invalid param: value_name must be a string type!')
   })
 
@@ -225,7 +225,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the minLength method and throw INVALID_PARAM if value is invalid', () => {
     const value = false
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').minLength(20)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).minLength(20)
     expect(sut).toThrow('invalid param: value_name must be a string type!')
   })
 
@@ -243,7 +243,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the minLength method and throw INVALID_PARAM if value length exceed the limit', () => {
     const value = 'invalid'
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').minLength(10)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).minLength(10)
     expect(sut).toThrow('invalid param: value_name must have a minimum of 10 characters!')
   })
 
@@ -267,7 +267,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the string method and throw INVALID_PARAM if the value is not of type string', () => {
     const value: any = false
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').string()
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).string()
     expect(sut).toThrow('invalid param: value_name must be a string type!')
   })
 
@@ -291,7 +291,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the number method and throw INVALID_PARAM if the value is not of type number', () => {
     const value: any = false
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').number()
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).number()
     expect(sut).toThrow('invalid param: value_name must be a number type!')
   })
 
@@ -315,7 +315,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the boolean method and throw INVALID_PARAM if the value is not of type boolean', () => {
     const value: any = 'false'
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').boolean()
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).boolean()
     expect(sut).toThrow('invalid param: value_name must be a boolean type!')
   })
 
@@ -345,7 +345,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the float method and throw INVALID_PARAM if the value is number and is not float', () => {
     const value = 1
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').float()
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).float()
     expect(sut).toThrow('invalid param: value_name must be a number and float!')
   })
 
@@ -375,7 +375,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the integer method and throw INVALID_PARAM if the value is number and is not integer', () => {
     const value = 1.2
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').integer()
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).integer()
     expect(sut).toThrow('invalid param: value_name must be a number and integer!')
   })
 
@@ -388,7 +388,7 @@ describe('Validex', () => {
   it('Should be able to validate the date method and throw INVALID_PARAM if the value is date and invalid type', () => {
     const value = new Date().toISOString()
     const type: any = null
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').date(type)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).date(type)
     expect(sut).toThrow('date method received invalid parameter: type is required!')
   })
 
@@ -466,7 +466,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the date method and throw INVALID_PARAM if the value is not correctly formatted', () => {
     const value = '2023/10'
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').date('YYYY-DD-MM')
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).date('YYYY-DD-MM')
     expect(sut).toThrow('invalid param: the date value_name is not in the format YYYY-DD-MM!')
   })
 
@@ -492,7 +492,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the date method and throw MISSING_PARAM if the value is not correctly formatted', () => {
     const value = 'invalid-format'
-    const sut = (): Validex => validex(value, 'value_name', 'MISSING_PARAM').date('YYYY-DD-MM')
+    const sut = (): Validex => validex(value, 'value_name', MissingParamError).date('YYYY-DD-MM')
     expect(sut).toThrow('missing param: the date value_name is not in the format YYYY-DD-MM!')
   })
 
@@ -527,7 +527,7 @@ describe('Validex', () => {
   it('Should be able to validate the dateGreaterThan method and throw INVALID_PARAM if the date is equal to the reference date', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
-    const sut = (): Validex => validex(date, 'value_name', 'INVALID_PARAM').dateGreaterThan(refDate)
+    const sut = (): Validex => validex(date, 'value_name', InvalidParamError).dateGreaterThan(refDate)
     expect(sut).toThrow('invalid param: the date value_name must be greater than the reference date!')
   })
 
@@ -548,7 +548,7 @@ describe('Validex', () => {
   it('Should be able to validate the dateGreaterThan method and throw INVALID_PARAM if the date is in an invalid format', () => {
     const date = 'invalid_data'
     const refDate = new Date('2000-02-03T02:00:00.000Z')
-    const sut = (): Validex => validex(date, 'date_name', 'INVALID_PARAM').dateGreaterThan(refDate)
+    const sut = (): Validex => validex(date, 'date_name', InvalidParamError).dateGreaterThan(refDate)
     expect(sut).toThrow('invalid param: the provided date is invalid!')
   })
 
@@ -611,7 +611,7 @@ describe('Validex', () => {
   it('Should be able to validate the dateLessThan method and throw INVALID_PARAM if value is not date', () => {
     const date = 'invalid_date'
     const refDate = new Date('2000-02-02T02:00:00.000Z')
-    const sut = (): Validex => validex(date, 'value_name', 'INVALID_PARAM').dateLessThan(refDate)
+    const sut = (): Validex => validex(date, 'value_name', InvalidParamError).dateLessThan(refDate)
     expect(sut).toThrow('invalid param: the provided date is invalid!')
   })
 
@@ -625,7 +625,7 @@ describe('Validex', () => {
   it('Should be able to validate the dateLessThan method and throw INVALID_PARAM if the date is equal to the reference date', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
-    const sut = (): Validex => validex(date, 'value_name', 'INVALID_PARAM').dateLessThan(refDate)
+    const sut = (): Validex => validex(date, 'value_name', InvalidParamError).dateLessThan(refDate)
     expect(sut).toThrow('invalid param: the date value_name must be less than the reference date!')
   })
 
@@ -668,7 +668,7 @@ describe('Validex', () => {
   it('Should be able to validate time method and throw error if value is in correct format and invalid type', () => {
     const value = '11:55'
     const type: any = null
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').time(type)
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).time(type)
     expect(sut).toThrow('invalid param: time method received invalid parameter: type is required!')
   })
 
@@ -712,7 +712,7 @@ describe('Validex', () => {
 
   it('Should be able to validate the time method and throw INVALID_PARAM if the value is not time', () => {
     const value = false
-    const sut = (): Validex => validex(value, 'value_name', 'INVALID_PARAM').time('HH:MM:SS')
+    const sut = (): Validex => validex(value, 'value_name', InvalidParamError).time('HH:MM:SS')
     expect(sut).toThrow('invalid param: the time false is not in the format HH:MM:SS')
   })
 })
