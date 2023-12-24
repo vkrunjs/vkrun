@@ -8,12 +8,12 @@ const addValidation = (method: string, params?: any): any[] => {
   }
 }
 
-export const string = (customError?: Error): any => {
-  return addValidation('string', { customError })
+export const string = (): any => {
+  return addValidation('string')
 }
 
-export const minWord = (minWord: number, customError?: Error): any => {
-  return addValidation('minWord', { minWord, customError })
+export const minWord = (minWord: number): any => {
+  return addValidation('minWord', { minWord })
 }
 
 export const maxLength = (maxLength: number, customError?: Error): any => {

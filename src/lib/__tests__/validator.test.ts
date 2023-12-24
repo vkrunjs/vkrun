@@ -79,25 +79,19 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the minWord method and throw error if the value does not have the minimum number of words', () => {
-    const value = 'primary '
-    const sut = (): Validex => validex(value).minWord(2, errorInjected)
-    expect(sut).toThrow(errorInjected)
-  })
-
-  it('Should be able to validate the minWord method and throw MISSING_PARAM if value is not provided', () => {
+  it('Should be able to validate the minWord method and throw MissingParamError if value is not provided', () => {
     const value = 'primary '
     const sut = (): Validex => validex(value, 'value_name', MissingParamError).minWord(2)
     expect(sut).toThrow(new MissingParamError('value_name must have at least 2 words!'))
   })
 
-  it('Should be able to validate the minWord method and throw INVALID_PARAM if value is not provided', () => {
+  it('Should be able to validate the minWord method and throw InvalidParamError if value is not provided', () => {
     const value = 'primary '
     const sut = (): Validex => validex(value, 'value_name', InvalidParamError).minWord(2)
     expect(sut).toThrow(new InvalidParamError('value_name must have at least 2 words!'))
   })
 
-  it('Should be able to validate the minWord method and throw SERVER_ERROR type error if value is not provided', () => {
+  it('Should be able to validate the minWord method and throw ServerError type error if value is not provided', () => {
     const value = 'primary '
     const sut = (): Validex => validex(value, 'value_name', ServerError).minWord(2)
     expect(sut).toThrow(new ServerError())
@@ -259,16 +253,10 @@ describe('Validex', () => {
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the string method and throw error if the value is not of type string', () => {
-    const value: any = false
-    const sut = (): Validex => validex(value).string(errorInjected)
-    expect(sut).toThrow(errorInjected)
-  })
-
-  it('Should be able to validate the string method and throw INVALID_PARAM if the value is not of type string', () => {
+  it('Should be able to validate the string method and throw InvalidParamError if the value is not of type string', () => {
     const value: any = false
     const sut = (): Validex => validex(value, 'value_name', InvalidParamError).string()
-    expect(sut).toThrow('invalid param: value_name must be a string type!')
+    expect(sut).toThrow(new InvalidParamError('value_name must be a string type!'))
   })
 
   it('Should be able to validate the number method and return true if the value is of type number', () => {

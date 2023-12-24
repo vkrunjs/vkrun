@@ -45,12 +45,12 @@ class CreateSchema {
 
       switch (rule.method) {
         case 'string':
-          validate = v.string(rule.customError).validate()
+          validate = v.string().validate()
           this.isValid.push(validate)
           break
 
         case 'minWord':
-          validate = v.minWord(rule.minWord ?? 0, rule.customError).validate()
+          validate = v.minWord(rule.minWord ?? 0).validate()
           this.isValid.push(validate)
           break
 

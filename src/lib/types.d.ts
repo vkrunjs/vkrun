@@ -1,11 +1,11 @@
 export interface IValidex {
   required: (returnError?: Error) => this
-  minWord: (minWord: number, returnError?: Error) => this
+  minWord: (minWord: number) => this
   email: (returnError?: Error) => this
   uuid: (returnError?: Error) => this
   maxLength: (maxLength: number, returnError?: Error) => this
   minLength: (minLength: number, returnError?: Error) => this
-  string: (returnError?: Error) => this
+  string: () => this
   number: (returnError?: Error) => this
   boolean: (returnError?: Error) => this
   float: (returnError?: Error) => this

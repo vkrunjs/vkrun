@@ -1,3 +1,4 @@
+import { errorMessage } from './errors/error-message'
 import {
   DateTypes,
   ErrorTypes,
@@ -24,20 +25,20 @@ export class Validex implements IValidex {
     this.isValid = []
     const invalidErrorType = errorType && typeof errorType !== 'function'
     if (errorType && !valueName) {
-      throw new Error('missing class param: valueName is required!')
+      throw new Error(errorMessage.validex.constructorParams.valueName.missingClassParam)
     } else if (invalidErrorType) {
-      throw new Error('invalid class param: errorType provided is not valid!')
+      throw new Error(errorMessage.validex.constructorParams.valueName.invalidClassParam)
     }
   }
 
-  string (customError?: Error): this {
+  string (): this {
     const isString = typeof this.value === 'string'
     if (isString) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a string type!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.string.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -45,16 +46,18 @@ export class Validex implements IValidex {
     return this
   }
 
-  minWord (minWord: number, customError?: Error): this {
+  minWord (minWord: number): this {
     const trimmedValue = String(this.value).trim()
     const words = trimmedValue.split(/\s+/)
     const hasMinOfWords = words.length >= minWord
     if (hasMinOfWords) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must have at least ${minWord} words!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.minWord.noMinimumWords
+        const messageError = errorMessageTemplate
+          .replace('[valueName]', this.valueName)
+          .replace('[minWord]', String(minWord))
         this.handleError(messageError)
       }
       this.isValid.push(false)
