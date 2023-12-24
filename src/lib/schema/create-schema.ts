@@ -29,8 +29,8 @@ class CreateSchema {
   ): boolean {
     const validateItemArray = (value: ValidateItemArrayValue): Validex => {
       let validatorItemArray: Validex
-      if (this.config) {
-        validatorItemArray = validex(value, `all values in the ${key}`, this.config.errorType)
+      if (this.config?.errorType) {
+        validatorItemArray = validex(value, `all values in the ${key}`, this.config?.errorType)
       } else {
         validatorItemArray = validex(value, `all values in the ${key}`)
       }
@@ -147,7 +147,13 @@ class CreateSchema {
     for (const [objectToValidateKey, objectToValidateValue] of Object.entries(objectToValidate)) {
       if (!(objectToValidateKey in schema)) {
         if (this.config?.errorType) {
-          throw new Error(`${objectToValidateKey} key was not declared in the schema`)
+          const isCustomError = typeof this.config?.errorType === 'function'
+          if (isCustomError) {
+            const CustomError = this.config?.errorType
+            throw new CustomError(`${objectToValidateKey} key was not declared in the schema`)
+          } else {
+            throw new Error(`${objectToValidateKey} key was not declared in the schema`)
+          }
         } else {
           this.isValid.push(false)
         }
@@ -177,7 +183,13 @@ class CreateSchema {
 
       if (isSchemaKeyAbsent && !isNotRequiredMethodPresent()) {
         if (this.config?.errorType) {
-          throw new Error(`${schemaKey} key is required!`)
+          const isCustomError = typeof this.config?.errorType === 'function'
+          if (isCustomError) {
+            const CustomError = this.config?.errorType
+            throw new CustomError(`${schemaKey} key is required!`)
+          } else {
+            throw new Error(`${schemaKey} key is required!`)
+          }
         } else {
           this.isValid.push(false)
         }
@@ -200,7 +212,13 @@ class CreateSchema {
           this.isValid.push(validate)
         } else {
           if (this.config?.errorType) {
-            throw new Error(`${schemaKey} value must be an array!`)
+            const isCustomError = typeof this.config?.errorType === 'function'
+            if (isCustomError) {
+              const CustomError = this.config?.errorType
+              throw new CustomError(`${schemaKey} value must be an array!`)
+            } else {
+              throw new Error(`${schemaKey} value must be an array!`)
+            }
           }
           this.isValid.push(false)
         }

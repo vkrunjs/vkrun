@@ -13,7 +13,6 @@ export class Validex implements IValidex {
   private readonly valueName: ValidexValueName
   private readonly errorType?: ErrorTypes
   private readonly isValid: boolean[]
-  private readonly isObject: boolean
 
   constructor (
     value: ValidexValue,
@@ -24,10 +23,14 @@ export class Validex implements IValidex {
     this.errorType = errorType
     this.valueName = valueName
     this.isValid = []
-    this.isObject = false
+    const invalidErrorType = errorType &&
+                             errorType !== 'MISSING_PARAM' &&
+                             errorType !== 'INVALID_PARAM' &&
+                             errorType !== 'SERVER_ERROR' &&
+                             typeof errorType !== 'function'
     if (errorType && !valueName) {
       throw new Error('missing class param: valueName is required!')
-    } else if (errorType && !['MISSING_PARAM', 'INVALID_PARAM', 'SERVER_ERROR'].includes(errorType)) {
+    } else if (invalidErrorType) {
       throw new Error('invalid class param: errorType provided is not valid!')
     }
   }
@@ -409,12 +412,19 @@ export class Validex implements IValidex {
   }
 
   private handleError (messageError: string): this {
+    const isCustomError = typeof this.errorType === 'function'
+
     if (this.errorType === 'MISSING_PARAM') {
       throw new MissingParamError(messageError)
     } else if (this.errorType === 'INVALID_PARAM') {
       throw new InvalidParamError(messageError)
-    } else {
+    } else if (this.errorType === 'SERVER_ERROR') {
       throw new ServerError()
+    } else if (isCustomError) {
+      const CustomError = this.errorType
+      throw new CustomError(messageError)
+    } else {
+      throw new Error(messageError)
     }
   }
 

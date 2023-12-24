@@ -19,10 +19,11 @@ export interface IValidex {
 export type ValidexValue = string | boolean | Date | number | undefined | null
 export type ValidexValueName = string
 export interface ObjectConfig {
-  errorType: ErrorTypes
+  errorType?: ErrorTypes
 }
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
-export type ErrorTypes = 'MISSING_PARAM' | 'INVALID_PARAM' | 'SERVER_ERROR'
+export type ErrorClass<T extends Error> = new (message?: string) => T
+export type ErrorTypes = 'MISSING_PARAM' | 'INVALID_PARAM' | 'SERVER_ERROR' | ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{

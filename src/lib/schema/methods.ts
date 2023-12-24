@@ -48,7 +48,7 @@ export const boolean = (customError?: Error): any => {
   return addValidation('boolean', { customError })
 }
 
-export const date = (type: DateTypes, customError?: Error): any => {
+export const date = (type?: DateTypes, customError?: Error): any => {
   return addValidation('date', { dateType: type, customError })
 }
 
