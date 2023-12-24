@@ -162,7 +162,7 @@ try {
 
 ### Required
 
-#### Required validation with boolean return:
+#### Validation with boolean return:
 
 ```ts
 import validex from "validex"
@@ -212,7 +212,7 @@ const validated = validex(value).required().validate()
 console.log(validated) // false
 ```
 
-#### Required with error handling:
+#### Validation with error handling:
 
 ```ts
 import validex from "validex"

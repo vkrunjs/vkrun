@@ -126,7 +126,7 @@ console.log(validated) // true
 > Ao chamar a função validex cujo retorno esperado seja um erro, é necessário fornecer:
 - valor
 - nome do parâmetro
-- tipo de erro (MISSING_PARAM, INVALID_PARAM ou SERVER_ERROR)
+- classe que estende de Erro
 - métodos para teste
 
 ```ts
@@ -155,7 +155,7 @@ try {
 
 - Toda validação encadeada que deve ser capturado algum erro, a chamada da função validex deve estar dentro de uma estrutura try catch. Outro ponto importante é que náo necessário a chamada do método validate ao final.
 
-### required()
+### Required
 
 #### Validação com retorno boleano:
 
@@ -229,5 +229,5 @@ try {
 }
 ```
 
-## License
+## Licença
 > Está biblioteca é lançada sob a licença MIT.
