@@ -1,12 +1,11 @@
 # Validex
 
-## Language
+## Idioma
+<p><span style="font-weight: bold;">Português</span> | <a href="./README.md">Inglês</a></p>
 
-<p><a href="./README-pt.md">Portuguese</a> | <span style="font-weight: bold;">English</span></p>
+## Introdução
 
-## Introduction
-
-> Validex is a runtime data validation library. Simplifying and enhancing the validation of various data types in JavaScript and TypeScript projects, Validex offers the flexibility to define schemas for objects and allows modeling complex and interdependent validations, providing a robust and customizable solution for your validation needs. Below are some of the validation types supported by Validex:
+> O Validex é uma biblioteca de validação de dados em tempo de execução. Simplificando e aprimorando a validação de diversos tipos de dados em projetos JavaScript e TypeScript, Validex oferece a flexibilidade de definir esquemas para objetos e permitindo a modelagem de validações complexas e interdependentes, proporcionando uma solução robusta e personalizável para suas necessidades de validação. Abaixo estão alguns dos tipos de validações suportados pelo Validex:
 
 - [object](#object)
 - array
@@ -24,9 +23,7 @@
 - dateGreaterThan
 - dateLessThan
 
-## Installation
-
-> To install the Validex, use the following command:
+## Instalação
 
 ##### NPM
 ```bash
@@ -38,15 +35,13 @@ npm install validex
 yarn add validex
 ```
 
-
-## Using Validex
+## Utilizando o validex
 
 ### Object
 
-#### Object validation using Schema:
+#### Validação de objeto utilizando Schema:
 
-> By default, all types except the array method are configured as required values, meaning the value must be different from undefined, null, and an empty string. If the value is not required, the notRequired method should be used.
-
+> Por padrão todos os tipos exceto o método array vem configurado como valor obrigatório, ou seja o valor tem que ser diferente de undefined, null e string vazia. Caso o valor não seja obrigatório, deve se usar o método notRequired.
 
 ```ts
 import { createSchema, array, string, uuid, notRequired} from "validex"
@@ -69,7 +64,7 @@ const product = productListSchema.validate({
 console.log(product) // true
 ```
 
-#### Object with error handling::
+#### Object com manipulação de erros:
 
 ```ts
 import { createSchema, array, string, uuid, notRequired} from "validex"
@@ -104,12 +99,12 @@ try {
 
 console.log(user) // true
 ```
-> By default, all types except the array method are configured as mandatory values, meaning the value must be different from undefined. If the value is not mandatory, the notRequired method should be used.
+> Por padrão todos os tipos exceto o método array vem configurado como valor obrigatório, ou seja o valor tem que ser diferente de undefined. Caso o valor não seja obrigatório, deve se usar o método notRequired.
 
-#### Chained validation with Boolean return:
-> When calling the validex function, whose expected return is boolean, it is necessary to provide:
-- value
-- methods for testing
+#### Validação encadeada com retorno boleano:
+> Ao chamar a função validex cujo retorno esperado seja booleano, é necessário fornecer:
+- valor
+- métodos para teste
 
 ```ts
 import validex from "validex";
@@ -125,14 +120,14 @@ const validated = validex(email)
 console.log(validated) // true
 ```
 
-- For any chained validation where the desired return is boolean, the validate method must be called at the end.
+- Toda validação encadeada que o retorno desejado seja boleano, deve se chamar o método validate ao final.
 
-#### Chained validation with Error handling:
-> When calling the validex function, whose expected return is an error, it is necessary to provide:
-- value
-- parameter name
-- class that extends Error
-- testing methods
+#### Validação encadeada com manipulação de erros:
+> Ao chamar a função validex cujo retorno esperado seja um erro, é necessário fornecer:
+- valor
+- nome do parâmetro
+- tipo de erro (MISSING_PARAM, INVALID_PARAM ou SERVER_ERROR)
+- métodos para teste
 
 ```ts
 import validex from "validex";
@@ -158,11 +153,11 @@ try {
 }
 ```
 
-- For any chained validation where an error needs to be captured, the call to the validex function should be within a try-catch structure. Another important point is that it is not necessary to call the validate method at the end.
+- Toda validação encadeada que deve ser capturado algum erro, a chamada da função validex deve estar dentro de uma estrutura try catch. Outro ponto importante é que náo necessário a chamada do método validate ao final.
 
-### Required
+### required()
 
-#### Required validation with boolean return:
+#### Validação com retorno boleano:
 
 ```ts
 import validex from "validex"
@@ -212,7 +207,7 @@ const validated = validex(value).required().validate()
 console.log(validated) // false
 ```
 
-#### Required with error handling:
+#### Validação com manipulação de erros:
 
 ```ts
 import validex from "validex"
@@ -235,4 +230,4 @@ try {
 ```
 
 ## License
-> This library is released under the MIT license.
+> Está biblioteca é lançada sob a licença MIT.
