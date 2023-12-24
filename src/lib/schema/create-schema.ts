@@ -1,6 +1,5 @@
-import validex from '../index'
+import validex from '../../index'
 import { Validex } from '../validex'
-import { required } from './methods'
 import {
   Schema,
   ObjectConfig,
@@ -214,7 +213,8 @@ class CreateSchema {
           this.isValid.push(validate)
         }
       } else {
-        const validateRequiredByDefault = this.validateProperty(schemaKey, objectToValidateValue, [required()])
+        const required: ValidatePropertyRules = [{ method: 'required', private: true }]
+        const validateRequiredByDefault = this.validateProperty(schemaKey, objectToValidateValue, required)
         this.isValid.push(validateRequiredByDefault)
         validate = this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
         this.isValid.push(validate)

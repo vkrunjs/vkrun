@@ -8,10 +8,6 @@ const addValidation = (method: string, params?: any): any[] => {
   }
 }
 
-export const required = (customError?: Error): any => {
-  return addValidation('required', { customError })
-}
-
 export const string = (customError?: Error): any => {
   return addValidation('string', { customError })
 }

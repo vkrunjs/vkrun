@@ -1,4 +1,4 @@
-import validex from '../index'
+import validex from '../../index'
 import { Validex } from '../validex'
 import { InvalidParamError, MissingParamError, ServerError } from '../errors'
 

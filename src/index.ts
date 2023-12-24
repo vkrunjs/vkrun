@@ -1,6 +1,6 @@
-import { Validex } from './validex'
-import { ErrorTypes, ValidexValue, ValidexValueName } from './types'
-export * from './schema'
+import { Validex } from './lib/validex'
+import { ErrorTypes, ValidexValue, ValidexValueName } from './lib/types'
+export * from './lib/schema'
 
 const validex = (
   value: ValidexValue,

@@ -27,7 +27,7 @@ export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -39,7 +39,7 @@ export type ValidatePropertyRules = Array<{
 }>
 export interface ValidatePropertyRule {
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
   minWord?: number
   maxLength?: number
   minLength?: number
