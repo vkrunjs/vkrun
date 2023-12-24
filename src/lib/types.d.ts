@@ -26,7 +26,7 @@ export type ErrorTypes = 'MISSING_PARAM' | 'INVALID_PARAM' | 'SERVER_ERROR'
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{
-  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
+  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
   arrayType: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
   minWord?: number
   maxLength?: number
@@ -37,8 +37,21 @@ export type ValidatePropertyRules = Array<{
   private?: boolean
   customError?: Error
 }>
+export interface ValidatePropertyRule {
+  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
+  arrayType: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
+  minWord?: number
+  maxLength?: number
+  minLength?: number
+  dateType?: DateTypes
+  dateToCompare?: Date
+  timeType?: TimeTypes
+  private?: boolean
+  customError?: Error
+}
 export type ValidateItemArrayValue = string | boolean | Date | number
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
 export type Schema = Record<string, Validex[]>
 export type ObjectType = Record<string, any>
 export type SchemaConfig = ObjectConfig
+export type ArrayTypes = 'string' | 'number' | 'boolean' | 'date' | Schema

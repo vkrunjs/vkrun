@@ -13,6 +13,7 @@ export class Validex implements IValidex {
   private readonly valueName: ValidexValueName
   private readonly errorType?: ErrorTypes
   private readonly isValid: boolean[]
+  private readonly isObject: boolean
 
   constructor (
     value: ValidexValue,
@@ -23,6 +24,7 @@ export class Validex implements IValidex {
     this.errorType = errorType
     this.valueName = valueName
     this.isValid = []
+    this.isObject = false
     if (errorType && !valueName) {
       throw new Error('missing class param: valueName is required!')
     } else if (errorType && !['MISSING_PARAM', 'INVALID_PARAM', 'SERVER_ERROR'].includes(errorType)) {
