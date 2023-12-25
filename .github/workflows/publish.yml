@@ -16,8 +16,6 @@ jobs:
           git config --global user.email "juka.mebaj@gmail.com"
           git config --global user.name "jukerah"
       - run: npm install
-      - run: npm version minor
-      - run: git push --tags origin main
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
