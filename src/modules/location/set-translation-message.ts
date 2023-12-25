@@ -91,5 +91,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.minLength.strict must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.number?.strict) {
+    if (typeof newMessages.validator.method.number.strict === 'string') {
+      const hasValueNameKey = newMessages.validator.method.number.strict.includes('[valueName]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.number.strict = newMessages.validator.method.number.strict
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.number.strict must contain the reserved key [valueName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.number.strict must be a string type!')
+    }
+  }
   return true
 }
