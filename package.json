@@ -1,13 +1,15 @@
 {
   "name": "vkrun",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Vkrun is a runtime data validation library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [],
   "author": "Mario Elvio",
   "license": "MIT",
-  "files": [ "lib/**/*" ],
+  "files": [
+    "lib/**/*"
+  ],
   "homepage": "https://github.com/jukerah/vkrun#readme",
   "repository": {
     "type": "git",
