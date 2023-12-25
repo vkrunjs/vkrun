@@ -1,21 +1,19 @@
+name: Publish NPM
+
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: '18.16.1'
-      - name: Configure Git
-        run: |
-          git config --global user.email "juka.mebaj@gmail.com"
-          git config --global user.name "jukerah"
-      - run: npm install
-      - run: npm publish --access=public
+          registry-url: https://registry.npmjs.org/
+      - run: yarn install
+      - run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
