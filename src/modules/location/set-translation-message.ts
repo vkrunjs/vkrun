@@ -127,5 +127,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.integer.strict must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.boolean?.strict) {
+    if (typeof newMessages.validator.method.boolean.strict === 'string') {
+      const hasValueNameKey = newMessages.validator.method.boolean.strict.includes('[valueName]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.boolean.strict = newMessages.validator.method.boolean.strict
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.boolean.strict must contain the reserved key [valueName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.boolean.strict must be a string type!')
+    }
+  }
   return true
 }
