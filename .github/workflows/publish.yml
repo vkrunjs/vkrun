@@ -10,14 +10,14 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: '18.16.1'
       - name: Configure Git
         run: |
           git config --global user.email "juka.mebaj@gmail.com"
           git config --global user.name "jukerah"
       - run: npm install
       - run: npm version minor
-      - run: git push --tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+      - run: git push --tags origin main
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
