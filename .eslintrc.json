@@ -12,5 +12,6 @@
         "@typescript-eslint/no-unsafe-argument": "off"
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["lib/"]
 }

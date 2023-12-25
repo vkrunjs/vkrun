@@ -1,3 +1,5 @@
+import { Validator } from './validator'
+
 export interface IValidator {
   required: () => this
   minWord: (minWord: number) => this
@@ -23,7 +25,7 @@ export interface ObjectConfig {
 }
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
 export type ErrorClass<T extends Error> = new (message?: string) => T
-export type ErrorTypes = ErrorClass
+export type ErrorTypes = any // ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{
