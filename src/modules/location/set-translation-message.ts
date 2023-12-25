@@ -47,10 +47,22 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       if (hasValueNameKey) {
         informativeMessage.validator.method.uuid.strict = newMessages.validator.method.uuid.strict
       } else {
-        throw new Error('setTranslationMessage: newMessages.validator.method.uuid.strict must contain the reserved keys [valueName]!')
+        throw new Error('setTranslationMessage: newMessages.validator.method.uuid.strict must contain the reserved key [valueName]!')
       }
     } else {
       throw new Error('setTranslationMessage: newMessages.validator.method.uuid.strict must be a string type!')
+    }
+  }
+  if (newMessages?.validator?.method?.email?.strict) {
+    if (typeof newMessages.validator.method.email.strict === 'string') {
+      const hasValueNameKey = newMessages.validator.method.email.strict.includes('[value]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.email.strict = newMessages.validator.method.email.strict
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.email.strict must contain the reserved key [value]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.email.strict must be a string type!')
     }
   }
   return true
