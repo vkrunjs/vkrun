@@ -115,5 +115,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.float.strict must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.integer?.strict) {
+    if (typeof newMessages.validator.method.integer.strict === 'string') {
+      const hasValueNameKey = newMessages.validator.method.integer.strict.includes('[valueName]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.integer.strict = newMessages.validator.method.integer.strict
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.integer.strict must contain the reserved key [valueName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.integer.strict must be a string type!')
+    }
+  }
   return true
 }
