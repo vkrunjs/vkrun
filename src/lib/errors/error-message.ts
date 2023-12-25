@@ -14,6 +14,9 @@ export let errorMessage = {
       },
       minWord: {
         noMinimumWords: '[valueName] must have at least [minWord] words!'
+      },
+      uuid: {
+        strict: '[valueName] must be a uuid type!'
       }
     }
   }
