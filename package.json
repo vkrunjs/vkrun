@@ -14,7 +14,7 @@
     "url": "git+https://github.com/jukerah/vkrun.git"
   },
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rm -rf lib",
     "build": "npm run clean && tsc",
     "prepublish": "npm run test && npm run build",
     "test": "jest --coverage=false",
