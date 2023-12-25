@@ -55,14 +55,27 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
   }
   if (newMessages?.validator?.method?.email?.strict) {
     if (typeof newMessages.validator.method.email.strict === 'string') {
-      const hasValueNameKey = newMessages.validator.method.email.strict.includes('[value]')
-      if (hasValueNameKey) {
+      const hasValueKey = newMessages.validator.method.email.strict.includes('[value]')
+      if (hasValueKey) {
         informativeMessage.validator.method.email.strict = newMessages.validator.method.email.strict
       } else {
         throw new Error('setTranslationMessage: newMessages.validator.method.email.strict must contain the reserved key [value]!')
       }
     } else {
       throw new Error('setTranslationMessage: newMessages.validator.method.email.strict must be a string type!')
+    }
+  }
+  if (newMessages?.validator?.method?.maxLength?.strict) {
+    if (typeof newMessages.validator.method.maxLength.strict === 'string') {
+      const hasValueNameKey = newMessages.validator.method.maxLength.strict.includes('[valueName]')
+      const hasMaxLengthKey = newMessages.validator.method.maxLength.strict.includes('[maxLength]')
+      if (hasValueNameKey && hasMaxLengthKey) {
+        informativeMessage.validator.method.maxLength.strict = newMessages.validator.method.maxLength.strict
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.maxLength.strict must contain the reserved keys [valueName] and [maxLength]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.maxLength.strict must be a string type!')
     }
   }
   return true
