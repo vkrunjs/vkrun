@@ -1,5 +1,4 @@
-import validator from '../../../index'
-import { Validator } from '..'
+import { Validator, validator } from '../index'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 
 describe('Validator', () => {

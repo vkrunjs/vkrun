@@ -1,4 +1,4 @@
-import { SetTranslationMessage } from '../../types'
+import { SetTranslationMessage } from '../types'
 import { informativeMessage } from './informative-message'
 
 export const setTranslationMessage = (newMessages: SetTranslationMessage): boolean => {

@@ -1,5 +1,4 @@
-import validex from '../../index'
-import { Validator } from '../validator'
+import { Validator, validator } from '../validator'
 import {
   Schema,
   ObjectConfig,
@@ -9,7 +8,7 @@ import {
   ValidateItemArrayValue,
   ObjectType,
   ValidatePropertyRule
-} from '../../types'
+} from '../types'
 import { informativeMessage } from '../location/informative-message'
 
 class CreateSchema {
@@ -34,9 +33,9 @@ class CreateSchema {
       const valueName = message.replace('[keyName]', key)
 
       if (this.config?.errorType) {
-        validatorItemArray = validex(value, valueName, this.config?.errorType)
+        validatorItemArray = validator(value, valueName, this.config?.errorType)
       } else {
-        validatorItemArray = validex(value, valueName)
+        validatorItemArray = validator(value, valueName)
       }
       return validatorItemArray
     }
@@ -44,8 +43,8 @@ class CreateSchema {
     let validate: boolean
     for (const rule of rules) {
       let v: Validator
-      if (this.config) v = validex(value, key, this.config.errorType)
-      else v = validex(value, key)
+      if (this.config) v = validator(value, key, this.config.errorType)
+      else v = validator(value, key)
 
       switch (rule.method) {
         case 'string':

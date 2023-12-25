@@ -1,4 +1,4 @@
-import { DateTypes, TimeTypes, ArrayTypes } from '../../types'
+import { DateTypes, TimeTypes, ArrayTypes } from '../types'
 
 const addValidation = (method: string, params?: any): any[] => {
   return { method, private: true, ...params }

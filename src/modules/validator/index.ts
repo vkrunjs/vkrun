@@ -6,7 +6,7 @@ import {
   TimeTypes,
   ValidatorValue,
   ValidatorValueName
-} from '../../types'
+} from '../types'
 
 export class Validator implements IValidator {
   private readonly value: ValidatorValue
