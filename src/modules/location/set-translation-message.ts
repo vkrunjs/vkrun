@@ -164,5 +164,12 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.date.invalidFormat must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.date?.invalidParameter) {
+    if (typeof newMessages.validator.method.date.invalidParameter === 'string') {
+      informativeMessage.validator.method.date.invalidParameter = newMessages.validator.method.date.invalidParameter
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.date.invalidParameter must be a string type!')
+    }
+  }
   return true
 }
