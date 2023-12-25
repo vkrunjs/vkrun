@@ -17,7 +17,7 @@ jobs:
           git config --global user.name "jukerah"
       - run: npm install
       - run: npm version minor
-      - run: git push --tags
+      - run: git push --tags "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
       - run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
