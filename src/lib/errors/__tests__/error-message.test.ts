@@ -23,4 +23,10 @@ describe('Error Messages', () => {
     expect(message.includes('[valueName]')).toBe(true)
     expect(message.includes('[minWord]')).toBe(true)
   })
+
+  it('validex.method.uuid.strict should be a string and contain [valueName]', () => {
+    const message = errorMessage.validex.method.uuid.strict
+    expect(typeof message).toBe('string')
+    expect(message.includes('[valueName]')).toBe(true)
+  })
 })
