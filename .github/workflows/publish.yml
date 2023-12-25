@@ -1,32 +1,22 @@
-name: Publish Package
-
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+      - 'package.json'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: '18.16.1'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
-      - name: Bump version, push tags, and publish
-        run: |
-          npm version minor
-          git push --follow-tags
-          npm publish --access=public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm install
+      - run: git config --global user.email "juka.mebaj@gmail.com"
+      - run: git config --global user.name "jukerah"
+      - run: npm version minor
+      - run: git push --tags
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
