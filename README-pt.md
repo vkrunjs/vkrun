@@ -96,9 +96,8 @@ try {
     console.log(error.message) // missing param: name key is required!
   }
 }
-
-console.log(user) // true
 ```
+
 > Por padrão todos os tipos exceto o método array vem configurado como valor obrigatório, ou seja o valor tem que ser diferente de undefined. Caso o valor não seja obrigatório, deve se usar o método notRequired.
 
 #### Validação encadeada com retorno boleano:

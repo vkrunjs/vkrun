@@ -87,7 +87,7 @@ const productListSchema = createSchema({
     name: [string()],
     description: [string(), notRequired()]
   })
-}, { errorType: MissingParamError }) // injetado classe de erro
+}, { errorType: MissingParamError }) // injected error class
 
 try {
   const product = productListSchema.validate({
@@ -101,9 +101,8 @@ try {
     console.log(error.message) // missing param: name key is required!
   }
 }
-
-console.log(user) // true
 ```
+
 > By default, all types except the array method are configured as mandatory values, meaning the value must be different from undefined. If the value is not mandatory, the notRequired method should be used.
 
 #### Chained validation with Boolean return:
