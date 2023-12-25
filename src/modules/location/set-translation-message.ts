@@ -171,5 +171,12 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.date.invalidParameter must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.dateGreaterThan?.invalidDate) {
+    if (typeof newMessages.validator.method.dateGreaterThan.invalidDate === 'string') {
+      informativeMessage.validator.method.dateGreaterThan.invalidDate = newMessages.validator.method.dateGreaterThan.invalidDate
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.invalidDate must be a string type!')
+    }
+  }
   return true
 }

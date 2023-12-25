@@ -16,9 +16,8 @@
     "url": "git+https://github.com/jukerah/vkrun.git"
   },
   "scripts": {
-    "clean": "rm -rf lib",
-    "build": "npm run clean && tsc",
-    "prepublish": "npm run test && npm run build",
+    "build": "tsc",
+    "publish": "npm run test && npm run build && npm version minor && git push --tags && npm publish --access=public",
     "test": "jest --coverage=false",
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",
