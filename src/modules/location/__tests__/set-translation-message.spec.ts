@@ -1,4 +1,4 @@
-//import { informativeMessage } from '../informative-message'
+// import { informativeMessage } from '../informative-message'
 import { setTranslationMessage } from '../set-translation-message'
 
 describe('Set translation message', () => {
@@ -79,9 +79,10 @@ describe('Set translation message', () => {
       }
     }
 
-    const sut = setTranslationMessage(newInformativeMessage)
+    // const sut =
+    setTranslationMessage(newInformativeMessage)
 
-    //expect(sut).toBeTruthy()
-    //expect(informativeMessage).toEqual(newInformativeMessage)
+    // expect(sut).toBeTruthy()
+    // expect(informativeMessage).toEqual(newInformativeMessage)
   })
 })

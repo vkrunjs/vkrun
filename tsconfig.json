@@ -10,8 +10,9 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "declaration": true
   },
   "include": [ "src" ],
-  "exclude": [ "**/*.test.ts" ]
+  "exclude": [ "**/*.spec.ts" ]
 }
