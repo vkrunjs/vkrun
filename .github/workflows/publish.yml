@@ -1,23 +1,25 @@
-# When setting up node:
-- uses: actions/setup-node@v3
-  with:
-    node-version: '18.x'
-    registry-url: 'https://registry.npmjs.org' # <-- the registry-url here is required
-
-# ...[build & test etc]...
-
-# Bump the version & push (if you're not doing that elsewhere)
-- name: Bump version & push
-  run: |
-    git config --global user.name 'Automated publish'
-    git config --global user.email '$jukerah@users.noreply.github.com'
-
-    # Update the version in package.json, and commit & tag the change:
-    npm version patch # YMMV - you might want the semver level as a workflow input
-
-    git push && git push --tags
-
-# Publish the result to npm with your granular token:
-- run: npm publish
-  env:
-    NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+name: npm-publish
+on:
+  push:
+    branches:
+      - main
+jobs:
+  npm-publish:
+    name: npm-publish
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Publish if version has been updated
+      uses: pascalgn/npm-publish-action@1.3.9
+      with:
+        tag_name: "v%s"
+        tag_message: "v%s"
+        create_tag: "true"
+        commit_pattern: "^Release (\\S+)"
+        workspace: "."
+        publish_command: "yarn"
+        publish_args: "--non-interactive"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
