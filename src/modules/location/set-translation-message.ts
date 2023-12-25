@@ -41,5 +41,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.minWord.noMinimumWords must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.uuid?.strict) {
+    if (typeof newMessages.validator.method.uuid.strict === 'string') {
+      const hasValueNameKey = newMessages.validator.method.uuid.strict.includes('[valueName]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.uuid.strict = newMessages.validator.method.uuid.strict
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.uuid.strict must contain the reserved keys [valueName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.uuid.strict must be a string type!')
+    }
+  }
   return true
 }
