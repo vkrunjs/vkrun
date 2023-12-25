@@ -10,6 +10,7 @@ import {
   ObjectType,
   ValidatePropertyRule
 } from '../types'
+import { errorMessage } from '../errors/error-message'
 
 class CreateSchema {
   private readonly schema: Schema
@@ -29,10 +30,13 @@ class CreateSchema {
   ): boolean {
     const validateItemArray = (value: ValidateItemArrayValue): Validex => {
       let validatorItemArray: Validex
+      const messageTemplate = errorMessage.schema.validateProperty.itemArray.valueName
+      const valueName = messageTemplate.replace('[keyName]', key)
+
       if (this.config?.errorType) {
-        validatorItemArray = validex(value, `all values in the ${key}`, this.config?.errorType)
+        validatorItemArray = validex(value, valueName, this.config?.errorType)
       } else {
-        validatorItemArray = validex(value, `all values in the ${key}`)
+        validatorItemArray = validex(value, valueName)
       }
       return validatorItemArray
     }
@@ -55,67 +59,67 @@ class CreateSchema {
           break
 
         case 'uuid':
-          validate = v.uuid(rule.customError).validate()
+          validate = v.uuid().validate()
           this.isValid.push(validate)
           break
 
         case 'email':
-          validate = v.email(rule.customError).validate()
+          validate = v.email().validate()
           this.isValid.push(validate)
           break
 
         case 'maxLength':
-          validate = v.maxLength(rule.maxLength ?? 0, rule.customError).validate()
+          validate = v.maxLength(rule.maxLength ?? 0).validate()
           this.isValid.push(validate)
           break
 
         case 'minLength':
-          validate = v.minLength(rule.minLength ?? 0, rule.customError).validate()
+          validate = v.minLength(rule.minLength ?? 0).validate()
           this.isValid.push(validate)
           break
 
         case 'required':
-          validate = v.required(rule.customError).validate()
+          validate = v.required().validate()
           this.isValid.push(validate)
           break
 
         case 'number':
-          validate = v.number(rule.customError).validate()
+          validate = v.number().validate()
           this.isValid.push(validate)
           break
 
         case 'float':
-          validate = v.float(rule.customError).validate()
+          validate = v.float().validate()
           this.isValid.push(validate)
           break
 
         case 'integer':
-          validate = v.integer(rule.customError).validate()
+          validate = v.integer().validate()
           this.isValid.push(validate)
           break
 
         case 'boolean':
-          validate = v.boolean(rule.customError).validate()
+          validate = v.boolean().validate()
           this.isValid.push(validate)
           break
 
         case 'date':
-          validate = v.date(rule.dateType ?? 'ISO8601', rule.customError).validate()
+          validate = v.date(rule.dateType ?? 'ISO8601').validate()
           this.isValid.push(validate)
           break
 
         case 'dateGreaterThan':
-          validate = v.dateGreaterThan(rule.dateToCompare ?? new Date(), rule.customError).validate()
+          validate = v.dateGreaterThan(rule.dateToCompare ?? new Date()).validate()
           this.isValid.push(validate)
           break
 
         case 'dateLessThan':
-          validate = v.dateLessThan(rule.dateToCompare ?? new Date(), rule.customError).validate()
+          validate = v.dateLessThan(rule.dateToCompare ?? new Date()).validate()
           this.isValid.push(validate)
           break
 
         case 'time':
-          validate = v.time(rule.timeType ?? 'HH:MM:SS', rule.customError).validate()
+          validate = v.time(rule.timeType ?? 'HH:MM:SS').validate()
           this.isValid.push(validate)
           break
 
@@ -146,14 +150,11 @@ class CreateSchema {
   ): boolean {
     for (const [objectToValidateKey, objectToValidateValue] of Object.entries(objectToValidate)) {
       if (!(objectToValidateKey in schema)) {
-        if (this.config?.errorType) {
-          const isCustomError = typeof this.config?.errorType === 'function'
-          if (isCustomError) {
-            const CustomError = this.config?.errorType
-            throw new CustomError(`${objectToValidateKey} key was not declared in the schema`)
-          } else {
-            throw new Error(`${objectToValidateKey} key was not declared in the schema`)
-          }
+        if (this.config?.errorType && typeof this.config?.errorType === 'function') {
+          const errorMessageTemplate = errorMessage.schema.validateSchema.keyNotDeclaredInTheSchema
+          const messageError = errorMessageTemplate.replace('[keyName]', objectToValidateKey)
+          const CustomError = this.config?.errorType
+          throw new CustomError(messageError)
         } else {
           this.isValid.push(false)
         }
@@ -182,14 +183,11 @@ class CreateSchema {
       }
 
       if (isSchemaKeyAbsent && !isNotRequiredMethodPresent()) {
-        if (this.config?.errorType) {
-          const isCustomError = typeof this.config?.errorType === 'function'
-          if (isCustomError) {
-            const CustomError = this.config?.errorType
-            throw new CustomError(`${schemaKey} key is required!`)
-          } else {
-            throw new Error(`${schemaKey} key is required!`)
-          }
+        if (this.config?.errorType && typeof this.config?.errorType === 'function') {
+          const errorMessageTemplate = errorMessage.schema.validateObject.schemaKeyAbsent
+          const messageError = errorMessageTemplate.replace('[keyName]', schemaKey)
+          const CustomError = this.config?.errorType
+          throw new CustomError(messageError)
         } else {
           this.isValid.push(false)
         }
@@ -211,14 +209,11 @@ class CreateSchema {
           validate = this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
           this.isValid.push(validate)
         } else {
-          if (this.config?.errorType) {
-            const isCustomError = typeof this.config?.errorType === 'function'
-            if (isCustomError) {
-              const CustomError = this.config?.errorType
-              throw new CustomError(`${schemaKey} value must be an array!`)
-            } else {
-              throw new Error(`${schemaKey} value must be an array!`)
-            }
+          if (this.config?.errorType && typeof this.config?.errorType === 'function') {
+            const errorMessageTemplate = errorMessage.schema.validateObject.notIsArray
+            const messageError = errorMessageTemplate.replace('[keyName]', schemaKey)
+            const CustomError = this.config?.errorType
+            throw new CustomError(messageError)
           }
           this.isValid.push(false)
         }

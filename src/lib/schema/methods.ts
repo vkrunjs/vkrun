@@ -24,8 +24,8 @@ export const minLength = (minLength: number, customError?: Error): any => {
   return addValidation('minLength', { minLength, customError })
 }
 
-export const uuid = (customError?: Error): any => {
-  return addValidation('uuid', { customError })
+export const uuid = (): any => {
+  return addValidation('uuid')
 }
 
 export const email = (customError?: Error): any => {

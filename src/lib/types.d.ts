@@ -1,19 +1,19 @@
 export interface IValidex {
-  required: (returnError?: Error) => this
+  required: () => this
   minWord: (minWord: number) => this
-  email: (returnError?: Error) => this
-  uuid: (returnError?: Error) => this
-  maxLength: (maxLength: number, returnError?: Error) => this
-  minLength: (minLength: number, returnError?: Error) => this
+  email: () => this
+  uuid: () => this
+  maxLength: (maxLength: number) => this
+  minLength: (minLength: number) => this
   string: () => this
-  number: (returnError?: Error) => this
-  boolean: (returnError?: Error) => this
-  float: (returnError?: Error) => this
-  integer: (returnError?: Error) => this
-  date: (type: DateTypes, returnError?: Error) => this
-  dateGreaterThan: (dateToCompare: Date, returnError?: Error) => this
-  dateLessThan: (dateToCompare: Date, returnError?: Error) => this
-  time: (type: 'HH:MM' | 'HH:MM:SS', returnError?: Error) => this
+  number: () => this
+  boolean: () => this
+  float: () => this
+  integer: () => this
+  date: (type: DateTypes) => this
+  dateGreaterThan: (dateToCompare: Date) => this
+  dateLessThan: (dateToCompare: Date) => this
+  time: (type: 'HH:MM' | 'HH:MM:SS') => this
   validate: () => boolean
 }
 export type ValidexValue = string | boolean | Date | number | undefined | null

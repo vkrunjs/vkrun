@@ -65,15 +65,15 @@ export class Validex implements IValidex {
     return this
   }
 
-  uuid (customError?: Error): this {
+  uuid (): this {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
     const isUuid = uuidRegex.test(String(this.value))
     if (isUuid) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a uuid type!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.uuid.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -81,15 +81,15 @@ export class Validex implements IValidex {
     return this
   }
 
-  email (customError?: Error): this {
+  email (): this {
     const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
     const emailFormatIsValid = regEmail.test(String(this.value))
     if (emailFormatIsValid) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = 'email format is invalid!'
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.email.strict
+        const messageError = errorMessageTemplate.replace('[value]', String(this.value))
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -97,14 +97,16 @@ export class Validex implements IValidex {
     return this
   }
 
-  maxLength (maxLength: number, customError?: Error): this {
+  maxLength (maxLength: number): this {
     const isString = typeof this.value === 'string'
     if (isString) {
       const exceededLimit = String(this.value).length > maxLength
       if (exceededLimit) {
-        if (customError) throw new Error(customError.message)
-        else if (this.errorType) {
-          const messageError = `${this.valueName} must have a maximum of ${maxLength} characters!`
+        if (this.errorType) {
+          const errorMessageTemplate = errorMessage.validex.method.maxLength.strict
+          const messageError = errorMessageTemplate
+            .replace('[valueName]', this.valueName)
+            .replace('[maxLength]', String(maxLength))
           this.handleError(messageError)
         }
         this.isValid.push(true)
@@ -112,9 +114,9 @@ export class Validex implements IValidex {
       }
       this.isValid.push(false)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a string type!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.string.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -122,14 +124,16 @@ export class Validex implements IValidex {
     return this
   }
 
-  minLength (minLength: number, customError?: Error): this {
+  minLength (minLength: number): this {
     const isString = typeof this.value === 'string'
     if (isString) {
       const exceededLimit = String(this.value).length < minLength
       if (exceededLimit) {
-        if (customError) throw new Error(customError.message)
-        else if (this.errorType) {
-          const messageError = `${this.valueName} must have a minimum of ${minLength} characters!`
+        if (this.errorType) {
+          const errorMessageTemplate = errorMessage.validex.method.minLength.strict
+          const messageError = errorMessageTemplate
+            .replace('[valueName]', this.valueName)
+            .replace('[minLength]', String(minLength))
           this.handleError(messageError)
         }
         this.isValid.push(true)
@@ -137,9 +141,9 @@ export class Validex implements IValidex {
       }
       this.isValid.push(false)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a string type!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.string.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -147,14 +151,14 @@ export class Validex implements IValidex {
     return this
   }
 
-  number (customError?: Error): this {
+  number (): this {
     const isNumber = typeof this.value === 'number'
     if (isNumber) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a number type!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.number.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -162,16 +166,16 @@ export class Validex implements IValidex {
     return this
   }
 
-  float (customError?: Error): this {
+  float (): this {
     const isNumber = typeof this.value === 'number'
     const isFloat = Number.isFinite(this.value) && !Number.isInteger(this.value)
 
     if (isNumber && isFloat && this.value % 1 !== 0) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a number and float!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.float.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -180,15 +184,15 @@ export class Validex implements IValidex {
     return this
   }
 
-  integer (customError?: Error): this {
+  integer (): this {
     const isInteger = Number.isInteger(this.value)
 
     if (isInteger) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a number and integer!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.integer.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -197,14 +201,14 @@ export class Validex implements IValidex {
     return this
   }
 
-  boolean (customError?: Error): this {
+  boolean (): this {
     const isBoolean = typeof this.value === 'boolean'
     if (isBoolean) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} must be a boolean type!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.boolean.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -212,7 +216,7 @@ export class Validex implements IValidex {
     return this
   }
 
-  required (customError?: Error): this {
+  required (): this {
     const isEmpty = !this.value || this.value === undefined
 
     if (typeof this.value === 'boolean') {
@@ -220,9 +224,9 @@ export class Validex implements IValidex {
     } else if (typeof this.value === 'number' && this.value === 0) {
       this.isValid.push(true)
     } else if (isEmpty) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `${this.valueName} is required!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.required.strict
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -232,14 +236,16 @@ export class Validex implements IValidex {
     return this
   }
 
-  date (type: DateTypes, customError?: Error): this {
+  date (type: DateTypes): this {
     let year: number, month: number, day: number
     let formattedDate: Date
 
     if (typeof this.value === 'string' && this.value.length < 10) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `the date ${this.valueName} is not in the format ${type}!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.date.invalidFormat
+        const messageError = errorMessageTemplate
+          .replace('[valueName]', this.valueName)
+          .replace('[type]', type)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -283,9 +289,9 @@ export class Validex implements IValidex {
         formattedDate = new Date(String(this.value))
         break
       default:
-        if (customError) throw new Error(customError.message)
-        else if (this.errorType) {
-          const messageError = 'date method received invalid parameter: type is required!!'
+        if (this.errorType) {
+          const errorMessageTemplate = errorMessage.validex.method.date.invalidParameter
+          const messageError = errorMessageTemplate
           this.handleError(messageError)
         }
         this.isValid.push(false)
@@ -293,9 +299,11 @@ export class Validex implements IValidex {
     }
     const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
     if (isInvalidDate) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `the date ${this.valueName} is not in the format ${type}!`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.date.invalidFormat
+        const messageError = errorMessageTemplate
+          .replace('[valueName]', this.valueName)
+          .replace('[type]', type)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -305,17 +313,13 @@ export class Validex implements IValidex {
     return this
   }
 
-  dateGreaterThan (
-    dateToCompare: Date,
-    customError?: Error
-  ): this {
+  dateGreaterThan (dateToCompare: Date): this {
     const date = new Date(String(this.value))
     const isInvalidDate = isNaN(date.getTime())
 
     if (isInvalidDate) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = 'the provided date is invalid!'
+      if (this.errorType) {
+        const messageError = errorMessage.validex.method.dateGreaterThan.invalidDate
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -325,32 +329,25 @@ export class Validex implements IValidex {
     const datesAreEqual = date.getTime() === dateToCompare.getTime()
     const deadlineExceeded = date < dateToCompare
 
-    if (datesAreEqual) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `the date ${this.valueName} must be greater than the reference date!`
+    if (datesAreEqual || deadlineExceeded) {
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.dateGreaterThan.limitExceeded
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
       return this
-    } else if (deadlineExceeded) {
-      if (customError) throw new Error(customError.message)
-      this.isValid.push(false)
     }
     this.isValid.push(true)
     return this
   }
 
-  dateLessThan (
-    dateToCompare: Date,
-    customError?: Error
-  ): this {
+  dateLessThan (dateToCompare: Date): this {
     const date = new Date(String(this.value))
     const isInvalidDate = isNaN(date.getTime())
     if (isInvalidDate) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = 'the provided date is invalid!'
+      if (this.errorType) {
+        const messageError = errorMessage.validex.method.dateGreaterThan.invalidDate
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -360,31 +357,27 @@ export class Validex implements IValidex {
     const datesAreEqual = date.getTime() === dateToCompare.getTime()
     const deadlineExceeded = date > dateToCompare
 
-    if (datesAreEqual) {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `the date ${this.valueName} must be less than the reference date!`
+    if (datesAreEqual || deadlineExceeded) {
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.dateLessThan.limitExceeded
+        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
       return this
-    } else if (deadlineExceeded) {
-      if (customError) throw new Error(customError.message)
-      this.isValid.push(false)
     }
     this.isValid.push(true)
     return this
   }
 
-  time (type: TimeTypes, customError?: Error): this {
+  time (type: TimeTypes): this {
     const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
     const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
     let isTime = false
 
     if (!type || typeof type !== 'string') {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = 'time method received invalid parameter: type is required!'
+      if (this.errorType) {
+        const messageError = errorMessage.validex.method.time.invalidParameter
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -398,9 +391,11 @@ export class Validex implements IValidex {
     if (isTime) {
       this.isValid.push(true)
     } else {
-      if (customError) throw new Error(customError.message)
-      else if (this.errorType) {
-        const messageError = `the time ${String(this.value)} is not in the format ${type}`
+      if (this.errorType) {
+        const errorMessageTemplate = errorMessage.validex.method.time.invalidFormat
+        const messageError = errorMessageTemplate
+          .replace('[value]', String(this.value))
+          .replace('[type]', type)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -409,13 +404,11 @@ export class Validex implements IValidex {
     return this
   }
 
-  private handleError (messageError: string): this {
+  private handleError (messageError: string): void {
     const isCustomError = typeof this.errorType === 'function'
     if (isCustomError) {
       const CustomError = this.errorType
       throw new CustomError(messageError)
-    } else {
-      throw new Error(messageError)
     }
   }
 
