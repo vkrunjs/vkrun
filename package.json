@@ -1,12 +1,22 @@
 {
-  "name": "validex",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "vkrun",
+  "version": "0.1.0",
+  "description": "Vkrun is a runtime data validation library",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "author": "Mario Elvio",
+  "license": "MIT",
+  "files": [ "lib/**/*" ],
+  "homepage": "https://github.com/jukerah/vkrun#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jukerah/vkrun.git"
+  },
   "scripts": {
+    "clean": "rimraf lib",
+    "build": "npm run clean && tsc",
+    "prepublish": "npm run test && npm run build",
     "test": "jest --coverage=false",
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",

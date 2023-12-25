@@ -1,11 +1,7 @@
-import { DateTypes, TimeTypes, ArrayTypes } from '../types'
+import { DateTypes, TimeTypes, ArrayTypes } from '../../types'
 
 const addValidation = (method: string, params?: any): any[] => {
-  return {
-    method,
-    private: true,
-    ...params
-  }
+  return { method, private: true, ...params }
 }
 
 export const string = (): any => {
@@ -16,12 +12,12 @@ export const minWord = (minWord: number): any => {
   return addValidation('minWord', { minWord })
 }
 
-export const maxLength = (maxLength: number, customError?: Error): any => {
-  return addValidation('maxLength', { maxLength, customError })
+export const maxLength = (maxLength: number): any => {
+  return addValidation('maxLength')
 }
 
-export const minLength = (minLength: number, customError?: Error): any => {
-  return addValidation('minLength', { minLength, customError })
+export const minLength = (minLength: number): any => {
+  return addValidation('minLength', { minLength })
 }
 
 export const uuid = (): any => {
@@ -48,20 +44,20 @@ export const boolean = (customError?: Error): any => {
   return addValidation('boolean', { customError })
 }
 
-export const date = (type?: DateTypes, customError?: Error): any => {
-  return addValidation('date', { dateType: type, customError })
+export const date = (type?: DateTypes): any => {
+  return addValidation('date', { dateType: type })
 }
 
-export const dateGreaterThan = (dateToCompare: Date, customError?: Error): any => {
-  return addValidation('dateGreaterThan', { dateToCompare, customError })
+export const dateGreaterThan = (dateToCompare: Date): any => {
+  return addValidation('dateGreaterThan', { dateToCompare })
 }
 
-export const dateLessThan = (dateToCompare: Date, customError?: Error): any => {
-  return addValidation('dateLessThan', { dateToCompare, customError })
+export const dateLessThan = (dateToCompare: Date): any => {
+  return addValidation('dateLessThan', { dateToCompare })
 }
 
-export const time = (type: TimeTypes, customError?: Error): any => {
-  return addValidation('time', { timeType: type, customError })
+export const time = (type: TimeTypes): any => {
+  return addValidation('time', { timeType: type })
 }
 
 export const notRequired = (): any => {

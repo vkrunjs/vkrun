@@ -1,7 +1,5 @@
-/* eslint-disable prefer-const */
-/* eslint-disable no-template-curly-in-string */
-export let errorMessage = {
-  validex: {
+export const informativeMessage = {
+  validator: {
     constructorParams: {
       valueName: {
         missingClassParam: 'missing class param: valueName is required!',

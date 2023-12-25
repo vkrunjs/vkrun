@@ -1,5 +1,5 @@
-import { array, createSchema, date, minWord, notRequired, string, uuid } from '../../index'
-import { InvalidParamError } from '../errors'
+import { array, createSchema, date, minWord, notRequired, string, uuid } from '../index'
+import { InvalidParamError } from '../../errors'
 
 describe('Validator', () => {
   it('should validate an object with ObjectValidator', () => {

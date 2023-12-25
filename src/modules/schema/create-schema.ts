@@ -1,5 +1,5 @@
 import validex from '../../index'
-import { Validex } from '../validex'
+import { Validator } from '../validator'
 import {
   Schema,
   ObjectConfig,
@@ -9,8 +9,8 @@ import {
   ValidateItemArrayValue,
   ObjectType,
   ValidatePropertyRule
-} from '../types'
-import { errorMessage } from '../errors/error-message'
+} from '../../types'
+import { informativeMessage } from '../location/informative-message'
 
 class CreateSchema {
   private readonly schema: Schema
@@ -28,10 +28,10 @@ class CreateSchema {
     value: ValidatePropertyValue,
     rules: ValidatePropertyRules
   ): boolean {
-    const validateItemArray = (value: ValidateItemArrayValue): Validex => {
-      let validatorItemArray: Validex
-      const messageTemplate = errorMessage.schema.validateProperty.itemArray.valueName
-      const valueName = messageTemplate.replace('[keyName]', key)
+    const validateItemArray = (value: ValidateItemArrayValue): Validator => {
+      let validatorItemArray: Validator
+      const message = informativeMessage.schema.validateProperty.itemArray.valueName
+      const valueName = message.replace('[keyName]', key)
 
       if (this.config?.errorType) {
         validatorItemArray = validex(value, valueName, this.config?.errorType)
@@ -43,7 +43,7 @@ class CreateSchema {
 
     let validate: boolean
     for (const rule of rules) {
-      let v: Validex
+      let v: Validator
       if (this.config) v = validex(value, key, this.config.errorType)
       else v = validex(value, key)
 
@@ -151,8 +151,8 @@ class CreateSchema {
     for (const [objectToValidateKey, objectToValidateValue] of Object.entries(objectToValidate)) {
       if (!(objectToValidateKey in schema)) {
         if (this.config?.errorType && typeof this.config?.errorType === 'function') {
-          const errorMessageTemplate = errorMessage.schema.validateSchema.keyNotDeclaredInTheSchema
-          const messageError = errorMessageTemplate.replace('[keyName]', objectToValidateKey)
+          const message = informativeMessage.schema.validateSchema.keyNotDeclaredInTheSchema
+          const messageError = message.replace('[keyName]', objectToValidateKey)
           const CustomError = this.config?.errorType
           throw new CustomError(messageError)
         } else {
@@ -184,8 +184,8 @@ class CreateSchema {
 
       if (isSchemaKeyAbsent && !isNotRequiredMethodPresent()) {
         if (this.config?.errorType && typeof this.config?.errorType === 'function') {
-          const errorMessageTemplate = errorMessage.schema.validateObject.schemaKeyAbsent
-          const messageError = errorMessageTemplate.replace('[keyName]', schemaKey)
+          const message = informativeMessage.schema.validateObject.schemaKeyAbsent
+          const messageError = message.replace('[keyName]', schemaKey)
           const CustomError = this.config?.errorType
           throw new CustomError(messageError)
         } else {
@@ -210,8 +210,8 @@ class CreateSchema {
           this.isValid.push(validate)
         } else {
           if (this.config?.errorType && typeof this.config?.errorType === 'function') {
-            const errorMessageTemplate = errorMessage.schema.validateObject.notIsArray
-            const messageError = errorMessageTemplate.replace('[keyName]', schemaKey)
+            const message = informativeMessage.schema.validateObject.notIsArray
+            const messageError = message.replace('[keyName]', schemaKey)
             const CustomError = this.config?.errorType
             throw new CustomError(messageError)
           }

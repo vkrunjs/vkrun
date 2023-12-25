@@ -1,4 +1,4 @@
-export interface IValidex {
+export interface IValidator {
   required: () => this
   minWord: (minWord: number) => this
   email: () => this
@@ -16,8 +16,8 @@ export interface IValidex {
   time: (type: 'HH:MM' | 'HH:MM:SS') => this
   validate: () => boolean
 }
-export type ValidexValue = string | boolean | Date | number | undefined | null
-export type ValidexValueName = string
+export type ValidatorValue = string | boolean | Date | number | undefined | null
+export type ValidatorValueName = string
 export interface ObjectConfig {
   errorType?: ErrorTypes
 }
@@ -28,7 +28,7 @@ export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -40,7 +40,7 @@ export type ValidatePropertyRules = Array<{
 }>
 export interface ValidatePropertyRule {
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validex[]>
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -52,7 +52,82 @@ export interface ValidatePropertyRule {
 }
 export type ValidateItemArrayValue = string | boolean | Date | number
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
-export type Schema = Record<string, Validex[]>
+export type Schema = Record<string, Validator[]>
 export type ObjectType = Record<string, any>
 export type SchemaConfig = ObjectConfig
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'date' | Schema
+export interface SetTranslationMessage {
+  validator?: {
+    constructorParams?: {
+      valueName?: {
+        missingClassParam?: string
+        invalidClassParam?: string
+      }
+    }
+    method?: {
+      string?: {
+        strict?: string
+      }
+      minWord?: {
+        noMinimumWords?: string
+      }
+      uuid?: {
+        strict?: string
+      }
+      email?: {
+        strict?: string
+      }
+      maxLength?: {
+        strict?: string
+      }
+      minLength?: {
+        strict?: string
+      }
+      number?: {
+        strict?: string
+      }
+      float?: {
+        strict?: string
+      }
+      integer?: {
+        strict?: string
+      }
+      boolean?: {
+        strict?: string
+      }
+      required?: {
+        strict?: string
+      }
+      date?: {
+        invalidFormat?: string
+        invalidParameter?: string
+      }
+      dateGreaterThan?: {
+        invalidDate?: string
+        limitExceeded?: string
+      }
+      dateLessThan?: {
+        invalidDate?: string
+        limitExceeded?: string
+      }
+      time?: {
+        invalidParameter?: string
+        invalidFormat?: string
+      }
+    }
+  }
+  schema?: {
+    validateProperty?: {
+      itemArray?: {
+        valueName?: string
+      }
+    }
+    validateSchema?: {
+      keyNotDeclaredInTheSchema?: string
+    }
+    validateObject?: {
+      schemaKeyAbsent?: string
+      notIsArray?: string
+    }
+  }
+}

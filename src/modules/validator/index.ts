@@ -1,22 +1,22 @@
-import { errorMessage } from './errors/error-message'
+import { informativeMessage } from '../location/informative-message'
 import {
   DateTypes,
   ErrorTypes,
-  IValidex,
+  IValidator,
   TimeTypes,
-  ValidexValue,
-  ValidexValueName
-} from './types'
+  ValidatorValue,
+  ValidatorValueName
+} from '../../types'
 
-export class Validex implements IValidex {
-  private readonly value: ValidexValue
-  private readonly valueName: ValidexValueName
+export class Validator implements IValidator {
+  private readonly value: ValidatorValue
+  private readonly valueName: ValidatorValueName
   private readonly errorType?: ErrorTypes
   private readonly isValid: boolean[]
 
   constructor (
-    value: ValidexValue,
-    valueName: ValidexValueName,
+    value: ValidatorValue,
+    valueName: ValidatorValueName,
     errorType?: ErrorTypes
   ) {
     this.value = value
@@ -25,9 +25,9 @@ export class Validex implements IValidex {
     this.isValid = []
     const invalidErrorType = errorType && typeof errorType !== 'function'
     if (errorType && !valueName) {
-      throw new Error(errorMessage.validex.constructorParams.valueName.missingClassParam)
+      throw new Error(informativeMessage.validator.constructorParams.valueName.missingClassParam)
     } else if (invalidErrorType) {
-      throw new Error(errorMessage.validex.constructorParams.valueName.invalidClassParam)
+      throw new Error(informativeMessage.validator.constructorParams.valueName.invalidClassParam)
     }
   }
 
@@ -37,8 +37,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.string.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.string.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -54,8 +54,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.minWord.noMinimumWords
-        const messageError = errorMessageTemplate
+        const message = informativeMessage.validator.method.minWord.noMinimumWords
+        const messageError = message
           .replace('[valueName]', this.valueName)
           .replace('[minWord]', String(minWord))
         this.handleError(messageError)
@@ -72,8 +72,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.uuid.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.uuid.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -88,8 +88,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.email.strict
-        const messageError = errorMessageTemplate.replace('[value]', String(this.value))
+        const message = informativeMessage.validator.method.email.strict
+        const messageError = message.replace('[value]', String(this.value))
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -103,8 +103,8 @@ export class Validex implements IValidex {
       const exceededLimit = String(this.value).length > maxLength
       if (exceededLimit) {
         if (this.errorType) {
-          const errorMessageTemplate = errorMessage.validex.method.maxLength.strict
-          const messageError = errorMessageTemplate
+          const message = informativeMessage.validator.method.maxLength.strict
+          const messageError = message
             .replace('[valueName]', this.valueName)
             .replace('[maxLength]', String(maxLength))
           this.handleError(messageError)
@@ -115,8 +115,8 @@ export class Validex implements IValidex {
       this.isValid.push(false)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.string.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.string.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -130,8 +130,8 @@ export class Validex implements IValidex {
       const exceededLimit = String(this.value).length < minLength
       if (exceededLimit) {
         if (this.errorType) {
-          const errorMessageTemplate = errorMessage.validex.method.minLength.strict
-          const messageError = errorMessageTemplate
+          const message = informativeMessage.validator.method.minLength.strict
+          const messageError = message
             .replace('[valueName]', this.valueName)
             .replace('[minLength]', String(minLength))
           this.handleError(messageError)
@@ -142,8 +142,8 @@ export class Validex implements IValidex {
       this.isValid.push(false)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.string.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.string.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -157,8 +157,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.number.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.number.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -174,8 +174,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.float.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.float.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -191,8 +191,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.integer.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.integer.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -207,8 +207,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.boolean.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.boolean.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -225,8 +225,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else if (isEmpty) {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.required.strict
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.required.strict
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -242,8 +242,8 @@ export class Validex implements IValidex {
 
     if (typeof this.value === 'string' && this.value.length < 10) {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.date.invalidFormat
-        const messageError = errorMessageTemplate
+        const message = informativeMessage.validator.method.date.invalidFormat
+        const messageError = message
           .replace('[valueName]', this.valueName)
           .replace('[type]', type)
         this.handleError(messageError)
@@ -290,8 +290,8 @@ export class Validex implements IValidex {
         break
       default:
         if (this.errorType) {
-          const errorMessageTemplate = errorMessage.validex.method.date.invalidParameter
-          const messageError = errorMessageTemplate
+          const message = informativeMessage.validator.method.date.invalidParameter
+          const messageError = message
           this.handleError(messageError)
         }
         this.isValid.push(false)
@@ -300,8 +300,8 @@ export class Validex implements IValidex {
     const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
     if (isInvalidDate) {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.date.invalidFormat
-        const messageError = errorMessageTemplate
+        const message = informativeMessage.validator.method.date.invalidFormat
+        const messageError = message
           .replace('[valueName]', this.valueName)
           .replace('[type]', type)
         this.handleError(messageError)
@@ -319,7 +319,7 @@ export class Validex implements IValidex {
 
     if (isInvalidDate) {
       if (this.errorType) {
-        const messageError = errorMessage.validex.method.dateGreaterThan.invalidDate
+        const messageError = informativeMessage.validator.method.dateGreaterThan.invalidDate
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -331,8 +331,8 @@ export class Validex implements IValidex {
 
     if (datesAreEqual || deadlineExceeded) {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.dateGreaterThan.limitExceeded
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.dateGreaterThan.limitExceeded
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -347,7 +347,7 @@ export class Validex implements IValidex {
     const isInvalidDate = isNaN(date.getTime())
     if (isInvalidDate) {
       if (this.errorType) {
-        const messageError = errorMessage.validex.method.dateGreaterThan.invalidDate
+        const messageError = informativeMessage.validator.method.dateGreaterThan.invalidDate
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -359,8 +359,8 @@ export class Validex implements IValidex {
 
     if (datesAreEqual || deadlineExceeded) {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.dateLessThan.limitExceeded
-        const messageError = errorMessageTemplate.replace('[valueName]', this.valueName)
+        const message = informativeMessage.validator.method.dateLessThan.limitExceeded
+        const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -377,7 +377,7 @@ export class Validex implements IValidex {
 
     if (!type || typeof type !== 'string') {
       if (this.errorType) {
-        const messageError = errorMessage.validex.method.time.invalidParameter
+        const messageError = informativeMessage.validator.method.time.invalidParameter
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -392,8 +392,8 @@ export class Validex implements IValidex {
       this.isValid.push(true)
     } else {
       if (this.errorType) {
-        const errorMessageTemplate = errorMessage.validex.method.time.invalidFormat
-        const messageError = errorMessageTemplate
+        const message = informativeMessage.validator.method.time.invalidFormat
+        const messageError = message
           .replace('[value]', String(this.value))
           .replace('[type]', type)
         this.handleError(messageError)
@@ -415,4 +415,8 @@ export class Validex implements IValidex {
   validate (): boolean {
     return this.isValid.every(isValid => isValid)
   }
+}
+
+export const validator = (value: ValidatorValue, valueName?: ValidatorValueName, typeError?: ErrorTypes): Validator => {
+  return new Validator(value, valueName ?? '', typeError)
 }
