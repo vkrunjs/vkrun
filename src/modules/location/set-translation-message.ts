@@ -216,5 +216,18 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.time.invalidParameter must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.time?.invalidFormat) {
+    if (typeof newMessages.validator.method.time.invalidFormat === 'string') {
+      const hasValueKey = newMessages.validator.method.time.invalidFormat.includes('[value]')
+      const hasTypeKey = newMessages.validator.method.time.invalidFormat.includes('[type]')
+      if (hasValueKey && hasTypeKey) {
+        informativeMessage.validator.method.time.invalidFormat = newMessages.validator.method.time.invalidFormat
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.time.invalidFormat must contain the reserved keys [value] and [type]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.time.invalidFormat must be a string type!')
+    }
+  }
   return true
 }
