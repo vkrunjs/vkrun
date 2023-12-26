@@ -217,7 +217,7 @@ class CreateSchema {
           this.isValid.push(false)
         }
       } else if (isNotRequiredMethodPresent()) {
-        if (objectToValidateValue) {
+        if (objectToValidateValue !== undefined) {
           const newSchemaRules = schemaRules.filter(
             (rule: ValidatePropertyRule) => rule.method !== 'notRequired'
           )

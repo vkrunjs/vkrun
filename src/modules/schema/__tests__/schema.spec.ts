@@ -269,7 +269,7 @@ describe('Validator', () => {
         documento: [string()],
         lista: array({
           perfil: [string()],
-          website: [string()]
+          website: [string(), notRequired()]
         })
       }
     })
@@ -281,7 +281,7 @@ describe('Validator', () => {
         documento: '123',
         lista: [{
           perfil: 'desenvolvedor',
-          website: ''
+          website: false
         }]
       }
     })
