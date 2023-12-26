@@ -1,4 +1,6 @@
-export const informativeMessage = {
+import { InformativeMessage } from '../types'
+
+export const informativeMessage: InformativeMessage = {
   validator: {
     constructorParams: {
       valueName: {

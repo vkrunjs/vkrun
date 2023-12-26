@@ -133,3 +133,79 @@ export interface SetTranslationMessage {
     }
   }
 }
+export interface InformativeMessage {
+  validator: {
+    constructorParams: {
+      valueName: {
+        missingClassParam: string
+        invalidClassParam: string
+      }
+    }
+    method: {
+      string: {
+        strict: string
+      }
+      minWord: {
+        noMinimumWords: string
+      }
+      uuid: {
+        strict: string
+      }
+      email: {
+        strict: string
+      }
+      maxLength: {
+        strict: string
+      }
+      minLength: {
+        strict: string
+      }
+      number: {
+        strict: string
+      }
+      float: {
+        strict: string
+      }
+      integer: {
+        strict: string
+      }
+      boolean: {
+        strict: string
+      }
+      required: {
+        strict: string
+      }
+      date: {
+        invalidFormat: string
+        invalidParameter: string
+      }
+      dateGreaterThan: {
+        invalidDate: string
+        limitExceeded: string
+      }
+      dateLessThan: {
+        invalidDate: string
+        limitExceeded: string
+      }
+      time: {
+        invalidParameter: string
+        invalidFormat: string
+      }
+    }
+  }
+  schema: {
+    validateProperty: {
+      itemArray: {
+        valueName: string
+      }
+    }
+    validateSchema: {
+      keyNotDeclaredInTheSchema: string
+    }
+    validateObject: {
+      schemaKeyAbsent: string
+      notIsArray: string
+    }
+  }
+}
+export type AnyInformativeMessage = InformativeMessage & Record<string, any>
