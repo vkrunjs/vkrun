@@ -212,4 +212,19 @@ describe('Set translation message', () => {
 
     expect(sut).toThrow('setTranslationMessage: noMinimumWords must contain the reserved key(s) [valueName] and [minWord]!')
   })
+
+  it('Should be able to able to not change the informational message', () => {
+    const newInformativeMessage: any = {
+      validator: {
+        constructorParams: {
+          valueName: 'invalid value'
+        }
+      }
+    }
+
+    const sut = setTranslationMessage(newInformativeMessage)
+    console.log(JSON.stringify(informativeMessage, null, 2))
+    expect(sut).toBeTruthy()
+    expect(informativeMessage).toEqual(informativeMessage)
+  })
 })
