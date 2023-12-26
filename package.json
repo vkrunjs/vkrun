@@ -17,7 +17,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "publish": "npm run test && npm run build && npm version minor && git push --tags && npm publish --access=public",
     "test": "jest --coverage=false",
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",
