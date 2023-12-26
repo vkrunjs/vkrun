@@ -1,10 +1,10 @@
-// import { informativeMessage } from '../informative-message'
+import { informativeMessage } from '../informative-message'
 import { setTranslationMessage } from '../set-translation-message'
 
 describe('Set translation message', () => {
-  it('Should be able to able to change error messages', () => {
+  it('Should be able to able to change informative message', () => {
     const newInformativeMessage = {
-      validex: {
+      validator: {
         constructorParams: {
           valueName: {
             missingClassParam: 'parâmetro de classe ausente: valueName é obrigatório!',
@@ -79,10 +79,9 @@ describe('Set translation message', () => {
       }
     }
 
-    // const sut =
-    setTranslationMessage(newInformativeMessage)
+    const sut = setTranslationMessage(newInformativeMessage)
 
-    // expect(sut).toBeTruthy()
-    // expect(informativeMessage).toEqual(newInformativeMessage)
+    expect(sut).toBeTruthy()
+    expect(informativeMessage).toEqual(newInformativeMessage)
   })
 })

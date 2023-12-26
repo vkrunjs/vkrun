@@ -168,7 +168,7 @@ try {
 import { setTranslationMessage } from "vkrun"
 
 const newInformativeMessage = {
-    validex: {
+    validator: {
       constructorParams: {
         valueName: {
           missingClassParam: 'parâmetro de classe ausente: valueName é obrigatório!',
