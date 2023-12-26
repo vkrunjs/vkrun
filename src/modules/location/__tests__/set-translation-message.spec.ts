@@ -223,7 +223,16 @@ describe('Set translation message', () => {
     }
 
     const sut = setTranslationMessage(newInformativeMessage)
-    console.log(JSON.stringify(informativeMessage, null, 2))
+
+    expect(sut).toBeTruthy()
+    expect(informativeMessage).toEqual(informativeMessage)
+  })
+
+  it('Should be able to able to not change the message when value of newMessages is undefined', () => {
+    const newInformativeMessage: any = undefined
+
+    const sut = setTranslationMessage(newInformativeMessage)
+
     expect(sut).toBeTruthy()
     expect(informativeMessage).toEqual(informativeMessage)
   })
