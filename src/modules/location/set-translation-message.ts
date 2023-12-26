@@ -178,5 +178,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.invalidDate must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.dateGreaterThan?.limitExceeded) {
+    if (typeof newMessages.validator.method.dateGreaterThan.limitExceeded === 'string') {
+      const hasValueNameKey = newMessages.validator.method.dateGreaterThan.limitExceeded.includes('[valueName]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.dateGreaterThan.limitExceeded = newMessages.validator.method.dateGreaterThan.limitExceeded
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.limitExceeded must contain the reserved key [valueName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.limitExceeded must be a string type!')
+    }
+  }
   return true
 }
