@@ -180,4 +180,20 @@ describe('Set translation message', () => {
       }
     })
   })
+
+  it('Should be able to able to throw error if value is different from string and undefined', () => {
+    const newInformativeMessage: any = {
+      validator: {
+        method: {
+          minWord: {
+            noMinimumWords: true
+          }
+        }
+      }
+    }
+
+    const sut = (): any => setTranslationMessage(newInformativeMessage)
+
+    expect(sut).toThrow('setTranslationMessage: newMessages.validator.method.minWord.noMinimumWords must be a string type!')
+  })
 })
