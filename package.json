@@ -15,13 +15,19 @@
     "type": "git",
     "url": "git+https://github.com/jukerah/vkrun.git"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc",
     "test": "jest --coverage=false",
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",
     "test:ci": "npm test -- --coverage=true",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "changeset": "packages/cli/bin.js",
+    "release": "yarn build && changeset publish"
   },
   "lint-staged": {
     "*.ts": [
