@@ -194,7 +194,7 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
     if (typeof newMessages.validator.method.dateLessThan.invalidDate === 'string') {
       informativeMessage.validator.method.dateLessThan.invalidDate = newMessages.validator.method.dateLessThan.invalidDate
     } else {
-      throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.invalidDate must be a string type!')
+      throw new Error('setTranslationMessage: newMessages.validator.method.dateLessThan.invalidDate must be a string type!')
     }
   }
   if (newMessages?.validator?.method?.dateLessThan?.limitExceeded) {
@@ -207,6 +207,13 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       }
     } else {
       throw new Error('setTranslationMessage: newMessages.validator.method.dateLessThan.limitExceeded must be a string type!')
+    }
+  }
+  if (newMessages?.validator?.method?.time?.invalidParameter) {
+    if (typeof newMessages.validator.method.time.invalidParameter === 'string') {
+      informativeMessage.validator.method.time.invalidParameter = newMessages.validator.method.time.invalidParameter
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.time.invalidParameter must be a string type!')
     }
   }
   return true
