@@ -190,5 +190,12 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.limitExceeded must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.dateLessThan?.invalidDate) {
+    if (typeof newMessages.validator.method.dateLessThan.invalidDate === 'string') {
+      informativeMessage.validator.method.dateLessThan.invalidDate = newMessages.validator.method.dateLessThan.invalidDate
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.invalidDate must be a string type!')
+    }
+  }
   return true
 }
