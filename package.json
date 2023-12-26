@@ -21,8 +21,6 @@
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",
     "test:ci": "npm test -- --coverage=true",
-    "prepare": "husky install && chmod ug+x .husky/*",
-    "husky-add-hooks": "npx husky add .husky/pre-commit \"npm run pre-commit\" && npx husky add .husky/commit-msg \"npx commitlint --edit \"'$1'\"\" && npx husky add .husky/pre-push \"npm run test:ci\" ",
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
