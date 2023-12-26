@@ -1,13 +1,14 @@
 # Vkrun
 
-## Language
+## Language README
 
-<p><a href="./README-pt.md">Portuguese</a> | <span style="font-weight: bold;">English</span></p>
+<p><a href="https://github.com/jukerah/vkrun/blob/main/README-pt.md">Portuguese</a> | <span style="font-weight: bold;">English</span></p>
 
 ## Introduction
 
-> Vkrun is a runtime data validation library. Simplifying and enhancing the validation of various data types in JavaScript and TypeScript projects, Vkrun offers the flexibility to define schemas for objects and allows modeling complex and interdependent validations, providing a robust and customizable solution for your validation needs. Below are some of the validation types supported by Vkrun:
+> Vkrun is a runtime data validation library. Simplifying and enhancing the validation of various data types in JavaScript and TypeScript projects, Vkrun offers the flexibility to define schemas for objects and allows modeling complex and interdependent validations, providing a robust and customizable solution for your validation needs.
 
+### Validations:
 - [object](#object)
 - array
 - string
@@ -23,6 +24,9 @@
 - integer
 - dateGreaterThan
 - dateLessThan
+
+### Translation:
+- [setTranslationMessage](#setTranslationMessage)
 
 ## Installation
 
@@ -158,6 +162,94 @@ try {
 ```
 
 - For any chained validation where an error needs to be captured, the call to the vkrun function should be within a try-catch structure. Another important point is that it is not necessary to call the validate method at the end.
+
+### setTranslationMessage
+
+#### Translation
+
+> If you need support in another language, the "setTranslationMessage" function can be used to modify error messages, using keys and values for translation. It is not mandatory to change all messages; it is possible to modify individual messages, provided that the message object path is provided correctly, and the reserved keys are respected.
+
+```ts
+import { setTranslationMessage } from "vkrun"
+
+const newInformativeMessage = {
+    validex: {
+      constructorParams: {
+        valueName: {
+          missingClassParam: 'parâmetro de classe ausente: valueName é obrigatório!',
+          invalidClassParam: 'parâmetro de classe inválido: errorType fornecido não é válido!'
+        }
+      },
+      method: {
+        string: {
+          strict: '[valueName] deve ser do tipo string!'
+        },
+        minWord: {
+          noMinimumWords: '[valueName] deve ter pelo menos [minWord] palavras!'
+        },
+        uuid: {
+          strict: '[valueName] deve ser do tipo uuid!'
+        },
+        email: {
+          strict: 'email [value] é inválido!'
+        },
+        maxLength: {
+          strict: '[valueName] deve ter no máximo [maxLength] caracteres!'
+        },
+        minLength: {
+          strict: '[valueName] deve ter no mínimo [minLength] caracteres!'
+        },
+        number: {
+          strict: '[valueName] deve ser um tipo number!'
+        },
+        float: {
+          strict: '[valueName] deve ser um number e float!'
+        },
+        integer: {
+          strict: '[valueName] deve ser um number e integer!'
+        },
+        boolean: {
+          strict: '[valueName] deve ser do tipo boolean!'
+        },
+        required: {
+          strict: '[valueName] é obrigatório!'
+        },
+        date: {
+          invalidFormat: 'a data [valueName] não está no formato [type]!',
+          invalidParameter: 'método date recebeu parâmetro inválido: type é obrigatório!'
+        },
+        dateGreaterThan: {
+          invalidDate: 'a data fornecida é inválida!',
+          limitExceeded: 'a data [valueName] deve ser maior que a data de referência!'
+        },
+        dateLessThan: {
+          invalidDate: 'a data fornecida é inválida!',
+          limitExceeded: 'a data [valueName] deve ser menor que a data de referência!'
+        },
+        time: {
+          invalidParameter: 'o método time recebeu parâmetro inválido: o type é obrigatório!',
+          invalidFormat: 'a hora [value] não está no formato [type]!'
+        }
+      }
+    },
+    schema: {
+      validateProperty: {
+        itemArray: {
+          valueName: 'todos os valores em [keyName]'
+        }
+      },
+      validateSchema: {
+        keyNotDeclaredInTheSchema: 'a chave [keyName] não foi declarada no schema'
+      },
+      validateObject: {
+        schemaKeyAbsent: 'a chave [keyName] é obrigatória!',
+        notIsArray: 'o valor [keyName] deve ser um array!'
+      }
+    }
+  }
+
+  setTranslationMessage(newInformativeMessage)
+```
 
 ### Required
 
