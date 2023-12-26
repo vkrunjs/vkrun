@@ -1,6 +1,6 @@
 {
   "name": "vkrun",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Vkrun is a runtime data validation library",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
