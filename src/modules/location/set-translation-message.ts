@@ -35,130 +35,53 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
     }
   }
 
-  // Constructor
-  setValue(
-    ['validator', 'constructorParams', 'valueName', 'invalidClassParam'],
-    newMessages?.validator?.constructorParams?.valueName?.invalidClassParam
-  )
-  setValue(
-    ['validator', 'constructorParams', 'valueName', 'missingClassParam'],
-    newMessages?.validator?.constructorParams?.valueName?.missingClassParam
-  )
+  const configurations = [
+    // Validator
+    { keys: ['validator', 'constructorParams', 'valueName', 'invalidClassParam'] },
+    { keys: ['validator', 'constructorParams', 'valueName', 'missingClassParam'] },
+    { keys: ['validator', 'method', 'string', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'minWord', 'noMinimumWords'], reservedKeys: ['[valueName]', '[minWord]'] },
+    { keys: ['validator', 'method', 'uuid', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'email', 'strict'], reservedKeys: ['[value]'] },
+    { keys: ['validator', 'method', 'maxLength', 'strict'], reservedKeys: ['[valueName]', '[maxLength]'] },
+    { keys: ['validator', 'method', 'minLength', 'strict'], reservedKeys: ['[valueName]', '[minLength]'] },
+    { keys: ['validator', 'method', 'number', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'float', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'integer', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'boolean', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'required', 'strict'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'date', 'invalidFormat'], reservedKeys: ['[valueName]', '[type]'] },
+    { keys: ['validator', 'method', 'date', 'invalidParameter'] },
+    { keys: ['validator', 'method', 'dateGreaterThan', 'invalidDate'] },
+    { keys: ['validator', 'method', 'dateGreaterThan', 'limitExceeded'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'dateLessThan', 'invalidDate'] },
+    { keys: ['validator', 'method', 'dateLessThan', 'limitExceeded'], reservedKeys: ['[valueName]'] },
+    { keys: ['validator', 'method', 'time', 'invalidParameter'] },
+    { keys: ['validator', 'method', 'time', 'invalidFormat'], reservedKeys: ['[value]', '[type]'] },
 
-  // Validator
-  setValue(
-    ['validator', 'method', 'string', 'strict'],
-    newMessages?.validator?.method?.string?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'minWord', 'noMinimumWords'],
-    newMessages?.validator?.method?.minWord?.noMinimumWords,
-    ['[valueName]', '[minWord]']
-  )
-  setValue(
-    ['validator', 'method', 'uuid', 'strict'],
-    newMessages?.validator?.method?.uuid?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'email', 'strict'],
-    newMessages?.validator?.method?.email?.strict,
-    ['[value]']
-  )
-  setValue(
-    ['validator', 'method', 'maxLength', 'strict'],
-    newMessages?.validator?.method?.maxLength?.strict,
-    ['[valueName]', '[maxLength]']
-  )
-  setValue(
-    ['validator', 'method', 'minLength', 'strict'],
-    newMessages?.validator?.method?.minLength?.strict,
-    ['[valueName]', '[minLength]']
-  )
-  setValue(
-    ['validator', 'method', 'number', 'strict'],
-    newMessages?.validator?.method?.number?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'float', 'strict'],
-    newMessages?.validator?.method?.float?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'integer', 'strict'],
-    newMessages?.validator?.method?.integer?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'boolean', 'strict'],
-    newMessages?.validator?.method?.boolean?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'required', 'strict'],
-    newMessages?.validator?.method?.required?.strict,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'date', 'invalidFormat'],
-    newMessages?.validator?.method?.date?.invalidFormat,
-    ['[valueName]', '[type]']
-  )
-  setValue(
-    ['validator', 'method', 'date', 'invalidParameter'],
-    newMessages?.validator?.method?.date?.invalidParameter
-  )
-  setValue(
-    ['validator', 'method', 'dateGreaterThan', 'invalidDate'],
-    newMessages?.validator?.method?.dateGreaterThan?.invalidDate
-  )
-  setValue(
-    ['validator', 'method', 'dateGreaterThan', 'limitExceeded'],
-    newMessages?.validator?.method?.dateGreaterThan?.limitExceeded,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'dateLessThan', 'invalidDate'],
-    newMessages?.validator?.method?.dateLessThan?.invalidDate
-  )
-  setValue(
-    ['validator', 'method', 'dateLessThan', 'limitExceeded'],
-    newMessages?.validator?.method?.dateLessThan?.limitExceeded,
-    ['[valueName]']
-  )
-  setValue(
-    ['validator', 'method', 'time', 'invalidParameter'],
-    newMessages?.validator?.method?.time?.invalidParameter
-  )
-  setValue(
-    ['validator', 'method', 'time', 'invalidFormat'],
-    newMessages?.validator?.method?.time?.invalidFormat,
-    ['[value]', '[type]']
-  )
+    // Schema
+    { keys: ['schema', 'validateProperty', 'itemArray', 'valueName'], reservedKeys: ['[keyName]'] },
+    { keys: ['schema', 'validateSchema', 'keyNotDeclaredInTheSchema'], reservedKeys: ['[keyName]'] },
+    { keys: ['schema', 'validateObject', 'schemaKeyAbsent'], reservedKeys: ['[keyName]'] },
+    { keys: ['schema', 'validateObject', 'notIsArray'], reservedKeys: ['[keyName]'] }
+  ]
 
-  // Schema
-  setValue(
-    ['schema', 'validateProperty', 'itemArray', 'valueName'],
-    newMessages?.schema?.validateProperty?.itemArray?.valueName,
-    ['[keyName]']
-  )
-  setValue(
-    ['schema', 'validateSchema', 'keyNotDeclaredInTheSchema'],
-    newMessages?.schema?.validateSchema?.keyNotDeclaredInTheSchema,
-    ['[keyName]']
-  )
-  setValue(
-    ['schema', 'validateObject', 'schemaKeyAbsent'],
-    newMessages?.schema?.validateObject?.schemaKeyAbsent,
-    ['[keyName]']
-  )
-  setValue(
-    ['schema', 'validateObject', 'notIsArray'],
-    newMessages?.schema?.validateObject?.notIsArray,
-    ['[keyName]']
-  )
+  configurations.forEach((config: { keys: string[], reservedKeys?: string[] }) => {
+    const messages: any = newMessages
+    if (config.keys.length === 3) {
+      setValue(
+        config.keys,
+        messages?.[config.keys[0]]?.[config.keys[1]]?.[config.keys[2]],
+        config.reservedKeys
+      )
+    } else if (config.keys.length === 4) {
+      setValue(
+        config.keys,
+        messages?.[config.keys[0]]?.[config.keys[1]]?.[config.keys[2]]?.[config.keys[3]],
+        config.reservedKeys
+      )
+    }
+  })
 
   return true
 }
