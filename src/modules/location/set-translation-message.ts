@@ -197,5 +197,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.dateGreaterThan.invalidDate must be a string type!')
     }
   }
+  if (newMessages?.validator?.method?.dateLessThan?.limitExceeded) {
+    if (typeof newMessages.validator.method.dateLessThan.limitExceeded === 'string') {
+      const hasValueNameKey = newMessages.validator.method.dateLessThan.limitExceeded.includes('[valueName]')
+      if (hasValueNameKey) {
+        informativeMessage.validator.method.dateLessThan.limitExceeded = newMessages.validator.method.dateLessThan.limitExceeded
+      } else {
+        throw new Error('setTranslationMessage: newMessages.validator.method.dateLessThan.limitExceeded must contain the reserved key [valueName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.validator.method.dateLessThan.limitExceeded must be a string type!')
+    }
+  }
   return true
 }
