@@ -229,5 +229,17 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       throw new Error('setTranslationMessage: newMessages.validator.method.time.invalidFormat must be a string type!')
     }
   }
+  if (newMessages?.schema?.validateProperty?.itemArray?.valueName) {
+    if (typeof newMessages.schema.validateProperty.itemArray.valueName === 'string') {
+      const hasKeyName = newMessages.schema.validateProperty.itemArray.valueName.includes('[keyName]')
+      if (hasKeyName) {
+        informativeMessage.schema.validateProperty.itemArray.valueName = newMessages.schema.validateProperty.itemArray.valueName
+      } else {
+        throw new Error('setTranslationMessage: newMessages.schema.validateProperty.itemArray.valueName must contain the reserved key [keyName]!')
+      }
+    } else {
+      throw new Error('setTranslationMessage: newMessages.schema.validateProperty.itemArray.valueName must be a string type!')
+    }
+  }
   return true
 }
