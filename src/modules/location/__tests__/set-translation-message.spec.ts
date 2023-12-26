@@ -196,4 +196,20 @@ describe('Set translation message', () => {
 
     expect(sut).toThrow('setTranslationMessage: newMessages.validator.method.minWord.noMinimumWords must be a string type!')
   })
+
+  it('Should be able to able to throw error if value does not have the reserved keys', () => {
+    const newInformativeMessage: any = {
+      validator: {
+        method: {
+          minWord: {
+            noMinimumWords: 'valueName deve ter pelo menos minWord palavras!'
+          }
+        }
+      }
+    }
+
+    const sut = (): any => setTranslationMessage(newInformativeMessage)
+
+    expect(sut).toThrow('setTranslationMessage: noMinimumWords must contain the reserved key(s) [valueName] and [minWord]!')
+  })
 })
