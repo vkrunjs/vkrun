@@ -1,4 +1,4 @@
-import { informativeMessage } from '../location/informative-message'
+import { informativeMessage } from '../location'
 import {
   DateTypes,
   ErrorTypes,

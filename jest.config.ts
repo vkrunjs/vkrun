@@ -18,7 +18,9 @@ const config: Config = {
   },
   testPathIgnorePatterns: ['<rootDir>/src/.*\\.types\\.ts$'],
   coveragePathIgnorePatterns: [
-    '<rootDir>/src/.*\\.d\\.ts$'
+    '<rootDir>/src/.*\\.d\\.ts$',
+    '<rootDir>/src/index.ts$',
+    '<rootDir>/src/modules/types.ts$'
   ]
 }
 

@@ -214,6 +214,7 @@ describe('Set translation message', () => {
   })
 
   it('Should be able to able to not change the informational message', () => {
+    const informativeMessageMock = informativeMessage
     const newInformativeMessage: any = {
       validator: {
         constructorParams: {
@@ -225,15 +226,16 @@ describe('Set translation message', () => {
     const sut = setTranslationMessage(newInformativeMessage)
 
     expect(sut).toBeTruthy()
-    expect(informativeMessage).toEqual(informativeMessage)
+    expect(informativeMessage).toEqual(informativeMessageMock)
   })
 
   it('Should be able to able to not change the message when value of newMessages is undefined', () => {
+    const informativeMessageMock = informativeMessage
     const newInformativeMessage: any = undefined
 
     const sut = setTranslationMessage(newInformativeMessage)
 
     expect(sut).toBeTruthy()
-    expect(informativeMessage).toEqual(informativeMessage)
+    expect(informativeMessage).toEqual(informativeMessageMock)
   })
 })

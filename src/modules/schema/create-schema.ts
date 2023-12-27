@@ -9,7 +9,7 @@ import {
   ObjectType,
   ValidatePropertyRule
 } from '../types'
-import { informativeMessage } from '../location/informative-message'
+import { informativeMessage } from '../location'
 
 class CreateSchema {
   private readonly schema: Schema
