@@ -51,8 +51,7 @@ describe('Set translation message', () => {
             strict: '[valueName] é obrigatório!'
           },
           date: {
-            invalidFormat: 'a data [valueName] não está no formato [type]!',
-            invalidParameter: 'método date recebeu parâmetro inválido: type é obrigatório!'
+            invalidFormat: 'a data [valueName] não está no formato [type]!'
           },
           dateGreaterThan: {
             invalidDate: 'a data fornecida é inválida!',
@@ -73,9 +72,6 @@ describe('Set translation message', () => {
           itemArray: {
             valueName: 'todos os valores em [keyName]'
           }
-        },
-        validateSchema: {
-          keyNotDeclaredInTheSchema: 'a chave [keyName] não foi declarada no schema'
         },
         validateObject: {
           schemaKeyAbsent: 'a chave [keyName] é obrigatória!',
@@ -147,8 +143,7 @@ describe('Set translation message', () => {
             strict: '[valueName] is required!'
           },
           date: {
-            invalidFormat: 'the date [valueName] is not in the format [type]!',
-            invalidParameter: 'date method received invalid parameter: type is required!'
+            invalidFormat: 'the date [valueName] is not in the format [type]!'
           },
           dateGreaterThan: {
             invalidDate: 'the provided date is invalid!',
@@ -169,9 +164,6 @@ describe('Set translation message', () => {
           itemArray: {
             valueName: 'all values in the [keyName]'
           }
-        },
-        validateSchema: {
-          keyNotDeclaredInTheSchema: '[keyName] key was not declared in the schema'
         },
         validateObject: {
           schemaKeyAbsent: '[keyName] key is required!',

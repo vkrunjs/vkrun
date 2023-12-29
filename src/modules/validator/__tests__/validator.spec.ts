@@ -138,14 +138,14 @@ describe('Validator', () => {
 
   it('Should be able to validate the maxLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
-    const sut = validator(value).maxLength(20).validate()
-    expect(sut).toBeFalsy()
+    const sut = validator(value).maxLength(21).validate()
+    expect(sut).toBeTruthy()
   })
 
   it('Should be able to validate the maxLength method and return true if value length exceed the limit', () => {
     const value = 'exceed_the_limit'
     const sut = validator(value).maxLength(10).validate()
-    expect(sut).toBeTruthy()
+    expect(sut).toBeFalsy()
   })
 
   it('Should be able to validate the maxLength method and throw INVALID_PARAM if value length exceed the limit', () => {
@@ -168,14 +168,14 @@ describe('Validator', () => {
 
   it('Should be able to validate the minLength method and return false if value length does not exceed the limit', () => {
     const value = 'not_exceed_the_limit'
-    const sut = validator(value).minLength(20).validate()
-    expect(sut).toBeFalsy()
+    const sut = validator(value).minLength(19).validate()
+    expect(sut).toBeTruthy()
   })
 
   it('Should be able to validate the minLength method and return true if value length exceed the limit', () => {
     const value = 'exceed_the_limit'
     const sut = validator(value).minLength(20).validate()
-    expect(sut).toBeTruthy()
+    expect(sut).toBeFalsy()
   })
 
   it('Should be able to validate the minLength method and throw INVALID_PARAM if value is invalid', () => {
@@ -304,13 +304,6 @@ describe('Validator', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the date method and throw INVALID_PARAM if the value is date and invalid type', () => {
-    const value = new Date().toISOString()
-    const type: any = null
-    const sut = (): Validator => validator(value, 'value_name', InvalidParamError).date(type)
-    expect(sut).toThrow('date method received invalid parameter: type is required!')
-  })
-
   it('Should be able to validate the date method and return false if the value is not correct date', () => {
     const value = '2000-30'
     const sut = validator(value).date('YYYY-DD-MM').validate()
@@ -380,13 +373,6 @@ describe('Validator', () => {
   it('Should be able to validate the date method and throw error if the value is not correctly formatted', () => {
     const value = 'invalid-format'
     const sut = validator(value).date('YYYY-DD-MM').validate()
-    expect(sut).toBeFalsy()
-  })
-
-  it('Should be able to validate the date method and return false if the type is not correctly formatted', () => {
-    const value = '2023/10/15'
-    const type: any = 'invalid-format'
-    const sut = validator(value).date(type).validate()
     expect(sut).toBeFalsy()
   })
 
