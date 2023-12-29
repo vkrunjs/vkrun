@@ -1,4 +1,4 @@
-import { DateTypes, TimeTypes, ArrayTypes } from '../types'
+import { DateTypes, TimeTypes } from '../types'
 
 const addValidation = (method: string, params?: any): any[] => {
   return { method, private: true, ...params }
@@ -13,7 +13,7 @@ export const minWord = (minWord: number): any => {
 }
 
 export const maxLength = (maxLength: number): any => {
-  return addValidation('maxLength')
+  return addValidation('maxLength', { maxLength })
 }
 
 export const minLength = (minLength: number): any => {
@@ -24,24 +24,24 @@ export const uuid = (): any => {
   return addValidation('uuid')
 }
 
-export const email = (customError?: Error): any => {
-  return addValidation('email', { customError })
+export const email = (): any => {
+  return addValidation('email')
 }
 
-export const number = (customError?: Error): any => {
-  return addValidation('number', { customError })
+export const number = (): any => {
+  return addValidation('number')
 }
 
-export const float = (customError?: Error): any => {
-  return addValidation('float', { customError })
+export const float = (): any => {
+  return addValidation('float')
 }
 
-export const integer = (customError?: Error): any => {
-  return addValidation('integer', { customError })
+export const integer = (): any => {
+  return addValidation('integer')
 }
 
-export const boolean = (customError?: Error): any => {
-  return addValidation('boolean', { customError })
+export const boolean = (): any => {
+  return addValidation('boolean')
 }
 
 export const date = (type?: DateTypes): any => {
@@ -64,6 +64,20 @@ export const notRequired = (): any => {
   return addValidation('notRequired')
 }
 
-export const array = (arrayType?: ArrayTypes): any => {
-  return [addValidation('array', { arrayType: arrayType ?? 'any' })]
+export const array: {
+  string: any
+  number: any
+  boolean: any
+  date: (type?: DateTypes) => void
+  strict: (array: any[]) => void
+  object: (object: any) => void
+  any: any
+} = {
+  string: () => [addValidation('array', { arrayType: 'string' })],
+  number: () => [addValidation('array', { arrayType: 'number' })],
+  boolean: () => [addValidation('array', { arrayType: 'boolean' })],
+  date: (type?: DateTypes) => [addValidation('array', { arrayType: 'date', dateType: type })],
+  strict: (array: any[]) => [addValidation('array', { arrayType: 'strict', arrayRules: array })],
+  object: (object: any) => [addValidation('array', { arrayType: 'object', arrayRules: object })],
+  any: () => [addValidation('array', { arrayType: 'any' })]
 }

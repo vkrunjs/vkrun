@@ -14,7 +14,6 @@ export const locationConfig: Array<{ keys: string[], reservedKeys?: string[] }> 
   { keys: ['validator', 'method', 'boolean', 'strict'], reservedKeys: ['[valueName]'] },
   { keys: ['validator', 'method', 'required', 'strict'], reservedKeys: ['[valueName]'] },
   { keys: ['validator', 'method', 'date', 'invalidFormat'], reservedKeys: ['[valueName]', '[type]'] },
-  { keys: ['validator', 'method', 'date', 'invalidParameter'] },
   { keys: ['validator', 'method', 'dateGreaterThan', 'invalidDate'] },
   { keys: ['validator', 'method', 'dateGreaterThan', 'limitExceeded'], reservedKeys: ['[valueName]'] },
   { keys: ['validator', 'method', 'dateLessThan', 'invalidDate'] },
@@ -24,7 +23,6 @@ export const locationConfig: Array<{ keys: string[], reservedKeys?: string[] }> 
 
   // Schema
   { keys: ['schema', 'validateProperty', 'itemArray', 'valueName'], reservedKeys: ['[keyName]'] },
-  { keys: ['schema', 'validateSchema', 'keyNotDeclaredInTheSchema'], reservedKeys: ['[keyName]'] },
   { keys: ['schema', 'validateObject', 'schemaKeyAbsent'], reservedKeys: ['[keyName]'] },
   { keys: ['schema', 'validateObject', 'notIsArray'], reservedKeys: ['[keyName]'] }
 ]

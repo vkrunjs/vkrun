@@ -1,4 +1,6 @@
 import { Validator, validator } from '../validator'
+import { informativeMessage } from '../location'
+import { isObject, isArray, isNotRequired } from './utils'
 import {
   Schema,
   ObjectConfig,
@@ -9,7 +11,6 @@ import {
   ObjectType,
   ValidatePropertyRule
 } from '../types'
-import { informativeMessage } from '../location'
 
 class CreateSchema {
   private readonly schema: Schema
@@ -22,18 +23,18 @@ class CreateSchema {
     this.isValid = []
   }
 
-  private validateProperty (
+  private async validateProperty (
     key: ValidatePropertyKey,
     value: ValidatePropertyValue,
     rules: ValidatePropertyRules
-  ): boolean {
+  ): Promise<boolean> {
     const validateItemArray = (value: ValidateItemArrayValue): Validator => {
       let validatorItemArray: Validator
       const message = informativeMessage.schema.validateProperty.itemArray.valueName
       const valueName = message.replace('[keyName]', key)
 
       if (this.config?.errorType) {
-        validatorItemArray = validator(value, valueName, this.config?.errorType)
+        validatorItemArray = validator(value, valueName, this.config.errorType)
       } else {
         validatorItemArray = validator(value, valueName)
       }
@@ -128,11 +129,34 @@ class CreateSchema {
               validate = validateItemArray(item).string().validate()
               this.isValid.push(validate)
             })
-          } else if (typeof rule.arrayType === 'object' && rule.arrayType !== undefined) {
-            value.forEach((item: ObjectType) => {
-              validate = this.validateObject(item, rule.arrayType as ObjectType)
+          } else if (rule.arrayType === 'number') {
+            value.forEach((item: number) => {
+              validate = validateItemArray(item).number().validate()
               this.isValid.push(validate)
             })
+          } else if (rule.arrayType === 'boolean') {
+            value.forEach((item: boolean) => {
+              validate = validateItemArray(item).boolean().validate()
+              this.isValid.push(validate)
+            })
+          } else if (rule.arrayType === 'date') {
+            value.forEach((item: Date) => {
+              validate = validateItemArray(item).date(rule?.dateType).validate()
+              this.isValid.push(validate)
+            })
+          } else if (rule.arrayType === 'strict') {
+            value.forEach((item: number, index: number) => {
+              if (item === rule?.arrayRules[index]) {
+                this.isValid.push(true)
+              } else {
+                this.isValid.push(false)
+              }
+            })
+          } else if (rule.arrayType === 'object' && rule.arrayType !== undefined) {
+            await Promise.all(value.map(async (item: ObjectType) => {
+              const validate = await this.validateObject(item, rule.arrayRules as ObjectType)
+              this.isValid.push(validate)
+            }))
           }
           break
 
@@ -143,69 +167,38 @@ class CreateSchema {
     return this.isValid.every(isValid => isValid)
   }
 
-  private validateSchema (
-    schema: ObjectType,
-    objectToValidate: ObjectType
-  ): boolean {
-    for (const [objectToValidateKey, objectToValidateValue] of Object.entries(objectToValidate)) {
-      if (!(objectToValidateKey in schema)) {
-        if (this.config?.errorType && typeof this.config?.errorType === 'function') {
-          const message = informativeMessage.schema.validateSchema.keyNotDeclaredInTheSchema
-          const messageError = message.replace('[keyName]', objectToValidateKey)
-          const CustomError = this.config?.errorType
-          throw new CustomError(messageError)
-        } else {
-          this.isValid.push(false)
-        }
-      }
-      const isObject = typeof objectToValidateValue === 'object' && !Array.isArray(objectToValidateValue)
-      if (isObject) {
-        const validateSchema = this.validateSchema(schema[objectToValidateKey], objectToValidateValue)
-        this.isValid.push(validateSchema)
-      }
-    }
-    return this.isValid.every(isValid => isValid)
-  }
-
-  private validateObject (
+  private async validateObject (
     objectToValidate: ObjectType,
     schema: ObjectType
-  ): boolean {
+  ): Promise<boolean> {
     let validate: boolean
+
     for (const [schemaKey, schemaRules] of Object.entries(schema)) {
       const objectToValidateValue = objectToValidate[schemaKey]
       const isSchemaKeyAbsent = !(schemaKey in objectToValidate)
-      const isNotRequiredMethodPresent = (): boolean => {
-        return typeof objectToValidateValue !== 'object' &&
-          Array.isArray(schemaRules) &&
-          schemaRules.some((rule: ValidatePropertyRule) => rule?.method === 'notRequired')
-      }
 
-      if (isSchemaKeyAbsent && !isNotRequiredMethodPresent()) {
+      if (
+        (isSchemaKeyAbsent && !isNotRequired(schemaRules)) ||
+        (isSchemaKeyAbsent && isObject(schemaRules))
+      ) {
         if (this.config?.errorType && typeof this.config?.errorType === 'function') {
           const message = informativeMessage.schema.validateObject.schemaKeyAbsent
           const messageError = message.replace('[keyName]', schemaKey)
           const CustomError = this.config?.errorType
           throw new CustomError(messageError)
-        } else {
-          this.isValid.push(false)
         }
+        this.isValid.push(false)
+        break
       }
 
-      const isObject = (): boolean => {
-        return typeof objectToValidateValue === 'object' &&
-          objectToValidateValue !== null &&
-          schemaRules.method !== 'array' &&
-          !Array.isArray(objectToValidateValue)
-      }
-
-      if (isObject()) {
-        validate = this.validateObject(objectToValidateValue, schemaRules)
+      if (isObject(objectToValidateValue)) {
+        validate = await this.validateObject(objectToValidateValue, schemaRules)
         this.isValid.push(validate)
-      } else if (schemaRules.method === 'array') {
-        const isArray = Array.isArray(objectToValidateValue)
-        if (isArray) {
-          validate = this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
+      } else if (isArray(schemaRules)) {
+        const valuesIsArray = Array.isArray(objectToValidateValue)
+
+        if (valuesIsArray) {
+          validate = await this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
           this.isValid.push(validate)
         } else {
           if (this.config?.errorType && typeof this.config?.errorType === 'function') {
@@ -216,19 +209,19 @@ class CreateSchema {
           }
           this.isValid.push(false)
         }
-      } else if (isNotRequiredMethodPresent()) {
+      } else if (isNotRequired(schemaRules)) {
         if (objectToValidateValue !== undefined) {
           const newSchemaRules = schemaRules.filter(
             (rule: ValidatePropertyRule) => rule.method !== 'notRequired'
           )
-          validate = this.validateProperty(schemaKey, objectToValidateValue, newSchemaRules)
+          validate = await this.validateProperty(schemaKey, objectToValidateValue, newSchemaRules)
           this.isValid.push(validate)
         }
       } else {
-        const required: ValidatePropertyRules = [{ method: 'required', private: true }]
-        const validateRequiredByDefault = this.validateProperty(schemaKey, objectToValidateValue, required)
-        this.isValid.push(validateRequiredByDefault)
-        validate = this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
+        const requiredRules: ValidatePropertyRules = [{ method: 'required', private: true }]
+        const validateRequiredByDefault = this.validateProperty(schemaKey, objectToValidateValue, requiredRules)
+        this.isValid.push(await validateRequiredByDefault)
+        validate = await this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
         this.isValid.push(validate)
       }
     }
@@ -236,9 +229,8 @@ class CreateSchema {
     return this.isValid.every(isValid => isValid)
   }
 
-  validate (objectToValidate: ObjectType): boolean {
-    this.validateObject(objectToValidate, this.schema)
-    this.validateSchema(this.schema, objectToValidate)
+  async validate (objectToValidate: ObjectType): Promise<boolean> {
+    await this.validateObject(objectToValidate, this.schema)
     return this.isValid.every(isValid => isValid)
   }
 }

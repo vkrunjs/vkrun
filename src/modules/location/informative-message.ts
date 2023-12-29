@@ -43,8 +43,7 @@ export const informativeMessage: InformativeMessage = {
         strict: '[valueName] is required!'
       },
       date: {
-        invalidFormat: 'the date [valueName] is not in the format [type]!',
-        invalidParameter: 'date method received invalid parameter: type is required!'
+        invalidFormat: 'the date [valueName] is not in the format [type]!'
       },
       dateGreaterThan: {
         invalidDate: 'the provided date is invalid!',
@@ -65,9 +64,6 @@ export const informativeMessage: InformativeMessage = {
       itemArray: {
         valueName: 'all values in the [keyName]'
       }
-    },
-    validateSchema: {
-      keyNotDeclaredInTheSchema: '[keyName] key was not declared in the schema'
     },
     validateObject: {
       schemaKeyAbsent: '[keyName] key is required!',

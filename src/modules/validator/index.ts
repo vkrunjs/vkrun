@@ -109,10 +109,10 @@ export class Validator implements IValidator {
             .replace('[maxLength]', String(maxLength))
           this.handleError(messageError)
         }
-        this.isValid.push(true)
+        this.isValid.push(false)
         return this
       }
-      this.isValid.push(false)
+      this.isValid.push(true)
     } else {
       if (this.errorType) {
         const message = informativeMessage.validator.method.string.strict
@@ -136,10 +136,10 @@ export class Validator implements IValidator {
             .replace('[minLength]', String(minLength))
           this.handleError(messageError)
         }
-        this.isValid.push(true)
+        this.isValid.push(false)
         return this
       }
-      this.isValid.push(false)
+      this.isValid.push(true)
     } else {
       if (this.errorType) {
         const message = informativeMessage.validator.method.string.strict
@@ -236,16 +236,24 @@ export class Validator implements IValidator {
     return this
   }
 
-  date (type: DateTypes): this {
+  date (type?: DateTypes): this {
     let year: number, month: number, day: number
     let formattedDate: Date
 
-    if (typeof this.value === 'string' && this.value.length < 10) {
+    const invalidFormat = (): boolean => {
+      return (typeof this.value === 'string' &&
+             this.value.length < 10) ||
+             (typeof this.value === 'string' &&
+             this.value.length <= 10 &&
+             type === 'ISO8601')
+    }
+
+    if (invalidFormat()) {
       if (this.errorType) {
         const message = informativeMessage.validator.method.date.invalidFormat
         const messageError = message
           .replace('[valueName]', this.valueName)
-          .replace('[type]', type)
+          .replace('[type]', type ?? 'ISO8601')
         this.handleError(messageError)
       }
       this.isValid.push(false)
@@ -285,25 +293,17 @@ export class Validator implements IValidator {
         [year, day, month] = String(this.value).split('-').map(Number)
         formattedDate = new Date(year, month - 1, day)
         break
-      case 'ISO8601':
-        formattedDate = new Date(String(this.value))
-        break
       default:
-        if (this.errorType) {
-          const message = informativeMessage.validator.method.date.invalidParameter
-          const messageError = message
-          this.handleError(messageError)
-        }
-        this.isValid.push(false)
-        return this
+        formattedDate = new Date(String(this.value))
     }
+
     const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
     if (isInvalidDate) {
       if (this.errorType) {
         const message = informativeMessage.validator.method.date.invalidFormat
         const messageError = message
           .replace('[valueName]', this.valueName)
-          .replace('[type]', type)
+          .replace('[type]', type ?? 'ISO8601')
         this.handleError(messageError)
       }
       this.isValid.push(false)

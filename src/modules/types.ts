@@ -30,7 +30,8 @@ export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
 export type ValidatePropertyRules = Array<{
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+  arrayRules?: any
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -42,7 +43,8 @@ export type ValidatePropertyRules = Array<{
 }>
 export interface ValidatePropertyRule {
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+  arrayRules?: any
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -57,7 +59,6 @@ export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
 export type Schema = Record<string, Validator[]>
 export type ObjectType = Record<string, any>
 export type SchemaConfig = ObjectConfig
-export type ArrayTypes = 'string' | 'number' | 'boolean' | 'date' | Schema
 export interface SetTranslationMessage {
   validator?: {
     constructorParams?: {
@@ -177,7 +178,6 @@ export interface InformativeMessage {
       }
       date: {
         invalidFormat: string
-        invalidParameter: string
       }
       dateGreaterThan: {
         invalidDate: string
@@ -198,9 +198,6 @@ export interface InformativeMessage {
       itemArray: {
         valueName: string
       }
-    }
-    validateSchema: {
-      keyNotDeclaredInTheSchema: string
     }
     validateObject: {
       schemaKeyAbsent: string
