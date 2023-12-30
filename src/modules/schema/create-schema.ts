@@ -33,8 +33,8 @@ class CreateSchema {
       const message = informativeMessage.schema.validateProperty.itemArray.valueName
       const valueName = message.replace('[keyName]', key)
 
-      if (this.config?.errorType) {
-        validatorItemArray = validator(value, valueName, this.config.errorType)
+      if (this.config?.error) {
+        validatorItemArray = validator(value, valueName, this.config.error)
       } else {
         validatorItemArray = validator(value, valueName)
       }
@@ -44,7 +44,7 @@ class CreateSchema {
     let validate: boolean
     for (const rule of rules) {
       let v: Validator
-      if (this.config) v = validator(value, key, this.config.errorType)
+      if (this.config) v = validator(value, key, this.config.error)
       else v = validator(value, key)
 
       switch (rule.method) {
@@ -181,10 +181,10 @@ class CreateSchema {
         (isSchemaKeyAbsent && !isNotRequired(schemaRules)) ||
         (isSchemaKeyAbsent && isObject(schemaRules))
       ) {
-        if (this.config?.errorType && typeof this.config?.errorType === 'function') {
+        if (this.config?.error && typeof this.config?.error === 'function') {
           const message = informativeMessage.schema.validateObject.schemaKeyAbsent
           const messageError = message.replace('[keyName]', schemaKey)
-          const CustomError = this.config?.errorType
+          const CustomError = this.config?.error
           throw new CustomError(messageError)
         }
         this.isValid.push(false)
@@ -201,10 +201,10 @@ class CreateSchema {
           validate = await this.validateProperty(schemaKey, objectToValidateValue, schemaRules)
           this.isValid.push(validate)
         } else {
-          if (this.config?.errorType && typeof this.config?.errorType === 'function') {
+          if (this.config?.error && typeof this.config?.error === 'function') {
             const message = informativeMessage.schema.validateObject.notIsArray
             const messageError = message.replace('[keyName]', schemaKey)
-            const CustomError = this.config?.errorType
+            const CustomError = this.config?.error
             throw new CustomError(messageError)
           }
           this.isValid.push(false)

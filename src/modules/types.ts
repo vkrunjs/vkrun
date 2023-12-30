@@ -21,7 +21,7 @@ export interface IValidator {
 export type ValidatorValue = string | boolean | Date | number | undefined | null
 export type ValidatorValueName = string
 export interface ObjectConfig {
-  errorType?: ErrorTypes
+  error?: ErrorTypes
 }
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
 export type ErrorClass<T extends Error> = new (message?: string) => T

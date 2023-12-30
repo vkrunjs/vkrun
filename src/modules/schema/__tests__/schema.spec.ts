@@ -79,7 +79,7 @@ describe('Schema', () => {
   it("Should be able to validate the string method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyString: [string()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({ keyString: false })
 
@@ -92,7 +92,7 @@ describe('Schema', () => {
   it('Should be able to validate the string method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyString: [number()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -150,7 +150,7 @@ describe('Schema', () => {
   it("Should be able to validate the number method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyNumber: [number()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({ keyNumber: false })
 
@@ -163,7 +163,7 @@ describe('Schema', () => {
   it('Should be able to validate the number method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyNumber: [number()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -228,7 +228,7 @@ describe('Schema', () => {
     const schema = createSchema({
       keyBooleanTrue: [boolean()],
       keyBooleanFalse: [boolean()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyBooleanTrue: 'true',
@@ -245,7 +245,7 @@ describe('Schema', () => {
     const schema = createSchema({
       keyBooleanTrue: [boolean()],
       keyBooleanFalse: [boolean()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -302,7 +302,7 @@ describe('Schema', () => {
   it("Should be able to validate the minWord method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyMinWord: [minWord(2)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyMinWord: 'any_text'
@@ -316,7 +316,7 @@ describe('Schema', () => {
   it('Should be able to validate the minWord method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyMinWord: [minWord(2)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -373,7 +373,7 @@ describe('Schema', () => {
   it("Should be able to validate the maxLength method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyMaxLength: [maxLength(3)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyMaxLength: 'text'
@@ -387,7 +387,7 @@ describe('Schema', () => {
   it('Should be able to validate the maxLength method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyMaxLength: [maxLength(3)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -444,7 +444,7 @@ describe('Schema', () => {
   it("Should be able to validate the maxLength method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyMinLength: [minLength(5)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyMinLength: 'text'
@@ -458,7 +458,7 @@ describe('Schema', () => {
   it('Should be able to validate the maxLength method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyMinLength: [minLength(5)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -515,7 +515,7 @@ describe('Schema', () => {
   it("Should be able to validate the uuid method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyUuid: [uuid()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyUuid: '123'
@@ -529,7 +529,7 @@ describe('Schema', () => {
   it('Should be able to validate the uuid method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyUuid: [uuid()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -586,7 +586,7 @@ describe('Schema', () => {
   it("Should be able to validate the email method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyEmail: [email()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyEmail: 'email@email'
@@ -600,7 +600,7 @@ describe('Schema', () => {
   it('Should be able to validate the email method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyEmail: [email()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -657,7 +657,7 @@ describe('Schema', () => {
   it("Should be able to validate the number method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyNumber: [number()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyNumber: '123'
@@ -671,7 +671,7 @@ describe('Schema', () => {
   it('Should be able to validate the number method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyNumber: [number()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -728,7 +728,7 @@ describe('Schema', () => {
   it("Should be able to validate the float method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyFloat: [float()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyFloat: 123
@@ -742,7 +742,7 @@ describe('Schema', () => {
   it('Should be able to validate the float method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyFloat: [float()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -799,7 +799,7 @@ describe('Schema', () => {
   it("Should be able to validate the integer method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       keyInteger: [integer()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyInteger: 123.5
@@ -813,7 +813,7 @@ describe('Schema', () => {
   it('Should be able to validate the integer method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyInteger: [integer()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -933,7 +933,7 @@ describe('Schema', () => {
       'YYYY/DD/MM': [date('YYYY/DD/MM')],
       'YYYY-MM-DD': [date('YYYY-MM-DD')],
       'YYYY-DD-MM': [date('YYYY-DD-MM')]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyDate: 123.5
@@ -947,7 +947,7 @@ describe('Schema', () => {
   it('Should be able to validate the date method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       keyDate: [date()]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -1016,7 +1016,7 @@ describe('Schema', () => {
 
     const schema = createSchema({
       keyDateGreaterThan: [dateGreaterThan(refDate)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyDateGreaterThan: 'invalid_date'
@@ -1032,7 +1032,7 @@ describe('Schema', () => {
 
     const schema = createSchema({
       keyDateGreaterThan: [dateGreaterThan(refDate)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -1101,7 +1101,7 @@ describe('Schema', () => {
 
     const schema = createSchema({
       keyDateLessThan: [dateLessThan(refDate)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyDateLessThan: 'invalid_date'
@@ -1117,7 +1117,7 @@ describe('Schema', () => {
 
     const schema = createSchema({
       keyDateLessThan: [dateLessThan(refDate)]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -1181,7 +1181,7 @@ describe('Schema', () => {
     const schema = createSchema({
       'HH:MM:SS': [time('HH:MM:SS')],
       'HH:MM': [time('HH:MM')]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       'HH:MM:SS': '11:05',
@@ -1197,7 +1197,7 @@ describe('Schema', () => {
     const schema = createSchema({
       'HH:MM:SS': [time('HH:MM:SS')],
       'HH:MM': [time('HH:MM')]
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -1276,7 +1276,7 @@ describe('Schema', () => {
   it("Should be able to validate the array method and throw InvalidParamError if doesn't passes all tests", async () => {
     const schema = createSchema({
       stringArray: array.string()
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       stringArray: [true, 'string', 'string']
@@ -1290,7 +1290,7 @@ describe('Schema', () => {
   it('Should be able to validate the array method and throw InvalidParamError when value is not provided', async () => {
     const schema = createSchema({
       stringArray: array.string()
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 
@@ -1314,7 +1314,7 @@ describe('Schema', () => {
   it('Should be able to validate the array method and throw InvalidParamError when value is not array', async () => {
     const schema = createSchema({
       stringArray: array.string()
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       stringArray: 'string'
@@ -1375,7 +1375,7 @@ describe('Schema', () => {
       keyObject: {
         itemA: [string()]
       }
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({
       keyObject: {
@@ -1393,7 +1393,7 @@ describe('Schema', () => {
       keyObject: {
         itemA: [string()]
       }
-    }, { errorType: InvalidParamError })
+    }, { error: InvalidParamError })
 
     const sut = async (): Promise<boolean> => await schema.validate({})
 

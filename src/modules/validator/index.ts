@@ -11,20 +11,20 @@ import {
 export class Validator implements IValidator {
   private readonly value: ValidatorValue
   private readonly valueName: ValidatorValueName
-  private readonly errorType?: ErrorTypes
+  private readonly error?: ErrorTypes
   private readonly isValid: boolean[]
 
   constructor (
     value: ValidatorValue,
     valueName: ValidatorValueName,
-    errorType?: ErrorTypes
+    error?: ErrorTypes
   ) {
     this.value = value
-    this.errorType = errorType
+    this.error = error
     this.valueName = valueName
     this.isValid = []
-    const invalidErrorType = errorType && typeof errorType !== 'function'
-    if (errorType && !valueName) {
+    const invalidErrorType = error && typeof error !== 'function'
+    if (error && !valueName) {
       throw new Error(informativeMessage.validator.constructorParams.valueName.missingClassParam)
     } else if (invalidErrorType) {
       throw new Error(informativeMessage.validator.constructorParams.valueName.invalidClassParam)
@@ -36,7 +36,7 @@ export class Validator implements IValidator {
     if (isString) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.string.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -53,7 +53,7 @@ export class Validator implements IValidator {
     if (hasMinOfWords) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.minWord.noMinimumWords
         const messageError = message
           .replace('[valueName]', this.valueName)
@@ -71,7 +71,7 @@ export class Validator implements IValidator {
     if (isUuid) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.uuid.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -87,7 +87,7 @@ export class Validator implements IValidator {
     if (emailFormatIsValid) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.email.strict
         const messageError = message.replace('[value]', String(this.value))
         this.handleError(messageError)
@@ -102,7 +102,7 @@ export class Validator implements IValidator {
     if (isString) {
       const exceededLimit = String(this.value).length > maxLength
       if (exceededLimit) {
-        if (this.errorType) {
+        if (this.error) {
           const message = informativeMessage.validator.method.maxLength.strict
           const messageError = message
             .replace('[valueName]', this.valueName)
@@ -114,7 +114,7 @@ export class Validator implements IValidator {
       }
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.string.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -129,7 +129,7 @@ export class Validator implements IValidator {
     if (isString) {
       const exceededLimit = String(this.value).length < minLength
       if (exceededLimit) {
-        if (this.errorType) {
+        if (this.error) {
           const message = informativeMessage.validator.method.minLength.strict
           const messageError = message
             .replace('[valueName]', this.valueName)
@@ -141,7 +141,7 @@ export class Validator implements IValidator {
       }
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.string.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -156,7 +156,7 @@ export class Validator implements IValidator {
     if (isNumber) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.number.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -173,7 +173,7 @@ export class Validator implements IValidator {
     if (isNumber && isFloat && this.value % 1 !== 0) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.float.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -190,7 +190,7 @@ export class Validator implements IValidator {
     if (isInteger) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.integer.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -206,7 +206,7 @@ export class Validator implements IValidator {
     if (isBoolean) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.boolean.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -224,7 +224,7 @@ export class Validator implements IValidator {
     } else if (typeof this.value === 'number' && this.value === 0) {
       this.isValid.push(true)
     } else if (isEmpty) {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.required.strict
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -249,7 +249,7 @@ export class Validator implements IValidator {
     }
 
     if (invalidFormat()) {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.date.invalidFormat
         const messageError = message
           .replace('[valueName]', this.valueName)
@@ -299,7 +299,7 @@ export class Validator implements IValidator {
 
     const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
     if (isInvalidDate) {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.date.invalidFormat
         const messageError = message
           .replace('[valueName]', this.valueName)
@@ -318,7 +318,7 @@ export class Validator implements IValidator {
     const isInvalidDate = isNaN(date.getTime())
 
     if (isInvalidDate) {
-      if (this.errorType) {
+      if (this.error) {
         const messageError = informativeMessage.validator.method.dateGreaterThan.invalidDate
         this.handleError(messageError)
       }
@@ -330,7 +330,7 @@ export class Validator implements IValidator {
     const deadlineExceeded = date < dateToCompare
 
     if (datesAreEqual || deadlineExceeded) {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.dateGreaterThan.limitExceeded
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -346,7 +346,7 @@ export class Validator implements IValidator {
     const date = new Date(String(this.value))
     const isInvalidDate = isNaN(date.getTime())
     if (isInvalidDate) {
-      if (this.errorType) {
+      if (this.error) {
         const messageError = informativeMessage.validator.method.dateGreaterThan.invalidDate
         this.handleError(messageError)
       }
@@ -358,7 +358,7 @@ export class Validator implements IValidator {
     const deadlineExceeded = date > dateToCompare
 
     if (datesAreEqual || deadlineExceeded) {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.dateLessThan.limitExceeded
         const messageError = message.replace('[valueName]', this.valueName)
         this.handleError(messageError)
@@ -376,7 +376,7 @@ export class Validator implements IValidator {
     let isTime = false
 
     if (!type || typeof type !== 'string') {
-      if (this.errorType) {
+      if (this.error) {
         const messageError = informativeMessage.validator.method.time.invalidParameter
         this.handleError(messageError)
       }
@@ -391,7 +391,7 @@ export class Validator implements IValidator {
     if (isTime) {
       this.isValid.push(true)
     } else {
-      if (this.errorType) {
+      if (this.error) {
         const message = informativeMessage.validator.method.time.invalidFormat
         const messageError = message
           .replace('[value]', String(this.value))
@@ -405,9 +405,9 @@ export class Validator implements IValidator {
   }
 
   private handleError (messageError: string): void {
-    const isCustomError = typeof this.errorType === 'function'
+    const isCustomError = typeof this.error === 'function'
     if (isCustomError) {
-      const CustomError = this.errorType
+      const CustomError = this.error
       throw new CustomError(messageError)
     }
   }
