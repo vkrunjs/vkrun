@@ -16,7 +16,8 @@ export interface IValidator {
   dateGreaterThan: (dateToCompare: Date) => this
   dateLessThan: (dateToCompare: Date) => this
   time: (type: 'HH:MM' | 'HH:MM:SS') => this
-  validate: () => boolean
+  throw: (ClassError?: ErrorTypes) => void
+  validate: () => Tests
 }
 export type ValidatorValue = string | boolean | Date | number | undefined | null
 export type ValidatorValueName = string
@@ -28,6 +29,16 @@ export type ErrorClass<T extends Error> = new (message?: string) => T
 export type ErrorTypes = any // ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
+export type Methods = Array<{
+  method: 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
+  minWord?: number
+  maxLength?: number
+  minLength?: number
+  dateType?: DateTypes
+  dateToCompare?: Date
+  timeType?: TimeTypes
+  private?: boolean
+}>
 export type ValidatePropertyRules = Array<{
   method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
   arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
@@ -206,3 +217,20 @@ export interface InformativeMessage {
   }
 }
 export type AnyInformativeMessage = InformativeMessage & Record<string, any>
+export interface Tests {
+  passedAll: boolean
+  passed: number
+  failed: number
+  totalTests: number
+  errors: ErrorTest[]
+  time: string
+}
+export interface ErrorTest {
+  class?: string
+  method?: string
+  type: 'invalid param' | 'invalid value' | 'missing value'
+  name: string
+  expect: string
+  received: any
+  message: string
+}

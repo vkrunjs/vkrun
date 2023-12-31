@@ -7,7 +7,7 @@ export const resetTranslationMessage = (): void => {
       constructorParams: {
         valueName: {
           missingClassParam: 'missing class param: valueName is required!',
-          invalidClassParam: 'invalid class param: errorType provided is not valid!'
+          invalidClassParam: 'invalid class param: class error provided is not valid!'
         }
       },
       method: {
