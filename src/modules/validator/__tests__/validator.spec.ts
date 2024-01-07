@@ -11,6 +11,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'required',
+      name: 'value_name',
+      expect: 'value other than undefined, null or empty string',
+      received: false
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -23,6 +30,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'required',
+      name: 'value_name',
+      expect: 'value other than undefined, null or empty string',
+      received: 'any_value'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -35,6 +49,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'required',
+      name: 'value_name',
+      expect: 'value other than undefined, null or empty string',
+      received: 0
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -47,6 +68,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'required',
       type: 'missing value',
@@ -67,12 +89,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'required',
       type: 'missing value',
       name: 'value_name',
       expect: 'value other than undefined, null or empty string',
-      received: 'null',
+      received: null,
       message: 'value_name is required!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
@@ -87,6 +110,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'required',
       type: 'missing value',
@@ -141,6 +165,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'minWord',
+      name: 'value_name',
+      expect: 'must have a minimum of words',
+      received: 'primary secondary'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -153,6 +184,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'minWord',
       type: 'invalid value',
@@ -190,6 +222,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'email',
+      name: 'value_name',
+      expect: 'valid email',
+      received: 'any_email@mail.com'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -202,6 +241,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'email',
       type: 'invalid value',
@@ -240,6 +280,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'uuid',
+      name: 'uuid',
+      expect: 'uuid format',
+      received: '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -252,6 +299,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'uuid',
       type: 'invalid value',
@@ -278,6 +326,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'maxLength',
+      name: 'value_name',
+      expect: 'string with characters less than or equal to the limit',
+      received: 'not_exceed_the_limit'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -289,6 +344,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'maxLength',
       type: 'invalid value',
@@ -320,12 +376,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'maxLength',
       type: 'invalid value',
       name: 'value_name',
       expect: 'string with characters less than or equal to the limit',
-      received: undefined,
+      received: 'undefined',
       message: 'value_name must be a string type!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
@@ -340,6 +397,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'minLength',
+      name: 'value_name',
+      expect: 'string with characters greater than or equal to the limit',
+      received: 'not_exceed_the_limit'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -352,6 +416,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'minLength',
       type: 'invalid value',
@@ -377,12 +442,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'minLength',
       type: 'invalid value',
       name: 'value_name',
       expect: 'string with characters greater than or equal to the limit',
-      received: undefined,
+      received: 'undefined',
       message: 'value_name must be a string type!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
@@ -403,6 +469,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'string',
+      name: 'value_name',
+      expect: 'string type',
+      received: 'string_value'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -415,6 +488,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'string',
       type: 'invalid value',
@@ -447,6 +521,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'number',
+      name: 'value_name',
+      expect: 'number type',
+      received: 0
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -459,6 +540,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'number',
       type: 'invalid value',
@@ -485,6 +567,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'boolean',
+      name: 'value_name',
+      expect: 'boolean type',
+      received: false
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -497,6 +586,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'boolean',
       type: 'invalid value',
@@ -523,6 +613,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'float',
+      name: 'value_name',
+      expect: 'number float type',
+      received: 1.2
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -535,6 +632,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'float',
       type: 'invalid value',
@@ -555,6 +653,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'float',
       type: 'invalid value',
@@ -581,6 +680,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'integer',
+      name: 'value_name',
+      expect: 'number integer type',
+      received: 1
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -593,6 +699,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'integer',
       type: 'invalid value',
@@ -611,7 +718,7 @@ describe('Validator', () => {
   })
 
   it('Should be able to validate the date method and return passedAll to equal true if the value is date and type ISO8601', () => {
-    const value = new Date().toISOString()
+    const value = new Date('2024-01-01T06:11:09.714Z').toISOString()
 
     const sut = validator(value, 'value_name').date('ISO8601').validate()
 
@@ -619,6 +726,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type ISO8601',
+      received: '2024-01-01T06:11:09.714Z'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -631,6 +745,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'date',
       type: 'invalid value',
@@ -651,6 +766,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type DD/MM/YYYY',
+      received: '30/12/2000'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -663,6 +785,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type DD-MM-YYYY',
+      received: '30-12-2000'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -675,6 +804,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type MM/DD/YYYY',
+      received: '12/30/2000'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -687,6 +823,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type MM-DD-YYYY',
+      received: '12-30-2000'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -699,6 +842,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type YYYY/MM/DD',
+      received: '2000/12/30'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -711,6 +861,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type YYYY-MM-DD',
+      received: '2000-12-30'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -723,6 +880,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type YYYY/DD/MM',
+      received: '2000/30/12'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -735,6 +899,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'date',
+      name: 'value_name',
+      expect: 'date type YYYY-DD-MM',
+      received: '2000-30-12'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -747,6 +918,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'date',
       type: 'invalid value',
@@ -773,6 +945,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'date',
       type: 'invalid value',
@@ -800,6 +973,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'dateGreaterThan',
+      name: 'value_name',
+      expect: '2000/03/02 00:00:00 greater than reference 2000/02/02 00:00:00',
+      received: new Date('2000-02-03T02:00:00.000Z')
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -813,6 +993,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'dateGreaterThan',
       type: 'invalid value',
@@ -834,6 +1015,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'dateGreaterThan',
       type: 'invalid value',
@@ -869,6 +1051,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'dateGreaterThan',
       type: 'invalid value',
@@ -890,6 +1073,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'dateLessThan',
+      name: 'value_name',
+      expect: '2000/02/02 00:00:00 less than reference 2000/03/02 00:00:00',
+      received: new Date('2000-02-02T02:00:00.000Z')
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -903,8 +1093,9 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
-      method: 'dateGreaterThan',
+      method: 'dateLessThan',
       type: 'invalid value',
       name: 'value_name',
       expect: '2000/03/02 00:00:00 less than reference 2000/02/02 00:00:00',
@@ -924,8 +1115,9 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
-      method: 'dateGreaterThan',
+      method: 'dateLessThan',
       type: 'invalid value',
       name: 'value_name',
       expect: '2000/02/02 00:00:00 less than reference 2000/02/02 00:00:00',
@@ -952,8 +1144,9 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
-      method: 'dateGreaterThan',
+      method: 'dateLessThan',
       type: 'invalid value',
       name: 'value_name',
       expect: 'date value_name less than reference date',
@@ -978,6 +1171,13 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'time',
+      name: 'value_name',
+      expect: 'format HH:MM',
+      received: '11:05'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -990,6 +1190,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'time',
       type: 'invalid value',
@@ -1004,12 +1205,19 @@ describe('Validator', () => {
   it('Should be able to validate the time method and return passedAll to equal true if the value is in the time format HH:MM:SS', () => {
     const value = '11:05:03'
 
-    const sut = validator(value, 'vale_name').time('HH:MM:SS').validate()
+    const sut = validator(value, 'value_name').time('HH:MM:SS').validate()
 
     expect(sut.passedAll).toBeTruthy()
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'time',
+      name: 'value_name',
+      expect: 'format HH:MM:SS',
+      received: '11:05:03'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -1021,6 +1229,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'time',
       type: 'invalid value',
@@ -1047,6 +1256,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'time',
       type: 'invalid value',
@@ -1066,6 +1276,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'time',
       type: 'invalid value',
@@ -1085,6 +1296,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'time',
       type: 'invalid value',
@@ -1105,6 +1317,7 @@ describe('Validator', () => {
     expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
     expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'time',
       type: 'invalid value',
