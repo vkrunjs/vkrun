@@ -39,8 +39,9 @@ export type Methods = Array<{
   timeType?: TimeTypes
   private?: boolean
 }>
+export type MethodTypes = 'object' | 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
 export type ValidatePropertyRules = Array<{
-  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
+  method: MethodTypes
   arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
   arrayRules?: any
   minWord?: number
@@ -53,7 +54,7 @@ export type ValidatePropertyRules = Array<{
   customError?: Error
 }>
 export interface ValidatePropertyRule {
-  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
+  method: MethodTypes
   arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
   arrayRules?: any
   minWord?: number
@@ -222,15 +223,32 @@ export interface Tests {
   passed: number
   failed: number
   totalTests: number
+  successes: SuccessTest[]
   errors: ErrorTest[]
   time: string
 }
 export interface ErrorTest {
   class?: string
   method?: string
-  type: 'invalid param' | 'invalid value' | 'missing value'
+  type: 'invalid param' | 'invalid value' | 'missing value' | 'missing key'
   name: string
   expect: string
   received: any
   message: string
+}
+export interface SuccessTest {
+  method: string
+  name: string
+  expect: string
+  received: any
+}
+export interface ValidateMethodParams {
+  object: ObjectType
+  keyName: string
+  value: any
+  schemaRules: any
+  callbackValidateObject: (object: ObjectType, schema: ObjectType) => Promise<void>
+  callbackUpdateTest: (test: Tests) => void
+  callbackAddPassed: (success: SuccessTest) => void
+  callbackAddFailed: (error: ErrorTest) => void
 }
