@@ -2875,9 +2875,9 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(31)
+    expect(sut.passed).toEqual(24)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(31)
+    expect(sut.totalTests).toEqual(24)
     expect(sut.successes).toEqual([
       {
         method: 'required',
@@ -2890,16 +2890,6 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
-        name: 'stringArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          'string',
-          'string',
-          'string'
-        ]
-      },
-      {
         method: 'string',
         name: 'all values in the stringArray',
         expect: 'string type',
@@ -2928,16 +2918,6 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
-        name: 'numberArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          123,
-          123,
-          123
-        ]
-      },
-      {
         method: 'number',
         name: 'all values in the numberArray',
         expect: 'number type',
@@ -2954,16 +2934,6 @@ describe('Schema', () => {
         name: 'all values in the numberArray',
         expect: 'number type',
         received: 123
-      },
-      {
-        method: 'required',
-        name: 'booleanArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          true,
-          false,
-          true
-        ]
       },
       {
         method: 'required',
@@ -3004,16 +2974,6 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
-        name: 'dateArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          new Date('2024-01-04T00:22:21.377Z'),
-          new Date('2024-01-04T00:22:21.377Z'),
-          new Date('2024-01-04T00:22:21.377Z')
-        ]
-      },
-      {
         method: 'date',
         name: 'all values in the dateArray',
         expect: 'date type ISO8601',
@@ -3030,16 +2990,6 @@ describe('Schema', () => {
         name: 'all values in the dateArray',
         expect: 'date type ISO8601',
         received: new Date('2024-01-04T00:22:21.377Z')
-      },
-      {
-        method: 'required',
-        name: 'strictArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          'blue',
-          'orange',
-          'red'
-        ]
       },
       {
         method: 'required',
@@ -3102,27 +3052,6 @@ describe('Schema', () => {
           'string',
           true,
           123
-        ]
-      },
-      {
-        method: 'required',
-        name: 'anyArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          new Date('2024-01-04T00:22:21.377Z'),
-          'string',
-          true,
-          123
-        ]
-      },
-      {
-        method: 'required',
-        name: 'objectArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          {
-            keyObject: 'string'
-          }
         ]
       },
       {
@@ -3414,9 +3343,9 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(24)
+    expect(sut.passed).toEqual(17)
     expect(sut.failed).toEqual(7)
-    expect(sut.totalTests).toEqual(31)
+    expect(sut.totalTests).toEqual(24)
     expect(sut.successes).toEqual([
       {
         method: 'required',
@@ -3429,16 +3358,6 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
-        name: 'stringArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          'string',
-          false,
-          'string'
-        ]
-      },
-      {
         method: 'string',
         name: 'all values in the stringArray',
         expect: 'string type',
@@ -3461,16 +3380,6 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
-        name: 'numberArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          123,
-          '123',
-          123
-        ]
-      },
-      {
         method: 'number',
         name: 'all values in the numberArray',
         expect: 'number type',
@@ -3481,16 +3390,6 @@ describe('Schema', () => {
         name: 'all values in the numberArray',
         expect: 'number type',
         received: 123
-      },
-      {
-        method: 'required',
-        name: 'booleanArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          'true',
-          false,
-          true
-        ]
       },
       {
         method: 'required',
@@ -3525,16 +3424,6 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
-        name: 'dateArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          new Date('2024-01-04T00:25:15.816Z'),
-          '03/10/1993',
-          new Date('2024-01-04T00:25:15.816Z')
-        ]
-      },
-      {
         method: 'date',
         name: 'all values in the dateArray',
         expect: 'date type ISO8601',
@@ -3545,16 +3434,6 @@ describe('Schema', () => {
         name: 'all values in the dateArray',
         expect: 'date type ISO8601',
         received: new Date('2024-01-04T00:25:15.816Z')
-      },
-      {
-        method: 'required',
-        name: 'strictArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          'blue',
-          'red',
-          'orange'
-        ]
       },
       {
         method: 'required',
@@ -3589,27 +3468,6 @@ describe('Schema', () => {
           'string',
           true,
           123
-        ]
-      },
-      {
-        method: 'required',
-        name: 'anyArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          new Date('2024-01-04T00:25:15.816Z'),
-          'string',
-          true,
-          123
-        ]
-      },
-      {
-        method: 'required',
-        name: 'objectArray',
-        expect: 'value other than undefined, null or empty string',
-        received: [
-          {
-            keyObject: false
-          }
         ]
       },
       {
@@ -3736,27 +3594,17 @@ describe('Schema', () => {
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'stringArray',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'stringArray is required!'
-      },
-      {
-        method: 'array',
-        type: 'invalid value',
-        name: 'stringArray',
-        expect: 'array',
-        received: 'undefined',
-        message: 'stringArray value must be an array!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'array',
+      type: 'invalid value',
+      name: 'stringArray',
+      expect: 'array',
+      received: 'undefined',
+      message: 'stringArray value must be an array!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
@@ -3784,15 +3632,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'stringArray',
-      expect: 'value other than undefined, null or empty string',
-      received: 'string'
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
       {
         method: 'array',

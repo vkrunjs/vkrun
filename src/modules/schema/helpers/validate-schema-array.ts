@@ -1,13 +1,10 @@
 import { informativeMessage } from '../../location'
 import { hasMethod } from '../../utils'
-import { ValidateMethodParams, ValidatePropertyRules } from '../../types'
+import { ValidateMethodParams } from '../../types'
 import { callValidateMethod } from './call-validate-method'
 
 export const validateSchemaArray = async (params: ValidateMethodParams): Promise<void> => {
-  if (hasMethod(params.schemaRules, 'required')) {
-    const requiredRules: ValidatePropertyRules = [{ method: 'required', private: true }]
-    await callValidateMethod({ ...params, schemaRules: requiredRules })
-  } else if ((hasMethod(params.schemaRules, 'notRequired'))) {
+  if ((hasMethod(params.schemaRules, 'notRequired'))) {
     params.callbackAddPassed({
       method: 'notRequired',
       name: params.keyName,
