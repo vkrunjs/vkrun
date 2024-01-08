@@ -87,11 +87,6 @@ describe('Error Messages', () => {
     expect(message.includes('[type]')).toBe(true)
   })
 
-  it('validator.method.date.invalidParameter should be a string and contain [valueName]', () => {
-    const message = informativeMessage.validator.method.date.invalidParameter
-    expect(typeof message).toBe('string')
-  })
-
   it('validator.method.dateGreaterThan.invalidDate should be a string', () => {
     const message = informativeMessage.validator.method.dateGreaterThan.invalidDate
     expect(typeof message).toBe('string')
@@ -126,15 +121,14 @@ describe('Error Messages', () => {
     expect(message.includes('[type]')).toBe(true)
   })
 
-  it('schema.validateProperty.itemArray.valueName should be a string', () => {
-    const message = informativeMessage.schema.validateProperty.itemArray.valueName
+  it('schema.constructorParams.schema should be a string', () => {
+    const message = informativeMessage.schema.constructorParams.schema
     expect(typeof message).toBe('string')
   })
 
-  it('schema.validateSchema.keyNotDeclaredInTheSchema should be a string and contain [keyName]', () => {
-    const message = informativeMessage.schema.validateSchema.keyNotDeclaredInTheSchema
+  it('schema.validateProperty.itemArray.valueName should be a string', () => {
+    const message = informativeMessage.schema.validateProperty.itemArray.valueName
     expect(typeof message).toBe('string')
-    expect(message.includes('[keyName]')).toBe(true)
   })
 
   it('schema.validateObject.schemaKeyAbsent should be a string and contain [keyName]', () => {
@@ -147,5 +141,11 @@ describe('Error Messages', () => {
     const message = informativeMessage.schema.validateObject.notIsArray
     expect(typeof message).toBe('string')
     expect(message.includes('[keyName]')).toBe(true)
+  })
+
+  it('schema.validateObject.notIsObject should be a string and contain [valueName]', () => {
+    const message = informativeMessage.schema.validateObject.notIsObject
+    expect(typeof message).toBe('string')
+    expect(message.includes('[valueName]')).toBe(true)
   })
 })

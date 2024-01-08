@@ -16,21 +16,34 @@ export interface IValidator {
   dateGreaterThan: (dateToCompare: Date) => this
   dateLessThan: (dateToCompare: Date) => this
   time: (type: 'HH:MM' | 'HH:MM:SS') => this
-  validate: () => boolean
+  throw: (ClassError?: ErrorTypes) => void
+  validate: () => Tests
 }
 export type ValidatorValue = string | boolean | Date | number | undefined | null
 export type ValidatorValueName = string
 export interface ObjectConfig {
-  errorType?: ErrorTypes
+  error?: ErrorTypes
 }
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
 export type ErrorClass<T extends Error> = new (message?: string) => T
 export type ErrorTypes = any // ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
+export type Methods = Array<{
+  method: 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
+  minWord?: number
+  maxLength?: number
+  minLength?: number
+  dateType?: DateTypes
+  dateToCompare?: Date
+  timeType?: TimeTypes
+  private?: boolean
+}>
+export type MethodTypes = 'object' | 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
 export type ValidatePropertyRules = Array<{
-  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
+  method: MethodTypes
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+  arrayRules?: any
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -41,8 +54,9 @@ export type ValidatePropertyRules = Array<{
   customError?: Error
 }>
 export interface ValidatePropertyRule {
-  method: 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | Record<string, Validator[]>
+  method: MethodTypes
+  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+  arrayRules?: any
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -57,7 +71,6 @@ export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
 export type Schema = Record<string, Validator[]>
 export type ObjectType = Record<string, any>
 export type SchemaConfig = ObjectConfig
-export type ArrayTypes = 'string' | 'number' | 'boolean' | 'date' | Schema
 export interface SetTranslationMessage {
   validator?: {
     constructorParams?: {
@@ -177,7 +190,6 @@ export interface InformativeMessage {
       }
       date: {
         invalidFormat: string
-        invalidParameter: string
       }
       dateGreaterThan: {
         invalidDate: string
@@ -194,18 +206,61 @@ export interface InformativeMessage {
     }
   }
   schema: {
+    constructorParams: {
+      schema: string
+    }
     validateProperty: {
       itemArray: {
         valueName: string
       }
     }
-    validateSchema: {
-      keyNotDeclaredInTheSchema: string
-    }
     validateObject: {
       schemaKeyAbsent: string
       notIsArray: string
+      notIsObject: string
     }
   }
 }
 export type AnyInformativeMessage = InformativeMessage & Record<string, any>
+export interface Tests {
+  passedAll: boolean
+  passed: number
+  failed: number
+  totalTests: number
+  successes: SuccessTest[]
+  errors: ErrorTest[]
+  time: string
+}
+export interface ErrorTest {
+  class?: string
+  method?: string
+  type: 'invalid param' | 'invalid value' | 'missing value' | 'missing key'
+  name: string
+  expect: string
+  received: any
+  message: string
+}
+export interface SuccessTest {
+  class?: string
+  method?: string
+  name: string
+  expect: string
+  received: any
+}
+export interface ValidateMethodParams {
+  keyName: string
+  value: any
+  schemaRules: any
+  callbackValidateValue: (object: ObjectType, schema: ObjectType) => Promise<void>
+  callbackUpdateTest: (test: Tests) => void
+  callbackAddPassed: (success: SuccessTest) => void
+  callbackAddFailed: (error: ErrorTest) => void
+}
+export interface SelectSchemaFormat {
+  value: ObjectType
+  schema: ObjectType
+  callbackValidateValue: (object: ObjectType, schema: ObjectType) => Promise<void>
+  callbackUpdateTest: (test: Tests) => void
+  callbackAddPassed: (success: SuccessTest) => void
+  callbackAddFailed: (error: ErrorTest) => void
+}

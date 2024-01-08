@@ -1,8 +1,29 @@
 import { informativeMessage } from '../location'
 import {
+  addBooleanResults,
+  addDateResults,
+  addEmailResults,
+  addFloatResults,
+  addIntegerResults,
+  addMaxLengthResults,
+  addMinLengthResults,
+  addMinWordResults,
+  addNumberResults,
+  addRequiredResults,
+  addStringResults,
+  addUuidResults,
+  addDateGreaterThanResults,
+  addDateLessThanResults,
+  addTimeResults
+} from './helpers'
+import {
   DateTypes,
+  ErrorTest,
   ErrorTypes,
   IValidator,
+  Methods,
+  SuccessTest,
+  Tests,
   TimeTypes,
   ValidatorValue,
   ValidatorValueName
@@ -11,412 +32,327 @@ import {
 export class Validator implements IValidator {
   private readonly value: ValidatorValue
   private readonly valueName: ValidatorValueName
-  private readonly errorType?: ErrorTypes
-  private readonly isValid: boolean[]
+  private readonly methods: Methods
+  private uninitializedValidation: boolean
+  private readonly tests: Tests
 
-  constructor (
-    value: ValidatorValue,
-    valueName: ValidatorValueName,
-    errorType?: ErrorTypes
-  ) {
+  constructor (value: ValidatorValue, valueName: ValidatorValueName) {
     this.value = value
-    this.errorType = errorType
     this.valueName = valueName
-    this.isValid = []
-    const invalidErrorType = errorType && typeof errorType !== 'function'
-    if (errorType && !valueName) {
-      throw new Error(informativeMessage.validator.constructorParams.valueName.missingClassParam)
-    } else if (invalidErrorType) {
-      throw new Error(informativeMessage.validator.constructorParams.valueName.invalidClassParam)
+    this.methods = []
+    this.uninitializedValidation = true
+    this.tests = {
+      passedAll: false,
+      passed: 0,
+      failed: 0,
+      totalTests: 0,
+      successes: [],
+      errors: [],
+      time: ''
     }
   }
 
   string (): this {
-    const isString = typeof this.value === 'string'
-    if (isString) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'string' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.string.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addStringResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   minWord (minWord: number): this {
-    const trimmedValue = String(this.value).trim()
-    const words = trimmedValue.split(/\s+/)
-    const hasMinOfWords = words.length >= minWord
-    if (hasMinOfWords) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'minWord', minWord })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.minWord.noMinimumWords
-        const messageError = message
-          .replace('[valueName]', this.valueName)
-          .replace('[minWord]', String(minWord))
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addMinWordResults({
+        value: this.value,
+        valueName: this.valueName,
+        minWord,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   uuid (): this {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-    const isUuid = uuidRegex.test(String(this.value))
-    if (isUuid) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'uuid' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.uuid.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addUuidResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   email (): this {
-    const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-    const emailFormatIsValid = regEmail.test(String(this.value))
-    if (emailFormatIsValid) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'email' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.email.strict
-        const messageError = message.replace('[value]', String(this.value))
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addEmailResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   maxLength (maxLength: number): this {
-    const isString = typeof this.value === 'string'
-    if (isString) {
-      const exceededLimit = String(this.value).length > maxLength
-      if (exceededLimit) {
-        if (this.errorType) {
-          const message = informativeMessage.validator.method.maxLength.strict
-          const messageError = message
-            .replace('[valueName]', this.valueName)
-            .replace('[maxLength]', String(maxLength))
-          this.handleError(messageError)
-        }
-        this.isValid.push(true)
-        return this
-      }
-      this.isValid.push(false)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'maxLength', maxLength })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.string.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addMaxLengthResults({
+        value: this.value,
+        valueName: this.valueName,
+        maxLength,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   minLength (minLength: number): this {
-    const isString = typeof this.value === 'string'
-    if (isString) {
-      const exceededLimit = String(this.value).length < minLength
-      if (exceededLimit) {
-        if (this.errorType) {
-          const message = informativeMessage.validator.method.minLength.strict
-          const messageError = message
-            .replace('[valueName]', this.valueName)
-            .replace('[minLength]', String(minLength))
-          this.handleError(messageError)
-        }
-        this.isValid.push(true)
-        return this
-      }
-      this.isValid.push(false)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'minLength', minLength })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.string.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addMinLengthResults({
+        value: this.value,
+        valueName: this.valueName,
+        minLength,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   number (): this {
-    const isNumber = typeof this.value === 'number'
-    if (isNumber) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'number' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.number.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addNumberResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   float (): this {
-    const isNumber = typeof this.value === 'number'
-    const isFloat = Number.isFinite(this.value) && !Number.isInteger(this.value)
-
-    if (isNumber && isFloat && this.value % 1 !== 0) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'float' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.float.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addFloatResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
-
     return this
   }
 
   integer (): this {
-    const isInteger = Number.isInteger(this.value)
-
-    if (isInteger) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'integer' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.integer.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addIntegerResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
-
     return this
   }
 
   boolean (): this {
-    const isBoolean = typeof this.value === 'boolean'
-    if (isBoolean) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'boolean' })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.boolean.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addBooleanResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   required (): this {
-    const isEmpty = !this.value || this.value === undefined
-
-    if (typeof this.value === 'boolean') {
-      this.isValid.push(true)
-    } else if (typeof this.value === 'number' && this.value === 0) {
-      this.isValid.push(true)
-    } else if (isEmpty) {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.required.strict
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'required' })
     } else {
-      this.isValid.push(true)
+      addRequiredResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
-  date (type: DateTypes): this {
-    let year: number, month: number, day: number
-    let formattedDate: Date
-
-    if (typeof this.value === 'string' && this.value.length < 10) {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.date.invalidFormat
-        const messageError = message
-          .replace('[valueName]', this.valueName)
-          .replace('[type]', type)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
-      return this
-    }
-
-    switch (type) {
-      case 'DD/MM/YYYY':
-        [day, month, year] = String(this.value).split('/').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'MM/DD/YYYY':
-        [month, day, year] = String(this.value).split('/').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'DD-MM-YYYY':
-        [day, month, year] = String(this.value).split('-').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'MM-DD-YYYY':
-        [month, day, year] = String(this.value).split('-').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'YYYY/MM/DD':
-        [year, month, day] = String(this.value).split('/').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'YYYY/DD/MM':
-        [year, day, month] = String(this.value).split('/').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'YYYY-MM-DD':
-        [year, month, day] = String(this.value).split('-').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'YYYY-DD-MM':
-        [year, day, month] = String(this.value).split('-').map(Number)
-        formattedDate = new Date(year, month - 1, day)
-        break
-      case 'ISO8601':
-        formattedDate = new Date(String(this.value))
-        break
-      default:
-        if (this.errorType) {
-          const message = informativeMessage.validator.method.date.invalidParameter
-          const messageError = message
-          this.handleError(messageError)
-        }
-        this.isValid.push(false)
-        return this
-    }
-    const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
-    if (isInvalidDate) {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.date.invalidFormat
-        const messageError = message
-          .replace('[valueName]', this.valueName)
-          .replace('[type]', type)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+  date (type?: DateTypes): this {
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'date', dateType: type })
     } else {
-      this.isValid.push(true)
+      addDateResults({
+        value: this.value,
+        valueName: this.valueName,
+        type,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
     return this
   }
 
   dateGreaterThan (dateToCompare: Date): this {
-    const date = new Date(String(this.value))
-    const isInvalidDate = isNaN(date.getTime())
-
-    if (isInvalidDate) {
-      if (this.errorType) {
-        const messageError = informativeMessage.validator.method.dateGreaterThan.invalidDate
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
-      return this
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'dateGreaterThan', dateToCompare })
+    } else {
+      addDateGreaterThanResults({
+        value: this.value,
+        valueName: this.valueName,
+        dateToCompare,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
-
-    const datesAreEqual = date.getTime() === dateToCompare.getTime()
-    const deadlineExceeded = date < dateToCompare
-
-    if (datesAreEqual || deadlineExceeded) {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.dateGreaterThan.limitExceeded
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
-      return this
-    }
-    this.isValid.push(true)
     return this
   }
 
   dateLessThan (dateToCompare: Date): this {
-    const date = new Date(String(this.value))
-    const isInvalidDate = isNaN(date.getTime())
-    if (isInvalidDate) {
-      if (this.errorType) {
-        const messageError = informativeMessage.validator.method.dateGreaterThan.invalidDate
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
-      return this
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'dateLessThan', dateToCompare })
+    } else {
+      addDateLessThanResults({
+        value: this.value,
+        valueName: this.valueName,
+        dateToCompare,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
-
-    const datesAreEqual = date.getTime() === dateToCompare.getTime()
-    const deadlineExceeded = date > dateToCompare
-
-    if (datesAreEqual || deadlineExceeded) {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.dateLessThan.limitExceeded
-        const messageError = message.replace('[valueName]', this.valueName)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
-      return this
-    }
-    this.isValid.push(true)
     return this
   }
 
   time (type: TimeTypes): this {
-    const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
-    const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
-    let isTime = false
-
-    if (!type || typeof type !== 'string') {
-      if (this.errorType) {
-        const messageError = informativeMessage.validator.method.time.invalidParameter
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
-      return this
-    } else if (type === 'HH:MM') {
-      isTime = regTimeHHMM.test(String(this.value))
-    } else if (type === 'HH:MM:SS') {
-      isTime = regTimeHHMMSS.test(String(this.value))
-    }
-
-    if (isTime) {
-      this.isValid.push(true)
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'time', timeType: type })
     } else {
-      if (this.errorType) {
-        const message = informativeMessage.validator.method.time.invalidFormat
-        const messageError = message
-          .replace('[value]', String(this.value))
-          .replace('[type]', type)
-        this.handleError(messageError)
-      }
-      this.isValid.push(false)
+      addTimeResults({
+        value: this.value,
+        valueName: this.valueName,
+        type,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
-
     return this
   }
 
-  private handleError (messageError: string): void {
-    const isCustomError = typeof this.errorType === 'function'
-    if (isCustomError) {
-      const CustomError = this.errorType
-      throw new CustomError(messageError)
+  private passedAll (): void {
+    this.tests.passedAll = this.tests.passed === this.tests.totalTests
+  }
+
+  private addPassed (success: SuccessTest): void {
+    ++this.tests.passed
+    ++this.tests.totalTests
+    this.tests.successes.push(success)
+    this.passedAll()
+  }
+
+  private addFailed (error: ErrorTest): void {
+    ++this.tests.failed
+    ++this.tests.totalTests
+    this.tests.errors.push(error)
+    this.passedAll()
+  }
+
+  private executeMethods (): void {
+    this.uninitializedValidation = false
+    this.methods.forEach((rule) => {
+      if (rule.method === 'required') {
+        this.required()
+      } else if (rule.method === 'string') {
+        this.string()
+      } else if (rule.method === 'minWord') {
+        this.minWord(rule.minWord as any)
+      } else if (rule.method === 'email') {
+        this.email()
+      } else if (rule.method === 'uuid') {
+        this.uuid()
+      } else if (rule.method === 'maxLength') {
+        this.maxLength(rule.maxLength as any)
+      } else if (rule.method === 'minLength') {
+        this.minLength(rule.minLength as any)
+      } else if (rule.method === 'number') {
+        this.number()
+      } else if (rule.method === 'float') {
+        this.float()
+      } else if (rule.method === 'integer') {
+        this.integer()
+      } else if (rule.method === 'boolean') {
+        this.boolean()
+      } else if (rule.method === 'date') {
+        this.date(rule.dateType)
+      } else if (rule.method === 'dateGreaterThan') {
+        this.dateGreaterThan(rule?.dateToCompare as any)
+      } else if (rule.method === 'dateLessThan') {
+        this.dateLessThan(rule?.dateToCompare as any)
+      } else if (rule.method === 'time') {
+        this.time(rule?.timeType as any)
+      }
+    })
+  }
+
+  throw (ClassError?: ErrorTypes): void {
+    this.executeMethods()
+    if (this.tests.errors.length > 0) {
+      if (ClassError) {
+        const TestClassError = new ClassError('')
+        const extendsError = TestClassError instanceof Error
+        if (extendsError) {
+          throw new ClassError(this.tests.errors[0].message)
+        } else {
+          throw new Error(informativeMessage.validator.constructorParams.valueName.invalidClassParam)
+        }
+      } else {
+        throw new Error(this.tests.errors[0].message)
+      }
     }
   }
 
-  validate (): boolean {
-    return this.isValid.every(isValid => isValid)
+  validate (): Tests {
+    const stateDate = new Date()
+    this.executeMethods()
+    const endTime = new Date()
+    const elapsedTime = endTime.getTime() - stateDate.getTime()
+    const seconds = Math.floor(elapsedTime / 1000)
+    const ms = elapsedTime % 1000 || 1
+    this.tests.time = `${seconds}s ${ms}ms`
+    return this.tests
   }
 }
 
-export const validator = (value: ValidatorValue, valueName?: ValidatorValueName, typeError?: ErrorTypes): Validator => {
-  return new Validator(value, valueName ?? '', typeError)
+export const validator = (value: ValidatorValue, valueName: ValidatorValueName): Validator => {
+  return new Validator(value, valueName)
 }

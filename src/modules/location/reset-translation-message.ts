@@ -7,7 +7,7 @@ export const resetTranslationMessage = (): void => {
       constructorParams: {
         valueName: {
           missingClassParam: 'missing class param: valueName is required!',
-          invalidClassParam: 'invalid class param: errorType provided is not valid!'
+          invalidClassParam: 'invalid class param: class error provided is not valid!'
         }
       },
       method: {
@@ -45,8 +45,7 @@ export const resetTranslationMessage = (): void => {
           strict: '[valueName] is required!'
         },
         date: {
-          invalidFormat: 'the date [valueName] is not in the format [type]!',
-          invalidParameter: 'date method received invalid parameter: type is required!'
+          invalidFormat: 'the date [valueName] is not in the format [type]!'
         },
         dateGreaterThan: {
           invalidDate: 'the provided date is invalid!',
@@ -63,17 +62,18 @@ export const resetTranslationMessage = (): void => {
       }
     },
     schema: {
+      constructorParams: {
+        schema: 'the schema must be an object, object method, or array of objects method!'
+      },
       validateProperty: {
         itemArray: {
           valueName: 'all values in the [keyName]'
         }
       },
-      validateSchema: {
-        keyNotDeclaredInTheSchema: '[keyName] key was not declared in the schema'
-      },
       validateObject: {
         schemaKeyAbsent: '[keyName] key is required!',
-        notIsArray: '[keyName] value must be an array!'
+        notIsArray: '[keyName] value must be an array!',
+        notIsObject: '[valueName] value must be an object!'
       }
     }
   }
