@@ -1,9 +1,9 @@
-import { informativeMessage } from '../../location'
-import { hasMethod } from '../../utils'
-import { ValidateMethodParams } from '../../types'
-import { callValidateMethod } from './call-validate-method'
+import { informativeMessage } from '../../../location'
+import { hasMethod } from '../../../utils'
+import { ValidateMethodParams } from '../../../types'
+import { callValidatorMethod } from './call-validator-method'
 
-export const validateSchemaArray = async (params: ValidateMethodParams): Promise<void> => {
+export const validateArray = async (params: ValidateMethodParams): Promise<void> => {
   if ((hasMethod(params.schemaRules, 'notRequired'))) {
     params.callbackAddPassed({
       method: 'notRequired',
@@ -14,7 +14,7 @@ export const validateSchemaArray = async (params: ValidateMethodParams): Promise
   }
 
   if (Array.isArray(params.value)) {
-    await callValidateMethod(params)
+    await callValidatorMethod(params)
   } else {
     if (hasMethod(params.schemaRules, 'required')) {
       const message = informativeMessage.schema.validateObject.notIsArray
@@ -25,7 +25,7 @@ export const validateSchemaArray = async (params: ValidateMethodParams): Promise
         type: 'invalid value',
         name: params.keyName,
         expect: 'array',
-        received: typeof params.value,
+        received: params.value ?? 'undefined',
         message: messageError
       })
     }

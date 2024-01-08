@@ -22,7 +22,9 @@ export const locationConfig: Array<{ keys: string[], reservedKeys?: string[] }> 
   { keys: ['validator', 'method', 'time', 'invalidFormat'], reservedKeys: ['[value]', '[type]'] },
 
   // Schema
+  { keys: ['schema', 'constructorParams', 'schema'] },
   { keys: ['schema', 'validateProperty', 'itemArray', 'valueName'], reservedKeys: ['[keyName]'] },
   { keys: ['schema', 'validateObject', 'schemaKeyAbsent'], reservedKeys: ['[keyName]'] },
-  { keys: ['schema', 'validateObject', 'notIsArray'], reservedKeys: ['[keyName]'] }
+  { keys: ['schema', 'validateObject', 'notIsArray'], reservedKeys: ['[keyName]'] },
+  { keys: ['schema', 'validateObject', 'notIsObject'], reservedKeys: ['[valueName]'] }
 ]

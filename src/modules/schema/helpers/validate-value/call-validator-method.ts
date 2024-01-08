@@ -1,12 +1,12 @@
+import { Validator, validator } from '../../../validator'
+import { informativeMessage } from '../../../location'
 import {
   ValidateMethodParams,
   ObjectType,
   ValidateItemArrayValue
-} from '../../types'
-import { Validator, validator } from '../../validator'
-import { informativeMessage } from '../../location'
+} from '../../../types'
 
-export const callValidateMethod = async (params: ValidateMethodParams): Promise<void> => {
+export const callValidatorMethod = async (params: ValidateMethodParams): Promise<void> => {
   for (const rule of params.schemaRules) {
     const v = validator(params.value, params.keyName)
 
@@ -85,7 +85,7 @@ export const callValidateMethod = async (params: ValidateMethodParams): Promise<
         })
       } else if (rule.arrayType === 'object' && rule.arrayType !== undefined) {
         await Promise.all(params.value.map(async (item: ObjectType) => {
-          await params.callbackValidateObject(item, rule.arrayRules as ObjectType)
+          await params.callbackValidateValue(item, rule.arrayRules as ObjectType)
         }))
       }
     }

@@ -62,6 +62,9 @@ export const resetTranslationMessage = (): void => {
       }
     },
     schema: {
+      constructorParams: {
+        schema: 'the schema must be an object, object method, or array of objects method!'
+      },
       validateProperty: {
         itemArray: {
           valueName: 'all values in the [keyName]'
@@ -69,7 +72,8 @@ export const resetTranslationMessage = (): void => {
       },
       validateObject: {
         schemaKeyAbsent: '[keyName] key is required!',
-        notIsArray: '[keyName] value must be an array!'
+        notIsArray: '[keyName] value must be an array!',
+        notIsObject: '[valueName] value must be an object!'
       }
     }
   }

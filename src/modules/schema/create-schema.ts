@@ -1,10 +1,4 @@
-import { hasMethod } from '../utils'
-import {
-  validateSchemaArray,
-  validateSchemaNotRequired,
-  validateSchemaObject,
-  validateSchemaOtherMethods
-} from './helpers'
+import { selectSchemaFormat } from './helpers'
 import {
   Schema,
   ObjectConfig,
@@ -33,39 +27,21 @@ class CreateSchema {
     }
   }
 
-  private async validateObject (
-    objectToValidate: ObjectType,
+  private async validateValue (
+    value: ObjectType, // alterar nome para algo que seja array ou objeto
     schema: ObjectType
   ): Promise<void> {
-    // ajustar para que validateObjet receba diretamente um metodo array de objetos
-    for (const [schemaKey, schemaRules] of Object.entries(schema)) {
-      const objectValueToValidate = objectToValidate[schemaKey]
-      const params = {
-        object: objectToValidate,
-        keyName: hasMethod(schemaRules, 'alias')
-          ? schemaRules.find((rule: any) => rule.method === 'alias').alias
-          : schemaKey,
-        value: objectValueToValidate,
-        schemaRules,
-        callbackUpdateTest: (test: Tests) => this.handleUpdateTest(test),
-        callbackAddPassed: (success: SuccessTest) => this.addPassed(success),
-        callbackAddFailed: (error: ErrorTest) => this.addFailed(error),
-        callbackValidateObject: async (
-          object: ObjectType,
-          schema: ObjectType
-        ) => await this.validateObject(object, schema)
-      }
-
-      if (hasMethod(schemaRules, 'object')) {
-        await validateSchemaObject(params)
-      } else if (hasMethod(schemaRules, 'array')) {
-        await validateSchemaArray(params)
-      } else if (hasMethod(schemaRules, 'notRequired')) {
-        await validateSchemaNotRequired(params)
-      } else {
-        await validateSchemaOtherMethods(params)
-      }
-    }
+    await selectSchemaFormat({
+      value,
+      schema,
+      callbackUpdateTest: (test: Tests) => this.handleUpdateTest(test),
+      callbackAddPassed: (success: SuccessTest) => this.addPassed(success),
+      callbackAddFailed: (error: ErrorTest) => this.addFailed(error),
+      callbackValidateValue: async (
+        object: ObjectType,
+        schema: ObjectType
+      ) => await this.validateValue(object, schema)
+    })
   }
 
   private passedAll (): void {
@@ -104,9 +80,9 @@ class CreateSchema {
     }
   }
 
-  async validate (objectToValidate: ObjectType): Promise<Tests> {
+  async validate (valueToValidate: ObjectType): Promise<Tests> {
     const stateDate = new Date()
-    await this.validateObject(objectToValidate, this.schema)
+    await this.validateValue(valueToValidate, this.schema)
     const endTime = new Date()
     const elapsedTime = endTime.getTime() - stateDate.getTime()
     const seconds = Math.floor(elapsedTime / 1000)

@@ -24,7 +24,7 @@ import {
 
 describe('Schema', () => {
   // String
-  it('Should be able to validate the string method and return true if it passes all tests', async () => {
+  it('Should be able to validate the string method and return passes all tests', async () => {
     const schema = createSchema({
       keyString: [string()]
     })
@@ -53,7 +53,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the string method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the string method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyString: [string()]
     })
@@ -83,7 +83,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the string method and return false when value is not provided', async () => {
+  it("Must be able to validate the string method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyString: [string()]
     })
@@ -116,7 +116,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the string method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the string method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyString: [string(), notRequired()]
     })
@@ -137,7 +137,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the string method and return true when not required and value is provided', async () => {
+  it('Must be able to validate the string method and return passes all tests when not required and value is provided', async () => {
     const schema = createSchema({
       keyString: [string(), notRequired()]
     })
@@ -195,7 +195,7 @@ describe('Schema', () => {
   })
 
   // Number
-  it('Should be able to validate the number method and return true if it passes all tests', async () => {
+  it('Should be able to validate the number method and return passes all tests', async () => {
     const schema = createSchema({
       keyNumber: [number()]
     })
@@ -226,7 +226,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the number method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the number method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyNumber: [number()]
     })
@@ -256,7 +256,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the number method and return false when value is not provided', async () => {
+  it("Must be able to validate the number method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyNumber: [number()]
     })
@@ -288,7 +288,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the number method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the number method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyNumber: [number(), notRequired()]
     })
@@ -336,7 +336,7 @@ describe('Schema', () => {
   })
 
   // Boolean
-  it('Should be able to validate the boolean method and return true if it passes all tests', async () => {
+  it('Should be able to validate the boolean method and return passes all tests', async () => {
     const schema = createSchema({
       keyBooleanTrue: [boolean()],
       keyBooleanFalse: [boolean()]
@@ -381,7 +381,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the boolean method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the boolean method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyBooleanTrue: [boolean()],
       keyBooleanFalse: [boolean()]
@@ -427,7 +427,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the number method and return false when value is not provided', async () => {
+  it("Must be able to validate the number method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyBooleanTrue: [boolean()],
       keyBooleanFalse: [boolean()]
@@ -477,7 +477,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the boolean method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the boolean method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyBooleanTrue: [boolean(), notRequired()],
       keyBooleanFalse: [boolean(), notRequired()]
@@ -538,7 +538,7 @@ describe('Schema', () => {
   })
 
   // MinWord
-  it('Should be able to validate the minWord method and return true if it passes all tests', async () => {
+  it('Should be able to validate the minWord method and return passes all tests', async () => {
     const schema = createSchema({
       keyMinWord: [minWord(2)]
     })
@@ -569,7 +569,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the minWord method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the minWord method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyMinWord: [minWord(2)]
     })
@@ -599,7 +599,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the minWord method and return false when value is not provided', async () => {
+  it("Must be able to validate the minWord method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyMinWord: [minWord(2)]
     })
@@ -632,7 +632,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the minWord method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the minWord method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyMinWord: [minWord(2), notRequired()]
     })
@@ -680,7 +680,7 @@ describe('Schema', () => {
   })
 
   // MaxLength
-  it('Should be able to validate the maxLength method and return true if it passes all tests', async () => {
+  it('Should be able to validate the maxLength method and return passes all tests', async () => {
     const schema = createSchema({
       keyMaxLength: [maxLength(4)]
     })
@@ -711,7 +711,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the maxLength method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the maxLength method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyMaxLength: [maxLength(3)]
     })
@@ -741,7 +741,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the maxLength method and return false when value is not provided', async () => {
+  it("Must be able to validate the maxLength method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyMaxLength: [maxLength(3)]
     })
@@ -774,7 +774,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the maxLength method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the maxLength method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyMaxLength: [maxLength(3), notRequired()]
     })
@@ -822,7 +822,7 @@ describe('Schema', () => {
   })
 
   // MinLength
-  it('Should be able to validate the minLength method and return true if it passes all tests', async () => {
+  it('Should be able to validate the minLength method and return passes all tests', async () => {
     const schema = createSchema({
       keyMinLength: [minLength(4)]
     })
@@ -853,7 +853,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the maxLength method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the maxLength method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyMinLength: [minLength(5)]
     })
@@ -883,7 +883,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the maxLength method and return false when value is not provided', async () => {
+  it("Must be able to validate the maxLength method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyMinLength: [minLength(5)]
     })
@@ -916,7 +916,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the maxLength method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the maxLength method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyMinLength: [minLength(5), notRequired()]
     })
@@ -964,7 +964,7 @@ describe('Schema', () => {
   })
 
   // Uuid
-  it('Should be able to validate the uuid method and return true if it passes all tests', async () => {
+  it('Should be able to validate the uuid method and return passes all tests', async () => {
     const schema = createSchema({
       keyUuid: [uuid()]
     })
@@ -995,7 +995,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the uuid method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the uuid method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyUuid: [uuid()]
     })
@@ -1025,7 +1025,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the uuid method and return false when value is not provided', async () => {
+  it("Must be able to validate the uuid method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyUuid: [uuid()]
     })
@@ -1058,7 +1058,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the uuid method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the uuid method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyUuid: [uuid(), notRequired()]
     })
@@ -1106,7 +1106,7 @@ describe('Schema', () => {
   })
 
   // Email
-  it('Should be able to validate the email method and return true if it passes all tests', async () => {
+  it('Should be able to validate the email method and return passes all tests', async () => {
     const schema = createSchema({
       keyEmail: [email()]
     })
@@ -1137,7 +1137,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the email method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the email method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyEmail: [email()]
     })
@@ -1167,7 +1167,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the email method and return false when value is not provided', async () => {
+  it("Must be able to validate the email method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyEmail: [email()]
     })
@@ -1200,7 +1200,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the email method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the email method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyEmail: [email(), notRequired()]
     })
@@ -1248,7 +1248,7 @@ describe('Schema', () => {
   })
 
   // Number
-  it('Should be able to validate the number method and return true if it passes all tests', async () => {
+  it('Should be able to validate the number method and return passes all tests', async () => {
     const schema = createSchema({
       keyNumber: [number()]
     })
@@ -1279,7 +1279,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the number method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the number method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyNumber: [number()]
     })
@@ -1309,7 +1309,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the number method and return false when value is not provided', async () => {
+  it("Must be able to validate the number method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyNumber: [number()]
     })
@@ -1342,7 +1342,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the number method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the number method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyNumber: [number(), notRequired()]
     })
@@ -1390,7 +1390,7 @@ describe('Schema', () => {
   })
 
   // Float
-  it('Should be able to validate the float method and return true if it passes all tests', async () => {
+  it('Should be able to validate the float method and return passes all tests', async () => {
     const schema = createSchema({
       keyFloat: [float()]
     })
@@ -1421,7 +1421,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the float method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the float method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyFloat: [float()]
     })
@@ -1451,7 +1451,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the float method and return false when value is not provided', async () => {
+  it("Must be able to validate the float method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyFloat: [float()]
     })
@@ -1484,7 +1484,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the float method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the float method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyFloat: [float(), notRequired()]
     })
@@ -1532,7 +1532,7 @@ describe('Schema', () => {
   })
 
   // Integer
-  it('Should be able to validate the integer method and return true if it passes all tests', async () => {
+  it('Should be able to validate the integer method and return passes all tests', async () => {
     const schema = createSchema({
       keyInteger: [integer()]
     })
@@ -1563,7 +1563,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the integer method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the integer method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyInteger: [integer()]
     })
@@ -1593,7 +1593,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the integer method and return false when value is not provided', async () => {
+  it("Must be able to validate the integer method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyInteger: [integer()]
     })
@@ -1626,7 +1626,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the integer method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the integer method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       keyInteger: [integer(), notRequired()]
     })
@@ -1674,7 +1674,7 @@ describe('Schema', () => {
   })
 
   // Date
-  it('Should be able to validate the date method and return true if it passes all tests', async () => {
+  it('Should be able to validate the date method and return passes all tests', async () => {
     const schema = createSchema({
       'ISO8601-A': [date('ISO8601')],
       'ISO8601-B': [date()],
@@ -1831,7 +1831,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the date method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the date method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       'ISO8601-A': [date('ISO8601')],
       'ISO8601-B': [date()],
@@ -2009,7 +2009,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the date method and return false when value is not provided', async () => {
+  it("Must be able to validate the date method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       'ISO8601-A': [date('ISO8601')],
       'ISO8601-B': [date()],
@@ -2195,7 +2195,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the date method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the date method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       'ISO8601-A': [date('ISO8601'), notRequired()],
       'ISO8601-B': [date(), notRequired()],
@@ -2326,7 +2326,7 @@ describe('Schema', () => {
   })
 
   // DateGreaterThan
-  it('Should be able to validate the dateGreaterThan method and return true if it passes all tests', async () => {
+  it('Should be able to validate the dateGreaterThan method and return passes all tests', async () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
@@ -2360,7 +2360,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the dateGreaterThan method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the dateGreaterThan method and return doesn't passes all tests", async () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
@@ -2393,7 +2393,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the dateGreaterThan method and return false when value is not provided', async () => {
+  it("Must be able to validate the dateGreaterThan method and return doesn't passes all tests when value is not provided", async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const schema = createSchema({
@@ -2428,7 +2428,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the dateGreaterThan method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the dateGreaterThan method and return passes all tests when not required and value is not provided', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const schema = createSchema({
@@ -2482,7 +2482,7 @@ describe('Schema', () => {
   })
 
   // DateLessThan
-  it('Should be able to validate the dateLessThan method and return true if it passes all tests', async () => {
+  it('Should be able to validate the dateLessThan method and return passes all tests', async () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
@@ -2516,7 +2516,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the dateLessThan method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the dateLessThan method and return doesn't passes all tests", async () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
@@ -2551,7 +2551,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the dateLessThan method and return false when value is not provided', async () => {
+  it("Must be able to validate the dateLessThan method and return doesn't passes all tests when value is not provided", async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const schema = createSchema({
@@ -2586,7 +2586,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the dateLessThan method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the dateLessThan method and return passes all tests when not required and value is not provided', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const schema = createSchema({
@@ -2640,7 +2640,7 @@ describe('Schema', () => {
   })
 
   // Time
-  it('Should be able to validate the time method and return true if it passes all tests', async () => {
+  it('Should be able to validate the time method and return passes all tests', async () => {
     const schema = createSchema({
       'HH:MM:SS': [time('HH:MM:SS')],
       'HH:MM': [time('HH:MM')]
@@ -2685,7 +2685,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the time method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the time method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       'HH:MM:SS': [time('HH:MM:SS')],
       'HH:MM': [time('HH:MM')]
@@ -2735,7 +2735,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the time method and return false when value is not provided', async () => {
+  it("Must be able to validate the time method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       'HH:MM:SS': [time('HH:MM:SS')],
       'HH:MM': [time('HH:MM')]
@@ -2785,7 +2785,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the time method and return true when not required and value is not provided', async () => {
+  it('Must be able to validate the time method and return passes all tests when not required and value is not provided', async () => {
     const schema = createSchema({
       'HH:MM:SS': [time('HH:MM:SS'), notRequired()],
       'HH:MM': [time('HH:MM'), notRequired()]
@@ -2845,7 +2845,7 @@ describe('Schema', () => {
   })
 
   // Array
-  it('Should be able to validate the array method and return true if it passes all tests', async () => {
+  it('Should be able to validate the array method and return passes all tests', async () => {
     const schema = createSchema({
       stringArray: array.required().string(),
       numberArray: array.required().number(),
@@ -3081,7 +3081,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the not required array method and return true if it passes all tests', async () => {
+  it('Should be able to validate the not required array method and return passes all tests', async () => {
     const schema = createSchema({
       stringArray: array.notRequired().string(),
       numberArray: array.notRequired().number(),
@@ -3317,7 +3317,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the array method and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the array method and return doesn't passes all tests", async () => {
     const schema = createSchema({
       stringArray: array.required().string(),
       numberArray: array.required().number(),
@@ -3564,7 +3564,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the array method and return true when value is not provided', async () => {
+  it('Must be able to validate the array method and return passes all tests when value is not provided', async () => {
     const schema = createSchema({
       stringArray: array.notRequired().string()
     })
@@ -3585,7 +3585,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the array method and return false when value is not provided', async () => {
+  it("Must be able to validate the array method and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       stringArray: array.required().string()
     })
@@ -3622,7 +3622,7 @@ describe('Schema', () => {
     )
   })
 
-  it('Should be able to validate the array method and return false when value is not array', async () => {
+  it("Should be able to validate the array method and return doesn't passes all tests when value is not array", async () => {
     const schema = createSchema({
       stringArray: array.required().string()
     })
@@ -3678,7 +3678,7 @@ describe('Schema', () => {
   })
 
   // Object
-  it('Should be able to validate the object and return true if it passes all tests', async () => {
+  it('Should be able to validate the object and return passes all tests', async () => {
     const schema = createSchema({
       keyObject: object({
         itemA: [string()]
@@ -3713,7 +3713,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the required object and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the required object and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyObject: object({
         itemA: [string()]
@@ -3747,7 +3747,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it("Should be able to validate the not required object and return false if it doesn't passes all tests", async () => {
+  it("Should be able to validate the not required object and return doesn't passes all tests", async () => {
     const schema = createSchema({
       keyObject: object({
         itemA: [string()]
@@ -3791,7 +3791,7 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Must be able to validate the object and return false when value is not provided', async () => {
+  it("Must be able to validate the object and return doesn't passes all tests when value is not provided", async () => {
     const schema = createSchema({
       keyObject: object({
         itemA: [string()]
@@ -3873,6 +3873,363 @@ describe('Schema', () => {
       received: false,
       message: 'Item A must be a string type!'
     }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  // Teste para arrumar
+
+  it("Should be able to receive a schema array of required objects and return doesn't passes all tests", async () => {
+    const schema = createSchema(array.required().object({
+      itemA: [alias('Item A'), string()]
+    }))
+
+    const sut = await schema.validate([
+      {
+        itemA: false
+      },
+      {
+        itemA: 'is string'
+      }
+    ])
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(4)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(5)
+    expect(sut.successes).toEqual([
+      {
+        class: 'create schema',
+        method: 'required',
+        name: 'validate schema',
+        expect: 'array of objects',
+        received: [
+          {
+            itemA: false
+          },
+          {
+            itemA: 'is string'
+          }
+        ]
+      },
+      {
+        method: 'required',
+        name: 'Item A',
+        expect: 'value other than undefined, null or empty string',
+        received: false
+      },
+      {
+        method: 'required',
+        name: 'Item A',
+        expect: 'value other than undefined, null or empty string',
+        received: 'is string'
+      },
+      {
+        method: 'string',
+        name: 'Item A',
+        expect: 'string type',
+        received: 'is string'
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'string',
+      type: 'invalid value',
+      name: 'Item A',
+      expect: 'string type',
+      received: false,
+      message: 'Item A must be a string type!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it("Should be able to receive a schema array of required objects with empty array value and return doesn't passes all tests", async () => {
+    const schema = createSchema(array.required().object({
+      itemA: [alias('Item A'), string()]
+    }))
+
+    const sut = await schema.validate([])
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(0)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
+    expect(sut.errors).toEqual([{
+      class: 'create schema',
+      expect: 'array of objects',
+      message: 'schema validate value must be an array!',
+      method: 'required',
+      name: 'validate schema',
+      received: [],
+      type: 'invalid param'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it("Should be able to receive a schema array of required objects with value undefined and return doesn't passes all tests", async () => {
+    const schema = createSchema(array.required().object({
+      itemA: [alias('Item A'), string()]
+    }))
+
+    const sut = await schema.validate(undefined as any)
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(0)
+    expect(sut.failed).toEqual(2)
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([])
+    expect(sut.errors).toEqual([
+      {
+        class: 'create schema',
+        method: 'required',
+        type: 'invalid param',
+        name: 'validate schema',
+        expect: 'array of objects',
+        received: 'undefined',
+        message: 'schema validate value must be an array!'
+      },
+      {
+        class: 'create schema',
+        type: 'invalid param',
+        name: 'validate schema',
+        expect: 'array of objects',
+        received: 'undefined',
+        message: 'schema validate value must be an array!'
+      }
+    ])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it("Should be able to receive a schema array of not required objects and return doesn't passes all tests", async () => {
+    const schema = createSchema(array.notRequired().object({
+      itemA: [alias('Item A'), string()]
+    }))
+
+    const sut = await schema.validate([
+      {
+        itemA: false
+      },
+      {
+        itemA: 'is string'
+      }
+    ])
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(4)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(5)
+    expect(sut.successes).toEqual([
+      {
+        class: 'create schema',
+        method: 'notRequired',
+        name: 'validate schema',
+        expect: 'value is not required and of type object array',
+        received: [
+          {
+            itemA: false
+          },
+          {
+            itemA: 'is string'
+          }
+        ]
+      },
+      {
+        method: 'required',
+        name: 'Item A',
+        expect: 'value other than undefined, null or empty string',
+        received: false
+      },
+      {
+        method: 'required',
+        name: 'Item A',
+        expect: 'value other than undefined, null or empty string',
+        received: 'is string'
+      },
+      {
+        method: 'string',
+        name: 'Item A',
+        expect: 'string type',
+        received: 'is string'
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'string',
+      type: 'invalid value',
+      name: 'Item A',
+      expect: 'string type',
+      received: false,
+      message: 'Item A must be a string type!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it('Should be able to receive a schema array of not required objects with empty array value and return passes all tests', async () => {
+    const schema = createSchema(array.notRequired().object({
+      itemA: [alias('Item A'), string()]
+    }))
+
+    const sut = await schema.validate([])
+
+    expect(sut.passedAll).toBeTruthy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(0)
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      class: 'create schema',
+      method: 'notRequired',
+      name: 'validate schema',
+      expect: 'value is not required and of type object array',
+      received: []
+    }])
+    expect(sut.errors).toEqual([])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it("Should be able to return doesn't passes all tests when it lacks a schema or is in an invalid format", async () => {
+    const schema = createSchema(undefined as any)
+
+    const sut = await schema.validate([])
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(0)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
+    expect(sut.errors).toEqual([{
+      class: 'create schema',
+      type: 'invalid param',
+      name: 'create schema',
+      expect: 'valid schema',
+      received: 'undefined',
+      message: 'the schema must be an object, object method, or array of objects method!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it("Should be able to receive a schema with object required method and return doesn't passed all tests", async () => {
+    const schema = createSchema(object({
+      itemB: [alias('Item B'), string()]
+    }).required())
+
+    const sut = await schema.validate({
+      itemB: false
+    })
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        class: 'create schema',
+        method: 'required',
+        name: 'validate schema',
+        expect: 'object',
+        received: {
+          itemB: false
+        }
+      },
+      {
+        method: 'required',
+        name: 'Item B',
+        expect: 'value other than undefined, null or empty string',
+        received: false
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'string',
+      type: 'invalid value',
+      name: 'Item B',
+      expect: 'string type',
+      received: false,
+      message: 'Item B must be a string type!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it('Should be able to return failed all tests receive when schema with method required and value not provided', async () => {
+    const schema = createSchema(object({
+      itemB: [alias('Item B'), string()]
+    }).required())
+
+    const sut = await schema.validate(undefined as any)
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(0)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
+    expect(sut.errors).toEqual([{
+      class: 'create schema',
+      method: 'required',
+      type: 'invalid param',
+      name: 'validate schema',
+      expect: 'object',
+      received: 'undefined',
+      message: 'schema validate value must be an object!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it("Should be able to receive a schema with object not required method and return doesn't passed all tests", async () => {
+    const schema = createSchema(object({
+      itemB: [alias('Item B'), string()]
+    }).notRequired())
+
+    const sut = await schema.validate({
+      itemB: false
+    })
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        class: 'create schema',
+        method: 'notRequired',
+        name: 'validate schema',
+        expect: 'value is not required and of type object',
+        received: {
+          itemB: false
+        }
+      },
+      {
+        method: 'required',
+        name: 'Item B',
+        expect: 'value other than undefined, null or empty string',
+        received: false
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'string',
+      type: 'invalid value',
+      name: 'Item B',
+      expect: 'string type',
+      received: false,
+      message: 'Item B must be a string type!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it('Should be able to return passes all tests receive when schema with method not required and value not provided', async () => {
+    const schema = createSchema(object({
+      itemB: [alias('Item B'), string()]
+    }).notRequired())
+
+    const sut = await schema.validate(undefined as any)
+
+    expect(sut.passedAll).toBeTruthy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(0)
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      class: 'create schema',
+      method: 'notRequired',
+      name: 'validate schema',
+      expect: 'value is not required and of type object',
+      received: 'undefined'
+    }])
+    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 })

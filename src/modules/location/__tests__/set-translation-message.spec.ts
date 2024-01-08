@@ -68,6 +68,9 @@ describe('Set translation message', () => {
         }
       },
       schema: {
+        constructorParams: {
+          schema: 'o schema deve ser um object, método de object ou método de array de objects!'
+        },
         validateProperty: {
           itemArray: {
             valueName: 'todos os valores em [keyName]'
@@ -75,7 +78,9 @@ describe('Set translation message', () => {
         },
         validateObject: {
           schemaKeyAbsent: 'a chave [keyName] é obrigatória!',
-          notIsArray: 'o valor [keyName] deve ser um array!'
+          notIsArray: 'o valor [keyName] deve ser um array!',
+          notIsObject: 'o valor [valueName] deve ser um object!'
+
         }
       }
     }
@@ -160,6 +165,9 @@ describe('Set translation message', () => {
         }
       },
       schema: {
+        constructorParams: {
+          schema: 'the schema must be an object, object method, or array of objects method!'
+        },
         validateProperty: {
           itemArray: {
             valueName: 'all values in the [keyName]'
@@ -167,7 +175,9 @@ describe('Set translation message', () => {
         },
         validateObject: {
           schemaKeyAbsent: '[keyName] key is required!',
-          notIsArray: '[keyName] value must be an array!'
+          notIsArray: '[keyName] value must be an array!',
+          notIsObject: '[valueName] value must be an object!'
+
         }
       }
     })

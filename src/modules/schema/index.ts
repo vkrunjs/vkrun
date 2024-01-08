@@ -1,2 +1,2 @@
 export * from './create-schema'
-export * from './methods'
+export * from './helpers/methods'

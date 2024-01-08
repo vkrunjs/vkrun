@@ -206,6 +206,9 @@ export interface InformativeMessage {
     }
   }
   schema: {
+    constructorParams: {
+      schema: string
+    }
     validateProperty: {
       itemArray: {
         valueName: string
@@ -214,6 +217,7 @@ export interface InformativeMessage {
     validateObject: {
       schemaKeyAbsent: string
       notIsArray: string
+      notIsObject: string
     }
   }
 }
@@ -237,17 +241,25 @@ export interface ErrorTest {
   message: string
 }
 export interface SuccessTest {
-  method: string
+  class?: string
+  method?: string
   name: string
   expect: string
   received: any
 }
 export interface ValidateMethodParams {
-  object: ObjectType
   keyName: string
   value: any
   schemaRules: any
-  callbackValidateObject: (object: ObjectType, schema: ObjectType) => Promise<void>
+  callbackValidateValue: (object: ObjectType, schema: ObjectType) => Promise<void>
+  callbackUpdateTest: (test: Tests) => void
+  callbackAddPassed: (success: SuccessTest) => void
+  callbackAddFailed: (error: ErrorTest) => void
+}
+export interface SelectSchemaFormat {
+  value: ObjectType
+  schema: ObjectType
+  callbackValidateValue: (object: ObjectType, schema: ObjectType) => Promise<void>
   callbackUpdateTest: (test: Tests) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
