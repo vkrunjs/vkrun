@@ -359,16 +359,16 @@ describe('Schema', () => {
         received: true
       },
       {
-        method: 'boolean',
-        name: 'keyBooleanTrue',
-        expect: 'boolean type',
-        received: true
-      },
-      {
         method: 'required',
         name: 'keyBooleanFalse',
         expect: 'value other than undefined, null or empty string',
         received: false
+      },
+      {
+        method: 'boolean',
+        name: 'keyBooleanTrue',
+        expect: 'boolean type',
+        received: true
       },
       {
         method: 'boolean',
@@ -404,16 +404,16 @@ describe('Schema', () => {
         received: true
       },
       {
-        method: 'boolean',
-        name: 'keyBooleanTrue',
-        expect: 'boolean type',
-        received: true
-      },
-      {
         method: 'required',
         name: 'keyBooleanFalse',
         expect: 'value other than undefined, null or empty string',
         received: 'false'
+      },
+      {
+        method: 'boolean',
+        name: 'keyBooleanTrue',
+        expect: 'boolean type',
+        received: true
       }
     ])
     expect(sut.errors).toEqual([{
@@ -450,20 +450,20 @@ describe('Schema', () => {
         message: 'keyBooleanTrue is required!'
       },
       {
-        method: 'boolean',
-        type: 'invalid value',
-        name: 'keyBooleanTrue',
-        expect: 'boolean type',
-        received: 'undefined',
-        message: 'keyBooleanTrue must be a boolean type!'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'keyBooleanFalse',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'keyBooleanFalse is required!'
+      },
+      {
+        method: 'boolean',
+        type: 'invalid value',
+        name: 'keyBooleanTrue',
+        expect: 'boolean type',
+        received: 'undefined',
+        message: 'keyBooleanTrue must be a boolean type!'
       },
       {
         method: 'boolean',
@@ -1713,21 +1713,9 @@ describe('Schema', () => {
         received: new Date('2024-01-03T23:02:01.117Z')
       },
       {
-        method: 'date',
-        name: 'ISO8601-A',
-        expect: 'date type ISO8601',
-        received: new Date('2024-01-03T23:02:01.117Z')
-      },
-      {
         method: 'required',
         name: 'ISO8601-B',
         expect: 'value other than undefined, null or empty string',
-        received: '2024-01-03T23:02:01.117Z'
-      },
-      {
-        method: 'date',
-        name: 'ISO8601-B',
-        expect: 'date type ISO8601',
         received: '2024-01-03T23:02:01.117Z'
       },
       {
@@ -1735,6 +1723,60 @@ describe('Schema', () => {
         name: 'DD/MM/YYYY',
         expect: 'value other than undefined, null or empty string',
         received: '30/12/2000'
+      },
+      {
+        method: 'required',
+        name: 'MM/DD/YYYY',
+        expect: 'value other than undefined, null or empty string',
+        received: '12/30/2000'
+      },
+      {
+        method: 'required',
+        name: 'DD-MM-YYYY',
+        expect: 'value other than undefined, null or empty string',
+        received: '30-12-2000'
+      },
+      {
+        method: 'required',
+        name: 'MM-DD-YYYY',
+        expect: 'value other than undefined, null or empty string',
+        received: '12-30-2000'
+      },
+      {
+        method: 'required',
+        name: 'YYYY/MM/DD',
+        expect: 'value other than undefined, null or empty string',
+        received: '2000/12/30'
+      },
+      {
+        method: 'required',
+        name: 'YYYY/DD/MM',
+        expect: 'value other than undefined, null or empty string',
+        received: '2000/30/12'
+      },
+      {
+        method: 'required',
+        name: 'YYYY-MM-DD',
+        expect: 'value other than undefined, null or empty string',
+        received: '2000-12-30'
+      },
+      {
+        method: 'required',
+        name: 'YYYY-DD-MM',
+        expect: 'value other than undefined, null or empty string',
+        received: '2000-30-12'
+      },
+      {
+        method: 'date',
+        name: 'ISO8601-A',
+        expect: 'date type ISO8601',
+        received: new Date('2024-01-03T23:02:01.117Z')
+      },
+      {
+        method: 'date',
+        name: 'ISO8601-B',
+        expect: 'date type ISO8601',
+        received: '2024-01-03T23:02:01.117Z'
       },
       {
         method: 'date',
@@ -1743,22 +1785,10 @@ describe('Schema', () => {
         received: '30/12/2000'
       },
       {
-        method: 'required',
-        name: 'MM/DD/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '12/30/2000'
-      },
-      {
         method: 'date',
         name: 'MM/DD/YYYY',
         expect: 'date type MM/DD/YYYY',
         received: '12/30/2000'
-      },
-      {
-        method: 'required',
-        name: 'DD-MM-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '30-12-2000'
       },
       {
         method: 'date',
@@ -1767,22 +1797,10 @@ describe('Schema', () => {
         received: '30-12-2000'
       },
       {
-        method: 'required',
-        name: 'MM-DD-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '12-30-2000'
-      },
-      {
         method: 'date',
         name: 'MM-DD-YYYY',
         expect: 'date type MM-DD-YYYY',
         received: '12-30-2000'
-      },
-      {
-        method: 'required',
-        name: 'YYYY/MM/DD',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000/12/30'
       },
       {
         method: 'date',
@@ -1791,34 +1809,16 @@ describe('Schema', () => {
         received: '2000/12/30'
       },
       {
-        method: 'required',
-        name: 'YYYY/DD/MM',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000/30/12'
-      },
-      {
         method: 'date',
         name: 'YYYY/DD/MM',
         expect: 'date type YYYY/DD/MM',
         received: '2000/30/12'
       },
       {
-        method: 'required',
-        name: 'YYYY-MM-DD',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000-12-30'
-      },
-      {
         method: 'date',
         name: 'YYYY-MM-DD',
         expect: 'date type YYYY-MM-DD',
         received: '2000-12-30'
-      },
-      {
-        method: 'required',
-        name: 'YYYY-DD-MM',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000-30-12'
       },
       {
         method: 'date',
@@ -2040,28 +2040,12 @@ describe('Schema', () => {
         message: 'ISO8601-A is required!'
       },
       {
-        method: 'date',
-        type: 'invalid value',
-        name: 'ISO8601-A',
-        expect: 'date type ISO8601',
-        received: 'undefined',
-        message: 'the date ISO8601-A is not in the format ISO8601!'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'ISO8601-B',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'ISO8601-B is required!'
-      },
-      {
-        method: 'date',
-        type: 'invalid value',
-        name: 'ISO8601-B',
-        expect: 'date type ISO8601',
-        received: 'undefined',
-        message: 'the date ISO8601-B is not in the format ISO8601!'
       },
       {
         method: 'required',
@@ -2072,28 +2056,12 @@ describe('Schema', () => {
         message: 'DD/MM/YYYY is required!'
       },
       {
-        method: 'date',
-        type: 'invalid value',
-        name: 'DD/MM/YYYY',
-        expect: 'date type DD/MM/YYYY',
-        received: 'undefined',
-        message: 'the date DD/MM/YYYY is not in the format DD/MM/YYYY!'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'MM/DD/YYYY',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'MM/DD/YYYY is required!'
-      },
-      {
-        method: 'date',
-        type: 'invalid value',
-        name: 'MM/DD/YYYY',
-        expect: 'date type MM/DD/YYYY',
-        received: 'undefined',
-        message: 'the date MM/DD/YYYY is not in the format MM/DD/YYYY!'
       },
       {
         method: 'required',
@@ -2104,28 +2072,12 @@ describe('Schema', () => {
         message: 'DD-MM-YYYY is required!'
       },
       {
-        method: 'date',
-        type: 'invalid value',
-        name: 'DD-MM-YYYY',
-        expect: 'date type DD-MM-YYYY',
-        received: 'undefined',
-        message: 'the date DD-MM-YYYY is not in the format DD-MM-YYYY!'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'MM-DD-YYYY',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'MM-DD-YYYY is required!'
-      },
-      {
-        method: 'date',
-        type: 'invalid value',
-        name: 'MM-DD-YYYY',
-        expect: 'date type MM-DD-YYYY',
-        received: 'undefined',
-        message: 'the date MM-DD-YYYY is not in the format MM-DD-YYYY!'
       },
       {
         method: 'required',
@@ -2136,28 +2088,12 @@ describe('Schema', () => {
         message: 'YYYY/MM/DD is required!'
       },
       {
-        method: 'date',
-        type: 'invalid value',
-        name: 'YYYY/MM/DD',
-        expect: 'date type YYYY/MM/DD',
-        received: 'undefined',
-        message: 'the date YYYY/MM/DD is not in the format YYYY/MM/DD!'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'YYYY/DD/MM',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'YYYY/DD/MM is required!'
-      },
-      {
-        method: 'date',
-        type: 'invalid value',
-        name: 'YYYY/DD/MM',
-        expect: 'date type YYYY/DD/MM',
-        received: 'undefined',
-        message: 'the date YYYY/DD/MM is not in the format YYYY/DD/MM!'
       },
       {
         method: 'required',
@@ -2168,20 +2104,84 @@ describe('Schema', () => {
         message: 'YYYY-MM-DD is required!'
       },
       {
-        method: 'date',
-        type: 'invalid value',
-        name: 'YYYY-MM-DD',
-        expect: 'date type YYYY-MM-DD',
-        received: 'undefined',
-        message: 'the date YYYY-MM-DD is not in the format YYYY-MM-DD!'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'YYYY-DD-MM',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'YYYY-DD-MM is required!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'ISO8601-A',
+        expect: 'date type ISO8601',
+        received: 'undefined',
+        message: 'the date ISO8601-A is not in the format ISO8601!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'ISO8601-B',
+        expect: 'date type ISO8601',
+        received: 'undefined',
+        message: 'the date ISO8601-B is not in the format ISO8601!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'DD/MM/YYYY',
+        expect: 'date type DD/MM/YYYY',
+        received: 'undefined',
+        message: 'the date DD/MM/YYYY is not in the format DD/MM/YYYY!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'MM/DD/YYYY',
+        expect: 'date type MM/DD/YYYY',
+        received: 'undefined',
+        message: 'the date MM/DD/YYYY is not in the format MM/DD/YYYY!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'DD-MM-YYYY',
+        expect: 'date type DD-MM-YYYY',
+        received: 'undefined',
+        message: 'the date DD-MM-YYYY is not in the format DD-MM-YYYY!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'MM-DD-YYYY',
+        expect: 'date type MM-DD-YYYY',
+        received: 'undefined',
+        message: 'the date MM-DD-YYYY is not in the format MM-DD-YYYY!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'YYYY/MM/DD',
+        expect: 'date type YYYY/MM/DD',
+        received: 'undefined',
+        message: 'the date YYYY/MM/DD is not in the format YYYY/MM/DD!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'YYYY/DD/MM',
+        expect: 'date type YYYY/DD/MM',
+        received: 'undefined',
+        message: 'the date YYYY/DD/MM is not in the format YYYY/DD/MM!'
+      },
+      {
+        method: 'date',
+        type: 'invalid value',
+        name: 'YYYY-MM-DD',
+        expect: 'date type YYYY-MM-DD',
+        received: 'undefined',
+        message: 'the date YYYY-MM-DD is not in the format YYYY-MM-DD!'
       },
       {
         method: 'date',
@@ -2663,16 +2663,16 @@ describe('Schema', () => {
         received: '11:05:30'
       },
       {
-        method: 'time',
-        name: 'HH:MM:SS',
-        expect: 'format HH:MM:SS',
-        received: '11:05:30'
-      },
-      {
         method: 'required',
         name: 'HH:MM',
         expect: 'value other than undefined, null or empty string',
         received: '11:05'
+      },
+      {
+        method: 'time',
+        name: 'HH:MM:SS',
+        expect: 'format HH:MM:SS',
+        received: '11:05:30'
       },
       {
         method: 'time',
@@ -2758,20 +2758,20 @@ describe('Schema', () => {
         message: 'HH:MM:SS is required!'
       },
       {
-        method: 'time',
-        type: 'invalid value',
-        name: 'HH:MM:SS',
-        expect: 'format HH:MM:SS',
-        received: 'undefined',
-        message: 'the time undefined is not in the format HH:MM:SS'
-      },
-      {
         method: 'required',
         type: 'missing value',
         name: 'HH:MM',
         expect: 'value other than undefined, null or empty string',
         received: 'undefined',
         message: 'HH:MM is required!'
+      },
+      {
+        method: 'time',
+        type: 'invalid value',
+        name: 'HH:MM:SS',
+        expect: 'format HH:MM:SS',
+        received: 'undefined',
+        message: 'the time undefined is not in the format HH:MM:SS'
       },
       {
         method: 'time',
