@@ -6,13 +6,14 @@ import { validateOtherMethods } from './validate-other-methods'
 
 export const validateValue = async (params: SelectSchemaFormat): Promise<void> => {
   if (isObject(params.value)) {
+    const validatePromises = []
+
     for (const [schemaKey, schemaRules] of Object.entries(params.schema)) {
-      const valueToValidate = params.value[schemaKey]
       const paramsToValidate = {
         keyName: hasMethod(schemaRules, 'alias')
           ? schemaRules.find((rule: any) => rule.method === 'alias').alias
           : schemaKey,
-        value: valueToValidate,
+        value: params.value[schemaKey],
         schemaRules,
         callbackUpdateTest: params.callbackUpdateTest,
         callbackAddPassed: params.callbackAddPassed,
@@ -20,13 +21,19 @@ export const validateValue = async (params: SelectSchemaFormat): Promise<void> =
         callbackValidateValue: params.callbackValidateValue
       }
 
+      let promise
+
       if (hasMethod(schemaRules, 'object')) {
-        await validateObject(paramsToValidate)
+        promise = validateObject(paramsToValidate)
       } else if (hasMethod(schemaRules, 'array')) {
-        await validateArray(paramsToValidate)
+        promise = validateArray(paramsToValidate)
       } else {
-        await validateOtherMethods(paramsToValidate)
+        promise = validateOtherMethods(paramsToValidate)
       }
+
+      validatePromises.push(promise)
     }
+
+    await Promise.all(validatePromises)
   }
 }
