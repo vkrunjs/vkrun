@@ -1,6 +1,6 @@
 import { hasMethod, isEmpty, isNotEmpty } from '../../../utils'
-import { ValidateMethodParams, ValidatePropertyRules } from '../../../types'
-import { callValidatorMethod } from './call-validator-method'
+import { ValidateMethodParams } from '../../../types'
+import { validator } from '../../../validator'
 
 export const validateObject = async (params: ValidateMethodParams): Promise<void> => {
   if (hasMethod(params.schemaRules, 'notRequired')) {
@@ -16,8 +16,7 @@ export const validateObject = async (params: ValidateMethodParams): Promise<void
   }
   if (hasMethod(params.schemaRules, 'required')) {
     if (isEmpty(params.value)) {
-      const requiredRules: ValidatePropertyRules = [{ method: 'required', private: true }]
-      await callValidatorMethod({ ...params, schemaRules: requiredRules })
+      params.callbackUpdateTest(await validator().required().validate(params.value, params.keyName))
       await params.callbackValidateValue({}, params.schemaRules[1].object)
     } else {
       await params.callbackValidateValue(params.value, params.schemaRules[1].object)

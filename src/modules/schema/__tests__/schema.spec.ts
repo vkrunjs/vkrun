@@ -1,32 +1,13 @@
 import { InvalidParamError } from '../../errors'
 import { Tests } from '../../types'
-import {
-  alias,
-  array,
-  boolean,
-  createSchema,
-  date,
-  dateGreaterThan,
-  dateLessThan,
-  email,
-  float,
-  integer,
-  maxLength,
-  minLength,
-  minWord,
-  notRequired,
-  number,
-  object,
-  string,
-  time,
-  uuid
-} from '../index'
+import { validator as vkrun } from '../../validator'
+import { array, object } from '../index'
 
 describe('Schema', () => {
   // String
   it('Should be able to validate the string method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyString: [string()]
+    const schema = vkrun().schema({
+      keyString: vkrun().string().required()
     })
 
     const sut = await schema.validate({
@@ -54,8 +35,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the string method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyString: [string()]
+    const schema = vkrun().schema({
+      keyString: vkrun().string().required()
     })
 
     const sut = await schema.validate({
@@ -84,8 +65,8 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the string method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyString: [string()]
+    const schema = vkrun().schema({
+      keyString: vkrun().string().required()
     })
 
     const sut = await schema.validate({})
@@ -116,9 +97,30 @@ describe('Schema', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Must be able to validate the string method and return passes all tests when has not required method', async () => {
+    const schema = vkrun().schema({
+      keyString: vkrun().string().notRequired()
+    })
+
+    const sut = await schema.validate({})
+
+    expect(sut.passedAll).toBeTruthy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(0)
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'notRequired',
+      name: 'keyString',
+      expect: 'value is not required and of any type',
+      received: 'undefined'
+    }])
+    expect(sut.errors).toEqual([])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Must be able to validate the string method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyString: [string(), notRequired()]
+    const schema = vkrun().schema({
+      keyString: vkrun().string().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -138,8 +140,8 @@ describe('Schema', () => {
   })
 
   it('Must be able to validate the string method and return passes all tests when not required and value is provided', async () => {
-    const schema = createSchema({
-      keyString: [string(), notRequired()]
+    const schema = vkrun().schema({
+      keyString: vkrun().string().notRequired()
     })
 
     const sut = await schema.validate({
@@ -169,8 +171,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the string method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyString: [string()]
+    const schema = vkrun().schema({
+      keyString: vkrun().string()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({ keyString: false })
@@ -182,22 +184,22 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the string method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyString: [number()]
+    const schema = vkrun().schema({
+      keyString: vkrun().number()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
 
     await expect(sut).rejects.toThrow(InvalidParamError)
     await expect(sut).rejects.toThrow(
-      new InvalidParamError('keyString is required!')
+      new InvalidParamError('keyString must be a number type!')
     )
   })
 
   // Number
   it('Should be able to validate the number method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     })
 
     const sut = await schema.validate({
@@ -205,16 +207,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyNumber',
-        expect: 'value other than undefined, null or empty string',
-        received: 123
-      },
       {
         method: 'number',
         name: 'keyNumber',
@@ -227,8 +223,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the number method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     })
 
     const sut = await schema.validate({
@@ -236,15 +232,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyNumber',
-      expect: 'value other than undefined, null or empty string',
-      received: false
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'number',
       type: 'invalid value',
@@ -257,26 +248,18 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the number method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyNumber',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyNumber is required!'
-      },
       {
         method: 'number',
         type: 'invalid value',
@@ -289,8 +272,8 @@ describe('Schema', () => {
   })
 
   it('Must be able to validate the number method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyNumber: [number(), notRequired()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -310,8 +293,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the number method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({ keyNumber: false })
@@ -323,8 +306,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the number method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number().required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -337,9 +320,9 @@ describe('Schema', () => {
 
   // Boolean
   it('Should be able to validate the boolean method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyBooleanTrue: [boolean()],
-      keyBooleanFalse: [boolean()]
+    const schema = vkrun().schema({
+      keyBooleanTrue: vkrun().boolean(),
+      keyBooleanFalse: vkrun().boolean()
     })
 
     const sut = await schema.validate({
@@ -348,22 +331,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(4)
+    expect(sut.passed).toEqual(2)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(4)
+    expect(sut.totalTests).toEqual(2)
     expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyBooleanTrue',
-        expect: 'value other than undefined, null or empty string',
-        received: true
-      },
-      {
-        method: 'required',
-        name: 'keyBooleanFalse',
-        expect: 'value other than undefined, null or empty string',
-        received: false
-      },
       {
         method: 'boolean',
         name: 'keyBooleanTrue',
@@ -382,9 +353,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the boolean method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyBooleanTrue: [boolean()],
-      keyBooleanFalse: [boolean()]
+    const schema = vkrun().schema({
+      keyBooleanTrue: vkrun().boolean(),
+      keyBooleanFalse: vkrun().boolean()
     })
 
     const sut = await schema.validate({
@@ -393,29 +364,15 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(3)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(4)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyBooleanTrue',
-        expect: 'value other than undefined, null or empty string',
-        received: true
-      },
-      {
-        method: 'required',
-        name: 'keyBooleanFalse',
-        expect: 'value other than undefined, null or empty string',
-        received: 'false'
-      },
-      {
-        method: 'boolean',
-        name: 'keyBooleanTrue',
-        expect: 'boolean type',
-        received: true
-      }
-    ])
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([{
+      method: 'boolean',
+      name: 'keyBooleanTrue',
+      expect: 'boolean type',
+      received: true
+    }])
     expect(sut.errors).toEqual([{
       method: 'boolean',
       type: 'invalid value',
@@ -428,35 +385,19 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the number method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyBooleanTrue: [boolean()],
-      keyBooleanFalse: [boolean()]
+    const schema = vkrun().schema({
+      keyBooleanTrue: vkrun().boolean(),
+      keyBooleanFalse: vkrun().boolean()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(4)
-    expect(sut.totalTests).toEqual(4)
+    expect(sut.failed).toEqual(2)
+    expect(sut.totalTests).toEqual(2)
     expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyBooleanTrue',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyBooleanTrue is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyBooleanFalse',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyBooleanFalse is required!'
-      },
       {
         method: 'boolean',
         type: 'invalid value',
@@ -478,9 +419,9 @@ describe('Schema', () => {
   })
 
   it('Must be able to validate the boolean method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyBooleanTrue: [boolean(), notRequired()],
-      keyBooleanFalse: [boolean(), notRequired()]
+    const schema = vkrun().schema({
+      keyBooleanTrue: vkrun().boolean().notRequired(),
+      keyBooleanFalse: vkrun().boolean().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -508,9 +449,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the boolean method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyBooleanTrue: [boolean()],
-      keyBooleanFalse: [boolean()]
+    const schema = vkrun().schema({
+      keyBooleanTrue: vkrun().boolean(),
+      keyBooleanFalse: vkrun().boolean()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -525,9 +466,9 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the boolean method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyBooleanTrue: [boolean()],
-      keyBooleanFalse: [boolean()]
+    const schema = vkrun().schema({
+      keyBooleanTrue: vkrun().boolean().required(),
+      keyBooleanFalse: vkrun().boolean().required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -539,8 +480,8 @@ describe('Schema', () => {
 
   // MinWord
   it('Should be able to validate the minWord method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyMinWord: [minWord(2)]
+    const schema = vkrun().schema({
+      keyMinWord: vkrun().minWord(2)
     })
 
     const sut = await schema.validate({
@@ -548,30 +489,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyMinWord',
-        expect: 'value other than undefined, null or empty string',
-        received: 'any text'
-      },
-      {
-        method: 'minWord',
-        name: 'keyMinWord',
-        expect: 'must have a minimum of words',
-        received: 'any text'
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'minWord',
+      name: 'keyMinWord',
+      expect: 'must have a minimum of words',
+      received: 'any text'
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the minWord method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyMinWord: [minWord(2)]
+    const schema = vkrun().schema({
+      keyMinWord: vkrun().minWord(2)
     })
 
     const sut = await schema.validate({
@@ -579,15 +512,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyMinWord',
-      expect: 'value other than undefined, null or empty string',
-      received: 'any_text'
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'minWord',
       type: 'invalid value',
@@ -600,41 +528,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the minWord method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyMinWord: [minWord(2)]
+    const schema = vkrun().schema({
+      keyMinWord: vkrun().minWord(2)
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyMinWord',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyMinWord is required!'
-      },
-      {
-        method: 'minWord',
-        type: 'invalid value',
-        name: 'keyMinWord',
-        expect: 'must have a minimum of words',
-        received: 'undefined',
-        message: 'keyMinWord must have at least 2 words!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'minWord',
+      type: 'invalid value',
+      name: 'keyMinWord',
+      expect: 'must have a minimum of words',
+      received: 'undefined',
+      message: 'keyMinWord must have at least 2 words!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the minWord method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyMinWord: [minWord(2), notRequired()]
+    const schema = vkrun().schema({
+      keyMinWord: vkrun().minWord(2).notRequired()
     })
 
     const sut = await schema.validate({})
@@ -654,8 +572,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the minWord method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyMinWord: [minWord(2)]
+    const schema = vkrun().schema({
+      keyMinWord: vkrun().minWord(2)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -668,8 +586,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the minWord method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyMinWord: [minWord(2)]
+    const schema = vkrun().schema({
+      keyMinWord: vkrun().minWord(2).required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -681,8 +599,8 @@ describe('Schema', () => {
 
   // MaxLength
   it('Should be able to validate the maxLength method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyMaxLength: [maxLength(4)]
+    const schema = vkrun().schema({
+      keyMaxLength: vkrun().maxLength(4)
     })
 
     const sut = await schema.validate({
@@ -690,30 +608,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyMaxLength',
-        expect: 'value other than undefined, null or empty string',
-        received: 'text'
-      },
-      {
-        method: 'maxLength',
-        name: 'keyMaxLength',
-        expect: 'string with characters less than or equal to the limit',
-        received: 'text'
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'maxLength',
+      name: 'keyMaxLength',
+      expect: 'string with characters less than or equal to the limit',
+      received: 'text'
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the maxLength method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyMaxLength: [maxLength(3)]
+    const schema = vkrun().schema({
+      keyMaxLength: vkrun().maxLength(3).required()
     })
 
     const sut = await schema.validate({
@@ -742,41 +652,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the maxLength method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyMaxLength: [maxLength(3)]
+    const schema = vkrun().schema({
+      keyMaxLength: vkrun().maxLength(3)
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyMaxLength',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyMaxLength is required!'
-      },
-      {
-        method: 'maxLength',
-        type: 'invalid value',
-        name: 'keyMaxLength',
-        received: 'undefined',
-        expect: 'string with characters less than or equal to the limit',
-        message: 'keyMaxLength must be a string type!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'maxLength',
+      type: 'invalid value',
+      name: 'keyMaxLength',
+      received: 'undefined',
+      expect: 'string with characters less than or equal to the limit',
+      message: 'keyMaxLength must be a string type!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the maxLength method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyMaxLength: [maxLength(3), notRequired()]
+    const schema = vkrun().schema({
+      keyMaxLength: vkrun().maxLength(3).notRequired()
     })
 
     const sut = await schema.validate({})
@@ -796,8 +696,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the maxLength method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyMaxLength: [maxLength(3)]
+    const schema = vkrun().schema({
+      keyMaxLength: vkrun().maxLength(3)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -810,8 +710,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the maxLength method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyMaxLength: [maxLength(3)]
+    const schema = vkrun().schema({
+      keyMaxLength: vkrun().maxLength(3).required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -823,8 +723,8 @@ describe('Schema', () => {
 
   // MinLength
   it('Should be able to validate the minLength method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyMinLength: [minLength(4)]
+    const schema = vkrun().schema({
+      keyMinLength: vkrun().minLength(4)
     })
 
     const sut = await schema.validate({
@@ -832,30 +732,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyMinLength',
-        expect: 'value other than undefined, null or empty string',
-        received: 'text'
-      },
-      {
-        method: 'minLength',
-        name: 'keyMinLength',
-        expect: 'string with characters greater than or equal to the limit',
-        received: 'text'
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'minLength',
+      name: 'keyMinLength',
+      expect: 'string with characters greater than or equal to the limit',
+      received: 'text'
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the maxLength method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyMinLength: [minLength(5)]
+    const schema = vkrun().schema({
+      keyMinLength: vkrun().minLength(5)
     })
 
     const sut = await schema.validate({
@@ -863,15 +755,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyMinLength',
-      expect: 'value other than undefined, null or empty string',
-      received: 'text'
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'minLength',
       type: 'invalid value',
@@ -884,41 +771,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the maxLength method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyMinLength: [minLength(5)]
+    const schema = vkrun().schema({
+      keyMinLength: vkrun().minLength(5)
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyMinLength',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyMinLength is required!'
-      },
-      {
-        method: 'minLength',
-        type: 'invalid value',
-        name: 'keyMinLength',
-        expect: 'string with characters greater than or equal to the limit',
-        received: 'undefined',
-        message: 'keyMinLength must be a string type!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'minLength',
+      type: 'invalid value',
+      name: 'keyMinLength',
+      expect: 'string with characters greater than or equal to the limit',
+      received: 'undefined',
+      message: 'keyMinLength must be a string type!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the maxLength method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyMinLength: [minLength(5), notRequired()]
+    const schema = vkrun().schema({
+      keyMinLength: vkrun().minLength(5).notRequired()
     })
 
     const sut = await schema.validate({})
@@ -938,8 +815,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the maxLength method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyMinLength: [minLength(5)]
+    const schema = vkrun().schema({
+      keyMinLength: vkrun().minLength(5)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -952,8 +829,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the maxLength method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyMinLength: [minLength(5)]
+    const schema = vkrun().schema({
+      keyMinLength: vkrun().minLength(5).required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -965,8 +842,8 @@ describe('Schema', () => {
 
   // Uuid
   it('Should be able to validate the uuid method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyUuid: [uuid()]
+    const schema = vkrun().schema({
+      keyUuid: vkrun().uuid()
     })
 
     const sut = await schema.validate({
@@ -974,30 +851,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyUuid',
-        expect: 'value other than undefined, null or empty string',
-        received: '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
-      },
-      {
-        method: 'uuid',
-        name: 'keyUuid',
-        expect: 'uuid format',
-        received: '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'uuid',
+      name: 'keyUuid',
+      expect: 'uuid format',
+      received: '3ef7c105-c4ea-444d-bf47-e2e1a49ea613'
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the uuid method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyUuid: [uuid()]
+    const schema = vkrun().schema({
+      keyUuid: vkrun().uuid()
     })
 
     const sut = await schema.validate({
@@ -1005,15 +874,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyUuid',
-      expect: 'value other than undefined, null or empty string',
-      received: '123'
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'uuid',
       type: 'invalid value',
@@ -1026,41 +890,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the uuid method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyUuid: [uuid()]
+    const schema = vkrun().schema({
+      keyUuid: vkrun().uuid()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyUuid',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyUuid is required!'
-      },
-      {
-        method: 'uuid',
-        type: 'invalid value',
-        name: 'keyUuid',
-        expect: 'uuid format',
-        received: 'undefined',
-        message: 'keyUuid must be a uuid type!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'uuid',
+      type: 'invalid value',
+      name: 'keyUuid',
+      expect: 'uuid format',
+      received: 'undefined',
+      message: 'keyUuid must be a uuid type!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the uuid method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyUuid: [uuid(), notRequired()]
+    const schema = vkrun().schema({
+      keyUuid: vkrun().uuid().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -1080,8 +934,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the uuid method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyUuid: [uuid()]
+    const schema = vkrun().schema({
+      keyUuid: vkrun().uuid()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -1094,8 +948,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the uuid method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyUuid: [uuid()]
+    const schema = vkrun().schema({
+      keyUuid: vkrun().uuid().required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -1107,8 +961,8 @@ describe('Schema', () => {
 
   // Email
   it('Should be able to validate the email method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyEmail: [email()]
+    const schema = vkrun().schema({
+      keyEmail: vkrun().email()
     })
 
     const sut = await schema.validate({
@@ -1116,30 +970,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyEmail',
-        expect: 'value other than undefined, null or empty string',
-        received: 'email@email.com'
-      },
-      {
-        method: 'email',
-        name: 'keyEmail',
-        expect: 'valid email',
-        received: 'email@email.com'
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'email',
+      name: 'keyEmail',
+      expect: 'valid email',
+      received: 'email@email.com'
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the email method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyEmail: [email()]
+    const schema = vkrun().schema({
+      keyEmail: vkrun().email()
     })
 
     const sut = await schema.validate({
@@ -1147,15 +993,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyEmail',
-      expect: 'value other than undefined, null or empty string',
-      received: 'email@email'
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'email',
       type: 'invalid value',
@@ -1168,41 +1009,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the email method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyEmail: [email()]
+    const schema = vkrun().schema({
+      keyEmail: vkrun().email()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyEmail',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyEmail is required!'
-      },
-      {
-        method: 'email',
-        type: 'invalid value',
-        name: 'keyEmail',
-        expect: 'valid email',
-        received: 'undefined',
-        message: 'email undefined is invalid!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'email',
+      type: 'invalid value',
+      name: 'keyEmail',
+      expect: 'valid email',
+      received: 'undefined',
+      message: 'email undefined is invalid!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the email method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyEmail: [email(), notRequired()]
+    const schema = vkrun().schema({
+      keyEmail: vkrun().email().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -1222,8 +1053,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the email method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyEmail: [email()]
+    const schema = vkrun().schema({
+      keyEmail: vkrun().email()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -1236,21 +1067,21 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the email method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyEmail: [email()]
+    const schema = vkrun().schema({
+      keyEmail: vkrun().email()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
 
     await expect(sut).rejects.toThrow(
-      new InvalidParamError('keyEmail is required!')
+      new InvalidParamError('email undefined is invalid!')
     )
   })
 
   // Number
   it('Should be able to validate the number method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     })
 
     const sut = await schema.validate({
@@ -1258,30 +1089,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyNumber',
-        expect: 'value other than undefined, null or empty string',
-        received: 123
-      },
-      {
-        method: 'number',
-        name: 'keyNumber',
-        expect: 'number type',
-        received: 123
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'number',
+      name: 'keyNumber',
+      expect: 'number type',
+      received: 123
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the number method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     })
 
     const sut = await schema.validate({
@@ -1289,15 +1112,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyNumber',
-      expect: 'value other than undefined, null or empty string',
-      received: '123'
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'number',
       type: 'invalid value',
@@ -1310,41 +1128,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the number method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyNumber',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyNumber is required!'
-      },
-      {
-        method: 'number',
-        type: 'invalid value',
-        name: 'keyNumber',
-        expect: 'number type',
-        received: 'undefined',
-        message: 'keyNumber must be a number type!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'number',
+      type: 'invalid value',
+      name: 'keyNumber',
+      expect: 'number type',
+      received: 'undefined',
+      message: 'keyNumber must be a number type!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the number method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyNumber: [number(), notRequired()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -1364,8 +1172,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the number method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -1378,21 +1186,21 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the number method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyNumber: [number()]
+    const schema = vkrun().schema({
+      keyNumber: vkrun().number()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
 
     await expect(sut).rejects.toThrow(
-      new InvalidParamError('keyNumber is required!')
+      new InvalidParamError('keyNumber must be a number type!')
     )
   })
 
   // Float
   it('Should be able to validate the float method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyFloat: [float()]
+    const schema = vkrun().schema({
+      keyFloat: vkrun().float()
     })
 
     const sut = await schema.validate({
@@ -1400,30 +1208,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyFloat',
-        expect: 'value other than undefined, null or empty string',
-        received: 123.5
-      },
-      {
-        method: 'float',
-        name: 'keyFloat',
-        expect: 'number float type',
-        received: 123.5
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'float',
+      name: 'keyFloat',
+      expect: 'number float type',
+      received: 123.5
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the float method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyFloat: [float()]
+    const schema = vkrun().schema({
+      keyFloat: vkrun().float()
     })
 
     const sut = await schema.validate({
@@ -1431,15 +1231,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyFloat',
-      expect: 'value other than undefined, null or empty string',
-      received: 123
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'float',
       type: 'invalid value',
@@ -1452,41 +1247,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the float method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyFloat: [float()]
+    const schema = vkrun().schema({
+      keyFloat: vkrun().float()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyFloat',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyFloat is required!'
-      },
-      {
-        method: 'float',
-        type: 'invalid value',
-        name: 'keyFloat',
-        expect: 'number float type',
-        received: 'undefined',
-        message: 'keyFloat must be a number and float!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'float',
+      type: 'invalid value',
+      name: 'keyFloat',
+      expect: 'number float type',
+      received: 'undefined',
+      message: 'keyFloat must be a number and float!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the float method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyFloat: [float(), notRequired()]
+    const schema = vkrun().schema({
+      keyFloat: vkrun().float().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -1506,8 +1291,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the float method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyFloat: [float()]
+    const schema = vkrun().schema({
+      keyFloat: vkrun().float()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -1520,8 +1305,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the float method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyFloat: [float()]
+    const schema = vkrun().schema({
+      keyFloat: vkrun().float().required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -1533,8 +1318,8 @@ describe('Schema', () => {
 
   // Integer
   it('Should be able to validate the integer method and return passes all tests', async () => {
-    const schema = createSchema({
-      keyInteger: [integer()]
+    const schema = vkrun().schema({
+      keyInteger: vkrun().integer()
     })
 
     const sut = await schema.validate({
@@ -1542,30 +1327,22 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyInteger',
-        expect: 'value other than undefined, null or empty string',
-        received: 123
-      },
-      {
-        method: 'integer',
-        name: 'keyInteger',
-        expect: 'number integer type',
-        received: 123
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'integer',
+      name: 'keyInteger',
+      expect: 'number integer type',
+      received: 123
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to validate the integer method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyInteger: [integer()]
+    const schema = vkrun().schema({
+      keyInteger: vkrun().integer()
     })
 
     const sut = await schema.validate({
@@ -1573,15 +1350,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyInteger',
-      expect: 'value other than undefined, null or empty string',
-      received: 123.5
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'integer',
       type: 'invalid value',
@@ -1594,41 +1366,31 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the integer method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      keyInteger: [integer()]
+    const schema = vkrun().schema({
+      keyInteger: vkrun().integer()
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyInteger',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyInteger is required!'
-      },
-      {
-        method: 'integer',
-        type: 'invalid value',
-        name: 'keyInteger',
-        expect: 'number integer type',
-        received: 'undefined',
-        message: 'keyInteger must be a number and integer!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'integer',
+      type: 'invalid value',
+      name: 'keyInteger',
+      expect: 'number integer type',
+      received: 'undefined',
+      message: 'keyInteger must be a number and integer!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the integer method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      keyInteger: [integer(), notRequired()]
+    const schema = vkrun().schema({
+      keyInteger: vkrun().integer().notRequired()
     })
 
     const sut = await schema.validate({})
@@ -1648,8 +1410,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the integer method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      keyInteger: [integer()]
+    const schema = vkrun().schema({
+      keyInteger: vkrun().integer()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -1662,8 +1424,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the integer method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyInteger: [integer()]
+    const schema = vkrun().schema({
+      keyInteger: vkrun().integer().required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -1675,17 +1437,17 @@ describe('Schema', () => {
 
   // Date
   it('Should be able to validate the date method and return passes all tests', async () => {
-    const schema = createSchema({
-      'ISO8601-A': [date('ISO8601')],
-      'ISO8601-B': [date()],
-      'DD/MM/YYYY': [date('DD/MM/YYYY')],
-      'MM/DD/YYYY': [date('MM/DD/YYYY')],
-      'DD-MM-YYYY': [date('DD-MM-YYYY')],
-      'MM-DD-YYYY': [date('MM-DD-YYYY')],
-      'YYYY/MM/DD': [date('YYYY/MM/DD')],
-      'YYYY/DD/MM': [date('YYYY/DD/MM')],
-      'YYYY-MM-DD': [date('YYYY-MM-DD')],
-      'YYYY-DD-MM': [date('YYYY-DD-MM')]
+    const schema = vkrun().schema({
+      'ISO8601-A': vkrun().date('ISO8601'),
+      'ISO8601-B': vkrun().date(),
+      'DD/MM/YYYY': vkrun().date('DD/MM/YYYY'),
+      'MM/DD/YYYY': vkrun().date('MM/DD/YYYY'),
+      'DD-MM-YYYY': vkrun().date('DD-MM-YYYY'),
+      'MM-DD-YYYY': vkrun().date('MM-DD-YYYY'),
+      'YYYY/MM/DD': vkrun().date('YYYY/MM/DD'),
+      'YYYY/DD/MM': vkrun().date('YYYY/DD/MM'),
+      'YYYY-MM-DD': vkrun().date('YYYY-MM-DD'),
+      'YYYY-DD-MM': vkrun().date('YYYY-DD-MM')
     })
 
     const sut = await schema.validate({
@@ -1702,70 +1464,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(20)
+    expect(sut.passed).toEqual(10)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(20)
+    expect(sut.totalTests).toEqual(10)
     expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'ISO8601-A',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:02:01.117Z')
-      },
-      {
-        method: 'required',
-        name: 'ISO8601-B',
-        expect: 'value other than undefined, null or empty string',
-        received: '2024-01-03T23:02:01.117Z'
-      },
-      {
-        method: 'required',
-        name: 'DD/MM/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '30/12/2000'
-      },
-      {
-        method: 'required',
-        name: 'MM/DD/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '12/30/2000'
-      },
-      {
-        method: 'required',
-        name: 'DD-MM-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '30-12-2000'
-      },
-      {
-        method: 'required',
-        name: 'MM-DD-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: '12-30-2000'
-      },
-      {
-        method: 'required',
-        name: 'YYYY/MM/DD',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000/12/30'
-      },
-      {
-        method: 'required',
-        name: 'YYYY/DD/MM',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000/30/12'
-      },
-      {
-        method: 'required',
-        name: 'YYYY-MM-DD',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000-12-30'
-      },
-      {
-        method: 'required',
-        name: 'YYYY-DD-MM',
-        expect: 'value other than undefined, null or empty string',
-        received: '2000-30-12'
-      },
       {
         method: 'date',
         name: 'ISO8601-A',
@@ -1832,17 +1534,17 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the date method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      'ISO8601-A': [date('ISO8601')],
-      'ISO8601-B': [date()],
-      'DD/MM/YYYY': [date('DD/MM/YYYY')],
-      'MM/DD/YYYY': [date('MM/DD/YYYY')],
-      'DD-MM-YYYY': [date('DD-MM-YYYY')],
-      'MM-DD-YYYY': [date('MM-DD-YYYY')],
-      'YYYY/MM/DD': [date('YYYY/MM/DD')],
-      'YYYY/DD/MM': [date('YYYY/DD/MM')],
-      'YYYY-MM-DD': [date('YYYY-MM-DD')],
-      'YYYY-DD-MM': [date('YYYY-DD-MM')]
+    const schema = vkrun().schema({
+      'ISO8601-A': vkrun().date('ISO8601'),
+      'ISO8601-B': vkrun().date(),
+      'DD/MM/YYYY': vkrun().date('DD/MM/YYYY'),
+      'MM/DD/YYYY': vkrun().date('MM/DD/YYYY'),
+      'DD-MM-YYYY': vkrun().date('DD-MM-YYYY'),
+      'MM-DD-YYYY': vkrun().date('MM-DD-YYYY'),
+      'YYYY/MM/DD': vkrun().date('YYYY/MM/DD'),
+      'YYYY/DD/MM': vkrun().date('YYYY/DD/MM'),
+      'YYYY-MM-DD': vkrun().date('YYYY-MM-DD'),
+      'YYYY-DD-MM': vkrun().date('YYYY-DD-MM')
     })
 
     const sut = await schema.validate({
@@ -1859,71 +1561,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(10)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(10)
-    expect(sut.totalTests).toEqual(20)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'ISO8601-A',
-        expect: 'value other than undefined, null or empty string',
-        received: '30/12/2000'
-      },
-      {
-        method: 'required',
-        name: 'ISO8601-B',
-        expect: 'value other than undefined, null or empty string',
-        received: '30/12/2000'
-      },
-      {
-        method: 'required',
-        name: 'DD/MM/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'MM/DD/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'DD-MM-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'MM-DD-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'YYYY/MM/DD',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'YYYY/DD/MM',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'YYYY-MM-DD',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      },
-      {
-        method: 'required',
-        name: 'YYYY-DD-MM',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2024-01-03T23:15:34.690Z')
-      }
-    ])
+    expect(sut.totalTests).toEqual(10)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
       {
         method: 'date',
@@ -2010,107 +1651,27 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the date method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      'ISO8601-A': [date('ISO8601')],
-      'ISO8601-B': [date()],
-      'DD/MM/YYYY': [date('DD/MM/YYYY')],
-      'MM/DD/YYYY': [date('MM/DD/YYYY')],
-      'DD-MM-YYYY': [date('DD-MM-YYYY')],
-      'MM-DD-YYYY': [date('MM-DD-YYYY')],
-      'YYYY/MM/DD': [date('YYYY/MM/DD')],
-      'YYYY/DD/MM': [date('YYYY/DD/MM')],
-      'YYYY-MM-DD': [date('YYYY-MM-DD')],
-      'YYYY-DD-MM': [date('YYYY-DD-MM')]
+    const schema = vkrun().schema({
+      'ISO8601-A': vkrun().date('ISO8601'),
+      'ISO8601-B': vkrun().date(),
+      'DD/MM/YYYY': vkrun().date('DD/MM/YYYY'),
+      'MM/DD/YYYY': vkrun().date('MM/DD/YYYY'),
+      'DD-MM-YYYY': vkrun().date('DD-MM-YYYY'),
+      'MM-DD-YYYY': vkrun().date('MM-DD-YYYY'),
+      'YYYY/MM/DD': vkrun().date('YYYY/MM/DD'),
+      'YYYY/DD/MM': vkrun().date('YYYY/DD/MM'),
+      'YYYY-MM-DD': vkrun().date('YYYY-MM-DD'),
+      'YYYY-DD-MM': vkrun().date('YYYY-DD-MM')
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(20)
-    expect(sut.totalTests).toEqual(20)
+    expect(sut.failed).toEqual(10)
+    expect(sut.totalTests).toEqual(10)
     expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'ISO8601-A',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'ISO8601-A is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'ISO8601-B',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'ISO8601-B is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'DD/MM/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'DD/MM/YYYY is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'MM/DD/YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'MM/DD/YYYY is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'DD-MM-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'DD-MM-YYYY is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'MM-DD-YYYY',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'MM-DD-YYYY is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'YYYY/MM/DD',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'YYYY/MM/DD is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'YYYY/DD/MM',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'YYYY/DD/MM is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'YYYY-MM-DD',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'YYYY-MM-DD is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'YYYY-DD-MM',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'YYYY-DD-MM is required!'
-      },
       {
         method: 'date',
         type: 'invalid value',
@@ -2196,17 +1757,17 @@ describe('Schema', () => {
   })
 
   it('Must be able to validate the date method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      'ISO8601-A': [date('ISO8601'), notRequired()],
-      'ISO8601-B': [date(), notRequired()],
-      'DD/MM/YYYY': [date('DD/MM/YYYY'), notRequired()],
-      'MM/DD/YYYY': [date('MM/DD/YYYY'), notRequired()],
-      'DD-MM-YYYY': [date('DD-MM-YYYY'), notRequired()],
-      'MM-DD-YYYY': [date('MM-DD-YYYY'), notRequired()],
-      'YYYY/MM/DD': [date('YYYY/MM/DD'), notRequired()],
-      'YYYY/DD/MM': [date('YYYY/DD/MM'), notRequired()],
-      'YYYY-MM-DD': [date('YYYY-MM-DD'), notRequired()],
-      'YYYY-DD-MM': [date('YYYY-DD-MM'), notRequired()]
+    const schema = vkrun().schema({
+      'ISO8601-A': vkrun().date('ISO8601').notRequired(),
+      'ISO8601-B': vkrun().date().notRequired(),
+      'DD/MM/YYYY': vkrun().date('DD/MM/YYYY').notRequired(),
+      'MM/DD/YYYY': vkrun().date('MM/DD/YYYY').notRequired(),
+      'DD-MM-YYYY': vkrun().date('DD-MM-YYYY').notRequired(),
+      'MM-DD-YYYY': vkrun().date('MM-DD-YYYY').notRequired(),
+      'YYYY/MM/DD': vkrun().date('YYYY/MM/DD').notRequired(),
+      'YYYY/DD/MM': vkrun().date('YYYY/DD/MM').notRequired(),
+      'YYYY-MM-DD': vkrun().date('YYYY-MM-DD').notRequired(),
+      'YYYY-DD-MM': vkrun().date('YYYY-DD-MM').notRequired()
     })
 
     const sut = await schema.validate({})
@@ -2282,17 +1843,17 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the date method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      'ISO8601-A': [date('ISO8601')],
-      'ISO8601-B': [date()],
-      'DD/MM/YYYY': [date('DD/MM/YYYY')],
-      'MM/DD/YYYY': [date('MM/DD/YYYY')],
-      'DD-MM-YYYY': [date('DD-MM-YYYY')],
-      'MM-DD-YYYY': [date('MM-DD-YYYY')],
-      'YYYY/MM/DD': [date('YYYY/MM/DD')],
-      'YYYY/DD/MM': [date('YYYY/DD/MM')],
-      'YYYY-MM-DD': [date('YYYY-MM-DD')],
-      'YYYY-DD-MM': [date('YYYY-DD-MM')]
+    const schema = vkrun().schema({
+      'ISO8601-A': vkrun().date('ISO8601'),
+      'ISO8601-B': vkrun().date(),
+      'DD/MM/YYYY': vkrun().date('DD/MM/YYYY'),
+      'MM/DD/YYYY': vkrun().date('MM/DD/YYYY'),
+      'DD-MM-YYYY': vkrun().date('DD-MM-YYYY'),
+      'MM-DD-YYYY': vkrun().date('MM-DD-YYYY'),
+      'YYYY/MM/DD': vkrun().date('YYYY/MM/DD'),
+      'YYYY/DD/MM': vkrun().date('YYYY/DD/MM'),
+      'YYYY-MM-DD': vkrun().date('YYYY-MM-DD'),
+      'YYYY-DD-MM': vkrun().date('YYYY-DD-MM')
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -2314,8 +1875,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the date method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      keyDate: [date()]
+    const schema = vkrun().schema({
+      keyDate: vkrun().date().required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -2330,8 +1891,8 @@ describe('Schema', () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateGreaterThan: [dateGreaterThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateGreaterThan: vkrun().dateGreaterThan(refDate)
     })
 
     const sut = await schema.validate({
@@ -2339,23 +1900,15 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyDateGreaterThan',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2000-02-03T02:00:00.000Z')
-      },
-      {
-        method: 'dateGreaterThan',
-        name: 'keyDateGreaterThan',
-        expect: '2000/03/02 00:00:00 greater than reference 2000/02/02 00:00:00',
-        received: new Date('2000-02-03T02:00:00.000Z')
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'dateGreaterThan',
+      name: 'keyDateGreaterThan',
+      expect: '2000/03/02 00:00:00 greater than reference 2000/02/02 00:00:00',
+      received: new Date('2000-02-03T02:00:00.000Z')
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
@@ -2364,8 +1917,8 @@ describe('Schema', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateGreaterThan: [dateGreaterThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateGreaterThan: vkrun().dateGreaterThan(refDate)
     })
 
     const sut = await schema.validate({
@@ -2373,15 +1926,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyDateGreaterThan',
-      expect: 'value other than undefined, null or empty string',
-      received: new Date('2000-02-02T02:00:00.000Z')
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([{
       method: 'dateGreaterThan',
       type: 'invalid value',
@@ -2396,43 +1944,33 @@ describe('Schema', () => {
   it("Must be able to validate the dateGreaterThan method and return doesn't passes all tests when value is not provided", async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateGreaterThan: [dateGreaterThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateGreaterThan: vkrun().dateGreaterThan(refDate)
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyDateGreaterThan',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyDateGreaterThan is required!'
-      },
-      {
-        method: 'dateGreaterThan',
-        type: 'invalid value',
-        name: 'keyDateGreaterThan',
-        expect: 'date keyDateGreaterThan greater than reference date',
-        received: 'undefined',
-        message: 'the provided date is invalid!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'dateGreaterThan',
+      type: 'invalid value',
+      name: 'keyDateGreaterThan',
+      expect: 'date keyDateGreaterThan greater than reference date',
+      received: 'undefined',
+      message: 'the provided date is invalid!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the dateGreaterThan method and return passes all tests when not required and value is not provided', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateGreaterThan: [dateGreaterThan(refDate), notRequired()]
+    const schema = vkrun().schema({
+      keyDateGreaterThan: vkrun().dateGreaterThan(refDate).notRequired()
     })
 
     const sut = await schema.validate({})
@@ -2454,8 +1992,8 @@ describe('Schema', () => {
   it("Should be able to validate the dateGreaterThan method and throw InvalidParamError if doesn't passes all tests", async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateGreaterThan: [dateGreaterThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateGreaterThan: vkrun().dateGreaterThan(refDate)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -2470,14 +2008,14 @@ describe('Schema', () => {
   it('Should be able to validate the dateGreaterThan method and throw InvalidParamError when value is not provided', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateGreaterThan: [dateGreaterThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateGreaterThan: vkrun().dateGreaterThan(refDate)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
 
     await expect(sut).rejects.toThrow(
-      new InvalidParamError('keyDateGreaterThan is required!')
+      new InvalidParamError('the provided date is invalid!')
     )
   })
 
@@ -2486,8 +2024,8 @@ describe('Schema', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateLessThan: [dateLessThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateLessThan: vkrun().dateLessThan(refDate)
     })
 
     const sut = await schema.validate({
@@ -2495,23 +2033,15 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'keyDateLessThan',
-        expect: 'value other than undefined, null or empty string',
-        received: new Date('2000-02-02T02:00:00.000Z')
-      },
-      {
-        method: 'dateLessThan',
-        name: 'keyDateLessThan',
-        expect: '2000/02/02 00:00:00 less than reference 2000/03/02 00:00:00',
-        received: new Date('2000-02-02T02:00:00.000Z')
-      }
-    ])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([{
+      method: 'dateLessThan',
+      name: 'keyDateLessThan',
+      expect: '2000/02/02 00:00:00 less than reference 2000/03/02 00:00:00',
+      received: new Date('2000-02-02T02:00:00.000Z')
+    }])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
@@ -2520,8 +2050,8 @@ describe('Schema', () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateLessThan: [dateLessThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateLessThan: vkrun().dateLessThan(refDate)
     })
 
     const sut = await schema.validate({
@@ -2529,15 +2059,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(1)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(1)
-    expect(sut.totalTests).toEqual(2)
-    expect(sut.successes).toEqual([{
-      method: 'required',
-      name: 'keyDateLessThan',
-      expect: 'value other than undefined, null or empty string',
-      received: new Date('2000-02-03T02:00:00.000Z')
-    }])
+    expect(sut.totalTests).toEqual(1)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
       {
         method: 'dateLessThan',
@@ -2554,43 +2079,33 @@ describe('Schema', () => {
   it("Must be able to validate the dateLessThan method and return doesn't passes all tests when value is not provided", async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateLessThan: [dateLessThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateLessThan: vkrun().dateLessThan(refDate)
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(1)
     expect(sut.successes).toEqual([])
-    expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'keyDateLessThan',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'keyDateLessThan is required!'
-      },
-      {
-        method: 'dateLessThan',
-        type: 'invalid value',
-        name: 'keyDateLessThan',
-        expect: 'date keyDateLessThan less than reference date',
-        received: 'undefined',
-        message: 'the provided date is invalid!'
-      }
-    ])
+    expect(sut.errors).toEqual([{
+      method: 'dateLessThan',
+      type: 'invalid value',
+      name: 'keyDateLessThan',
+      expect: 'date keyDateLessThan less than reference date',
+      received: 'undefined',
+      message: 'the provided date is invalid!'
+    }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it('Must be able to validate the dateLessThan method and return passes all tests when not required and value is not provided', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateLessThan: [dateLessThan(refDate), notRequired()]
+    const schema = vkrun().schema({
+      keyDateLessThan: vkrun().dateLessThan(refDate).notRequired()
     })
 
     const sut = await schema.validate({})
@@ -2612,8 +2127,8 @@ describe('Schema', () => {
   it("Should be able to validate the dateLessThan method and throw InvalidParamError if doesn't passes all tests", async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateLessThan: [dateLessThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateLessThan: vkrun().dateLessThan(refDate)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -2628,22 +2143,22 @@ describe('Schema', () => {
   it('Should be able to validate the dateLessThan method and throw InvalidParamError when value is not provided', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const schema = createSchema({
-      keyDateLessThan: [dateLessThan(refDate)]
+    const schema = vkrun().schema({
+      keyDateLessThan: vkrun().dateLessThan(refDate)
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
 
     await expect(sut).rejects.toThrow(
-      new InvalidParamError('keyDateLessThan is required!')
+      new InvalidParamError('the provided date is invalid!')
     )
   })
 
   // Time
   it('Should be able to validate the time method and return passes all tests', async () => {
-    const schema = createSchema({
-      'HH:MM:SS': [time('HH:MM:SS')],
-      'HH:MM': [time('HH:MM')]
+    const schema = vkrun().schema({
+      'HH:MM:SS': vkrun().time('HH:MM:SS'),
+      'HH:MM': vkrun().time('HH:MM')
     })
 
     const sut = await schema.validate({
@@ -2652,22 +2167,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(4)
+    expect(sut.passed).toEqual(2)
     expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(4)
+    expect(sut.totalTests).toEqual(2)
     expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'HH:MM:SS',
-        expect: 'value other than undefined, null or empty string',
-        received: '11:05:30'
-      },
-      {
-        method: 'required',
-        name: 'HH:MM',
-        expect: 'value other than undefined, null or empty string',
-        received: '11:05'
-      },
       {
         method: 'time',
         name: 'HH:MM:SS',
@@ -2686,9 +2189,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the time method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
-      'HH:MM:SS': [time('HH:MM:SS')],
-      'HH:MM': [time('HH:MM')]
+    const schema = vkrun().schema({
+      'HH:MM:SS': vkrun().time('HH:MM:SS'),
+      'HH:MM': vkrun().time('HH:MM')
     })
 
     const sut = await schema.validate({
@@ -2697,23 +2200,10 @@ describe('Schema', () => {
     })
 
     expect(sut.passedAll).toBeFalsy()
-    expect(sut.passed).toEqual(2)
+    expect(sut.passed).toEqual(0)
     expect(sut.failed).toEqual(2)
-    expect(sut.totalTests).toEqual(4)
-    expect(sut.successes).toEqual([
-      {
-        method: 'required',
-        name: 'HH:MM:SS',
-        expect: 'value other than undefined, null or empty string',
-        received: '11:05'
-      },
-      {
-        method: 'required',
-        name: 'HH:MM',
-        expect: 'value other than undefined, null or empty string',
-        received: '11:05:30'
-      }
-    ])
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
       {
         method: 'time',
@@ -2736,35 +2226,19 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the time method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
-      'HH:MM:SS': [time('HH:MM:SS')],
-      'HH:MM': [time('HH:MM')]
+    const schema = vkrun().schema({
+      'HH:MM:SS': vkrun().time('HH:MM:SS'),
+      'HH:MM': vkrun().time('HH:MM')
     })
 
     const sut = await schema.validate({})
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(4)
-    expect(sut.totalTests).toEqual(4)
+    expect(sut.failed).toEqual(2)
+    expect(sut.totalTests).toEqual(2)
     expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'HH:MM:SS',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'HH:MM:SS is required!'
-      },
-      {
-        method: 'required',
-        type: 'missing value',
-        name: 'HH:MM',
-        expect: 'value other than undefined, null or empty string',
-        received: 'undefined',
-        message: 'HH:MM is required!'
-      },
       {
         method: 'time',
         type: 'invalid value',
@@ -2786,9 +2260,9 @@ describe('Schema', () => {
   })
 
   it('Must be able to validate the time method and return passes all tests when not required and value is not provided', async () => {
-    const schema = createSchema({
-      'HH:MM:SS': [time('HH:MM:SS'), notRequired()],
-      'HH:MM': [time('HH:MM'), notRequired()]
+    const schema = vkrun().schema({
+      'HH:MM:SS': vkrun().time('HH:MM:SS').notRequired(),
+      'HH:MM': vkrun().time('HH:MM').notRequired()
     })
 
     const sut = await schema.validate({})
@@ -2816,9 +2290,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the time method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
-      'HH:MM:SS': [time('HH:MM:SS')],
-      'HH:MM': [time('HH:MM')]
+    const schema = vkrun().schema({
+      'HH:MM:SS': vkrun().time('HH:MM:SS'),
+      'HH:MM': vkrun().time('HH:MM')
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({
@@ -2832,9 +2306,9 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the time method and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
-      'HH:MM:SS': [time('HH:MM:SS')],
-      'HH:MM': [time('HH:MM')]
+    const schema = vkrun().schema({
+      'HH:MM:SS': vkrun().time('HH:MM:SS').required(),
+      'HH:MM': vkrun().time('HH:MM').required()
     }, { error: InvalidParamError })
 
     const sut = async (): Promise<Tests> => await schema.validate({})
@@ -2846,7 +2320,7 @@ describe('Schema', () => {
 
   // Array
   it('Should be able to validate the array method and return passes all tests', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string(),
       numberArray: array.required().number(),
       booleanArray: array.required().boolean(),
@@ -2854,7 +2328,7 @@ describe('Schema', () => {
       strictArray: array.required().strict(['blue', 'orange', 'red']),
       anyArray: array.required().any(),
       objectArray: array.required().object({
-        keyObject: [string()]
+        keyObject: vkrun().string().required()
       })
     })
 
@@ -2880,9 +2354,9 @@ describe('Schema', () => {
     expect(sut.totalTests).toEqual(24)
     expect(sut.successes).toEqual([
       {
-        method: 'required',
+        method: 'array',
         name: 'stringArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           'string',
           'string',
@@ -2908,9 +2382,9 @@ describe('Schema', () => {
         received: 'string'
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'numberArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           123,
           123,
@@ -2936,9 +2410,9 @@ describe('Schema', () => {
         received: 123
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'booleanArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           true,
           false,
@@ -2964,9 +2438,9 @@ describe('Schema', () => {
         received: true
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'dateArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           new Date('2024-01-04T00:22:21.377Z'),
           new Date('2024-01-04T00:22:21.377Z'),
@@ -2992,9 +2466,9 @@ describe('Schema', () => {
         received: new Date('2024-01-04T00:22:21.377Z')
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'strictArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           'blue',
           'orange',
@@ -3003,7 +2477,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3017,7 +2491,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3031,7 +2505,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3044,9 +2518,9 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'anyArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           new Date('2024-01-04T00:22:21.377Z'),
           'string',
@@ -3055,9 +2529,9 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'objectArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           {
             keyObject: 'string'
@@ -3082,7 +2556,7 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the not required array method and return passes all tests', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.notRequired().string(),
       numberArray: array.notRequired().number(),
       booleanArray: array.notRequired().boolean(),
@@ -3090,7 +2564,7 @@ describe('Schema', () => {
       strictArray: array.notRequired().strict(['blue', 'orange', 'red']),
       anyArray: array.notRequired().any(),
       objectArray: array.notRequired().object({
-        keyObject: [string()]
+        keyObject: vkrun().string().required()
       })
     })
 
@@ -3239,7 +2713,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3253,7 +2727,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3267,7 +2741,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3318,7 +2792,7 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the array method and return doesn't passes all tests", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string(),
       numberArray: array.required().number(),
       booleanArray: array.required().boolean(),
@@ -3326,7 +2800,7 @@ describe('Schema', () => {
       strictArray: array.required().strict(['blue', 'orange', 'red']),
       anyArray: array.required().any(),
       objectArray: array.required().object({
-        keyObject: [string()]
+        keyObject: vkrun().string().required()
       })
     })
 
@@ -3348,9 +2822,9 @@ describe('Schema', () => {
     expect(sut.totalTests).toEqual(24)
     expect(sut.successes).toEqual([
       {
-        method: 'required',
+        method: 'array',
         name: 'stringArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           'string',
           false,
@@ -3370,9 +2844,9 @@ describe('Schema', () => {
         received: 'string'
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'numberArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           123,
           '123',
@@ -3392,9 +2866,9 @@ describe('Schema', () => {
         received: 123
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'booleanArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           'true',
           false,
@@ -3414,9 +2888,9 @@ describe('Schema', () => {
         received: true
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'dateArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           new Date('2024-01-04T00:25:15.816Z'),
           '03/10/1993',
@@ -3436,9 +2910,9 @@ describe('Schema', () => {
         received: new Date('2024-01-04T00:25:15.816Z')
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'strictArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           'blue',
           'red',
@@ -3447,7 +2921,7 @@ describe('Schema', () => {
       },
       {
         method: 'array',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3460,9 +2934,9 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'anyArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           new Date('2024-01-04T00:25:15.816Z'),
           'string',
@@ -3471,9 +2945,9 @@ describe('Schema', () => {
         ]
       },
       {
-        method: 'required',
+        method: 'array',
         name: 'objectArray',
-        expect: 'value other than undefined, null or empty string',
+        expect: 'array',
         received: [
           {
             keyObject: false
@@ -3523,7 +2997,7 @@ describe('Schema', () => {
       {
         method: 'array',
         type: 'invalid value',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3539,7 +3013,7 @@ describe('Schema', () => {
       {
         method: 'array',
         type: 'invalid value',
-        name: 'strictArray',
+        name: 'all values in the strictArray',
         expect: [
           'blue',
           'orange',
@@ -3565,7 +3039,7 @@ describe('Schema', () => {
   })
 
   it('Must be able to validate the array method and return passes all tests when value is not provided', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.notRequired().string()
     })
 
@@ -3586,7 +3060,7 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the array method and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string()
     })
 
@@ -3609,7 +3083,7 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the array method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string()
     }, { error: InvalidParamError })
 
@@ -3623,7 +3097,7 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the array method and return doesn't passes all tests when value is not array", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string()
     })
 
@@ -3650,7 +3124,7 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the array method and throw InvalidParamError when value is not array', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string()
     }, { error: InvalidParamError })
 
@@ -3664,7 +3138,7 @@ describe('Schema', () => {
   })
 
   it('Should be able to throw InvalidParamError when error is true', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       stringArray: array.required().string()
     }, { error: true })
 
@@ -3679,9 +3153,9 @@ describe('Schema', () => {
 
   // Object
   it('Should be able to validate the object and return passes all tests', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       keyObject: object({
-        itemA: [string()]
+        itemA: vkrun().string().required()
       }).required()
     })
 
@@ -3714,9 +3188,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the required object and return doesn't passes all tests", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       keyObject: object({
-        itemA: [string()]
+        itemA: vkrun().string().required()
       }).required()
     })
 
@@ -3748,9 +3222,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the not required object and return doesn't passes all tests", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       keyObject: object({
-        itemA: [string()]
+        itemA: vkrun().string().required()
       }).notRequired()
     })
 
@@ -3792,9 +3266,9 @@ describe('Schema', () => {
   })
 
   it("Must be able to validate the object and return doesn't passes all tests when value is not provided", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       keyObject: object({
-        itemA: [string()]
+        itemA: vkrun().string().required()
       }).notRequired()
     })
 
@@ -3815,9 +3289,9 @@ describe('Schema', () => {
   })
 
   it("Should be able to validate the array method and throw InvalidParamError if doesn't passes all tests", async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       keyObject: object({
-        itemA: [string()]
+        itemA: vkrun().string().required()
       }).required()
     }, { error: InvalidParamError })
 
@@ -3833,9 +3307,9 @@ describe('Schema', () => {
   })
 
   it('Should be able to validate the object and throw InvalidParamError when value is not provided', async () => {
-    const schema = createSchema({
+    const schema = vkrun().schema({
       keyObject: object({
-        itemA: [string()]
+        itemA: vkrun().string().required()
       }).required()
     }, { error: InvalidParamError })
 
@@ -3847,8 +3321,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to change the object key name using the alias method', async () => {
-    const schema = createSchema({
-      itemA: [alias('Item A'), string()]
+    const schema = vkrun().schema({
+      itemA: vkrun().alias('Item A').string().required()
     })
 
     const sut = await schema.validate({
@@ -3877,10 +3351,9 @@ describe('Schema', () => {
   })
 
   // Teste para arrumar
-
   it("Should be able to receive a schema array of required objects and return doesn't passes all tests", async () => {
-    const schema = createSchema(array.required().object({
-      itemA: [alias('Item A'), string()]
+    const schema = vkrun().schema(array.required().object({
+      itemA: vkrun().alias('Item A').string().required()
     }))
 
     const sut = await schema.validate([
@@ -3930,20 +3403,22 @@ describe('Schema', () => {
         received: 'is string'
       }
     ])
-    expect(sut.errors).toEqual([{
-      method: 'string',
-      type: 'invalid value',
-      name: 'Item A',
-      expect: 'string type',
-      received: false,
-      message: 'Item A must be a string type!'
-    }])
+    expect(sut.errors).toEqual([
+      {
+        method: 'string',
+        type: 'invalid value',
+        name: 'Item A',
+        expect: 'string type',
+        received: false,
+        message: 'Item A must be a string type!'
+      }
+    ])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
   it("Should be able to receive a schema array of required objects with empty array value and return doesn't passes all tests", async () => {
-    const schema = createSchema(array.required().object({
-      itemA: [alias('Item A'), string()]
+    const schema = vkrun().schema(array.required().object({
+      itemA: vkrun().alias('Item A').string()
     }))
 
     const sut = await schema.validate([])
@@ -3966,8 +3441,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to receive a schema array of required objects with value undefined and return doesn't passes all tests", async () => {
-    const schema = createSchema(array.required().object({
-      itemA: [alias('Item A'), string()]
+    const schema = vkrun().schema(array.required().object({
+      itemA: vkrun().alias('Item A').string()
     }))
 
     const sut = await schema.validate(undefined as any)
@@ -4000,8 +3475,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to receive a schema array of not required objects and return doesn't passes all tests", async () => {
-    const schema = createSchema(array.notRequired().object({
-      itemA: [alias('Item A'), string()]
+    const schema = vkrun().schema(array.notRequired().object({
+      itemA: vkrun().alias('Item A').string().required()
     }))
 
     const sut = await schema.validate([
@@ -4063,8 +3538,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to receive a schema array of not required objects with empty array value and return passes all tests', async () => {
-    const schema = createSchema(array.notRequired().object({
-      itemA: [alias('Item A'), string()]
+    const schema = vkrun().schema(array.notRequired().object({
+      itemA: vkrun().alias('Item A').string()
     }))
 
     const sut = await schema.validate([])
@@ -4085,7 +3560,7 @@ describe('Schema', () => {
   })
 
   it("Should be able to return doesn't passes all tests when it lacks a schema or is in an invalid format", async () => {
-    const schema = createSchema(undefined as any)
+    const schema = vkrun().schema(undefined as any)
 
     const sut = await schema.validate([])
 
@@ -4106,8 +3581,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to receive a schema with object required method and return doesn't passed all tests", async () => {
-    const schema = createSchema(object({
-      itemB: [alias('Item B'), string()]
+    const schema = vkrun().schema(object({
+      itemB: vkrun().alias('Item B').string().required()
     }).required())
 
     const sut = await schema.validate({
@@ -4147,8 +3622,8 @@ describe('Schema', () => {
   })
 
   it('Should be able to return failed all tests receive when schema with method required and value not provided', async () => {
-    const schema = createSchema(object({
-      itemB: [alias('Item B'), string()]
+    const schema = vkrun().schema(object({
+      itemB: vkrun().alias('Item B').string()
     }).required())
 
     const sut = await schema.validate(undefined as any)
@@ -4171,8 +3646,8 @@ describe('Schema', () => {
   })
 
   it("Should be able to receive a schema with object not required method and return doesn't passed all tests", async () => {
-    const schema = createSchema(object({
-      itemB: [alias('Item B'), string()]
+    const schema = vkrun().schema(object({
+      itemB: vkrun().alias('Item B').string().required()
     }).notRequired())
 
     const sut = await schema.validate({
@@ -4208,28 +3683,6 @@ describe('Schema', () => {
       received: false,
       message: 'Item B must be a string type!'
     }])
-    expect(typeof sut.time === 'string').toBeTruthy()
-  })
-
-  it('Should be able to return passes all tests receive when schema with method not required and value not provided', async () => {
-    const schema = createSchema(object({
-      itemB: [alias('Item B'), string()]
-    }).notRequired())
-
-    const sut = await schema.validate(undefined as any)
-
-    expect(sut.passedAll).toBeTruthy()
-    expect(sut.passed).toEqual(1)
-    expect(sut.failed).toEqual(0)
-    expect(sut.totalTests).toEqual(1)
-    expect(sut.successes).toEqual([{
-      class: 'create schema',
-      method: 'notRequired',
-      name: 'validate schema',
-      expect: 'value is not required and of type object',
-      received: 'undefined'
-    }])
-    expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 })

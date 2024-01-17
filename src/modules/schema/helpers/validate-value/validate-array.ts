@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../../location'
-import { hasMethod } from '../../../utils'
+import { hasMethod, received } from '../../../utils'
 import { ValidateMethodParams } from '../../../types'
 import { callValidatorMethod } from './call-validator-method'
 
@@ -9,11 +9,19 @@ export const validateArray = async (params: ValidateMethodParams): Promise<void>
       method: 'notRequired',
       name: params.keyName,
       expect: 'value is not required and of any type',
-      received: params.value ?? 'undefined'
+      received: received(params.value)
     })
   }
 
   if (Array.isArray(params.value)) {
+    if (hasMethod(params.schemaRules, 'required')) {
+      params.callbackAddPassed({
+        method: 'array',
+        name: params.keyName,
+        expect: 'array',
+        received: received(params.value)
+      })
+    }
     await callValidatorMethod(params)
   } else {
     if (hasMethod(params.schemaRules, 'required')) {
@@ -25,7 +33,7 @@ export const validateArray = async (params: ValidateMethodParams): Promise<void>
         type: 'invalid value',
         name: params.keyName,
         expect: 'array',
-        received: params.value ?? 'undefined',
+        received: received(params.value),
         message: messageError
       })
     }

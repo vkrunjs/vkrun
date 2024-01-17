@@ -14,7 +14,8 @@ import {
   addUuidResults,
   addDateGreaterThanResults,
   addDateLessThanResults,
-  addTimeResults
+  addTimeResults,
+  addNotRequiredResults
 } from './helpers'
 import {
   DateTypes,
@@ -22,23 +23,26 @@ import {
   ErrorTypes,
   IValidator,
   Methods,
+  ObjectConfig,
+  ObjectType,
   SuccessTest,
   Tests,
   TimeTypes,
   ValidatorValue,
   ValidatorValueName
 } from '../types'
+import { hasMethod, isNotEmpty } from '../utils'
+import { CreateSchema } from '../schema'
 
 export class Validator implements IValidator {
-  private readonly value: ValidatorValue
-  private readonly valueName: ValidatorValueName
+  private value: ValidatorValue
+  private valueName: ValidatorValueName
   private readonly methods: Methods
   private uninitializedValidation: boolean
-  private readonly tests: Tests
+  private tests: Tests
 
-  constructor (value: ValidatorValue, valueName: ValidatorValueName) {
-    this.value = value
-    this.valueName = valueName
+  constructor () {
+    this.valueName = ''
     this.methods = []
     this.uninitializedValidation = true
     this.tests = {
@@ -209,6 +213,19 @@ export class Validator implements IValidator {
     return this
   }
 
+  notRequired (): this {
+    if (this.uninitializedValidation) {
+      this.methods.push({ method: 'notRequired' })
+    } else {
+      addNotRequiredResults({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success)
+      })
+    }
+    return this
+  }
+
   date (type?: DateTypes): this {
     if (this.uninitializedValidation) {
       this.methods.push({ method: 'date', dateType: type })
@@ -269,6 +286,11 @@ export class Validator implements IValidator {
     return this
   }
 
+  alias (valueName: string): this {
+    this.valueName = valueName
+    return this
+  }
+
   private passedAll (): void {
     this.tests.passedAll = this.tests.passed === this.tests.totalTests
   }
@@ -288,22 +310,26 @@ export class Validator implements IValidator {
   }
 
   private executeMethods (): void {
+    this.resetTests()
+
     this.uninitializedValidation = false
-    this.methods.forEach((rule) => {
+    const executeMethod = (rule: any): void => {
       if (rule.method === 'required') {
         this.required()
+      } else if (rule.method === 'notRequired') {
+        this.notRequired()
       } else if (rule.method === 'string') {
         this.string()
       } else if (rule.method === 'minWord') {
-        this.minWord(rule.minWord as any)
+        this.minWord(rule.minWord)
       } else if (rule.method === 'email') {
         this.email()
       } else if (rule.method === 'uuid') {
         this.uuid()
       } else if (rule.method === 'maxLength') {
-        this.maxLength(rule.maxLength as any)
+        this.maxLength(rule.maxLength)
       } else if (rule.method === 'minLength') {
-        this.minLength(rule.minLength as any)
+        this.minLength(rule.minLength)
       } else if (rule.method === 'number') {
         this.number()
       } else if (rule.method === 'float') {
@@ -315,17 +341,69 @@ export class Validator implements IValidator {
       } else if (rule.method === 'date') {
         this.date(rule.dateType)
       } else if (rule.method === 'dateGreaterThan') {
-        this.dateGreaterThan(rule?.dateToCompare as any)
+        this.dateGreaterThan(rule?.dateToCompare)
       } else if (rule.method === 'dateLessThan') {
-        this.dateLessThan(rule?.dateToCompare as any)
+        this.dateLessThan(rule?.dateToCompare)
       } else if (rule.method === 'time') {
-        this.time(rule?.timeType as any)
+        this.time(rule?.timeType)
       }
-    })
+    }
+
+    const prioritizeRequired = (): void => {
+      const requiredIndex = this.methods.findIndex(
+        method => method.method === 'required' || method.method === 'notRequired'
+      )
+
+      if (requiredIndex !== -1) {
+        const requiredMethod = this.methods.splice(requiredIndex, 1)[0]
+        this.methods.unshift(requiredMethod)
+      }
+    }
+
+    const execute = (): void => {
+      prioritizeRequired()
+      this.methods.forEach(rule => executeMethod(rule))
+    }
+
+    if (hasMethod(this.methods, 'notRequired')) {
+      if (isNotEmpty(this.value)) {
+        execute()
+      } else {
+        addNotRequiredResults({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: (success) => this.addPassed(success)
+        })
+      }
+    } else if (
+      hasMethod(this.methods, 'required') ||
+      (!hasMethod(this.methods, 'required') && !hasMethod(this.methods, 'notRequired'))
+    ) {
+      execute()
+    }
   }
 
-  throw (ClassError?: ErrorTypes): void {
+  schema (schema: ObjectType, config?: ObjectConfig): CreateSchema {
+    return new CreateSchema(schema, config)
+  }
+
+  private resetTests (): void {
+    this.tests = {
+      passedAll: false,
+      passed: 0,
+      failed: 0,
+      totalTests: 0,
+      successes: [],
+      errors: [],
+      time: ''
+    }
+  }
+
+  async throw (value: any, valueName: ValidatorValueName, ClassError?: ErrorTypes): Promise<void> {
+    this.value = await value
+    if (!this.valueName) this.valueName = valueName
     this.executeMethods()
+
     if (this.tests.errors.length > 0) {
       if (ClassError) {
         const TestClassError = new ClassError('')
@@ -341,7 +419,9 @@ export class Validator implements IValidator {
     }
   }
 
-  validate (): Tests {
+  async validate (value: any, valueName: ValidatorValueName): Promise<Tests> {
+    this.value = await value
+    if (!this.valueName) this.valueName = valueName
     const stateDate = new Date()
     this.executeMethods()
     const endTime = new Date()
@@ -353,6 +433,6 @@ export class Validator implements IValidator {
   }
 }
 
-export const validator = (value: ValidatorValue, valueName: ValidatorValueName): Validator => {
-  return new Validator(value, valueName)
+export const validator = (): Validator => {
+  return new Validator()
 }

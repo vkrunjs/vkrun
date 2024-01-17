@@ -8,7 +8,7 @@ import {
   SuccessTest
 } from '../types'
 
-class CreateSchema {
+export class CreateSchema {
   private readonly schema: Schema
   private readonly config?: ObjectConfig
   private readonly tests: Tests
@@ -63,21 +63,19 @@ class CreateSchema {
   }
 
   private handleUpdateTest (test: Tests): void {
-    if (test.passedAll) {
-      ++this.tests.passed
-      ++this.tests.totalTests
-      test.successes.forEach((success: SuccessTest) => {
-        this.tests.successes.push(success)
-      })
-      this.passedAll()
-    } else {
-      ++this.tests.failed
-      ++this.tests.totalTests
-      test.errors.forEach((error: ErrorTest) => {
-        this.tests.errors.push(error)
-      })
-      this.passedAll()
-    }
+    this.tests.passed += test.passed
+    this.tests.failed += test.failed
+    this.tests.totalTests += test.totalTests
+
+    test.successes.forEach((success: SuccessTest) => {
+      this.tests.successes.push(success)
+    })
+
+    test.errors.forEach((error: ErrorTest) => {
+      this.tests.errors.push(error)
+    })
+
+    this.passedAll()
   }
 
   async validate (valueToValidate: ObjectType): Promise<Tests> {

@@ -1,7 +1,8 @@
+import { CreateSchema } from './schema'
 import { Validator } from './validator'
-
 export interface IValidator {
   required: () => this
+  notRequired: () => this
   minWord: (minWord: number) => this
   email: () => this
   uuid: () => this
@@ -16,8 +17,10 @@ export interface IValidator {
   dateGreaterThan: (dateToCompare: Date) => this
   dateLessThan: (dateToCompare: Date) => this
   time: (type: 'HH:MM' | 'HH:MM:SS') => this
-  throw: (ClassError?: ErrorTypes) => void
-  validate: () => Tests
+  alias: (valueName: string) => this
+  schema: (schema: ObjectType, config?: ObjectConfig) => CreateSchema
+  throw: (value: ValidatorValue, valueName: ValidatorValueName, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: ValidatorValue, valueName: ValidatorValueName) => Promise<Tests>
 }
 export type ValidatorValue = string | boolean | Date | number | undefined | null
 export type ValidatorValueName = string
@@ -29,21 +32,9 @@ export type ErrorClass<T extends Error> = new (message?: string) => T
 export type ErrorTypes = any // ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
-export type Methods = Array<{
-  method: 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time'
-  minWord?: number
-  maxLength?: number
-  minLength?: number
-  dateType?: DateTypes
-  dateToCompare?: Date
-  timeType?: TimeTypes
-  private?: boolean
-}>
 export type MethodTypes = 'object' | 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
-export type ValidatePropertyRules = Array<{
+export interface Method {
   method: MethodTypes
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
-  arrayRules?: any
   minWord?: number
   maxLength?: number
   minLength?: number
@@ -51,21 +42,11 @@ export type ValidatePropertyRules = Array<{
   dateToCompare?: Date
   timeType?: TimeTypes
   private?: boolean
-  customError?: Error
-}>
-export interface ValidatePropertyRule {
-  method: MethodTypes
-  arrayType?: 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+  arrayType?: ArrayTypes
   arrayRules?: any
-  minWord?: number
-  maxLength?: number
-  minLength?: number
-  dateType?: DateTypes
-  dateToCompare?: Date
-  timeType?: TimeTypes
-  private?: boolean
-  customError?: Error
 }
+export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+export type Methods = Method[]
 export type ValidateItemArrayValue = string | boolean | Date | number
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
 export type Schema = Record<string, Validator[]>

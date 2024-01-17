@@ -1,67 +1,7 @@
-import { DateTypes, TimeTypes } from '../../types'
+import { DateTypes } from '../../types'
 
 const addValidation = (method: string, params?: any): any[] => {
   return { method, private: true, ...params }
-}
-
-export const string = (): any => {
-  return addValidation('string')
-}
-
-export const minWord = (minWord: number): any => {
-  return addValidation('minWord', { minWord })
-}
-
-export const maxLength = (maxLength: number): any => {
-  return addValidation('maxLength', { maxLength })
-}
-
-export const minLength = (minLength: number): any => {
-  return addValidation('minLength', { minLength })
-}
-
-export const uuid = (): any => {
-  return addValidation('uuid')
-}
-
-export const email = (): any => {
-  return addValidation('email')
-}
-
-export const number = (): any => {
-  return addValidation('number')
-}
-
-export const float = (): any => {
-  return addValidation('float')
-}
-
-export const integer = (): any => {
-  return addValidation('integer')
-}
-
-export const boolean = (): any => {
-  return addValidation('boolean')
-}
-
-export const date = (type?: DateTypes): any => {
-  return addValidation('date', { dateType: type })
-}
-
-export const dateGreaterThan = (dateToCompare: Date): any => {
-  return addValidation('dateGreaterThan', { dateToCompare })
-}
-
-export const dateLessThan = (dateToCompare: Date): any => {
-  return addValidation('dateLessThan', { dateToCompare })
-}
-
-export const time = (type: TimeTypes): any => {
-  return addValidation('time', { timeType: type })
-}
-
-export const notRequired = (): any => {
-  return addValidation('notRequired')
 }
 
 export const object = (object: object): {
@@ -77,10 +17,6 @@ export const object = (object: object): {
     addValidation('object', { object })
   ]
 })
-
-export const alias = (name: string): any => {
-  return addValidation('alias', { alias: name })
-}
 
 export const array: {
   required: () => {

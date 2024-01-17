@@ -36,7 +36,7 @@ export const schemaMethodObjectArray = async (params: SelectSchemaFormat): Promi
   }
 
   if (isArray(params.value)) {
-    params.value.forEach(async (object: any) => {
+    params.value.map(async (object: any) => {
       await params.callbackValidateValue(object, params.schema[1].arrayRules)
     })
   } else {

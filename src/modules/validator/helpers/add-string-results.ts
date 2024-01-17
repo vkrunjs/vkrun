@@ -22,8 +22,7 @@ export const addStringResults = ({
     })
   } else {
     const message = informativeMessage.validator.method.string.strict
-    const name = valueName || 'valueName'
-    const messageError = message.replace('[valueName]', name)
+    const messageError = message.replace('[valueName]', valueName)
     callbackAddFailed({
       method: 'string',
       type: 'invalid value',
