@@ -2,7 +2,7 @@ import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
 import { received } from '../../utils'
 
-export const addUuidResults = ({
+export const validateEmail = ({
   value,
   valueName,
   callbackAddPassed,
@@ -13,25 +13,24 @@ export const addUuidResults = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-  const isUuid = uuidRegex.test(String(value))
-
-  if (isUuid) {
+  const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+  const emailFormatIsValid = regEmail.test(String(value))
+  if (emailFormatIsValid) {
     callbackAddPassed({
-      method: 'uuid',
+      method: 'email',
       name: valueName,
-      expect: 'uuid format',
+      expect: 'valid email',
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.uuid.strict
-    const messageError = message.replace('[valueName]', valueName)
+    const message = informativeMessage.validator.method.email.strict
+    const messageError = message.replace('[value]', String(value))
 
     callbackAddFailed({
-      method: 'uuid',
+      method: 'email',
       type: 'invalid value',
       name: valueName,
-      expect: 'uuid format',
+      expect: 'valid email',
       received: received(value),
       message: messageError
     })

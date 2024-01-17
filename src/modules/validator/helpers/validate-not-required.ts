@@ -1,7 +1,7 @@
 import { SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
 import { received } from '../../utils'
 
-export const addNotRequiredResults = ({
+export const validateNotRequired = ({
   value,
   valueName,
   callbackAddPassed

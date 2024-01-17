@@ -1,27 +1,28 @@
 import { informativeMessage } from '../location'
 import {
-  addBooleanResults,
-  addDateResults,
-  addEmailResults,
-  addFloatResults,
-  addIntegerResults,
-  addMaxLengthResults,
-  addMinLengthResults,
-  addMinWordResults,
-  addNumberResults,
-  addRequiredResults,
-  addStringResults,
-  addUuidResults,
-  addDateGreaterThanResults,
-  addDateLessThanResults,
-  addTimeResults,
-  addNotRequiredResults
+  validateBoolean,
+  validateDate,
+  validateEmail,
+  validateFloat,
+  validateInteger,
+  validateMaxLength,
+  validateMinLength,
+  validateMinWord,
+  validateNumber,
+  validateRequired,
+  validateString,
+  validateUuid,
+  validateDateGreaterThan,
+  validateDateLessThan,
+  validateTime,
+  validateNotRequired
 } from './helpers'
 import {
   DateTypes,
   ErrorTest,
   ErrorTypes,
   IValidator,
+  Method,
   Methods,
   ObjectConfig,
   ObjectType,
@@ -58,9 +59,9 @@ export class Validator implements IValidator {
 
   string (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'string' })
+      this.methodBuild({ method: 'string' })
     } else {
-      addStringResults({
+      validateString({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -72,9 +73,9 @@ export class Validator implements IValidator {
 
   minWord (minWord: number): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'minWord', minWord })
+      this.methodBuild({ method: 'minWord', minWord })
     } else {
-      addMinWordResults({
+      validateMinWord({
         value: this.value,
         valueName: this.valueName,
         minWord,
@@ -87,9 +88,9 @@ export class Validator implements IValidator {
 
   uuid (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'uuid' })
+      this.methodBuild({ method: 'uuid' })
     } else {
-      addUuidResults({
+      validateUuid({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -101,9 +102,9 @@ export class Validator implements IValidator {
 
   email (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'email' })
+      this.methodBuild({ method: 'email' })
     } else {
-      addEmailResults({
+      validateEmail({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -115,9 +116,9 @@ export class Validator implements IValidator {
 
   maxLength (maxLength: number): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'maxLength', maxLength })
+      this.methodBuild({ method: 'maxLength', maxLength })
     } else {
-      addMaxLengthResults({
+      validateMaxLength({
         value: this.value,
         valueName: this.valueName,
         maxLength,
@@ -130,9 +131,9 @@ export class Validator implements IValidator {
 
   minLength (minLength: number): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'minLength', minLength })
+      this.methodBuild({ method: 'minLength', minLength })
     } else {
-      addMinLengthResults({
+      validateMinLength({
         value: this.value,
         valueName: this.valueName,
         minLength,
@@ -145,9 +146,9 @@ export class Validator implements IValidator {
 
   number (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'number' })
+      this.methodBuild({ method: 'number' })
     } else {
-      addNumberResults({
+      validateNumber({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -159,9 +160,9 @@ export class Validator implements IValidator {
 
   float (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'float' })
+      this.methodBuild({ method: 'float' })
     } else {
-      addFloatResults({
+      validateFloat({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -173,9 +174,9 @@ export class Validator implements IValidator {
 
   integer (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'integer' })
+      this.methodBuild({ method: 'integer' })
     } else {
-      addIntegerResults({
+      validateInteger({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -187,9 +188,9 @@ export class Validator implements IValidator {
 
   boolean (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'boolean' })
+      this.methodBuild({ method: 'boolean' })
     } else {
-      addBooleanResults({
+      validateBoolean({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -201,9 +202,9 @@ export class Validator implements IValidator {
 
   required (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'required' })
+      this.methodBuild({ method: 'required' })
     } else {
-      addRequiredResults({
+      validateRequired({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
@@ -215,9 +216,9 @@ export class Validator implements IValidator {
 
   notRequired (): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'notRequired' })
+      this.methodBuild({ method: 'notRequired' })
     } else {
-      addNotRequiredResults({
+      validateNotRequired({
         value: this.value,
         valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success)
@@ -228,9 +229,9 @@ export class Validator implements IValidator {
 
   date (type?: DateTypes): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'date', dateType: type })
+      this.methodBuild({ method: 'date', dateType: type })
     } else {
-      addDateResults({
+      validateDate({
         value: this.value,
         valueName: this.valueName,
         type,
@@ -243,9 +244,9 @@ export class Validator implements IValidator {
 
   dateGreaterThan (dateToCompare: Date): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'dateGreaterThan', dateToCompare })
+      this.methodBuild({ method: 'dateGreaterThan', dateToCompare })
     } else {
-      addDateGreaterThanResults({
+      validateDateGreaterThan({
         value: this.value,
         valueName: this.valueName,
         dateToCompare,
@@ -258,9 +259,9 @@ export class Validator implements IValidator {
 
   dateLessThan (dateToCompare: Date): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'dateLessThan', dateToCompare })
+      this.methodBuild({ method: 'dateLessThan', dateToCompare })
     } else {
-      addDateLessThanResults({
+      validateDateLessThan({
         value: this.value,
         valueName: this.valueName,
         dateToCompare,
@@ -273,9 +274,9 @@ export class Validator implements IValidator {
 
   time (type: TimeTypes): this {
     if (this.uninitializedValidation) {
-      this.methods.push({ method: 'time', timeType: type })
+      this.methodBuild({ method: 'time', timeType: type })
     } else {
-      addTimeResults({
+      validateTime({
         value: this.value,
         valueName: this.valueName,
         type,
@@ -289,6 +290,10 @@ export class Validator implements IValidator {
   alias (valueName: string): this {
     this.valueName = valueName
     return this
+  }
+
+  private methodBuild (build: Method): void {
+    this.methods.push(build)
   }
 
   private passedAll (): void {
@@ -369,7 +374,7 @@ export class Validator implements IValidator {
       if (isNotEmpty(this.value)) {
         execute()
       } else {
-        addNotRequiredResults({
+        validateNotRequired({
           value: this.value,
           valueName: this.valueName,
           callbackAddPassed: (success) => this.addPassed(success)

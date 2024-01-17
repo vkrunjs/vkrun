@@ -2,7 +2,7 @@ import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
 import { formatYYYYDDMMHHMMSS, received } from '../../utils'
 
-export const addDateGreaterThanResults = ({
+export const validateDateLessThan = ({
   value,
   valueName,
   dateToCompare,
@@ -20,15 +20,15 @@ export const addDateGreaterThanResults = ({
 
   const expect = (): string => {
     if (value instanceof Date && dateToCompare instanceof Date) {
-      return `${formatYYYYDDMMHHMMSS(date)} greater than reference ${formatYYYYDDMMHHMMSS(dateToCompare)}`
+      return `${formatYYYYDDMMHHMMSS(date)} less than reference ${formatYYYYDDMMHHMMSS(dateToCompare)}`
     } else {
-      return `date ${valueName} greater than reference date`
+      return `date ${valueName} less than reference date`
     }
   }
 
   const handleAddFailed = (messageError: string): void => {
     callbackAddFailed({
-      method: 'dateGreaterThan',
+      method: 'dateLessThan',
       type: 'invalid value',
       name: valueName,
       expect: expect(),
@@ -43,17 +43,16 @@ export const addDateGreaterThanResults = ({
   }
 
   const datesAreEqual = date.getTime() === dateToCompare.getTime()
-  const deadlineExceeded = date < dateToCompare
+  const deadlineExceeded = date > dateToCompare
 
   if (datesAreEqual || deadlineExceeded) {
-    const message = informativeMessage.validator.method.dateGreaterThan.limitExceeded
+    const message = informativeMessage.validator.method.dateLessThan.limitExceeded
     const messageError = message.replace('[valueName]', valueName)
     handleAddFailed(messageError)
     return this
   }
-
   callbackAddPassed({
-    method: 'dateGreaterThan',
+    method: 'dateLessThan',
     name: valueName,
     expect: expect(),
     received: value

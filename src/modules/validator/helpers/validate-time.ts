@@ -2,7 +2,7 @@ import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, TimeTypes, ValidatorValue, ValidatorValueName } from '../../types'
 import { received } from '../../utils'
 
-export const addTimeResults = ({
+export const validateTime = ({
   value,
   valueName,
   type,

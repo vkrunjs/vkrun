@@ -2,7 +2,7 @@ import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
 import { isInteger, received } from '../../utils'
 
-export const addIntegerResults = ({
+export const validateInteger = ({
   value,
   valueName,
   callbackAddPassed,

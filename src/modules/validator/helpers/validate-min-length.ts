@@ -2,7 +2,7 @@ import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
 import { isString, received } from '../../utils'
 
-export const addMinLengthResults = ({
+export const validateMinLength = ({
   value,
   valueName,
   minLength,

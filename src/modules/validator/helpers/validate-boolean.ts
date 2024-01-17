@@ -1,42 +1,34 @@
 import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { isBoolean, received } from '../../utils'
 
-export const addMinWordResults = ({
+export const validateBoolean = ({
   value,
   valueName,
-  minWord,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: ValidatorValue
   valueName: ValidatorValueName
-  minWord: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const trimmedValue = String(value).trim()
-  const words = trimmedValue.split(/\s+/)
-  const hasMinOfWords = words.length >= minWord
-
-  if (hasMinOfWords) {
+  if (isBoolean(value)) {
     callbackAddPassed({
-      method: 'minWord',
+      method: 'boolean',
       name: valueName,
-      expect: 'must have a minimum of words',
+      expect: 'boolean type',
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.minWord.noMinimumWords
-    const messageError = message
-      .replace('[valueName]', valueName)
-      .replace('[minWord]', String(minWord))
+    const message = informativeMessage.validator.method.boolean.strict
+    const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({
-      method: 'minWord',
+      method: 'boolean',
       type: 'invalid value',
       name: valueName,
-      expect: 'must have a minimum of words',
+      expect: 'boolean type',
       received: received(value),
       message: messageError
     })

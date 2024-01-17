@@ -2,7 +2,7 @@ import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
 import { isString, received } from '../../utils'
 
-export const addMaxLengthResults = ({
+export const validateMaxLength = ({
   value,
   valueName,
   maxLength,

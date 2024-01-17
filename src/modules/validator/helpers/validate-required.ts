@@ -1,8 +1,8 @@
 import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { isNotEmpty, received } from '../../utils'
 
-export const addEmailResults = ({
+export const validateRequired = ({
   value,
   valueName,
   callbackAddPassed,
@@ -13,24 +13,22 @@ export const addEmailResults = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const regEmail = /^[a-zA-Z0-9_.+-]+(?<!^[0-9]*)@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
-  const emailFormatIsValid = regEmail.test(String(value))
-  if (emailFormatIsValid) {
+  if (isNotEmpty(value)) {
     callbackAddPassed({
-      method: 'email',
+      method: 'required',
       name: valueName,
-      expect: 'valid email',
+      expect: 'value other than undefined, null or empty string',
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.email.strict
-    const messageError = message.replace('[value]', String(value))
+    const message = informativeMessage.validator.method.required.strict
+    const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({
-      method: 'email',
-      type: 'invalid value',
+      method: 'required',
+      type: 'missing value',
       name: valueName,
-      expect: 'valid email',
+      expect: 'value other than undefined, null or empty string',
       received: received(value),
       message: messageError
     })
