@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { isInteger, received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { isInteger, received } from '../../../utils'
 
 export const validateInteger = ({
   value,
@@ -8,8 +8,8 @@ export const validateInteger = ({
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
@@ -21,7 +21,7 @@ export const validateInteger = ({
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.integer.strict
+    const message = informativeMessage.integer.invalidValue
     const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({

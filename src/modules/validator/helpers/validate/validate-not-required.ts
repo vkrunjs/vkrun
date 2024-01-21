@@ -1,13 +1,13 @@
-import { SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { SuccessTest } from '../../../types'
+import { received } from '../../../utils'
 
 export const validateNotRequired = ({
   value,
   valueName,
   callbackAddPassed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   callbackAddPassed: (success: SuccessTest) => void
 }): void => {
   callbackAddPassed({

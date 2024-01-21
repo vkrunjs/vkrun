@@ -1,4 +1,3 @@
-import { informativeMessage } from '../location'
 import {
   validateBoolean,
   validateDate,
@@ -15,8 +14,10 @@ import {
   validateDateGreaterThan,
   validateDateLessThan,
   validateTime,
-  validateNotRequired
-} from './helpers'
+  validateNotRequired,
+  validateArray,
+  validateEqual
+} from './helpers/validate'
 import {
   DateTypes,
   ErrorTest,
@@ -28,16 +29,14 @@ import {
   ObjectType,
   SuccessTest,
   Tests,
-  TimeTypes,
-  ValidatorValue,
-  ValidatorValueName
+  TimeTypes
 } from '../types'
-import { hasMethod, isNotEmpty } from '../utils'
+import { hasMethod } from '../utils'
 import { CreateSchema } from '../schema'
 
 export class Validator implements IValidator {
-  private value: ValidatorValue
-  private valueName: ValidatorValueName
+  private value: any
+  private valueName: string
   private readonly methods: Methods
   private uninitializedValidation: boolean
   private tests: Tests
@@ -200,10 +199,8 @@ export class Validator implements IValidator {
     return this
   }
 
-  required (): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'required' })
-    } else {
+  private required (): void {
+    if (!this.uninitializedValidation) {
       validateRequired({
         value: this.value,
         valueName: this.valueName,
@@ -211,7 +208,6 @@ export class Validator implements IValidator {
         callbackAddFailed: error => this.addFailed(error)
       })
     }
-    return this
   }
 
   notRequired (): this {
@@ -292,6 +288,40 @@ export class Validator implements IValidator {
     return this
   }
 
+  array (): this {
+    if (this.uninitializedValidation) {
+      this.methodBuild({ method: 'array' })
+    } else {
+      validateArray({
+        value: this.value,
+        valueName: this.valueName,
+        methods: this.methods,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
+    }
+    return this
+  }
+
+  equal (valueToCompare: any): this {
+    if (this.uninitializedValidation) {
+      this.methodBuild({ method: 'equal', valueToCompare })
+    } else {
+      validateEqual({
+        value: this.value,
+        valueToCompare,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
+    }
+    return this
+  }
+
+  schema (schema: ObjectType, config?: ObjectConfig): CreateSchema {
+    return new CreateSchema(schema, config)
+  }
+
   private methodBuild (build: Method): void {
     this.methods.push(build)
   }
@@ -319,11 +349,10 @@ export class Validator implements IValidator {
 
     this.uninitializedValidation = false
     const executeMethod = (rule: any): void => {
-      if (rule.method === 'required') {
+      if (rule.method !== 'notRequired') {
         this.required()
-      } else if (rule.method === 'notRequired') {
-        this.notRequired()
-      } else if (rule.method === 'string') {
+      }
+      if (rule.method === 'string') {
         this.string()
       } else if (rule.method === 'minWord') {
         this.minWord(rule.minWord)
@@ -351,45 +380,43 @@ export class Validator implements IValidator {
         this.dateLessThan(rule?.dateToCompare)
       } else if (rule.method === 'time') {
         this.time(rule?.timeType)
+      } else if (rule.method === 'equal') {
+        this.equal(rule?.valueToCompare)
       }
     }
 
     const prioritizeRequired = (): void => {
-      const requiredIndex = this.methods.findIndex(
-        method => method.method === 'required' || method.method === 'notRequired'
+      const prioritizeIndex = this.methods.findIndex(
+        method => method.method === 'notRequired'
       )
 
-      if (requiredIndex !== -1) {
-        const requiredMethod = this.methods.splice(requiredIndex, 1)[0]
-        this.methods.unshift(requiredMethod)
+      if (prioritizeIndex !== -1) {
+        const prioritizeMethod = this.methods.splice(prioritizeIndex, 1)[0]
+        this.methods.unshift(prioritizeMethod)
       }
     }
 
     const execute = (): void => {
-      prioritizeRequired()
-      this.methods.forEach(rule => executeMethod(rule))
+      if (hasMethod(this.methods, 'array')) {
+        if (hasMethod(this.methods, 'notRequired')) {
+          if (this.value !== undefined) this.array()
+          else this.notRequired()
+        } else {
+          this.required()
+          this.array()
+        }
+      } else {
+        prioritizeRequired()
+        this.methods.forEach(rule => executeMethod(rule))
+      }
     }
 
-    if (hasMethod(this.methods, 'notRequired')) {
-      if (isNotEmpty(this.value)) {
-        execute()
-      } else {
-        validateNotRequired({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: (success) => this.addPassed(success)
-        })
-      }
-    } else if (
-      hasMethod(this.methods, 'required') ||
-      (!hasMethod(this.methods, 'required') && !hasMethod(this.methods, 'notRequired'))
-    ) {
+    if (hasMethod(this.methods, 'notRequired') && !hasMethod(this.methods, 'array')) {
+      if (this.value !== undefined) execute()
+      else this.notRequired()
+    } else if (!hasMethod(this.methods, 'notRequired')) {
       execute()
     }
-  }
-
-  schema (schema: ObjectType, config?: ObjectConfig): CreateSchema {
-    return new CreateSchema(schema, config)
   }
 
   private resetTests (): void {
@@ -404,8 +431,8 @@ export class Validator implements IValidator {
     }
   }
 
-  async throw (value: any, valueName: ValidatorValueName, ClassError?: ErrorTypes): Promise<void> {
-    this.value = await value
+  throw (value: any, valueName: string, ClassError?: ErrorTypes): void {
+    this.value = value
     if (!this.valueName) this.valueName = valueName
     this.executeMethods()
 
@@ -416,7 +443,7 @@ export class Validator implements IValidator {
         if (extendsError) {
           throw new ClassError(this.tests.errors[0].message)
         } else {
-          throw new Error(informativeMessage.validator.constructorParams.valueName.invalidClassParam)
+          throw new Error('invalid param: class error provided is not valid!')
         }
       } else {
         throw new Error(this.tests.errors[0].message)
@@ -424,17 +451,61 @@ export class Validator implements IValidator {
     }
   }
 
-  async validate (value: any, valueName: ValidatorValueName): Promise<Tests> {
+  async throwAsync (value: any, valueName: string, ClassError?: ErrorTypes): Promise<void> {
     this.value = await value
     if (!this.valueName) this.valueName = valueName
-    const stateDate = new Date()
+    this.executeMethods()
+    if (this.tests.errors.length > 0) {
+      if (ClassError) {
+        const TestClassError = new ClassError('')
+        const extendsError = TestClassError instanceof Error
+        if (extendsError) {
+          throw new ClassError(this.tests.errors[0].message)
+        } else {
+          throw new Error('invalid param: class error provided is not valid!')
+        }
+      } else {
+        throw new Error(this.tests.errors[0].message)
+      }
+    }
+  }
+
+  test (value: any, valueName: string): Tests {
+    this.value = value
+    if (!this.valueName) this.valueName = valueName
+    const startDate = new Date()
     this.executeMethods()
     const endTime = new Date()
-    const elapsedTime = endTime.getTime() - stateDate.getTime()
+    const elapsedTime = endTime.getTime() - startDate.getTime()
     const seconds = Math.floor(elapsedTime / 1000)
     const ms = elapsedTime % 1000 || 1
     this.tests.time = `${seconds}s ${ms}ms`
     return this.tests
+  }
+
+  async testAsync (value: any, valueName: string): Promise<Tests> {
+    this.value = await value
+    if (!this.valueName) this.valueName = valueName
+    const startDate = new Date()
+    this.executeMethods()
+    const endTime = new Date()
+    const elapsedTime = endTime.getTime() - startDate.getTime()
+    const seconds = Math.floor(elapsedTime / 1000)
+    const ms = elapsedTime % 1000 || 1
+    this.tests.time = `${seconds}s ${ms}ms`
+    return this.tests
+  }
+
+  validate (value: any): boolean {
+    this.value = value
+    this.executeMethods()
+    return this.tests.passedAll
+  }
+
+  async validateAsync (value: any): Promise<boolean> {
+    this.value = await value
+    this.executeMethods()
+    return this.tests.passedAll
   }
 }
 

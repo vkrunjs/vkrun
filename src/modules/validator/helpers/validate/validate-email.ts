@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { received } from '../../../utils'
 
 export const validateEmail = ({
   value,
@@ -8,8 +8,8 @@ export const validateEmail = ({
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
@@ -23,7 +23,7 @@ export const validateEmail = ({
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.email.strict
+    const message = informativeMessage.email.invalidValue
     const messageError = message.replace('[value]', String(value))
 
     callbackAddFailed({

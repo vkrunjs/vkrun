@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, TimeTypes, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest, TimeTypes } from '../../../types'
+import { received } from '../../../utils'
 
 export const validateTime = ({
   value,
@@ -9,8 +9,8 @@ export const validateTime = ({
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   type: TimeTypes
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
@@ -31,7 +31,7 @@ export const validateTime = ({
   }
 
   if (!type || typeof type !== 'string') {
-    handleAddFailed(informativeMessage.validator.method.time.invalidParameter)
+    handleAddFailed(informativeMessage.time.invalidParameter)
     return this
   } else if (type === 'HH:MM') {
     isTime = regTimeHHMM.test(String(value))
@@ -47,7 +47,7 @@ export const validateTime = ({
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.time.invalidFormat
+    const message = informativeMessage.time.invalidValue
     const messageError = message
       .replace('[value]', String(value))
       .replace('[type]', type)

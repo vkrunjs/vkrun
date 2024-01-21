@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { received } from '../../../utils'
 
 export const validateMinWord = ({
   value,
@@ -9,8 +9,8 @@ export const validateMinWord = ({
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   minWord: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
@@ -27,7 +27,7 @@ export const validateMinWord = ({
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.minWord.noMinimumWords
+    const message = informativeMessage.minWord.noMinimumWords
     const messageError = message
       .replace('[valueName]', valueName)
       .replace('[minWord]', String(minWord))

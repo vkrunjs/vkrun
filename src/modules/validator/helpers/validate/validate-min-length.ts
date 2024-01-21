@@ -1,50 +1,50 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { isString, received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { isString, received } from '../../../utils'
 
-export const validateMaxLength = ({
+export const validateMinLength = ({
   value,
   valueName,
-  maxLength,
+  minLength,
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
-  maxLength: number
+  value: any
+  valueName: string
+  minLength: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   const handleAddFailed = (messageError: string): void => {
     callbackAddFailed({
-      method: 'maxLength',
+      method: 'minLength',
       type: 'invalid value',
       name: valueName,
-      expect: 'string with characters less than or equal to the limit',
+      expect: 'string with characters greater than or equal to the limit',
       received: received(value),
       message: messageError
     })
   }
 
   if (isString(value)) {
-    const exceededLimit = String(value).length > maxLength
+    const exceededLimit = String(value).length < minLength
     if (exceededLimit) {
-      const message = informativeMessage.validator.method.maxLength.strict
+      const message = informativeMessage.minLength.invalidValue
       const messageError = message
         .replace('[valueName]', valueName)
-        .replace('[maxLength]', String(maxLength))
+        .replace('[minLength]', String(minLength))
 
       handleAddFailed(messageError)
       return this
     }
     callbackAddPassed({
-      method: 'maxLength',
+      method: 'minLength',
       name: valueName,
-      expect: 'string with characters less than or equal to the limit',
+      expect: 'string with characters greater than or equal to the limit',
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.string.strict
+    const message = informativeMessage.string.invalidValue
     const messageError = message.replace('[valueName]', valueName)
     handleAddFailed(messageError)
   }

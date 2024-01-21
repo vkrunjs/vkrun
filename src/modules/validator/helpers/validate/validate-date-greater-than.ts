@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { formatYYYYDDMMHHMMSS, received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { formatYYYYDDMMHHMMSS, received } from '../../../utils'
 
 export const validateDateGreaterThan = ({
   value,
@@ -9,8 +9,8 @@ export const validateDateGreaterThan = ({
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   dateToCompare: Date
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
@@ -38,7 +38,7 @@ export const validateDateGreaterThan = ({
   }
 
   if (isInvalidDate) {
-    handleAddFailed(informativeMessage.validator.method.dateGreaterThan.invalidDate)
+    handleAddFailed(informativeMessage.dateGreaterThan.invalidValue)
     return this
   }
 
@@ -46,7 +46,7 @@ export const validateDateGreaterThan = ({
   const deadlineExceeded = date < dateToCompare
 
   if (datesAreEqual || deadlineExceeded) {
-    const message = informativeMessage.validator.method.dateGreaterThan.limitExceeded
+    const message = informativeMessage.dateGreaterThan.limitExceeded
     const messageError = message.replace('[valueName]', valueName)
     handleAddFailed(messageError)
     return this

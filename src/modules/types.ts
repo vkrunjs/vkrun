@@ -1,7 +1,6 @@
 import { CreateSchema } from './schema'
 import { Validator } from './validator'
 export interface IValidator {
-  required: () => this
   notRequired: () => this
   minWord: (minWord: number) => this
   email: () => this
@@ -18,12 +17,16 @@ export interface IValidator {
   dateLessThan: (dateToCompare: Date) => this
   time: (type: 'HH:MM' | 'HH:MM:SS') => this
   alias: (valueName: string) => this
+  array: () => this
+  equal: (valueToCompare: any) => this
   schema: (schema: ObjectType, config?: ObjectConfig) => CreateSchema
-  throw: (value: ValidatorValue, valueName: ValidatorValueName, ClassError?: ErrorTypes) => Promise<void>
-  validate: (value: ValidatorValue, valueName: ValidatorValueName) => Promise<Tests>
+  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: any) => boolean
+  validateAsync: (value: any) => Promise<boolean>
+  test: (value: any, valueName: string) => Tests
+  testAsync: (value: any, valueName: string) => Promise<Tests>
 }
-export type ValidatorValue = string | boolean | Date | number | undefined | null
-export type ValidatorValueName = string
 export interface ObjectConfig {
   error?: ErrorTypes
 }
@@ -32,7 +35,7 @@ export type ErrorClass<T extends Error> = new (message?: string) => T
 export type ErrorTypes = any // ErrorClass
 export type ValidatePropertyKey = string
 export type ValidatePropertyValue = any
-export type MethodTypes = 'object' | 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
+export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
 export interface Method {
   method: MethodTypes
   minWord?: number
@@ -44,6 +47,7 @@ export interface Method {
   private?: boolean
   arrayType?: ArrayTypes
   arrayRules?: any
+  valueToCompare?: any
 }
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
 export type Methods = Method[]
@@ -53,153 +57,145 @@ export type Schema = Record<string, Validator[]>
 export type ObjectType = Record<string, any>
 export type SchemaConfig = ObjectConfig
 export interface SetTranslationMessage {
-  validator?: {
-    constructorParams?: {
-      valueName?: {
-        missingClassParam?: string
-        invalidClassParam?: string
-      }
-    }
-    method?: {
-      string?: {
-        strict?: string
-      }
-      minWord?: {
-        noMinimumWords?: string
-      }
-      uuid?: {
-        strict?: string
-      }
-      email?: {
-        strict?: string
-      }
-      maxLength?: {
-        strict?: string
-      }
-      minLength?: {
-        strict?: string
-      }
-      number?: {
-        strict?: string
-      }
-      float?: {
-        strict?: string
-      }
-      integer?: {
-        strict?: string
-      }
-      boolean?: {
-        strict?: string
-      }
-      required?: {
-        strict?: string
-      }
-      date?: {
-        invalidFormat?: string
-        invalidParameter?: string
-      }
-      dateGreaterThan?: {
-        invalidDate?: string
-        limitExceeded?: string
-      }
-      dateLessThan?: {
-        invalidDate?: string
-        limitExceeded?: string
-      }
-      time?: {
-        invalidParameter?: string
-        invalidFormat?: string
-      }
-    }
+  string?: {
+    invalidValue?: string
   }
-  schema?: {
-    validateProperty?: {
-      itemArray?: {
-        valueName?: string
-      }
-    }
-    validateSchema?: {
-      keyNotDeclaredInTheSchema?: string
-    }
-    validateObject?: {
-      schemaKeyAbsent?: string
-      notIsArray?: string
-    }
+  minWord?: {
+    noMinimumWords?: string
+  }
+  uuid?: {
+    invalidValue?: string
+  }
+  email?: {
+    invalidValue?: string
+  }
+  maxLength?: {
+    invalidValue?: string
+  }
+  minLength?: {
+    invalidValue?: string
+  }
+  number?: {
+    invalidValue?: string
+  }
+  float?: {
+    invalidValue?: string
+  }
+  integer?: {
+    invalidValue?: string
+  }
+  boolean?: {
+    invalidValue?: string
+  }
+  required?: {
+    invalidValue?: string
+  }
+  date?: {
+    invalidValue?: string
+  }
+  dateGreaterThan?: {
+    invalidValue?: string
+    limitExceeded?: string
+  }
+  dateLessThan?: {
+    invalidValue?: string
+    limitExceeded?: string
+  }
+  time?: {
+    invalidValue?: string
+    invalidParameter?: string
+  }
+  object?: {
+    invalidValue?: string
+    keyAbsent?: string
+    notIsObject?: string
+  }
+  array?: {
+    invalidValue?: string
+    notIsArray?: string
+  }
+  toEqual?: {
+    invalidValue?: string
+  }
+  notToEqual?: {
+    invalidValue?: string
+  }
+  oneOf?: {
+    invalidValue?: string
+  }
+  notOneOf?: {
+    invalidValue?: string
   }
 }
 export interface InformativeMessage {
-  validator: {
-    constructorParams: {
-      valueName: {
-        missingClassParam: string
-        invalidClassParam: string
-      }
-    }
-    method: {
-      string: {
-        strict: string
-      }
-      minWord: {
-        noMinimumWords: string
-      }
-      uuid: {
-        strict: string
-      }
-      email: {
-        strict: string
-      }
-      maxLength: {
-        strict: string
-      }
-      minLength: {
-        strict: string
-      }
-      number: {
-        strict: string
-      }
-      float: {
-        strict: string
-      }
-      integer: {
-        strict: string
-      }
-      boolean: {
-        strict: string
-      }
-      required: {
-        strict: string
-      }
-      date: {
-        invalidFormat: string
-      }
-      dateGreaterThan: {
-        invalidDate: string
-        limitExceeded: string
-      }
-      dateLessThan: {
-        invalidDate: string
-        limitExceeded: string
-      }
-      time: {
-        invalidParameter: string
-        invalidFormat: string
-      }
-    }
+  string: {
+    invalidValue: string
   }
-  schema: {
-    constructorParams: {
-      schema: string
-    }
-    validateProperty: {
-      itemArray: {
-        valueName: string
-      }
-    }
-    validateObject: {
-      schemaKeyAbsent: string
-      notIsArray: string
-      notIsObject: string
-    }
+  minWord: {
+    noMinimumWords: string
+  }
+  uuid: {
+    invalidValue: string
+  }
+  email: {
+    invalidValue: string
+  }
+  maxLength: {
+    invalidValue: string
+  }
+  minLength: {
+    invalidValue: string
+  }
+  number: {
+    invalidValue: string
+  }
+  float: {
+    invalidValue: string
+  }
+  integer: {
+    invalidValue: string
+  }
+  boolean: {
+    invalidValue: string
+  }
+  required: {
+    invalidValue: string
+  }
+  date: {
+    invalidValue: string
+  }
+  dateGreaterThan: {
+    invalidValue: string
+    limitExceeded: string
+  }
+  dateLessThan: {
+    invalidValue: string
+    limitExceeded: string
+  }
+  time: {
+    invalidValue: string
+    invalidParameter: string
+  }
+  object: {
+    invalidValue: string
+    keyAbsent: string
+    notIsObject: string
+  }
+  array: {
+    invalidValue: string
+    notIsArray: string
+  }
+  toEqual: {
+    invalidValue: string
+  }
+  notToEqual: {
+    invalidValue: string
+  }
+  oneOf: {
+    invalidValue: string
+  }
+  notOneOf: {
+    invalidValue: string
   }
 }
 export type AnyInformativeMessage = InformativeMessage & Record<string, any>

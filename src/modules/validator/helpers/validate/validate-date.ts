@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../location'
-import { DateTypes, ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { DateTypes, ErrorTest, SuccessTest } from '../../../types'
+import { received } from '../../../utils'
 
 export const validateDate = ({
   value,
@@ -9,8 +9,8 @@ export const validateDate = ({
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   type?: DateTypes
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
@@ -27,7 +27,7 @@ export const validateDate = ({
   }
 
   const handleAddFailed = (): void => {
-    const message = informativeMessage.validator.method.date.invalidFormat
+    const message = informativeMessage.date.invalidValue
     const messageError = message
       .replace('[valueName]', valueName)
       .replace('[type]', type ?? 'ISO8601')

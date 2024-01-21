@@ -1,34 +1,34 @@
-import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, ValidatorValue, ValidatorValueName } from '../../types'
-import { isBoolean, received } from '../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { isFloat, received } from '../../../utils'
 
-export const validateBoolean = ({
+export const validateFloat = ({
   value,
   valueName,
   callbackAddPassed,
   callbackAddFailed
 }: {
-  value: ValidatorValue
-  valueName: ValidatorValueName
+  value: any
+  valueName: string
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  if (isBoolean(value)) {
+  if (isFloat(value)) {
     callbackAddPassed({
-      method: 'boolean',
+      method: 'float',
       name: valueName,
-      expect: 'boolean type',
+      expect: 'number float type',
       received: value
     })
   } else {
-    const message = informativeMessage.validator.method.boolean.strict
+    const message = informativeMessage.float.invalidValue
     const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({
-      method: 'boolean',
+      method: 'float',
       type: 'invalid value',
       name: valueName,
-      expect: 'boolean type',
+      expect: 'number float type',
       received: received(value),
       message: messageError
     })
