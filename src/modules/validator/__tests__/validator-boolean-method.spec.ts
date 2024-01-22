@@ -12,14 +12,20 @@ describe('Validator Boolean Method', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the boolean method and return false if the value is not of type boolean', () => {
-    const value = 1
+  it('Should be able to validate the boolean method and return false if list is invalid', () => {
+    const invalidList = [
+      'invalid-uuid-57b73598-8764-4ad0-a76a-679bb6640eb1',
+      new Date(),
+      123,
+      null,
+      [],
+      {},
+      undefined
+    ]
 
-    const sut = validator()
-      .boolean()
-      .validate(value)
+    const sut = validator().boolean()
 
-    expect(sut).toBeFalsy()
+    expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
   it('Should be able to validate the boolean method when value is promise and return true if the value is of type boolean', async () => {
