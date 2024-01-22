@@ -2,8 +2,8 @@ import { validator } from '../index'
 import { InvalidParamError } from '../../errors'
 
 describe('Validator Email Method', () => {
-  it('Should be able to validate the email method and return true if email list is valid', () => {
-    const validEmailList = [
+  it('Should be able to validate the email method and return true if list is valid', () => {
+    const validList = [
       'any_email@domain.com',
       'any-email@domain.com',
       'any.email@domain.com',
@@ -14,11 +14,11 @@ describe('Validator Email Method', () => {
       .string()
       .email()
 
-    expect(validEmailList.every((email) => sut.validate(email))).toBeTruthy()
+    expect(validList.every((value) => sut.validate(value))).toBeTruthy()
   })
 
-  it('Should be able to validate the email method and return false if email list is invalid', () => {
-    const invalidEmailList = [
+  it('Should be able to validate the email method and return false if list is invalid', () => {
+    const invalidList = [
       'any_email@.com',
       'any_email@domain',
       'any_email@domain.c',
@@ -45,14 +45,21 @@ describe('Validator Email Method', () => {
       'any_?_email@domain.com',
       'any_<_email@domain.com',
       'any_>_email@domain.com',
-      'any_/_email@domain.com'
+      'any_/_email@domain.com',
+      false,
+      new Date(),
+      null,
+      123,
+      [],
+      {},
+      undefined
     ]
 
     const sut = validator()
       .string()
       .email()
 
-    expect(invalidEmailList.every((email) => sut.validate(email))).toBeFalsy()
+    expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
   it('Should be able to validate the email method when value is promise and return true if the value is a valid email format', async () => {
