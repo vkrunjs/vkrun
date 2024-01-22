@@ -12,14 +12,20 @@ describe('Validator String Method', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the string method and return false if the value is not of type string', () => {
-    const value = false
+  it('Should be able to validate the string method and return false if list is invalid', () => {
+    const invalidList = [
+      false,
+      new Date(),
+      123,
+      null,
+      [],
+      {},
+      undefined
+    ]
 
-    const sut = validator()
-      .string()
-      .validate(value)
+    const sut = validator().string()
 
-    expect(sut).toBeFalsy()
+    expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
   it('Should be able to validate the string method when value is promise and return true if the value is of type string', async () => {
