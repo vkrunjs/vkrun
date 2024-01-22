@@ -50,35 +50,67 @@ export const validateDate = ({
   switch (type) {
     case 'DD/MM/YYYY':
       [day, month, year] = String(value).split('/').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'MM/DD/YYYY':
       [month, day, year] = String(value).split('/').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'DD-MM-YYYY':
       [day, month, year] = String(value).split('-').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'MM-DD-YYYY':
       [month, day, year] = String(value).split('-').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'YYYY/MM/DD':
       [year, month, day] = String(value).split('/').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'YYYY/DD/MM':
       [year, day, month] = String(value).split('/').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'YYYY-MM-DD':
       [year, month, day] = String(value).split('-').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     case 'YYYY-DD-MM':
       [year, day, month] = String(value).split('-').map(Number)
-      formattedDate = new Date(year, month - 1, day)
+      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+        formattedDate = false as any
+      } else {
+        formattedDate = new Date(year, month - 1, day)
+      }
       break
     default:
       formattedDate = new Date(String(value))
