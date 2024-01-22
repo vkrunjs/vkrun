@@ -12,14 +12,20 @@ describe('Validator Number Method', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the number method and return false if the value is not of type number', () => {
-    const value = true
+  it('Should be able to validate the number method and return false if list is invalid', () => {
+    const invalidList = [
+      'invalid-uuid-57b73598-8764-4ad0-a76a-679bb6640eb1',
+      false,
+      new Date(),
+      null,
+      [],
+      {},
+      undefined
+    ]
 
-    const sut = validator()
-      .number()
-      .validate(value)
+    const sut = validator().number()
 
-    expect(sut).toBeFalsy()
+    expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
   it('Should be able to validate the number method when value is promise and return true if the value is of type number', async () => {
