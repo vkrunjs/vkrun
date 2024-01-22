@@ -1,13 +1,11 @@
 import { CreateSchema } from './schema'
 import { Validator } from './validator'
 export interface IValidator {
-  notRequired: () => this
+  notRequired: () => NotRequiredMethod
   minWord: (minWord: number) => this
-  email: () => this
-  uuid: () => this
   maxLength: (maxLength: number) => this
   minLength: (minLength: number) => this
-  string: () => this
+  string: () => StringMethod
   number: () => this
   boolean: () => this
   float: () => this
@@ -20,6 +18,43 @@ export interface IValidator {
   array: () => this
   equal: (valueToCompare: any) => this
   schema: (schema: ObjectType, config?: ObjectConfig) => CreateSchema
+  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: any) => boolean
+  validateAsync: (value: any) => Promise<boolean>
+  test: (value: any, valueName: string) => Tests
+  testAsync: (value: any, valueName: string) => Promise<Tests>
+}
+export interface StringMethod {
+  email: () => EmailMethod
+  UUID: () => UUIDMethod
+  notRequired: () => NotRequiredMethod
+  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: any) => boolean
+  validateAsync: (value: any) => Promise<boolean>
+  test: (value: any, valueName: string) => Tests
+  testAsync: (value: any, valueName: string) => Promise<Tests>
+}
+export interface EmailMethod {
+  notRequired: () => NotRequiredMethod
+  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: any) => boolean
+  validateAsync: (value: any) => Promise<boolean>
+  test: (value: any, valueName: string) => Tests
+  testAsync: (value: any, valueName: string) => Promise<Tests>
+}
+export interface UUIDMethod {
+  notRequired: () => NotRequiredMethod
+  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: any) => boolean
+  validateAsync: (value: any) => Promise<boolean>
+  test: (value: any, valueName: string) => Tests
+  testAsync: (value: any, valueName: string) => Promise<Tests>
+}
+export interface NotRequiredMethod {
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
   validate: (value: any) => boolean

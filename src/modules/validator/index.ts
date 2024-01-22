@@ -20,16 +20,20 @@ import {
 } from './helpers/validate'
 import {
   DateTypes,
+  EmailMethod,
   ErrorTest,
   ErrorTypes,
   IValidator,
   Method,
   Methods,
+  NotRequiredMethod,
   ObjectConfig,
   ObjectType,
+  StringMethod,
   SuccessTest,
   Tests,
-  TimeTypes
+  TimeTypes,
+  UUIDMethod
 } from '../types'
 import { hasMethod } from '../utils'
 import { CreateSchema } from '../schema'
@@ -56,18 +60,54 @@ export class Validator implements IValidator {
     }
   }
 
-  string (): this {
+  string (): StringMethod {
     if (this.uninitializedValidation) {
       this.methodBuild({ method: 'string' })
-    } else {
-      validateString({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
     }
-    return this
+
+    const email = (): EmailMethod => {
+      if (this.uninitializedValidation && hasMethod(this.methods, 'string')) {
+        this.methodBuild({ method: 'email' })
+      }
+
+      return {
+        notRequired: () => this.notRequired(),
+        throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
+        throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
+        validate: (value: any) => this.validate(value),
+        validateAsync: async (value: any) => await this.validateAsync(value),
+        test: (value: any, valueName: string) => this.test(value, valueName),
+        testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+      }
+    }
+
+    const UUID = (): UUIDMethod => {
+      if (this.uninitializedValidation && hasMethod(this.methods, 'string')) {
+        this.methodBuild({ method: 'uuid' })
+      }
+
+      return {
+        notRequired: () => this.notRequired(),
+        throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
+        throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
+        validate: (value: any) => this.validate(value),
+        validateAsync: async (value: any) => await this.validateAsync(value),
+        test: (value: any, valueName: string) => this.test(value, valueName),
+        testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+      }
+    }
+
+    return {
+      email: () => email(),
+      UUID: () => UUID(),
+      notRequired: () => this.notRequired(),
+      throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
+      throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
+      validate: (value: any) => this.validate(value),
+      validateAsync: async (value: any) => await this.validateAsync(value),
+      test: (value: any, valueName: string) => this.test(value, valueName),
+      testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+    }
   }
 
   minWord (minWord: number): this {
@@ -78,34 +118,6 @@ export class Validator implements IValidator {
         value: this.value,
         valueName: this.valueName,
         minWord,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
-
-  uuid (): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'uuid' })
-    } else {
-      validateUuid({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
-
-  email (): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'email' })
-    } else {
-      validateEmail({
-        value: this.value,
-        valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
         callbackAddFailed: error => this.addFailed(error)
       })
@@ -210,7 +222,7 @@ export class Validator implements IValidator {
     }
   }
 
-  notRequired (): this {
+  notRequired (): NotRequiredMethod {
     if (this.uninitializedValidation) {
       this.methodBuild({ method: 'notRequired' })
     } else {
@@ -349,17 +361,29 @@ export class Validator implements IValidator {
 
     this.uninitializedValidation = false
     const executeMethod = (rule: any): void => {
-      if (rule.method !== 'notRequired') {
-        this.required()
-      }
       if (rule.method === 'string') {
-        this.string()
+        validateString({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'minWord') {
         this.minWord(rule.minWord)
       } else if (rule.method === 'email') {
-        this.email()
+        validateEmail({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'uuid') {
-        this.uuid()
+        validateUuid({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'maxLength') {
         this.maxLength(rule.maxLength)
       } else if (rule.method === 'minLength') {
@@ -385,37 +409,17 @@ export class Validator implements IValidator {
       }
     }
 
-    const prioritizeRequired = (): void => {
-      const prioritizeIndex = this.methods.findIndex(
-        method => method.method === 'notRequired'
-      )
-
-      if (prioritizeIndex !== -1) {
-        const prioritizeMethod = this.methods.splice(prioritizeIndex, 1)[0]
-        this.methods.unshift(prioritizeMethod)
-      }
+    if (hasMethod(this.methods, 'notRequired')) {
+      this.notRequired()
+      if (this.value === undefined) return
+    } else {
+      this.required()
     }
 
-    const execute = (): void => {
-      if (hasMethod(this.methods, 'array')) {
-        if (hasMethod(this.methods, 'notRequired')) {
-          if (this.value !== undefined) this.array()
-          else this.notRequired()
-        } else {
-          this.required()
-          this.array()
-        }
-      } else {
-        prioritizeRequired()
-        this.methods.forEach(rule => executeMethod(rule))
-      }
-    }
-
-    if (hasMethod(this.methods, 'notRequired') && !hasMethod(this.methods, 'array')) {
-      if (this.value !== undefined) execute()
-      else this.notRequired()
-    } else if (!hasMethod(this.methods, 'notRequired')) {
-      execute()
+    if (hasMethod(this.methods, 'array')) {
+      this.array()
+    } else {
+      this.methods.forEach(rule => executeMethod(rule))
     }
   }
 
