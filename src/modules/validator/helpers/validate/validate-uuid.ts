@@ -18,9 +18,9 @@ export const validateUuid = ({
 
   if (isUuid) {
     callbackAddPassed({
-      method: 'uuid',
+      method: 'UUID',
       name: valueName,
-      expect: 'uuid format',
+      expect: 'UUID format',
       received: value
     })
   } else {
@@ -28,10 +28,10 @@ export const validateUuid = ({
     const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({
-      method: 'uuid',
+      method: 'UUID',
       type: 'invalid value',
       name: valueName,
-      expect: 'uuid format',
+      expect: 'UUID format',
       received: received(value),
       message: messageError
     })
