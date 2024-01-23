@@ -20,12 +20,15 @@ import {
 } from './helpers/validate'
 import {
   DateTypes,
+  DefaultReturn,
   EmailMethod,
   ErrorTest,
   ErrorTypes,
   IValidator,
+  MaxLengthMethod,
   Method,
   Methods,
+  MinLengthMethod,
   NotRequiredMethod,
   ObjectConfig,
   ObjectType,
@@ -40,13 +43,13 @@ import { CreateSchema } from '../schema'
 
 export class Validator implements IValidator {
   private value: any
-  private valueName: string
+  private valueName: any
   private readonly methods: Methods
   private uninitializedValidation: boolean
   private tests: Tests
 
   constructor () {
-    this.valueName = ''
+    this.valueName = undefined
     this.methods = []
     this.uninitializedValidation = true
     this.tests = {
@@ -61,52 +64,44 @@ export class Validator implements IValidator {
   }
 
   string (): StringMethod {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'string' })
-    }
+    this.methodBuild({ method: 'string' })
 
     const email = (): EmailMethod => {
-      if (this.uninitializedValidation && hasMethod(this.methods, 'string')) {
-        this.methodBuild({ method: 'email' })
-      }
-
-      return {
-        notRequired: () => this.notRequired(),
-        throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
-        throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
-        validate: (value: any) => this.validate(value),
-        validateAsync: async (value: any) => await this.validateAsync(value),
-        test: (value: any, valueName: string) => this.test(value, valueName),
-        testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
-      }
+      this.methodBuild({ method: 'email' })
+      return this.defaultReturnMethods()
     }
 
     const UUID = (): UUIDMethod => {
-      if (this.uninitializedValidation && hasMethod(this.methods, 'string')) {
-        this.methodBuild({ method: 'uuid' })
+      this.methodBuild({ method: 'UUID' })
+      return this.defaultReturnMethods()
+    }
+
+    const minLength = (minLength: number): MinLengthMethod => {
+      if (hasMethod(this.methods, 'minLength')) {
+        throw Error('minLength method has already been called!')
       }
 
-      return {
-        notRequired: () => this.notRequired(),
-        throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
-        throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
-        validate: (value: any) => this.validate(value),
-        validateAsync: async (value: any) => await this.validateAsync(value),
-        test: (value: any, valueName: string) => this.test(value, valueName),
-        testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+      this.methodBuild({ method: 'minLength', minLength })
+
+      return { maxLength, ...this.defaultReturnMethods() }
+    }
+
+    const maxLength = (maxLength: number): MaxLengthMethod => {
+      if (hasMethod(this.methods, 'maxLength')) {
+        throw Error('maxLength method has already been called!')
       }
+
+      this.methodBuild({ method: 'maxLength', maxLength })
+
+      return { minLength, ...this.defaultReturnMethods() }
     }
 
     return {
-      email: () => email(),
-      UUID: () => UUID(),
-      notRequired: () => this.notRequired(),
-      throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
-      throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
-      validate: (value: any) => this.validate(value),
-      validateAsync: async (value: any) => await this.validateAsync(value),
-      test: (value: any, valueName: string) => this.test(value, valueName),
-      testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+      minLength,
+      maxLength,
+      email,
+      UUID,
+      ...this.defaultReturnMethods()
     }
   }
 
@@ -118,36 +113,6 @@ export class Validator implements IValidator {
         value: this.value,
         valueName: this.valueName,
         minWord,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
-
-  maxLength (maxLength: number): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'maxLength', maxLength })
-    } else {
-      validateMaxLength({
-        value: this.value,
-        valueName: this.valueName,
-        maxLength,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
-
-  minLength (minLength: number): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'minLength', minLength })
-    } else {
-      validateMinLength({
-        value: this.value,
-        valueName: this.valueName,
-        minLength,
         callbackAddPassed: success => this.addPassed(success),
         callbackAddFailed: error => this.addFailed(error)
       })
@@ -232,7 +197,15 @@ export class Validator implements IValidator {
         callbackAddPassed: success => this.addPassed(success)
       })
     }
-    return this
+
+    return {
+      throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
+      throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
+      validate: (value: any) => this.validate(value),
+      validateAsync: async (value: any) => await this.validateAsync(value),
+      test: (value: any, valueName: string) => this.test(value, valueName),
+      testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+    }
   }
 
   date (type?: DateTypes): this {
@@ -377,7 +350,7 @@ export class Validator implements IValidator {
           callbackAddPassed: success => this.addPassed(success),
           callbackAddFailed: error => this.addFailed(error)
         })
-      } else if (rule.method === 'uuid') {
+      } else if (rule.method === 'UUID') {
         validateUuid({
           value: this.value,
           valueName: this.valueName,
@@ -385,9 +358,21 @@ export class Validator implements IValidator {
           callbackAddFailed: error => this.addFailed(error)
         })
       } else if (rule.method === 'maxLength') {
-        this.maxLength(rule.maxLength)
+        validateMaxLength({
+          value: this.value,
+          valueName: this.valueName,
+          maxLength: rule.maxLength,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'minLength') {
-        this.minLength(rule.minLength)
+        validateMinLength({
+          value: this.value,
+          valueName: this.valueName,
+          minLength: rule.minLength,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'number') {
         this.number()
       } else if (rule.method === 'float') {
@@ -435,9 +420,21 @@ export class Validator implements IValidator {
     }
   }
 
+  private defaultReturnMethods (): DefaultReturn {
+    return {
+      notRequired: () => this.notRequired(),
+      throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
+      throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
+      validate: (value: any) => this.validate(value),
+      validateAsync: async (value: any) => await this.validateAsync(value),
+      test: (value: any, valueName: string) => this.test(value, valueName),
+      testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+    }
+  }
+
   throw (value: any, valueName: string, ClassError?: ErrorTypes): void {
     this.value = value
-    if (!this.valueName) this.valueName = valueName
+    this.valueName = valueName
     this.executeMethods()
 
     if (this.tests.errors.length > 0) {
@@ -457,8 +454,9 @@ export class Validator implements IValidator {
 
   async throwAsync (value: any, valueName: string, ClassError?: ErrorTypes): Promise<void> {
     this.value = await value
-    if (!this.valueName) this.valueName = valueName
+    this.valueName = valueName
     this.executeMethods()
+
     if (this.tests.errors.length > 0) {
       if (ClassError) {
         const TestClassError = new ClassError('')
@@ -475,9 +473,9 @@ export class Validator implements IValidator {
   }
 
   test (value: any, valueName: string): Tests {
-    this.value = value
-    if (!this.valueName) this.valueName = valueName
     const startDate = new Date()
+    this.value = value
+    this.valueName = valueName
     this.executeMethods()
     const endTime = new Date()
     const elapsedTime = endTime.getTime() - startDate.getTime()
@@ -488,9 +486,9 @@ export class Validator implements IValidator {
   }
 
   async testAsync (value: any, valueName: string): Promise<Tests> {
-    this.value = await value
-    if (!this.valueName) this.valueName = valueName
     const startDate = new Date()
+    this.value = await value
+    this.valueName = valueName
     this.executeMethods()
     const endTime = new Date()
     const elapsedTime = endTime.getTime() - startDate.getTime()

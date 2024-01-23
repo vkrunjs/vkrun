@@ -1,10 +1,9 @@
 import { CreateSchema } from './schema'
 import { Validator } from './validator'
+
 export interface IValidator {
   notRequired: () => NotRequiredMethod
   minWord: (minWord: number) => this
-  maxLength: (maxLength: number) => this
-  minLength: (minLength: number) => this
   string: () => StringMethod
   number: () => this
   boolean: () => this
@@ -25,9 +24,8 @@ export interface IValidator {
   test: (value: any, valueName: string) => Tests
   testAsync: (value: any, valueName: string) => Promise<Tests>
 }
-export interface StringMethod {
-  email: () => EmailMethod
-  UUID: () => UUIDMethod
+
+export interface DefaultReturn {
   notRequired: () => NotRequiredMethod
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -36,24 +34,7 @@ export interface StringMethod {
   test: (value: any, valueName: string) => Tests
   testAsync: (value: any, valueName: string) => Promise<Tests>
 }
-export interface EmailMethod {
-  notRequired: () => NotRequiredMethod
-  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-  validate: (value: any) => boolean
-  validateAsync: (value: any) => Promise<boolean>
-  test: (value: any, valueName: string) => Tests
-  testAsync: (value: any, valueName: string) => Promise<Tests>
-}
-export interface UUIDMethod {
-  notRequired: () => NotRequiredMethod
-  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-  validate: (value: any) => boolean
-  validateAsync: (value: any) => Promise<boolean>
-  test: (value: any, valueName: string) => Tests
-  testAsync: (value: any, valueName: string) => Promise<Tests>
-}
+
 export interface NotRequiredMethod {
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -62,15 +43,42 @@ export interface NotRequiredMethod {
   test: (value: any, valueName: string) => Tests
   testAsync: (value: any, valueName: string) => Promise<Tests>
 }
+
+export interface StringMethod extends DefaultReturn {
+  minLength: (minLength: number) => MinLengthMethod
+  maxLength: (maxLength: number) => MaxLengthMethod
+  email: () => EmailMethod
+  UUID: () => UUIDMethod
+}
+
+export interface EmailMethod extends DefaultReturn {}
+
+export interface UUIDMethod extends DefaultReturn {}
+
+export interface MinLengthMethod extends DefaultReturn {
+  maxLength: (maxLength: number) => DefaultReturn
+}
+
+export interface MaxLengthMethod extends DefaultReturn {
+  minLength: (minLength: number) => DefaultReturn
+}
+
 export interface ObjectConfig {
   error?: ErrorTypes
 }
+
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
+
 export type ErrorClass<T extends Error> = new (message?: string) => T
+
 export type ErrorTypes = any // ErrorClass
+
 export type ValidatePropertyKey = string
+
 export type ValidatePropertyValue = any
-export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'uuid' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
+
+export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
+
 export interface Method {
   method: MethodTypes
   minWord?: number
@@ -84,13 +92,21 @@ export interface Method {
   arrayRules?: any
   valueToCompare?: any
 }
+
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+
 export type Methods = Method[]
+
 export type ValidateItemArrayValue = string | boolean | Date | number
+
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
+
 export type Schema = Record<string, Validator[]>
+
 export type ObjectType = Record<string, any>
+
 export type SchemaConfig = ObjectConfig
+
 export interface SetTranslationMessage {
   string?: {
     invalidValue?: string
@@ -162,6 +178,7 @@ export interface SetTranslationMessage {
     invalidValue?: string
   }
 }
+
 export interface InformativeMessage {
   string: {
     invalidValue: string
@@ -233,7 +250,9 @@ export interface InformativeMessage {
     invalidValue: string
   }
 }
+
 export type AnyInformativeMessage = InformativeMessage & Record<string, any>
+
 export interface Tests {
   passedAll: boolean
   passed: number
@@ -243,6 +262,7 @@ export interface Tests {
   errors: ErrorTest[]
   time: string
 }
+
 export interface ErrorTest {
   class?: string
   method?: string
@@ -252,6 +272,7 @@ export interface ErrorTest {
   received: any
   message: string
 }
+
 export interface SuccessTest {
   class?: string
   method?: string
@@ -259,6 +280,7 @@ export interface SuccessTest {
   expect: string
   received: any
 }
+
 export interface ValidateMethodParams {
   keyName: string
   value: any
@@ -268,6 +290,7 @@ export interface ValidateMethodParams {
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }
+
 export interface SelectSchemaFormat {
   value: ObjectType
   schema: ObjectType
