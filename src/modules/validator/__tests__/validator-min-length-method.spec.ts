@@ -282,13 +282,13 @@ describe('Validator MinLength Method', () => {
     try {
       const sut: void = validator()
       .string()
-      .maxLength(5)
       .minLength(5)
-      // @ts-ignore
       .maxLength(5)
+      // @ts-ignore
+      .minLength(5)
     } catch (error: any) {
       const sut = error
-      expect(sut.message).toEqual('maxLength method has already been called!')
+      expect(sut.message).toEqual('minLength method has already been called!')
     }
   })
   /* eslint-enable */
