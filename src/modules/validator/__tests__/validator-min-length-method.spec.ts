@@ -48,7 +48,7 @@ describe('Validator MinLength Method', () => {
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the minLength method when the value is a promise and return true if the value does not have the minimum number of characters', async () => {
+  it('Should be able to validate the minLength method when the value is a promise and return false if the value does not have the minimum number of characters', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
