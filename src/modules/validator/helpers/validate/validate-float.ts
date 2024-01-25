@@ -17,7 +17,7 @@ export const validateFloat = ({
     callbackAddPassed({
       method: 'float',
       name: valueName,
-      expect: 'number float type',
+      expect: 'float type',
       received: value
     })
   } else {
@@ -28,7 +28,7 @@ export const validateFloat = ({
       method: 'float',
       type: 'invalid value',
       name: valueName,
-      expect: 'number float type',
+      expect: 'float type',
       received: received(value),
       message: messageError
     })

@@ -17,7 +17,7 @@ export const validateInteger = ({
     callbackAddPassed({
       method: 'integer',
       name: valueName,
-      expect: 'number integer type',
+      expect: 'integer type',
       received: value
     })
   } else {
@@ -28,7 +28,7 @@ export const validateInteger = ({
       method: 'integer',
       type: 'invalid value',
       name: valueName,
-      expect: 'number integer type',
+      expect: 'integer type',
       received: received(value),
       message: messageError
     })
