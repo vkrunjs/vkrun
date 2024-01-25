@@ -29,6 +29,7 @@ import {
   Method,
   Methods,
   MinLengthMethod,
+  MinWordMethod,
   NotRequiredMethod,
   ObjectConfig,
   ObjectType,
@@ -78,46 +79,42 @@ export class Validator implements IValidator {
 
     const minLength = (minLength: number): MinLengthMethod => {
       if (hasMethod(this.methods, 'minLength')) {
+        console.error('vkrun: minLength method has already been called!')
         throw Error('minLength method has already been called!')
       }
 
       this.methodBuild({ method: 'minLength', minLength })
-
-      return { maxLength, ...this.defaultReturnMethods() }
+      return { maxLength, minWord, ...this.defaultReturnMethods() }
     }
 
     const maxLength = (maxLength: number): MaxLengthMethod => {
       if (hasMethod(this.methods, 'maxLength')) {
+        console.error('vkrun: maxLength method has already been called!')
         throw Error('maxLength method has already been called!')
       }
 
       this.methodBuild({ method: 'maxLength', maxLength })
+      return { minLength, minWord, ...this.defaultReturnMethods() }
+    }
 
-      return { minLength, ...this.defaultReturnMethods() }
+    const minWord = (minWord: number): MinWordMethod => {
+      if (hasMethod(this.methods, 'minWord')) {
+        console.error('vkrun: minWord method has already been called!')
+        throw Error('minWord method has already been called!')
+      }
+
+      this.methodBuild({ method: 'minWord', minWord })
+      return { minLength, maxLength, ...this.defaultReturnMethods() }
     }
 
     return {
       minLength,
       maxLength,
+      minWord,
       email,
       UUID,
       ...this.defaultReturnMethods()
     }
-  }
-
-  minWord (minWord: number): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'minWord', minWord })
-    } else {
-      validateMinWord({
-        value: this.value,
-        valueName: this.valueName,
-        minWord,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
   }
 
   number (): this {
@@ -162,7 +159,7 @@ export class Validator implements IValidator {
     return this
   }
 
-  boolean (): this {
+  boolean (): DefaultReturn {
     if (this.uninitializedValidation) {
       this.methodBuild({ method: 'boolean' })
     } else {
@@ -173,7 +170,7 @@ export class Validator implements IValidator {
         callbackAddFailed: error => this.addFailed(error)
       })
     }
-    return this
+    return this.defaultReturnMethods()
   }
 
   private required (): void {
@@ -342,7 +339,13 @@ export class Validator implements IValidator {
           callbackAddFailed: error => this.addFailed(error)
         })
       } else if (rule.method === 'minWord') {
-        this.minWord(rule.minWord)
+        validateMinWord({
+          value: this.value,
+          valueName: this.valueName,
+          minWord: rule.minWord,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'email') {
         validateEmail({
           value: this.value,
