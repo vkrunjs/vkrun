@@ -20,7 +20,7 @@ export const validateMaxLength = ({
       method: 'maxLength',
       type: 'invalid value',
       name: valueName,
-      expect: 'string with characters less than or equal to the limit',
+      expect: 'value with a length less than or equal to the limit',
       received: received(value),
       message: messageError
     })
@@ -40,7 +40,7 @@ export const validateMaxLength = ({
     callbackAddPassed({
       method: 'maxLength',
       name: valueName,
-      expect: 'string with characters less than or equal to the limit',
+      expect: 'value with a length less than or equal to the limit',
       received: value
     })
   } else {
