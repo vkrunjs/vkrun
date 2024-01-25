@@ -19,6 +19,9 @@ import {
   validateEqual
 } from './helpers/validate'
 import {
+  DateGreaterThanMethod,
+  DateLessThanMethod,
+  DateMethod,
   DateTypes,
   DefaultReturn,
   EmailMethod,
@@ -151,49 +154,30 @@ export class Validator implements IValidator {
     }
   }
 
-  date (type?: DateTypes): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'date', dateType: type })
-    } else {
-      validateDate({
-        value: this.value,
-        valueName: this.valueName,
-        type,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
+  date (type?: DateTypes): DateMethod {
+    this.methodBuild({ method: 'date', dateType: type })
 
-  dateGreaterThan (dateToCompare: Date): this {
-    if (this.uninitializedValidation) {
+    const dateGreaterThan = (dateToCompare: Date): DateGreaterThanMethod => {
+      if (hasMethod(this.methods, 'dateGreaterThan')) {
+        console.error('vkrun: dateGreaterThan method has already been called!')
+        throw Error('minWord dateGreaterThan has already been called!')
+      }
+
       this.methodBuild({ method: 'dateGreaterThan', dateToCompare })
-    } else {
-      validateDateGreaterThan({
-        value: this.value,
-        valueName: this.valueName,
-        dateToCompare,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
+      return { dateLessThan, ...this.defaultReturnMethods() }
     }
-    return this
-  }
 
-  dateLessThan (dateToCompare: Date): this {
-    if (this.uninitializedValidation) {
+    const dateLessThan = (dateToCompare: Date): DateLessThanMethod => {
+      if (hasMethod(this.methods, 'dateLessThan')) {
+        console.error('vkrun: dateLessThan method has already been called!')
+        throw Error('minWord dateLessThan has already been called!')
+      }
+
       this.methodBuild({ method: 'dateLessThan', dateToCompare })
-    } else {
-      validateDateLessThan({
-        value: this.value,
-        valueName: this.valueName,
-        dateToCompare,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
+      return { dateGreaterThan, ...this.defaultReturnMethods() }
     }
-    return this
+
+    return { dateGreaterThan, dateLessThan, ...this.defaultReturnMethods() }
   }
 
   time (type: TimeTypes): this {
@@ -351,11 +335,29 @@ export class Validator implements IValidator {
           callbackAddFailed: error => this.addFailed(error)
         })
       } else if (rule.method === 'date') {
-        this.date(rule.dateType)
+        validateDate({
+          value: this.value,
+          valueName: this.valueName,
+          type: rule.dateType,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'dateGreaterThan') {
-        this.dateGreaterThan(rule?.dateToCompare)
+        validateDateGreaterThan({
+          value: this.value,
+          valueName: this.valueName,
+          dateToCompare: rule.dateToCompare,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'dateLessThan') {
-        this.dateLessThan(rule?.dateToCompare)
+        validateDateLessThan({
+          value: this.value,
+          valueName: this.valueName,
+          dateToCompare: rule.dateToCompare,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'time') {
         this.time(rule?.timeType)
       } else if (rule.method === 'equal') {

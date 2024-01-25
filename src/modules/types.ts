@@ -5,9 +5,7 @@ export interface IValidator {
   notRequired: () => NotRequiredMethod
   string: () => StringMethod
   boolean: () => DefaultReturn
-  date: (type: DateTypes) => this
-  dateGreaterThan: (dateToCompare: Date) => this
-  dateLessThan: (dateToCompare: Date) => this
+  date: (type: DateTypes) => DateMethod
   time: (type: 'HH:MM' | 'HH:MM:SS') => this
   alias: (valueName: string) => this
   array: () => this
@@ -128,6 +126,19 @@ export interface NumberMethod extends DefaultReturn {
 
 export interface ObjectConfig {
   error?: ErrorTypes
+}
+
+export interface DateMethod extends DefaultReturn {
+  dateGreaterThan: (dateToCompare: Date) => DateGreaterThanMethod
+  dateLessThan: (dateToCompare: Date) => DateLessThanMethod
+}
+
+export interface DateGreaterThanMethod extends DefaultReturn {
+  dateLessThan: (dateToCompare: Date) => DefaultReturn
+}
+
+export interface DateLessThanMethod extends DefaultReturn {
+  dateGreaterThan: (dateToCompare: Date) => DefaultReturn
 }
 
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
