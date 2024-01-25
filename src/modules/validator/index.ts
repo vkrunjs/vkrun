@@ -176,16 +176,7 @@ export class Validator implements IValidator {
   }
 
   notRequired (): NotRequiredMethod {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'notRequired' })
-    } else {
-      validateNotRequired({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success)
-      })
-    }
-
+    this.methodBuild({ method: 'notRequired' })
     return {
       throw: (value: any, valueName: string, ClassError?: ErrorTypes) => this.throw(value, valueName, ClassError),
       throwAsync: async (value: any, valueName: string, ClassError?: ErrorTypes) => await this.throwAsync(value, valueName, ClassError),
@@ -394,7 +385,11 @@ export class Validator implements IValidator {
     }
 
     if (hasMethod(this.methods, 'notRequired')) {
-      this.notRequired()
+      validateNotRequired({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success)
+      })
       if (this.value === undefined) return
     } else {
       this.required()
