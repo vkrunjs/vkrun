@@ -3,10 +3,9 @@ import { Validator } from './validator'
 
 export interface IValidator {
   notRequired: () => NotRequiredMethod
-  minWord: (minWord: number) => this
   string: () => StringMethod
   number: () => this
-  boolean: () => this
+  boolean: () => DefaultReturn
   float: () => this
   integer: () => this
   date: (type: DateTypes) => this
@@ -47,6 +46,7 @@ export interface NotRequiredMethod {
 export interface StringMethod extends DefaultReturn {
   minLength: (minLength: number) => MinLengthMethod
   maxLength: (maxLength: number) => MaxLengthMethod
+  minWord: (minWord: number) => MinWordMethod
   email: () => EmailMethod
   UUID: () => UUIDMethod
 }
@@ -56,12 +56,75 @@ export interface EmailMethod extends DefaultReturn {}
 export interface UUIDMethod extends DefaultReturn {}
 
 export interface MinLengthMethod extends DefaultReturn {
-  maxLength: (maxLength: number) => DefaultReturn
+  maxLength: (maxLength: number) => {
+    minWord: (minWord: number) => DefaultReturn
+    notRequired: () => NotRequiredMethod
+    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+    validate: (value: any) => boolean
+    validateAsync: (value: any) => Promise<boolean>
+    test: (value: any, valueName: string) => Tests
+    testAsync: (value: any, valueName: string) => Promise<Tests>
+  }
+  minWord: (minWord: number) => {
+    maxLength: (maxLength: number) => DefaultReturn
+    notRequired: () => NotRequiredMethod
+    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+    validate: (value: any) => boolean
+    validateAsync: (value: any) => Promise<boolean>
+    test: (value: any, valueName: string) => Tests
+    testAsync: (value: any, valueName: string) => Promise<Tests>
+  }
 }
 
 export interface MaxLengthMethod extends DefaultReturn {
-  minLength: (minLength: number) => DefaultReturn
+  minLength: (minLength: number) => {
+    minWord: (minWord: number) => DefaultReturn
+    notRequired: () => NotRequiredMethod
+    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+    validate: (value: any) => boolean
+    validateAsync: (value: any) => Promise<boolean>
+    test: (value: any, valueName: string) => Tests
+    testAsync: (value: any, valueName: string) => Promise<Tests>
+  }
+  minWord: (minWord: number) => {
+    minLength: (minLength: number) => DefaultReturn
+    notRequired: () => NotRequiredMethod
+    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+    validate: (value: any) => boolean
+    validateAsync: (value: any) => Promise<boolean>
+    test: (value: any, valueName: string) => Tests
+    testAsync: (value: any, valueName: string) => Promise<Tests>
+  }
 }
+
+export interface MinWordMethod extends DefaultReturn {
+  minLength: (minLength: number) => {
+    maxLength: (maxLength: number) => DefaultReturn
+    notRequired: () => NotRequiredMethod
+    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+    validate: (value: any) => boolean
+    validateAsync: (value: any) => Promise<boolean>
+    test: (value: any, valueName: string) => Tests
+    testAsync: (value: any, valueName: string) => Promise<Tests>
+  }
+  maxLength: (maxLength: number) => {
+    minLength: (minLength: number) => DefaultReturn
+    notRequired: () => NotRequiredMethod
+    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+    validate: (value: any) => boolean
+    validateAsync: (value: any) => Promise<boolean>
+    test: (value: any, valueName: string) => Tests
+    testAsync: (value: any, valueName: string) => Promise<Tests>
+  }
+}
+
+export interface BooleanMethod extends DefaultReturn {}
 
 export interface ObjectConfig {
   error?: ErrorTypes
