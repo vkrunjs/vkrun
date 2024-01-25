@@ -160,16 +160,7 @@ export class Validator implements IValidator {
   }
 
   boolean (): DefaultReturn {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'boolean' })
-    } else {
-      validateBoolean({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
+    this.methodBuild({ method: 'boolean' })
     return this.defaultReturnMethods()
   }
 
@@ -383,7 +374,12 @@ export class Validator implements IValidator {
       } else if (rule.method === 'integer') {
         this.integer()
       } else if (rule.method === 'boolean') {
-        this.boolean()
+        validateBoolean({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'date') {
         this.date(rule.dateType)
       } else if (rule.method === 'dateGreaterThan') {
