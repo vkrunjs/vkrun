@@ -31,6 +31,7 @@ import {
   MinLengthMethod,
   MinWordMethod,
   NotRequiredMethod,
+  NumberMethod,
   ObjectConfig,
   ObjectType,
   StringMethod,
@@ -117,62 +118,25 @@ export class Validator implements IValidator {
     }
   }
 
-  number (): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'number' })
-    } else {
-      validateNumber({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
+  number (): NumberMethod {
+    this.methodBuild({ method: 'number' })
 
-  float (): this {
-    if (this.uninitializedValidation) {
+    const float = (): DefaultReturn => {
       this.methodBuild({ method: 'float' })
-    } else {
-      validateFloat({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
+      return this.defaultReturnMethods()
     }
-    return this
-  }
 
-  integer (): this {
-    if (this.uninitializedValidation) {
+    const integer = (): DefaultReturn => {
       this.methodBuild({ method: 'integer' })
-    } else {
-      validateInteger({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
+      return this.defaultReturnMethods()
     }
-    return this
+
+    return { float, integer, ...this.defaultReturnMethods() }
   }
 
   boolean (): DefaultReturn {
     this.methodBuild({ method: 'boolean' })
     return this.defaultReturnMethods()
-  }
-
-  private required (): void {
-    if (!this.uninitializedValidation) {
-      validateRequired({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
   }
 
   notRequired (): NotRequiredMethod {
@@ -308,7 +272,7 @@ export class Validator implements IValidator {
     this.passedAll()
   }
 
-  private executeMethods (): void {
+  private validateMethods (): void {
     this.resetTests()
 
     this.uninitializedValidation = false
@@ -359,11 +323,26 @@ export class Validator implements IValidator {
           callbackAddFailed: error => this.addFailed(error)
         })
       } else if (rule.method === 'number') {
-        this.number()
+        validateNumber({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'float') {
-        this.float()
+        validateFloat({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'integer') {
-        this.integer()
+        validateInteger({
+          value: this.value,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'boolean') {
         validateBoolean({
           value: this.value,
@@ -392,7 +371,12 @@ export class Validator implements IValidator {
       })
       if (this.value === undefined) return
     } else {
-      this.required()
+      validateRequired({
+        value: this.value,
+        valueName: this.valueName,
+        callbackAddPassed: success => this.addPassed(success),
+        callbackAddFailed: error => this.addFailed(error)
+      })
     }
 
     if (hasMethod(this.methods, 'array')) {
@@ -429,7 +413,7 @@ export class Validator implements IValidator {
   throw (value: any, valueName: string, ClassError?: ErrorTypes): void {
     this.value = value
     this.valueName = valueName
-    this.executeMethods()
+    this.validateMethods()
 
     if (this.tests.errors.length > 0) {
       if (ClassError) {
@@ -449,7 +433,7 @@ export class Validator implements IValidator {
   async throwAsync (value: any, valueName: string, ClassError?: ErrorTypes): Promise<void> {
     this.value = await value
     this.valueName = valueName
-    this.executeMethods()
+    this.validateMethods()
 
     if (this.tests.errors.length > 0) {
       if (ClassError) {
@@ -470,7 +454,7 @@ export class Validator implements IValidator {
     const startDate = new Date()
     this.value = value
     this.valueName = valueName
-    this.executeMethods()
+    this.validateMethods()
     const endTime = new Date()
     const elapsedTime = endTime.getTime() - startDate.getTime()
     const seconds = Math.floor(elapsedTime / 1000)
@@ -483,7 +467,7 @@ export class Validator implements IValidator {
     const startDate = new Date()
     this.value = await value
     this.valueName = valueName
-    this.executeMethods()
+    this.validateMethods()
     const endTime = new Date()
     const elapsedTime = endTime.getTime() - startDate.getTime()
     const seconds = Math.floor(elapsedTime / 1000)
@@ -494,13 +478,13 @@ export class Validator implements IValidator {
 
   validate (value: any): boolean {
     this.value = value
-    this.executeMethods()
+    this.validateMethods()
     return this.tests.passedAll
   }
 
   async validateAsync (value: any): Promise<boolean> {
     this.value = await value
-    this.executeMethods()
+    this.validateMethods()
     return this.tests.passedAll
   }
 }

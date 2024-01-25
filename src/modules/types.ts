@@ -4,10 +4,7 @@ import { Validator } from './validator'
 export interface IValidator {
   notRequired: () => NotRequiredMethod
   string: () => StringMethod
-  number: () => this
   boolean: () => DefaultReturn
-  float: () => this
-  integer: () => this
   date: (type: DateTypes) => this
   dateGreaterThan: (dateToCompare: Date) => this
   dateLessThan: (dateToCompare: Date) => this
@@ -124,7 +121,10 @@ export interface MinWordMethod extends DefaultReturn {
   }
 }
 
-export interface BooleanMethod extends DefaultReturn {}
+export interface NumberMethod extends DefaultReturn {
+  float: () => DefaultReturn
+  integer: () => DefaultReturn
+}
 
 export interface ObjectConfig {
   error?: ErrorTypes
