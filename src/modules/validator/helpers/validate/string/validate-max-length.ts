@@ -1,46 +1,46 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { isString, received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { isString, received } from '../../../../utils'
 
-export const validateMinLength = ({
+export const validateMaxLength = ({
   value,
   valueName,
-  minLength,
+  maxLength,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
-  minLength: number
+  maxLength: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   const handleAddFailed = (messageError: string): void => {
     callbackAddFailed({
-      method: 'minLength',
+      method: 'maxLength',
       type: 'invalid value',
       name: valueName,
-      expect: 'value with a length greater than or equal to the limit',
+      expect: 'value with a length less than or equal to the limit',
       received: received(value),
       message: messageError
     })
   }
 
   if (isString(value)) {
-    const exceededLimit = String(value).length < minLength
+    const exceededLimit = String(value).length > maxLength
     if (exceededLimit) {
-      const message = informativeMessage.minLength.invalidValue
+      const message = informativeMessage.string.maxLength
       const messageError = message
         .replace('[valueName]', valueName)
-        .replace('[minLength]', String(minLength))
+        .replace('[maxLength]', String(maxLength))
 
       handleAddFailed(messageError)
       return this
     }
     callbackAddPassed({
-      method: 'minLength',
+      method: 'maxLength',
       name: valueName,
-      expect: 'value with a length greater than or equal to the limit',
+      expect: 'value with a length less than or equal to the limit',
       received: value
     })
   } else {

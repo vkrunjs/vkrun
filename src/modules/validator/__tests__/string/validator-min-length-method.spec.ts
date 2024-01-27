@@ -1,20 +1,20 @@
-import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { validator } from '../../index'
+import { InvalidParamError } from '../../../errors'
 
-describe('Validator MaxLength Method', () => {
-  it('Should be able to validate the maxLength method and return true if the value does not exceed the maximum number of characters', () => {
+describe('Validator MinLength Method', () => {
+  it('Should be able to validate the minLength method and return true if the value has the minimum number of characters', () => {
     const value = 'abcde'
 
     const sut = validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
 
     expect(sut.validate(value)).toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method and return false if list is invalid', () => {
+  it('Should be able to validate the minLength method and return false if list is invalid', () => {
     const invalidList = [
-      'abcdef',
+      'abcd',
       false,
       new Date(),
       123,
@@ -26,12 +26,12 @@ describe('Validator MaxLength Method', () => {
 
     const sut = validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
-  it('Should be able to validate the maxLength method when value is promise and return true if the value does not exceed the maximum number of characters', async () => {
+  it('Should be able to validate the minLength method when value is promise and return true if the value has the minimum number of characters', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -42,35 +42,35 @@ describe('Validator MaxLength Method', () => {
 
     const sut = await validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method when the value is a promise and return true if the value exceed the maximum number of characters', async () => {
+  it('Should be able to validate the minLength method when the value is a promise and return false if the value does not have the minimum number of characters', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('abcdef')
+          resolve('abcd')
         }, 100)
       })
     }
 
     const sut = await validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the maxLength method and passedAll to equal true if the value does not exceed the maximum number of characters', () => {
+  it('Should be able to validate the minLength method and passedAll to equal true if the value has the minimum number of characters', () => {
     const value = 'abcde'
 
     const sut = validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -91,9 +91,9 @@ describe('Validator MaxLength Method', () => {
         received: 'abcde'
       },
       {
-        method: 'maxLength',
+        method: 'minLength',
         name: 'value_name',
-        expect: 'value with a length less than or equal to the limit',
+        expect: 'value with a length greater than or equal to the limit',
         received: 'abcde'
       }
     ])
@@ -101,12 +101,12 @@ describe('Validator MaxLength Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method and passedAll to equal false if the value exceed the maximum number of characters', () => {
-    const value = 'abcdef'
+  it('Should be able to validate the minLength method and passedAll to equal false if the value does not have the minimum number of characters', () => {
+    const value = 'abcd'
 
     const sut = validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -118,32 +118,32 @@ describe('Validator MaxLength Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: 'abcdef'
+        received: 'abcd'
       },
       {
         method: 'string',
         name: 'value_name',
         expect: 'string type',
-        received: 'abcdef'
+        received: 'abcd'
       }
     ])
     expect(sut.errors).toEqual([{
-      method: 'maxLength',
+      method: 'minLength',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'value with a length less than or equal to the limit',
-      received: 'abcdef',
-      message: 'value_name must have a maximum of 5 characters!'
+      expect: 'value with a length greater than or equal to the limit',
+      received: 'abcd',
+      message: 'value_name must have a minimum of 5 characters!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength and passAll method as equal to true when it is not required and value is undefined', () => {
+  it('Should be able to validate the minLength and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
     const sut = validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .notRequired()
       .test(value, 'value_name')
 
@@ -161,7 +161,7 @@ describe('Validator MaxLength Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method and passedAll to equal true if value is promise and does not exceed the maximum number of characters', async () => {
+  it('Should be able to validate the minLength method and passedAll to equal true if value is promise and has the minimum number of characters', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -172,7 +172,7 @@ describe('Validator MaxLength Method', () => {
 
     const sut = await validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -193,8 +193,8 @@ describe('Validator MaxLength Method', () => {
         received: 'abcde'
       },
       {
-        method: 'maxLength',
-        expect: 'value with a length less than or equal to the limit',
+        method: 'minLength',
+        expect: 'value with a length greater than or equal to the limit',
         name: 'value_name',
         received: 'abcde'
       }
@@ -203,18 +203,18 @@ describe('Validator MaxLength Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method and passedAll to equal false if value is promise and exceed the maximum number of characters', async () => {
+  it('Should be able to validate the minLength method and passedAll to equal false if value is promise and does not have the minimum number of characters', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('abcdef')
+          resolve('abcd')
         }, 100)
       })
     }
 
     const sut = await validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -226,53 +226,53 @@ describe('Validator MaxLength Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: 'abcdef'
+        received: 'abcd'
       },
       {
         method: 'string',
         name: 'value_name',
         expect: 'string type',
-        received: 'abcdef'
+        received: 'abcd'
       }
     ])
     expect(sut.errors).toEqual([{
-      method: 'maxLength',
+      method: 'minLength',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'value with a length less than or equal to the limit',
-      received: 'abcdef',
-      message: 'value_name must have a maximum of 5 characters!'
+      expect: 'value with a length greater than or equal to the limit',
+      received: 'abcd',
+      message: 'value_name must have a minimum of 5 characters!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the maxLength method and throw InvalidParamError if the value is undefined', () => {
+  it('Should be able to validate the minLength method and throw InvalidParamError if the value has the minimum number of characters', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .throw(value, 'value_name', InvalidParamError)
 
     expect(sut).toThrow(InvalidParamError)
     expect(sut).toThrow(new InvalidParamError('value_name is required!'))
   })
 
-  it('Should be able to validate the maxLength method and throw Error if the value is a promise and exceed the maximum number of characters', async () => {
+  it('Should be able to validate the minLength method and throw Error if the value is a promise and does not have the minimum number of characters', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('abcdef')
+          resolve('abcd')
         }, 100)
       })
     }
 
     const sut = async (): Promise<void> => await validator()
       .string()
-      .maxLength(5)
+      .minLength(5)
       .throwAsync(value(), 'value_name')
 
-    await expect(sut).rejects.toThrow('value_name must have a maximum of 5 characters!')
+    await expect(sut).rejects.toThrow('value_name must have a minimum of 5 characters!')
   })
 
   /* eslint-disable */
@@ -282,13 +282,13 @@ describe('Validator MaxLength Method', () => {
     try {
       const sut: void = validator()
       .string()
-      .maxLength(5)
       .minLength(5)
-      // @ts-ignore
       .maxLength(5)
+      // @ts-ignore
+      .minLength(5)
     } catch (error: any) {
       const sut = error
-      expect(sut.message).toEqual('maxLength method has already been called!')
+      expect(sut.message).toEqual('minLength method has already been called!')
     }
   })
   /* eslint-enable */

@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../location'
-import { DateTypes, ErrorTest, SuccessTest } from '../../../types'
-import { received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { DateTypes, ErrorTest, SuccessTest } from '../../../../types'
+import { received } from '../../../../utils'
 
 export const validateDate = ({
   value,
@@ -106,7 +106,7 @@ export const validateDate = ({
       break
     case 'YYYY-DD-MM':
       [year, day, month] = String(value).split('-').map(Number)
-      if (month > 12 || day > new Date(year, month, 0).getDate()) {
+      if (month > 12 || day > new Date(year, month, 0).getUTCDate()) {
         formattedDate = false as any
       } else {
         formattedDate = new Date(year, month - 1, day)

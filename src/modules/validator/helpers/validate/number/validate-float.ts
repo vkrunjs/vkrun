@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { isFloat, received } from '../../../../utils'
 
-export const validateUuid = ({
+export const validateFloat = ({
   value,
   valueName,
   callbackAddPassed,
@@ -13,25 +13,22 @@ export const validateUuid = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-  const isUuid = uuidRegex.test(String(value))
-
-  if (isUuid) {
+  if (isFloat(value)) {
     callbackAddPassed({
-      method: 'UUID',
+      method: 'float',
       name: valueName,
-      expect: 'UUID format',
+      expect: 'float type',
       received: value
     })
   } else {
-    const message = informativeMessage.uuid.invalidValue
+    const message = informativeMessage.number.float
     const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({
-      method: 'UUID',
+      method: 'float',
       type: 'invalid value',
       name: valueName,
-      expect: 'UUID format',
+      expect: 'float type',
       received: received(value),
       message: messageError
     })

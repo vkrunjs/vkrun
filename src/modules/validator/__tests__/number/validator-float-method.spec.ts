@@ -1,5 +1,5 @@
-import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { validator } from '../../index'
+import { InvalidParamError } from '../../../errors'
 
 describe('Validator Float Method', () => {
   it('Should be able to validate the float method and return true if the value is float', () => {
@@ -134,7 +134,7 @@ describe('Validator Float Method', () => {
       name: 'value_name',
       expect: 'float type',
       received: 1,
-      message: 'value_name must be a number and float!'
+      message: 'value_name must be a float!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
@@ -243,7 +243,7 @@ describe('Validator Float Method', () => {
         name: 'value_name',
         expect: 'float type',
         received: false,
-        message: 'value_name must be a number and float!'
+        message: 'value_name must be a float!'
       }
     ])
     expect(typeof sut.time === 'string').toBeTruthy()
@@ -275,6 +275,6 @@ describe('Validator Float Method', () => {
       .float()
       .throwAsync(value(), 'value_name')
 
-    await expect(sut).rejects.toThrow('value_name must be a number and float!')
+    await expect(sut).rejects.toThrow('value_name must be a float!')
   })
 })

@@ -129,16 +129,16 @@ export interface ObjectConfig {
 }
 
 export interface DateMethod extends DefaultReturn {
-  dateGreaterThan: (dateToCompare: Date) => DateGreaterThanMethod
-  dateLessThan: (dateToCompare: Date) => DateLessThanMethod
+  min: (dateToCompare: Date) => MinDateMethod
+  max: (dateToCompare: Date) => MaxDateMethod
 }
 
-export interface DateGreaterThanMethod extends DefaultReturn {
-  dateLessThan: (dateToCompare: Date) => DefaultReturn
+export interface MinDateMethod extends DefaultReturn {
+  max: (dateToCompare: Date) => DefaultReturn
 }
 
-export interface DateLessThanMethod extends DefaultReturn {
-  dateGreaterThan: (dateToCompare: Date) => DefaultReturn
+export interface MaxDateMethod extends DefaultReturn {
+  min: (dateToCompare: Date) => DefaultReturn
 }
 
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
@@ -151,7 +151,7 @@ export type ValidatePropertyKey = string
 
 export type ValidatePropertyValue = any
 
-export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'dateGreaterThan' | 'dateLessThan' | 'time' | 'alias'
+export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'min' | 'max' | 'time' | 'alias'
 
 export interface Method {
   method: MethodTypes
@@ -184,47 +184,25 @@ export type SchemaConfig = ObjectConfig
 export interface SetTranslationMessage {
   string?: {
     invalidValue?: string
-  }
-  minWord?: {
-    noMinimumWords?: string
-  }
-  uuid?: {
-    invalidValue?: string
-  }
-  email?: {
-    invalidValue?: string
-  }
-  maxLength?: {
-    invalidValue?: string
-  }
-  minLength?: {
-    invalidValue?: string
+    minWord?: string
+    uuid?: string
+    email?: string
+    maxLength?: string
+    minLength?: string
   }
   number?: {
     invalidValue?: string
-  }
-  float?: {
-    invalidValue?: string
-  }
-  integer?: {
-    invalidValue?: string
+    float?: string
+    integer?: string
   }
   boolean?: {
     invalidValue?: string
   }
-  required?: {
-    invalidValue?: string
-  }
+  required?: string
   date?: {
     invalidValue?: string
-  }
-  dateGreaterThan?: {
-    invalidValue?: string
-    limitExceeded?: string
-  }
-  dateLessThan?: {
-    invalidValue?: string
-    limitExceeded?: string
+    min?: string
+    max?: string
   }
   time?: {
     invalidValue?: string
@@ -256,47 +234,25 @@ export interface SetTranslationMessage {
 export interface InformativeMessage {
   string: {
     invalidValue: string
-  }
-  minWord: {
-    noMinimumWords: string
-  }
-  uuid: {
-    invalidValue: string
-  }
-  email: {
-    invalidValue: string
-  }
-  maxLength: {
-    invalidValue: string
-  }
-  minLength: {
-    invalidValue: string
+    minWord: string
+    uuid: string
+    email: string
+    maxLength: string
+    minLength: string
   }
   number: {
     invalidValue: string
-  }
-  float: {
-    invalidValue: string
-  }
-  integer: {
-    invalidValue: string
+    float: string
+    integer: string
   }
   boolean: {
     invalidValue: string
   }
-  required: {
-    invalidValue: string
-  }
+  required: string
   date: {
     invalidValue: string
-  }
-  dateGreaterThan: {
-    invalidValue: string
-    limitExceeded: string
-  }
-  dateLessThan: {
-    invalidValue: string
-    limitExceeded: string
+    min: string
+    max: string
   }
   time: {
     invalidValue: string

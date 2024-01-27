@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { isNumber, received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { isString, received } from '../../../../utils'
 
-export const validateNumber = ({
+export const validateString = ({
   value,
   valueName,
   callbackAddPassed,
@@ -13,22 +13,21 @@ export const validateNumber = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  if (isNumber(value)) {
+  if (isString(value)) {
     callbackAddPassed({
-      method: 'number',
+      method: 'string',
       name: valueName,
-      expect: 'number type',
+      expect: 'string type',
       received: value
     })
   } else {
-    const message = informativeMessage.number.invalidValue
+    const message = informativeMessage.string.invalidValue
     const messageError = message.replace('[valueName]', valueName)
-
     callbackAddFailed({
-      method: 'number',
+      method: 'string',
       type: 'invalid value',
       name: valueName,
-      expect: 'number type',
+      expect: 'string type',
       received: received(value),
       message: messageError
     })

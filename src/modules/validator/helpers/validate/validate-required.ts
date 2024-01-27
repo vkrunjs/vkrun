@@ -21,7 +21,7 @@ export const validateRequired = ({
       received: value
     })
   } else {
-    const message = informativeMessage.required.invalidValue
+    const message = informativeMessage.required
     const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({

@@ -1,4 +1,4 @@
-export * from './format-yyyy-dd-mm-hh-mm-ss'
+export * from './format-yyyy-dd-mm-hh-mm-ss-ms'
 export * from './is-not-empty'
 export * from './is-string'
 export * from './is-number'

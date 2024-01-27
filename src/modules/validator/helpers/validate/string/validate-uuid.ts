@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { isString, received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { received } from '../../../../utils'
 
-export const validateString = ({
+export const validateUuid = ({
   value,
   valueName,
   callbackAddPassed,
@@ -13,21 +13,25 @@ export const validateString = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  if (isString(value)) {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  const isUuid = uuidRegex.test(String(value))
+
+  if (isUuid) {
     callbackAddPassed({
-      method: 'string',
+      method: 'UUID',
       name: valueName,
-      expect: 'string type',
+      expect: 'UUID format',
       received: value
     })
   } else {
-    const message = informativeMessage.string.invalidValue
+    const message = informativeMessage.string.uuid
     const messageError = message.replace('[valueName]', valueName)
+
     callbackAddFailed({
-      method: 'string',
+      method: 'UUID',
       type: 'invalid value',
       name: valueName,
-      expect: 'string type',
+      expect: 'UUID format',
       received: received(value),
       message: messageError
     })

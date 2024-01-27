@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { isFloat, received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { isInteger, received } from '../../../../utils'
 
-export const validateFloat = ({
+export const validateInteger = ({
   value,
   valueName,
   callbackAddPassed,
@@ -13,22 +13,22 @@ export const validateFloat = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  if (isFloat(value)) {
+  if (isInteger(value)) {
     callbackAddPassed({
-      method: 'float',
+      method: 'integer',
       name: valueName,
-      expect: 'float type',
+      expect: 'integer type',
       received: value
     })
   } else {
-    const message = informativeMessage.float.invalidValue
+    const message = informativeMessage.number.integer
     const messageError = message.replace('[valueName]', valueName)
 
     callbackAddFailed({
-      method: 'float',
+      method: 'integer',
       type: 'invalid value',
       name: valueName,
-      expect: 'float type',
+      expect: 'integer type',
       received: received(value),
       message: messageError
     })

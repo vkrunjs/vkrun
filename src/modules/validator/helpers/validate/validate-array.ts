@@ -1,7 +1,7 @@
 import { informativeMessage } from '../../../location'
 import { ErrorTest, Method, Methods, SuccessTest, Tests } from '../../../types'
 import { isArray, received } from '../../../utils'
-import { validateString } from './validate-string'
+import { validateString } from './string/validate-string'
 
 export const validateArray = ({
   value,

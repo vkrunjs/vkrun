@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { received } from '../../../../utils'
 
 export const validateMinWord = ({
   value,
@@ -27,7 +27,7 @@ export const validateMinWord = ({
       received: value
     })
   } else {
-    const message = informativeMessage.minWord.noMinimumWords
+    const message = informativeMessage.string.minWord
     const messageError = message
       .replace('[valueName]', valueName)
       .replace('[minWord]', String(minWord))

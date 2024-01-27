@@ -1,50 +1,50 @@
-import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { validator } from '../../index'
+import { InvalidParamError } from '../../../errors'
 
-describe('Validator Number Method', () => {
-  it('Should be able to validate the number method and return true if the value is of type number', () => {
-    const value = 1
+describe('Validator String Method', () => {
+  it('Should be able to validate the string method and return true if the value is of type string', () => {
+    const value = 'string'
 
     const sut = validator()
-      .number()
+      .string()
       .validate(value)
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the number method and return false if list is invalid', () => {
+  it('Should be able to validate the string method and return false if list is invalid', () => {
     const invalidList = [
-      'invalid-uuid-57b73598-8764-4ad0-a76a-679bb6640eb1',
       false,
       new Date(),
+      123,
       null,
       [],
       {},
       undefined
     ]
 
-    const sut = validator().number()
+    const sut = validator().string()
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
-  it('Should be able to validate the number method when value is promise and return true if the value is of type number', async () => {
-    const value = async (): Promise<number> => {
+  it('Should be able to validate the string method when value is promise and return true if the value is of type string', async () => {
+    const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(1)
+          resolve('string')
         }, 100)
       })
     }
 
     const sut = await validator()
-      .number()
+      .string()
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the number method when value is promise and return false if the value is not of type number', async () => {
+  it('Should be able to validate the string method when value is promise and return false if the value is not of type string', async () => {
     const value = async (): Promise<boolean> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -54,17 +54,17 @@ describe('Validator Number Method', () => {
     }
 
     const sut = await validator()
-      .number()
+      .string()
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the number method and passedAll to equal true if the value is of type number', () => {
-    const value = 1
+  it('Should be able to validate the string method and passedAll to equal true if the value is of type string', () => {
+    const value = 'string'
 
     const sut = validator()
-      .number()
+      .string()
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -76,24 +76,24 @@ describe('Validator Number Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: 1
+        received: 'string'
       },
       {
-        method: 'number',
-        expect: 'number type',
+        method: 'string',
+        expect: 'string type',
         name: 'value_name',
-        received: 1
+        received: 'string'
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the number method and passedAll to equal false if the value is not of type number', () => {
+  it('Should be able to validate the string method and passedAll to equal false if the value is not of type string', () => {
     const value = false
 
     const sut = validator()
-      .number()
+      .string()
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -107,21 +107,21 @@ describe('Validator Number Method', () => {
       received: false
     }])
     expect(sut.errors).toEqual([{
-      method: 'number',
+      method: 'string',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'number type',
+      expect: 'string type',
       received: false,
-      message: 'value_name must be a number type!'
+      message: 'value_name must be a string type!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the number and passAll method as equal to true when it is not required, undefined value and not of type number', () => {
+  it('Should be able to validate the string and passAll method as equal to true when it is not required, undefined value and not of type string', () => {
     const value = undefined
 
     const sut = validator()
-      .number()
+      .string()
       .notRequired()
       .test(value, 'value_name')
 
@@ -139,17 +139,17 @@ describe('Validator Number Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the number method and passedAll to equal true if the value is promise of type number', async () => {
-    const value = async (): Promise<number> => {
+  it('Should be able to validate the string method and passedAll to equal true if the value is promise of type string', async () => {
+    const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(1)
+          resolve('string')
         }, 100)
       })
     }
 
     const sut = await validator()
-      .number()
+      .string()
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -161,20 +161,20 @@ describe('Validator Number Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: 1
+        received: 'string'
       },
       {
-        method: 'number',
-        expect: 'number type',
+        method: 'string',
+        expect: 'string type',
         name: 'value_name',
-        received: 1
+        received: 'string'
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the number method and passedAll to equal false if the value is a promise and is not of type number', async () => {
+  it('Should be able to validate the string method and passedAll to equal false if the value is a promise and is not of type string', async () => {
     const value = async (): Promise<boolean> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -184,7 +184,7 @@ describe('Validator Number Method', () => {
     }
 
     const sut = await validator()
-      .number()
+      .string()
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -198,28 +198,28 @@ describe('Validator Number Method', () => {
       received: false
     }])
     expect(sut.errors).toEqual([{
-      method: 'number',
+      method: 'string',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'number type',
+      expect: 'string type',
       received: false,
-      message: 'value_name must be a number type!'
+      message: 'value_name must be a string type!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the number method and throw InvalidParamError if the value is not of type number', () => {
+  it('Should be able to validate the string method and throw InvalidParamError if the value is not of type string', () => {
     const value = undefined
 
     const sut = (): void => validator()
-      .number()
+      .string()
       .throw(value, 'value_name', InvalidParamError)
 
     expect(sut).toThrow(InvalidParamError)
     expect(sut).toThrow(new InvalidParamError('value_name is required!'))
   })
 
-  it('Should be able to validate the number method and throw Error if the value is a promise and is not of type number', async () => {
+  it('Should be able to validate the string method and throw Error if the value is a promise and is not of type string', async () => {
     const value = async (): Promise<null> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -229,9 +229,9 @@ describe('Validator Number Method', () => {
     }
 
     const sut = async (): Promise<void> => await validator()
-      .number()
+      .string()
       .throwAsync(value(), 'value_name')
 
-    await expect(sut).rejects.toThrow('value_name must be a number type!')
+    await expect(sut).rejects.toThrow('value_name must be a string type!')
   })
 })

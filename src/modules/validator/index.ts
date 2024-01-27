@@ -11,16 +11,16 @@ import {
   validateRequired,
   validateString,
   validateUuid,
-  validateDateGreaterThan,
-  validateDateLessThan,
+  validateMinDate,
+  validateMaxDate,
   validateTime,
   validateNotRequired,
   validateArray,
   validateEqual
 } from './helpers/validate'
 import {
-  DateGreaterThanMethod,
-  DateLessThanMethod,
+  MinDateMethod,
+  MaxDateMethod,
   DateMethod,
   DateTypes,
   DefaultReturn,
@@ -157,27 +157,27 @@ export class Validator implements IValidator {
   date (type?: DateTypes): DateMethod {
     this.methodBuild({ method: 'date', dateType: type })
 
-    const dateGreaterThan = (dateToCompare: Date): DateGreaterThanMethod => {
-      if (hasMethod(this.methods, 'dateGreaterThan')) {
-        console.error('vkrun: dateGreaterThan method has already been called!')
-        throw Error('minWord dateGreaterThan has already been called!')
+    const min = (dateToCompare: Date): MinDateMethod => {
+      if (hasMethod(this.methods, 'min')) {
+        console.error('vkrun: min method has already been called!')
+        throw Error('min method has already been called!')
       }
 
-      this.methodBuild({ method: 'dateGreaterThan', dateToCompare })
-      return { dateLessThan, ...this.defaultReturnMethods() }
+      this.methodBuild({ method: 'min', dateToCompare })
+      return { max, ...this.defaultReturnMethods() }
     }
 
-    const dateLessThan = (dateToCompare: Date): DateLessThanMethod => {
-      if (hasMethod(this.methods, 'dateLessThan')) {
-        console.error('vkrun: dateLessThan method has already been called!')
-        throw Error('minWord dateLessThan has already been called!')
+    const max = (dateToCompare: Date): MaxDateMethod => {
+      if (hasMethod(this.methods, 'max')) {
+        console.error('vkrun: max method has already been called!')
+        throw Error('max method has already been called!')
       }
 
-      this.methodBuild({ method: 'dateLessThan', dateToCompare })
-      return { dateGreaterThan, ...this.defaultReturnMethods() }
+      this.methodBuild({ method: 'max', dateToCompare })
+      return { min, ...this.defaultReturnMethods() }
     }
 
-    return { dateGreaterThan, dateLessThan, ...this.defaultReturnMethods() }
+    return { min, max, ...this.defaultReturnMethods() }
   }
 
   time (type: TimeTypes): this {
@@ -342,22 +342,26 @@ export class Validator implements IValidator {
           callbackAddPassed: success => this.addPassed(success),
           callbackAddFailed: error => this.addFailed(error)
         })
-      } else if (rule.method === 'dateGreaterThan') {
-        validateDateGreaterThan({
-          value: this.value,
-          valueName: this.valueName,
-          dateToCompare: rule.dateToCompare,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'dateLessThan') {
-        validateDateLessThan({
-          value: this.value,
-          valueName: this.valueName,
-          dateToCompare: rule.dateToCompare,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
+      } else if (rule.method === 'min') {
+        if (hasMethod(this.methods, 'date')) {
+          validateMinDate({
+            value: this.value,
+            valueName: this.valueName,
+            dateToCompare: rule.dateToCompare,
+            callbackAddPassed: success => this.addPassed(success),
+            callbackAddFailed: error => this.addFailed(error)
+          })
+        }
+      } else if (rule.method === 'max') {
+        if (hasMethod(this.methods, 'date')) {
+          validateMaxDate({
+            value: this.value,
+            valueName: this.valueName,
+            dateToCompare: rule.dateToCompare,
+            callbackAddPassed: success => this.addPassed(success),
+            callbackAddFailed: error => this.addFailed(error)
+          })
+        }
       } else if (rule.method === 'time') {
         this.time(rule?.timeType)
       } else if (rule.method === 'equal') {

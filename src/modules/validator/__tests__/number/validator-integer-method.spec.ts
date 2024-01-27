@@ -1,5 +1,5 @@
-import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { validator } from '../../index'
+import { InvalidParamError } from '../../../errors'
 
 describe('Validator Integer Method', () => {
   it('Should be able to validate the integer method and return true if the value is integer', () => {
@@ -134,7 +134,7 @@ describe('Validator Integer Method', () => {
       name: 'value_name',
       expect: 'integer type',
       received: 1.5,
-      message: 'value_name must be a number and integer!'
+      message: 'value_name must be a integer!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
@@ -243,7 +243,7 @@ describe('Validator Integer Method', () => {
         name: 'value_name',
         expect: 'integer type',
         received: false,
-        message: 'value_name must be a number and integer!'
+        message: 'value_name must be a integer!'
       }
     ])
     expect(typeof sut.time === 'string').toBeTruthy()
@@ -275,6 +275,6 @@ describe('Validator Integer Method', () => {
       .integer()
       .throwAsync(value(), 'value_name')
 
-    await expect(sut).rejects.toThrow('value_name must be a number and integer!')
+    await expect(sut).rejects.toThrow('value_name must be a integer!')
   })
 })

@@ -1,5 +1,5 @@
-import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { validator } from '../../index'
+import { InvalidParamError } from '../../../errors'
 
 describe('Validator Email Method', () => {
   it('Should be able to validate the email method and return true if list is valid', () => {

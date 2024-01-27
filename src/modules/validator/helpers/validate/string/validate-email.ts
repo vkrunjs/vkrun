@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
+import { received } from '../../../../utils'
 
 export const validateEmail = ({
   value,
@@ -24,7 +24,7 @@ export const validateEmail = ({
       received: value
     })
   } else {
-    const message = informativeMessage.email.invalidValue
+    const message = informativeMessage.string.email
     const messageError = message.replace('[value]', String(value))
 
     callbackAddFailed({
