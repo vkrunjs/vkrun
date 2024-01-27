@@ -242,4 +242,16 @@ describe('Validator Date (default) Method', () => {
 
     await expect(sut).rejects.toThrow('the date value_name is not in the format ISO8601!')
   })
+
+  /* eslint-disable */
+  it('Should be able to throw an error if the date method received invalid parameter', () => {
+    try {
+      // @ts-ignore
+      validator().date(false)
+    } catch (error: any) {
+      const sut = error
+      expect(sut.message).toEqual('vkrun: date method received invalid parameter!')
+    }
+  })
+  /* eslint-enable */
 })

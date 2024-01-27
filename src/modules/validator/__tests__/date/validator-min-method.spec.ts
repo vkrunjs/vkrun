@@ -1,54 +1,36 @@
 import { validator } from '../../index'
 import { InvalidParamError } from '../../../errors'
 
-describe('Validator Max Date Method', () => {
-  it('Should be able to validate the max method and return true if the date is less than the reference date', () => {
-    const date = new Date('2000-02-02T02:00:00.000Z')
+describe('Validator Min Date Method', () => {
+  it('Should be able to validate the min method and return true if the date is greater than the reference date', () => {
+    const date = new Date('2000-02-04T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
     const sut = validator()
       .date()
-      .max(refDate)
+      .min(refDate)
 
     expect(sut.validate(date)).toBeTruthy()
   })
 
-  it('Should be able to validate the max method and return false if list is invalid', () => {
-    const date = new Date('2000-02-03T02:00:00.000Z')
+  it('Should be able to validate the min method and return false if list is invalid', () => {
+    const date = new Date('2000-02-02T02:00:00.000Z')
 
     const invalidList = [
-      new Date('2000-02-01T02:00:00.000Z'),
-      new Date('2000-02-02T02:00:00.000Z')
+      new Date('2000-02-03T02:00:00.000Z'),
+      new Date('2000-02-04T02:00:00.000Z')
     ]
 
     const dateSchema = validator().date()
 
     expect(invalidList.every(
       (sut) => dateSchema
-        .max(sut)
+        .min(sut)
         .validate(date))
     ).toBeFalsy()
   })
 
-  it('Should be able to validate the max method when value is promise and return true if the date is less than the reference date', async () => {
-    const refDate = new Date('2000-02-03T02:00:00.000Z')
-    const date = async (): Promise<Date> => {
-      return await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(new Date('2000-02-02T02:00:00.000Z'))
-        }, 100)
-      })
-    }
-
-    const sut = await validator()
-      .date()
-      .max(refDate)
-      .validateAsync(date())
-
-    expect(sut).toBeTruthy()
-  })
-
-  it('Should be able to validate the max method when the value is a promise and return true if the date is less than the reference date', async () => {
+  it('Should be able to validate the min method when value is promise and return true if the date is greater than the reference date', async () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
     const date = async (): Promise<Date> => {
       return await new Promise((resolve) => {
@@ -60,19 +42,37 @@ describe('Validator Max Date Method', () => {
 
     const sut = await validator()
       .date()
-      .max(refDate)
+      .min(refDate)
+      .validateAsync(date())
+
+    expect(sut).toBeTruthy()
+  })
+
+  it('Should be able to validate the min method when the value is a promise and return true if the date is less than the reference date', async () => {
+    const refDate = new Date('2000-02-03T02:00:00.000Z')
+    const date = async (): Promise<Date> => {
+      return await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(new Date('2000-02-02T02:00:00.000Z'))
+        }, 100)
+      })
+    }
+
+    const sut = await validator()
+      .date()
+      .min(refDate)
       .validateAsync(date())
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the max method and passedAll to equal true if the date is less than the reference date', () => {
-    const date = new Date('2000-02-02T02:00:00.000Z')
-    const refDate = new Date('2000-02-03T02:00:00.000Z')
+  it('Should be able to validate the min method and passedAll to equal true if the date is greater than the reference date', () => {
+    const date = new Date('2000-02-03T02:00:00.000Z')
+    const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const sut = validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .test(date, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -84,32 +84,32 @@ describe('Validator Max Date Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: new Date('2000-02-02T02:00:00.000Z')
+        received: new Date('2000-02-03T02:00:00.000Z')
       },
       {
         method: 'date',
         name: 'value_name',
         expect: 'date type ISO8601',
-        received: new Date('2000-02-02T02:00:00.000Z')
+        received: new Date('2000-02-03T02:00:00.000Z')
       },
       {
-        method: 'max',
+        method: 'min',
         name: 'value_name',
-        expect: '2000/02/02 02:00:00.000 less than or equal to 2000/03/02 02:00:00.000',
-        received: new Date('2000-02-02T02:00:00.000Z')
+        expect: '2000/03/02 02:00:00.000 greater than or equal to 2000/02/02 02:00:00.000',
+        received: new Date('2000-02-03T02:00:00.000Z')
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the max method and passedAll to equal false if the date is less than the reference date', () => {
-    const date = new Date('2000-02-03T02:00:00.000Z')
-    const refDate = new Date('2000-02-02T02:00:00.000Z')
+  it('Should be able to validate the min method and passedAll to equal false if the date is less than the reference date', () => {
+    const date = new Date('2000-02-02T02:00:00.000Z')
+    const refDate = new Date('2000-02-03T02:00:00.000Z')
 
     const sut = validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .test(date, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -121,33 +121,33 @@ describe('Validator Max Date Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: new Date('2000-02-03T02:00:00.000Z')
+        received: new Date('2000-02-02T02:00:00.000Z')
       },
       {
         method: 'date',
         name: 'value_name',
         expect: 'date type ISO8601',
-        received: new Date('2000-02-03T02:00:00.000Z')
+        received: new Date('2000-02-02T02:00:00.000Z')
       }
     ])
     expect(sut.errors).toEqual([{
-      method: 'max',
+      method: 'min',
       type: 'invalid value',
       name: 'value_name',
-      expect: '2000/03/02 02:00:00.000 less than or equal to 2000/02/02 02:00:00.000',
-      received: new Date('2000-02-03T02:00:00.000Z'),
-      message: 'the value_name 2000/03/02 02:00:00.000 must be greater than or equal to the 2000/02/02 02:00:00.000!'
+      expect: '2000/02/02 02:00:00.000 greater than or equal to 2000/03/02 02:00:00.000',
+      received: new Date('2000-02-02T02:00:00.000Z'),
+      message: 'the value_name 2000/02/02 02:00:00.000 must be greater than or equal to the 2000/03/02 02:00:00.000!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the max and passAll method as equal to true when it is not required and value is undefined', () => {
+  it('Should be able to validate the min and passAll method as equal to true when it is not required and value is undefined', () => {
     const date = undefined
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const sut = validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .notRequired()
       .test(date, 'value_name')
 
@@ -165,13 +165,13 @@ describe('Validator Max Date Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the max and passAll method as equal to false if value is undefined', () => {
+  it('Should be able to validate the min and passAll method as equal to false if value is undefined', () => {
     const date = undefined
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     const sut = validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .test(date, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -197,10 +197,10 @@ describe('Validator Max Date Method', () => {
         message: 'the date value_name is not in the format ISO8601!'
       },
       {
-        method: 'max',
+        method: 'min',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'date value_name less than reference date',
+        expect: 'date value_name greater than reference date',
         received: 'undefined',
         message: 'the date value_name is not in the format date!'
       }
@@ -208,19 +208,19 @@ describe('Validator Max Date Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the max method and passedAll to equal true if value is promise and less than the reference date', async () => {
-    const refDate = new Date('2000-03-02T02:00:00.001Z')
+  it('Should be able to validate the min method and passedAll to equal true if value is promise and greater than the reference date', async () => {
+    const refDate = new Date('2000-03-02T02:00:00.000Z')
     const date = async (): Promise<Date> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(new Date('2000-03-02T02:00:00.000Z'))
+          resolve(new Date('2000-03-02T02:00:00.001Z'))
         }, 100)
       })
     }
 
     const sut = await validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .testAsync(date(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -232,38 +232,38 @@ describe('Validator Max Date Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: new Date('2000-03-02T02:00:00.000Z')
+        received: new Date('2000-03-02T02:00:00.001Z')
       },
       {
         method: 'date',
         name: 'value_name',
         expect: 'date type ISO8601',
-        received: new Date('2000-03-02T02:00:00.000Z')
+        received: new Date('2000-03-02T02:00:00.001Z')
       },
       {
-        method: 'max',
+        method: 'min',
         name: 'value_name',
-        expect: '2000/02/03 02:00:00.000 less than or equal to 2000/02/03 02:00:00.001',
-        received: new Date('2000-03-02T02:00:00.000Z')
+        expect: '2000/02/03 02:00:00.001 greater than or equal to 2000/02/03 02:00:00.000',
+        received: new Date('2000-03-02T02:00:00.001Z')
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the max method and passedAll to equal false if value is promise and less than the reference date', async () => {
-    const refDate = new Date('2000-03-02T02:00:00.000Z')
+  it('Should be able to validate the min method and passedAll to equal false if value is promise and less than the reference date', async () => {
+    const refDate = new Date('2000-03-02T02:00:00.001Z')
     const date = async (): Promise<Date> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(new Date('2000-03-02T02:00:00.001Z'))
+          resolve(new Date('2000-03-02T02:00:00.000Z'))
         }, 100)
       })
     }
 
     const sut = await validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .testAsync(date(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -275,71 +275,83 @@ describe('Validator Max Date Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: new Date('2000-03-02T02:00:00.001Z')
+        received: new Date('2000-03-02T02:00:00.000Z')
       },
       {
         method: 'date',
         name: 'value_name',
         expect: 'date type ISO8601',
-        received: new Date('2000-03-02T02:00:00.001Z')
+        received: new Date('2000-03-02T02:00:00.000Z')
       }
     ])
     expect(sut.errors).toEqual([{
-      method: 'max',
+      method: 'min',
       type: 'invalid value',
       name: 'value_name',
-      expect: '2000/02/03 02:00:00.001 less than or equal to 2000/02/03 02:00:00.000',
-      received: new Date('2000-03-02T02:00:00.001Z'),
-      message: 'the value_name 2000/02/03 02:00:00.001 must be greater than or equal to the 2000/02/03 02:00:00.000!'
+      expect: '2000/02/03 02:00:00.000 greater than or equal to 2000/02/03 02:00:00.001',
+      received: new Date('2000-03-02T02:00:00.000Z'),
+      message: 'the value_name 2000/02/03 02:00:00.000 must be greater than or equal to the 2000/02/03 02:00:00.001!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the max method and throw InvalidParamError if the value is undefined', () => {
+  it('Should be able to validate the min method and throw InvalidParamError if the value is undefined', () => {
     const date = undefined
     const refDate = new Date('2000-03-02T02:00:00.000Z')
 
     const sut = (): void => validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .throw(date, 'value_name', InvalidParamError)
 
     expect(sut).toThrow(InvalidParamError)
     expect(sut).toThrow(new InvalidParamError('value_name is required!'))
   })
 
-  it('Should be able to validate the max method and throw Error if the value is a promise and less than the reference date', async () => {
-    const refDate = new Date('2000-03-02T02:00:00.000Z')
+  it('Should be able to validate the min method and throw Error if the value is a promise and less than the reference date', async () => {
+    const refDate = new Date('2000-03-02T02:00:00.001Z')
     const date = async (): Promise<Date> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve(new Date('2000-03-02T02:00:00.001Z'))
+          resolve(new Date('2000-03-02T02:00:00.000Z'))
         }, 100)
       })
     }
 
     const sut = async (): Promise<void> => await validator()
       .date()
-      .max(refDate)
+      .min(refDate)
       .throwAsync(date(), 'value_name')
 
-    await expect(sut).rejects.toThrow('the value_name 2000/02/03 02:00:00.001 must be greater than or equal to the 2000/02/03 02:00:00.000!')
+    await expect(sut).rejects.toThrow('the value_name 2000/02/03 02:00:00.000 must be greater than or equal to the 2000/02/03 02:00:00.001!')
   })
 
   /* eslint-disable */
-  it('Should be able to throw an error if the max method is called more than once', () => {
+  it('Should be able to throw an error if the min method is called more than once', () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     try {
       const sut: void = validator()
       .date()
-      .max(refDate)
       .min(refDate)
-      // @ts-ignore
       .max(refDate)
+      // @ts-ignore
+      .min(refDate)
     } catch (error: any) {
       const sut = error
-      expect(sut.message).toEqual('max method has already been called!')
+      expect(sut.message).toEqual('min method has already been called!')
+    }
+  })
+  
+  it('Should be able to throw an error if the max method received invalid parameter', () => {
+    try {
+      validator()
+        .date()
+        // @ts-ignore
+        .min(false)
+    } catch (error: any) {
+      const sut = error
+      expect(sut.message).toEqual('vkrun: min method received invalid parameter!')
     }
   })
   /* eslint-enable */

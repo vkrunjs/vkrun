@@ -291,5 +291,17 @@ describe('Validator MinLength Method', () => {
       expect(sut.message).toEqual('minLength method has already been called!')
     }
   })
+
+  it('Should be able to throw an error if the minLength method received invalid parameter', () => {
+    try {
+      validator()
+        .string()
+        // @ts-ignore
+        .minLength(false)
+    } catch (error: any) {
+      const sut = error
+      expect(sut.message).toEqual('vkrun: minLength method received invalid parameter!')
+    }
+  })
   /* eslint-enable */
 })

@@ -291,5 +291,17 @@ describe('Validator MinWord Method', () => {
       expect(sut.message).toEqual('minWord method has already been called!')
     }
   })
+
+  it('Should be able to throw an error if the minWord method received invalid parameter', () => {
+    try {
+      validator()
+        .string()
+        // @ts-ignore
+        .minWord(false)
+    } catch (error: any) {
+      const sut = error
+      expect(sut.message).toEqual('vkrun: minWord method received invalid parameter!')
+    }
+  })
   /* eslint-enable */
 })

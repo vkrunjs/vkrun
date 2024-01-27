@@ -291,5 +291,17 @@ describe('Validator MaxLength Method', () => {
       expect(sut.message).toEqual('maxLength method has already been called!')
     }
   })
+
+  it('Should be able to throw an error if the maxLength method received invalid parameter', () => {
+    try {
+      validator()
+        .string()
+        // @ts-ignore
+        .maxLength(false)
+    } catch (error: any) {
+      const sut = error
+      expect(sut.message).toEqual('vkrun: maxLength method received invalid parameter!')
+    }
+  })
   /* eslint-enable */
 })
