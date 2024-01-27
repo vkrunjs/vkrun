@@ -41,7 +41,8 @@ import {
   SuccessTest,
   Tests,
   TimeTypes,
-  UUIDMethod
+  UUIDMethod,
+  TimeMethod
 } from '../types'
 import { hasMethod } from '../utils'
 import { CreateSchema } from '../schema'
@@ -81,10 +82,25 @@ export class Validator implements IValidator {
       return this.defaultReturnMethods()
     }
 
+    const time = (type: TimeTypes): TimeMethod => {
+      if (!['HH:MM', 'HH:MM:SS', 'HH:MM:SS.MS'].includes(type)) {
+        console.error('vkrun: time method received invalid parameter!')
+        throw Error('vkrun: time method received invalid parameter!')
+      }
+
+      this.methodBuild({ method: 'time', timeType: type })
+      return this.defaultReturnMethods()
+    }
+
     const minLength = (minLength: number): MinLengthMethod => {
       if (hasMethod(this.methods, 'minLength')) {
         console.error('vkrun: minLength method has already been called!')
         throw Error('minLength method has already been called!')
+      }
+
+      if (typeof minLength !== 'number' || minLength < 0) {
+        console.error('vkrun: minLength method received invalid parameter!')
+        throw Error('vkrun: minLength method received invalid parameter!')
       }
 
       this.methodBuild({ method: 'minLength', minLength })
@@ -97,6 +113,11 @@ export class Validator implements IValidator {
         throw Error('maxLength method has already been called!')
       }
 
+      if (typeof maxLength !== 'number' || maxLength < 0) {
+        console.error('vkrun: maxLength method received invalid parameter!')
+        throw Error('vkrun: maxLength method received invalid parameter!')
+      }
+
       this.methodBuild({ method: 'maxLength', maxLength })
       return { minLength, minWord, ...this.defaultReturnMethods() }
     }
@@ -105,6 +126,11 @@ export class Validator implements IValidator {
       if (hasMethod(this.methods, 'minWord')) {
         console.error('vkrun: minWord method has already been called!')
         throw Error('minWord method has already been called!')
+      }
+
+      if (typeof minWord !== 'number' || minWord < 0) {
+        console.error('vkrun: minWord method received invalid parameter!')
+        throw Error('vkrun: minWord method received invalid parameter!')
       }
 
       this.methodBuild({ method: 'minWord', minWord })
@@ -117,6 +143,7 @@ export class Validator implements IValidator {
       minWord,
       email,
       UUID,
+      time,
       ...this.defaultReturnMethods()
     }
   }
@@ -155,9 +182,32 @@ export class Validator implements IValidator {
   }
 
   date (type?: DateTypes): DateMethod {
+    if (
+      type !== undefined &&
+      ![
+        'ISO8601',
+        'DD/MM/YYYY',
+        'MM/DD/YYYY',
+        'DD-MM-YYYY',
+        'MM-DD-YYYY',
+        'YYYY/MM/DD',
+        'YYYY/DD/MM',
+        'YYYY-MM-DD',
+        'YYYY-DD-MM'
+      ].includes(type)
+    ) {
+      console.error('vkrun: date method received invalid parameter!')
+      throw Error('vkrun: date method received invalid parameter!')
+    }
+
     this.methodBuild({ method: 'date', dateType: type })
 
     const min = (dateToCompare: Date): MinDateMethod => {
+      if (!(dateToCompare instanceof Date)) {
+        console.error('vkrun: min method received invalid parameter!')
+        throw Error('vkrun: min method received invalid parameter!')
+      }
+
       if (hasMethod(this.methods, 'min')) {
         console.error('vkrun: min method has already been called!')
         throw Error('min method has already been called!')
@@ -168,6 +218,11 @@ export class Validator implements IValidator {
     }
 
     const max = (dateToCompare: Date): MaxDateMethod => {
+      if (!(dateToCompare instanceof Date)) {
+        console.error('vkrun: max method received invalid parameter!')
+        throw Error('vkrun: max method received invalid parameter!')
+      }
+
       if (hasMethod(this.methods, 'max')) {
         console.error('vkrun: max method has already been called!')
         throw Error('max method has already been called!')
@@ -178,21 +233,6 @@ export class Validator implements IValidator {
     }
 
     return { min, max, ...this.defaultReturnMethods() }
-  }
-
-  time (type: TimeTypes): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'time', timeType: type })
-    } else {
-      validateTime({
-        value: this.value,
-        valueName: this.valueName,
-        type,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
   }
 
   alias (valueName: string): this {
@@ -363,7 +403,13 @@ export class Validator implements IValidator {
           })
         }
       } else if (rule.method === 'time') {
-        this.time(rule?.timeType)
+        validateTime({
+          value: this.value,
+          valueName: this.valueName,
+          type: rule.timeType,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       } else if (rule.method === 'equal') {
         this.equal(rule?.valueToCompare)
       }
