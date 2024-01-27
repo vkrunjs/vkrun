@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest, TimeTypes } from '../../../types'
-import { received } from '../../../utils'
+import { informativeMessage } from '../../../../location'
+import { ErrorTest, SuccessTest, TimeTypes } from '../../../../types'
+import { received } from '../../../../utils'
 
 export const validateTime = ({
   value,
@@ -17,6 +17,7 @@ export const validateTime = ({
 }): void => {
   const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
   const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/
+  const regTimeHHMMSSMS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,3})?$/
   let isTime = false
 
   const handleAddFailed = (messageError: string): void => {
@@ -30,13 +31,12 @@ export const validateTime = ({
     })
   }
 
-  if (!type || typeof type !== 'string') {
-    handleAddFailed(informativeMessage.time.invalidParameter)
-    return this
-  } else if (type === 'HH:MM') {
+  if (type === 'HH:MM') {
     isTime = regTimeHHMM.test(String(value))
   } else if (type === 'HH:MM:SS') {
     isTime = regTimeHHMMSS.test(String(value))
+  } else if (type === 'HH:MM:SS.MS') {
+    isTime = regTimeHHMMSSMS.test(String(value))
   }
 
   if (isTime) {
@@ -47,7 +47,7 @@ export const validateTime = ({
       received: value
     })
   } else {
-    const message = informativeMessage.time.invalidValue
+    const message = informativeMessage.string.time
     const messageError = message
       .replace('[value]', String(value))
       .replace('[type]', type)

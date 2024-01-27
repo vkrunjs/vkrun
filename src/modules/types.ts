@@ -6,7 +6,6 @@ export interface IValidator {
   string: () => StringMethod
   boolean: () => DefaultReturn
   date: (type: DateTypes) => DateMethod
-  time: (type: 'HH:MM' | 'HH:MM:SS') => this
   alias: (valueName: string) => this
   array: () => this
   equal: (valueToCompare: any) => this
@@ -44,11 +43,14 @@ export interface StringMethod extends DefaultReturn {
   minWord: (minWord: number) => MinWordMethod
   email: () => EmailMethod
   UUID: () => UUIDMethod
+  time: (type: TimeTypes) => TimeMethod
 }
 
 export interface EmailMethod extends DefaultReturn {}
 
 export interface UUIDMethod extends DefaultReturn {}
+
+export interface TimeMethod extends DefaultReturn {}
 
 export interface MinLengthMethod extends DefaultReturn {
   maxLength: (maxLength: number) => {
@@ -173,7 +175,7 @@ export type Methods = Method[]
 
 export type ValidateItemArrayValue = string | boolean | Date | number
 
-export type TimeTypes = 'HH:MM' | 'HH:MM:SS'
+export type TimeTypes = 'HH:MM' | 'HH:MM:SS' | 'HH:MM:SS.MS'
 
 export type Schema = Record<string, Validator[]>
 
@@ -187,6 +189,7 @@ export interface SetTranslationMessage {
     minWord?: string
     uuid?: string
     email?: string
+    time?: string
     maxLength?: string
     minLength?: string
   }
@@ -203,10 +206,6 @@ export interface SetTranslationMessage {
     invalidValue?: string
     min?: string
     max?: string
-  }
-  time?: {
-    invalidValue?: string
-    invalidParameter?: string
   }
   object?: {
     invalidValue?: string
@@ -237,6 +236,7 @@ export interface InformativeMessage {
     minWord: string
     uuid: string
     email: string
+    time: string
     maxLength: string
     minLength: string
   }
@@ -253,10 +253,6 @@ export interface InformativeMessage {
     invalidValue: string
     min: string
     max: string
-  }
-  time: {
-    invalidValue: string
-    invalidParameter: string
   }
   object: {
     invalidValue: string
