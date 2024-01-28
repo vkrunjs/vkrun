@@ -15,34 +15,63 @@ import {
   validateMaxDate,
   validateTime,
   validateNotRequired,
-  validateArray,
-  validateEqual
+  validateEqual,
+  validateObject,
+  validateArray
 } from './validate'
+import { informativeMessage } from '../../location'
 import { hasMethod } from '../../utils'
-import { ErrorTest, Methods, SuccessTest } from '../../types'
+import { ErrorTest, MethodTypes, Methods, SuccessTest, Tests } from '../../types'
 
 export const executeValidateMethods = (params: {
   value: any
   valueName: string
   methods: Methods
   resetTests: () => void
+  callbackUpdateTest: (test: Tests) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  let valueName = params.valueName
   params.resetTests()
+  let hasArray = false
+  let valueName = params.valueName
+  const message = { expect: '', error: '' }
 
-  const validateMethod = (rule: any): void => {
-    if (rule.method === 'string') {
-      validateString({
-        value: params.value,
+  const arrayErrorMessage = (type: MethodTypes): string => {
+    return informativeMessage.array.invalidValue
+      .replace('[valueName]', valueName)
+      .replace('[arrayType]', 'string')
+  }
+
+  const validateMethod = (rule: any, value: any): void => {
+    if (rule.method === 'object') {
+      validateObject({
+        value,
         valueName,
+        schema: rule.schema,
+        callbackUpdateTest: params.callbackUpdateTest,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
+    } else if (rule.method === 'string') {
+      if (hasArray) {
+        message.expect = 'index of the array is of type string!'
+        message.error = arrayErrorMessage('string')
+      } else {
+        message.expect = 'string type'
+        message.error = informativeMessage.string.invalidValue.replace('[valueName]', valueName)
+      }
+
+      validateString({
+        value,
+        valueName,
+        callbackAddPassed: params.callbackAddPassed,
+        callbackAddFailed: params.callbackAddFailed,
+        message
+      })
     } else if (rule.method === 'minWord') {
       validateMinWord({
-        value: params.value,
+        value,
         valueName,
         minWord: rule.minWord,
         callbackAddPassed: params.callbackAddPassed,
@@ -50,21 +79,21 @@ export const executeValidateMethods = (params: {
       })
     } else if (rule.method === 'email') {
       validateEmail({
-        value: params.value,
+        value,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
     } else if (rule.method === 'UUID') {
       validateUuid({
-        value: params.value,
+        value,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
     } else if (rule.method === 'maxLength') {
       validateMaxLength({
-        value: params.value,
+        value,
         valueName,
         maxLength: rule.maxLength,
         callbackAddPassed: params.callbackAddPassed,
@@ -72,7 +101,7 @@ export const executeValidateMethods = (params: {
       })
     } else if (rule.method === 'minLength') {
       validateMinLength({
-        value: params.value,
+        value,
         valueName,
         minLength: rule.minLength,
         callbackAddPassed: params.callbackAddPassed,
@@ -80,35 +109,35 @@ export const executeValidateMethods = (params: {
       })
     } else if (rule.method === 'number') {
       validateNumber({
-        value: params.value,
+        value,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
     } else if (rule.method === 'float') {
       validateFloat({
-        value: params.value,
+        value,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
     } else if (rule.method === 'integer') {
       validateInteger({
-        value: params.value,
+        value,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
     } else if (rule.method === 'boolean') {
       validateBoolean({
-        value: params.value,
+        value,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
         callbackAddFailed: params.callbackAddFailed
       })
     } else if (rule.method === 'date') {
       validateDate({
-        value: params.value,
+        value,
         valueName,
         type: rule.dateType,
         callbackAddPassed: params.callbackAddPassed,
@@ -117,7 +146,7 @@ export const executeValidateMethods = (params: {
     } else if (rule.method === 'min') {
       if (hasMethod(params.methods, 'date')) {
         validateMinDate({
-          value: params.value,
+          value,
           valueName,
           dateToCompare: rule.dateToCompare,
           callbackAddPassed: params.callbackAddPassed,
@@ -127,7 +156,7 @@ export const executeValidateMethods = (params: {
     } else if (rule.method === 'max') {
       if (hasMethod(params.methods, 'date')) {
         validateMaxDate({
-          value: params.value,
+          value,
           valueName,
           dateToCompare: rule.dateToCompare,
           callbackAddPassed: params.callbackAddPassed,
@@ -136,7 +165,7 @@ export const executeValidateMethods = (params: {
       }
     } else if (rule.method === 'time') {
       validateTime({
-        value: params.value,
+        value,
         valueName,
         type: rule.timeType,
         callbackAddPassed: params.callbackAddPassed,
@@ -144,7 +173,7 @@ export const executeValidateMethods = (params: {
       })
     } else if (rule.method === 'equal') {
       validateEqual({
-        value: params.value,
+        value,
         valueToCompare: rule.valueToCompare,
         valueName,
         callbackAddPassed: params.callbackAddPassed,
@@ -174,14 +203,16 @@ export const executeValidateMethods = (params: {
   }
 
   if (hasMethod(params.methods, 'array')) {
+    hasArray = true
     validateArray({
       value: params.value,
       valueName,
       methods: params.methods,
+      validateMethod,
       callbackAddPassed: params.callbackAddPassed,
       callbackAddFailed: params.callbackAddFailed
     })
   } else {
-    params.methods.forEach(rule => validateMethod(rule))
+    params.methods.forEach(rule => validateMethod(rule, params.value))
   }
 }

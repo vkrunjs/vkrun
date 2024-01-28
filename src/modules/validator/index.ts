@@ -1,5 +1,5 @@
 import { executeValidateMethods } from './helpers/execute-validate-methods'
-import { hasMethod } from '../utils'
+import { hasMethod, isObject } from '../utils'
 import { CreateSchema } from '../schema'
 import {
   MinDateMethod,
@@ -226,6 +226,16 @@ export class Validator implements IValidator {
     }
   }
 
+  object (schema: ObjectType): DefaultReturn {
+    if (!isObject(schema)) {
+      console.error('vkrun: object method received invalid parameter!')
+      throw Error('vkrun: object method received invalid parameter!')
+    }
+
+    this.methodBuild({ method: 'object', schema })
+    return this.defaultReturnMethods()
+  }
+
   array (): this {
     this.methodBuild({ method: 'array' })
     return this
@@ -244,6 +254,21 @@ export class Validator implements IValidator {
       value: this.value,
       valueName: this.valueName,
       methods: this.methods,
+      callbackUpdateTest: (test: Tests): void => {
+        this.tests.passed += test.passed
+        this.tests.failed += test.failed
+        this.tests.totalTests += test.totalTests
+
+        test.successes.forEach((success: SuccessTest) => {
+          this.tests.successes.push(success)
+        })
+
+        test.errors.forEach((error: ErrorTest) => {
+          this.tests.errors.push(error)
+        })
+
+        this.tests.passedAll = this.tests.passed === this.tests.totalTests
+      },
       callbackAddPassed: (success: SuccessTest) => {
         ++this.tests.passed
         ++this.tests.totalTests
