@@ -235,6 +235,11 @@ export class Validator implements IValidator {
     return { min, max, ...this.defaultReturnMethods() }
   }
 
+  equal (valueToCompare: any): DefaultReturn {
+    this.methodBuild({ method: 'equal', valueToCompare })
+    return this.defaultReturnMethods()
+  }
+
   alias (valueName: string): this {
     this.valueName = valueName
     return this
@@ -248,21 +253,6 @@ export class Validator implements IValidator {
         value: this.value,
         valueName: this.valueName,
         methods: this.methods,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-    return this
-  }
-
-  equal (valueToCompare: any): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'equal', valueToCompare })
-    } else {
-      validateEqual({
-        value: this.value,
-        valueToCompare,
-        valueName: this.valueName,
         callbackAddPassed: success => this.addPassed(success),
         callbackAddFailed: error => this.addFailed(error)
       })
@@ -411,7 +401,13 @@ export class Validator implements IValidator {
           callbackAddFailed: error => this.addFailed(error)
         })
       } else if (rule.method === 'equal') {
-        this.equal(rule?.valueToCompare)
+        validateEqual({
+          value: this.value,
+          valueToCompare: rule.valueToCompare,
+          valueName: this.valueName,
+          callbackAddPassed: success => this.addPassed(success),
+          callbackAddFailed: error => this.addFailed(error)
+        })
       }
     }
 

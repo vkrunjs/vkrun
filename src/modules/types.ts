@@ -8,7 +8,7 @@ export interface IValidator {
   date: (type: DateTypes) => DateMethod
   alias: (valueName: string) => this
   array: () => this
-  equal: (valueToCompare: any) => this
+  equal: (valueToCompare: any) => DefaultReturn
   schema: (schema: ObjectType, config?: ObjectConfig) => CreateSchema
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -216,9 +216,7 @@ export interface SetTranslationMessage {
     invalidValue?: string
     notIsArray?: string
   }
-  toEqual?: {
-    invalidValue?: string
-  }
+  equal?: string
   notToEqual?: {
     invalidValue?: string
   }
@@ -263,9 +261,7 @@ export interface InformativeMessage {
     invalidValue: string
     notIsArray: string
   }
-  toEqual: {
-    invalidValue: string
-  }
+  equal: string
   notToEqual: {
     invalidValue: string
   }

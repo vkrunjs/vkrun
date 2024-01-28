@@ -18,19 +18,19 @@ export const validateEqual = ({
 }): void => {
   if (deepEqual(value, valueToCompare)) {
     callbackAddPassed({
-      method: 'toEqual',
+      method: 'equal',
       name: valueName,
       expect: valueToCompare,
       received: value
     })
   } else {
     callbackAddFailed({
-      method: 'toEqual',
+      method: 'equal',
       type: 'invalid value',
       name: valueName,
       expect: valueToCompare,
       received: received(value),
-      message: informativeMessage.toEqual.invalidValue
+      message: informativeMessage.equal
     })
   }
 }
