@@ -1,23 +1,6 @@
-import {
-  validateBoolean,
-  validateDate,
-  validateEmail,
-  validateFloat,
-  validateInteger,
-  validateMaxLength,
-  validateMinLength,
-  validateMinWord,
-  validateNumber,
-  validateRequired,
-  validateString,
-  validateUuid,
-  validateMinDate,
-  validateMaxDate,
-  validateTime,
-  validateNotRequired,
-  validateArray,
-  validateEqual
-} from './helpers/validate'
+import { executeValidateMethods } from './helpers/execute-validate-methods'
+import { hasMethod } from '../utils'
+import { CreateSchema } from '../schema'
 import {
   MinDateMethod,
   MaxDateMethod,
@@ -42,22 +25,19 @@ import {
   Tests,
   TimeTypes,
   UUIDMethod,
-  TimeMethod
+  TimeMethod,
+  AliasMethod
 } from '../types'
-import { hasMethod } from '../utils'
-import { CreateSchema } from '../schema'
 
 export class Validator implements IValidator {
   private value: any
   private valueName: any
   private readonly methods: Methods
-  private uninitializedValidation: boolean
   private tests: Tests
 
   constructor () {
     this.valueName = undefined
     this.methods = []
-    this.uninitializedValidation = true
     this.tests = {
       passedAll: false,
       passed: 0,
@@ -182,20 +162,8 @@ export class Validator implements IValidator {
   }
 
   date (type?: DateTypes): DateMethod {
-    if (
-      type !== undefined &&
-      ![
-        'ISO8601',
-        'DD/MM/YYYY',
-        'MM/DD/YYYY',
-        'DD-MM-YYYY',
-        'MM-DD-YYYY',
-        'YYYY/MM/DD',
-        'YYYY/DD/MM',
-        'YYYY-MM-DD',
-        'YYYY-DD-MM'
-      ].includes(type)
-    ) {
+    const dateTypes = ['ISO8601', 'DD/MM/YYYY', 'MM/DD/YYYY', 'DD-MM-YYYY', 'MM-DD-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'YYYY-MM-DD', 'YYYY-DD-MM']
+    if (type !== undefined && !dateTypes.includes(type)) {
       console.error('vkrun: date method received invalid parameter!')
       throw Error('vkrun: date method received invalid parameter!')
     }
@@ -240,23 +208,26 @@ export class Validator implements IValidator {
     return this.defaultReturnMethods()
   }
 
-  alias (valueName: string): this {
+  alias (valueName: string): AliasMethod {
+    if (typeof valueName !== 'string') {
+      console.error('vkrun: alias method received invalid parameter!')
+      throw Error('vkrun: alias method received invalid parameter!')
+    }
+
     this.methodBuild({ method: 'alias', alias: valueName })
-    return this
+    return {
+      string: () => this.string(),
+      boolean: () => this.boolean(),
+      date: (type: DateTypes) => this.date(type),
+      array: () => this.array(),
+      equal: (valueToCompare: any) => this.equal(valueToCompare),
+      schema: (schema: ObjectType, config?: ObjectConfig) => this.schema(schema, config),
+      ...this.defaultReturnMethods()
+    }
   }
 
   array (): this {
-    if (this.uninitializedValidation) {
-      this.methodBuild({ method: 'array' })
-    } else {
-      validateArray({
-        value: this.value,
-        valueName: this.valueName,
-        methods: this.methods,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
+    this.methodBuild({ method: 'array' })
     return this
   }
 
@@ -268,187 +239,35 @@ export class Validator implements IValidator {
     this.methods.push(build)
   }
 
-  private passedAll (): void {
-    this.tests.passedAll = this.tests.passed === this.tests.totalTests
-  }
-
-  private addPassed (success: SuccessTest): void {
-    ++this.tests.passed
-    ++this.tests.totalTests
-    this.tests.successes.push(success)
-    this.passedAll()
-  }
-
-  private addFailed (error: ErrorTest): void {
-    ++this.tests.failed
-    ++this.tests.totalTests
-    this.tests.errors.push(error)
-    this.passedAll()
-  }
-
   private validateMethods (): void {
-    this.resetTests()
-
-    this.uninitializedValidation = false
-    const executeMethod = (rule: any): void => {
-      if (rule.method === 'string') {
-        validateString({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'minWord') {
-        validateMinWord({
-          value: this.value,
-          valueName: this.valueName,
-          minWord: rule.minWord,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'email') {
-        validateEmail({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'UUID') {
-        validateUuid({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'maxLength') {
-        validateMaxLength({
-          value: this.value,
-          valueName: this.valueName,
-          maxLength: rule.maxLength,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'minLength') {
-        validateMinLength({
-          value: this.value,
-          valueName: this.valueName,
-          minLength: rule.minLength,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'number') {
-        validateNumber({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'float') {
-        validateFloat({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'integer') {
-        validateInteger({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'boolean') {
-        validateBoolean({
-          value: this.value,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'date') {
-        validateDate({
-          value: this.value,
-          valueName: this.valueName,
-          type: rule.dateType,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'min') {
-        if (hasMethod(this.methods, 'date')) {
-          validateMinDate({
-            value: this.value,
-            valueName: this.valueName,
-            dateToCompare: rule.dateToCompare,
-            callbackAddPassed: success => this.addPassed(success),
-            callbackAddFailed: error => this.addFailed(error)
-          })
+    executeValidateMethods({
+      value: this.value,
+      valueName: this.valueName,
+      methods: this.methods,
+      callbackAddPassed: (success: SuccessTest) => {
+        ++this.tests.passed
+        ++this.tests.totalTests
+        this.tests.successes.push(success)
+        this.tests.passedAll = this.tests.passed === this.tests.totalTests
+      },
+      callbackAddFailed: (error: ErrorTest) => {
+        ++this.tests.failed
+        ++this.tests.totalTests
+        this.tests.errors.push(error)
+        this.tests.passedAll = this.tests.passed === this.tests.totalTests
+      },
+      resetTests: () => {
+        this.tests = {
+          passedAll: false,
+          passed: 0,
+          failed: 0,
+          totalTests: 0,
+          successes: [],
+          errors: [],
+          time: ''
         }
-      } else if (rule.method === 'max') {
-        if (hasMethod(this.methods, 'date')) {
-          validateMaxDate({
-            value: this.value,
-            valueName: this.valueName,
-            dateToCompare: rule.dateToCompare,
-            callbackAddPassed: success => this.addPassed(success),
-            callbackAddFailed: error => this.addFailed(error)
-          })
-        }
-      } else if (rule.method === 'time') {
-        validateTime({
-          value: this.value,
-          valueName: this.valueName,
-          type: rule.timeType,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
-      } else if (rule.method === 'equal') {
-        validateEqual({
-          value: this.value,
-          valueToCompare: rule.valueToCompare,
-          valueName: this.valueName,
-          callbackAddPassed: success => this.addPassed(success),
-          callbackAddFailed: error => this.addFailed(error)
-        })
       }
-    }
-
-    if (hasMethod(this.methods, 'alias')) {
-      const newValueName = this.methods.find((item) => item.method === 'alias')?.alias
-      this.valueName = newValueName
-    }
-
-    if (hasMethod(this.methods, 'notRequired')) {
-      validateNotRequired({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success)
-      })
-      if (this.value === undefined) return
-    } else {
-      validateRequired({
-        value: this.value,
-        valueName: this.valueName,
-        callbackAddPassed: success => this.addPassed(success),
-        callbackAddFailed: error => this.addFailed(error)
-      })
-    }
-
-    if (hasMethod(this.methods, 'array')) {
-      this.array()
-    } else {
-      this.methods.forEach(rule => executeMethod(rule))
-    }
-  }
-
-  private resetTests (): void {
-    this.tests = {
-      passedAll: false,
-      passed: 0,
-      failed: 0,
-      totalTests: 0,
-      successes: [],
-      errors: [],
-      time: ''
-    }
+    })
   }
 
   private defaultReturnMethods (): DefaultReturn {

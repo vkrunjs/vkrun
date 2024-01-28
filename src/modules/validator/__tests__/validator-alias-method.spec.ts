@@ -19,4 +19,16 @@ describe('Validator Alias Method', () => {
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
+
+  /* eslint-disable */
+  it('Should be able to throw an error if the alias method received invalid parameter', () => {
+    try {
+      // @ts-ignore
+      validator().alias(false)
+    } catch (error: any) {
+      const sut = error
+      expect(sut.message).toEqual('vkrun: alias method received invalid parameter!')
+    }
+  })
+  /* eslint-enable */
 })
