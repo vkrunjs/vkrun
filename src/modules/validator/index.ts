@@ -241,7 +241,7 @@ export class Validator implements IValidator {
   }
 
   alias (valueName: string): this {
-    this.valueName = valueName
+    this.methodBuild({ method: 'alias', alias: valueName })
     return this
   }
 
@@ -409,6 +409,11 @@ export class Validator implements IValidator {
           callbackAddFailed: error => this.addFailed(error)
         })
       }
+    }
+
+    if (hasMethod(this.methods, 'alias')) {
+      const newValueName = this.methods.find((item) => item.method === 'alias')?.alias
+      this.valueName = newValueName
     }
 
     if (hasMethod(this.methods, 'notRequired')) {

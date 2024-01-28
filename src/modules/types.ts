@@ -167,6 +167,7 @@ export interface Method {
   arrayType?: ArrayTypes
   arrayRules?: any
   valueToCompare?: any
+  alias?: string
 }
 
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
