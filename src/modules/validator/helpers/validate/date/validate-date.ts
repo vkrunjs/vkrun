@@ -18,13 +18,14 @@ export const validateDate = ({
   let year: number, month: number, day: number
   let formattedDate: Date
 
-  const invalidFormat = (): boolean => {
-    return (typeof value === 'string' &&
-              value.length < 10) ||
-              (typeof value === 'string' &&
-              value.length <= 10 &&
-              type === 'ISO8601')
-  }
+  const invalidFormat = (): boolean => (
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value === undefined ||
+    value === null ||
+    (typeof value === 'string' && value.length < 10) ||
+    (typeof value === 'string' && value.length <= 10 && type === 'ISO8601')
+  )
 
   const handleAddFailed = (): void => {
     const message = informativeMessage.date.invalidValue
@@ -44,7 +45,7 @@ export const validateDate = ({
 
   if (invalidFormat()) {
     handleAddFailed()
-    return this
+    return
   }
 
   switch (type) {

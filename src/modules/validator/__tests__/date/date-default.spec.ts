@@ -2,16 +2,6 @@ import { validator } from '../../index'
 import { InvalidParamError } from '../../../errors'
 
 describe('Validator Date (default) Method', () => {
-  it('Should be able to validate the date method and return true if the value is of type default date', () => {
-    const value = new Date()
-
-    const sut = validator()
-      .date()
-      .validate(value)
-
-    expect(sut).toBeTruthy()
-  })
-
   it('Should be able to validate the date method and return true if list is valid', () => {
     const validList = [
       new Date(),
@@ -21,9 +11,24 @@ describe('Validator Date (default) Method', () => {
       new Date('2020-01-01T00:00:00Z')
     ]
 
-    const sut = validator().date('ISO8601')
+    const sut = validator().date()
 
     expect(validList.every((value) => sut.validate(value))).toBeTruthy()
+  })
+
+  it('Should be able to validate the date method and return false if list is invalid', () => {
+    const validList = [
+      undefined,
+      null,
+      'invalid',
+      1,
+      true,
+      false
+    ]
+
+    const sut = validator().date()
+
+    expect(validList.every((value) => sut.validate(value))).toBeFalsy()
   })
 
   it('Should be able to validate the date method and return false if the value is not of type default date', () => {
