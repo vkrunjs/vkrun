@@ -93,7 +93,7 @@ describe('Validator MinWord Method', () => {
       {
         method: 'minWord',
         name: 'value_name',
-        expect: 'must have a minimum of words',
+        expect: 'minimum of words',
         received: 'Full Name'
       }
     ])
@@ -131,7 +131,7 @@ describe('Validator MinWord Method', () => {
       method: 'minWord',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'must have a minimum of words',
+      expect: 'minimum of words',
       received: 'Full',
       message: 'value_name must have at least 2 words!'
     }])
@@ -195,7 +195,7 @@ describe('Validator MinWord Method', () => {
       {
         method: 'minWord',
         name: 'value_name',
-        expect: 'must have a minimum of words',
+        expect: 'minimum of words',
         received: 'Full Name'
       }
     ])
@@ -239,7 +239,7 @@ describe('Validator MinWord Method', () => {
       method: 'minWord',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'must have a minimum of words',
+      expect: 'minimum of words',
       received: 'Full',
       message: 'value_name must have at least 2 words!'
     }])

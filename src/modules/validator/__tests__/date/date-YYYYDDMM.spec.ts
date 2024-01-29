@@ -126,7 +126,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       },
       {
         method: 'date',
-        expect: 'date type YYYY-DD-MM',
+        expect: 'YYYY-DD-MM date type',
         name: 'value_name',
         received: '2000-30-12'
       }
@@ -155,7 +155,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       },
       {
         method: 'date',
-        expect: 'date type YYYY/DD/MM',
+        expect: 'YYYY/DD/MM date type',
         name: 'value_name',
         received: '2000/30/12'
       }
@@ -185,7 +185,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'date type YYYY-DD-MM',
+      expect: 'YYYY-DD-MM date type',
       received: new Date('2000-02-03T02:00:00.000Z'),
       message: 'the date value_name is not in the format YYYY-DD-MM!'
     }])
@@ -213,7 +213,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'date type YYYY/DD/MM',
+      expect: 'YYYY/DD/MM date type',
       received: new Date('2000-02-03T02:00:00.000Z'),
       message: 'the date value_name is not in the format YYYY/DD/MM!'
     }])
@@ -290,7 +290,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       },
       {
         method: 'date',
-        expect: 'date type YYYY-DD-MM',
+        expect: 'YYYY-DD-MM date type',
         name: 'value_name',
         received: '2000-30-12'
       }
@@ -325,7 +325,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       },
       {
         method: 'date',
-        expect: 'date type YYYY/DD/MM',
+        expect: 'YYYY/DD/MM date type',
         name: 'value_name',
         received: '2000/30/12'
       }
@@ -361,7 +361,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'date type YYYY-DD-MM',
+      expect: 'YYYY-DD-MM date type',
       received: new Date('2000-02-03T02:00:00.000Z'),
       message: 'the date value_name is not in the format YYYY-DD-MM!'
     }])
@@ -395,7 +395,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'date type YYYY/DD/MM',
+      expect: 'YYYY/DD/MM date type',
       received: new Date('2000-02-03T02:00:00.000Z'),
       message: 'the date value_name is not in the format YYYY/DD/MM!'
     }])

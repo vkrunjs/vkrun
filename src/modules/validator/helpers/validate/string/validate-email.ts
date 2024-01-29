@@ -5,35 +5,40 @@ import { received } from '../../../../utils'
 export const validateEmail = ({
   value,
   valueName,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   const regEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  const message = {
+    expect: indexArray !== undefined ? 'array index in email format' : 'email format',
+    error: informativeMessage.string.email.replace('[value]', String(value))
+  }
 
   const emailFormatIsValid = regEmail.test(String(value))
   if (emailFormatIsValid) {
     callbackAddPassed({
       method: 'email',
       name: valueName,
-      expect: 'valid email',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
   } else {
-    const message = informativeMessage.string.email
-    const messageError = message.replace('[value]', String(value))
-
     callbackAddFailed({
       method: 'email',
       type: 'invalid value',
       name: valueName,
-      expect: 'valid email',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

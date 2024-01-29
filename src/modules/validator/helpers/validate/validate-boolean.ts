@@ -5,32 +5,38 @@ import { isBoolean, received } from '../../../utils'
 export const validateBoolean = ({
   value,
   valueName,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const message = {
+    expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',
+    error: informativeMessage.boolean.invalidValue.replace('[valueName]', valueName)
+  }
+
   if (isBoolean(value)) {
     callbackAddPassed({
       method: 'boolean',
       name: valueName,
-      expect: 'boolean type',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
   } else {
-    const message = informativeMessage.boolean.invalidValue
-    const messageError = message.replace('[valueName]', valueName)
-
     callbackAddFailed({
       method: 'boolean',
       type: 'invalid value',
       name: valueName,
-      expect: 'boolean type',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

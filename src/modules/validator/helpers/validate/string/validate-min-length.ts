@@ -6,46 +6,53 @@ export const validateMinLength = ({
   value,
   valueName,
   minLength,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
   minLength: number
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const handleAddFailed = (messageError: string): void => {
+  const message = {
+    expect: indexArray !== undefined
+      ? 'array index with a length greater than or equal to the limit'
+      : 'value with a length greater than or equal to the limit',
+    error: informativeMessage.string.minLength
+      .replace('[valueName]', valueName)
+      .replace('[minLength]', String(minLength))
+  }
+
+  const handleAddFailed = (): void => {
     callbackAddFailed({
       method: 'minLength',
       type: 'invalid value',
       name: valueName,
-      expect: 'value with a length greater than or equal to the limit',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 
   if (isString(value)) {
     const exceededLimit = String(value).length < minLength
     if (exceededLimit) {
-      const message = informativeMessage.string.minLength
-      const messageError = message
-        .replace('[valueName]', valueName)
-        .replace('[minLength]', String(minLength))
-
-      handleAddFailed(messageError)
-      return this
+      handleAddFailed()
+      return
     }
     callbackAddPassed({
       method: 'minLength',
       name: valueName,
-      expect: 'value with a length greater than or equal to the limit',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
   } else {
-    const message = informativeMessage.string.invalidValue
-    const messageError = message.replace('[valueName]', valueName)
-    handleAddFailed(messageError)
+    message.error = informativeMessage.string.invalidValue.replace('[valueName]', valueName)
+    handleAddFailed()
   }
 }

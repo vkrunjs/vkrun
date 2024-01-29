@@ -209,7 +209,7 @@ describe('Validator Object Method', () => {
       {
         method: 'date',
         name: 'valueD',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2024-01-28T18:24:55.758Z')
       },
       {
@@ -338,7 +338,7 @@ describe('Validator Object Method', () => {
       {
         method: 'date',
         name: 'valueD',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2024-01-28T18:24:55.758Z')
       },
       {
@@ -493,7 +493,7 @@ describe('Validator Object Method', () => {
       {
         method: 'date',
         name: 'valueD',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2024-01-28T18:24:55.758Z')
       },
       {
@@ -630,7 +630,7 @@ describe('Validator Object Method', () => {
       {
         method: 'date',
         name: 'valueD',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2024-01-28T18:24:55.758Z')
       },
       {

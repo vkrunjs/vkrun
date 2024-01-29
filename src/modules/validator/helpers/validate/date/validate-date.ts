@@ -6,17 +6,27 @@ export const validateDate = ({
   value,
   valueName,
   type,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
   type?: DateTypes
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   let year: number, month: number, day: number
   let formattedDate: Date
+  const message = {
+    expect: indexArray !== undefined
+      ? `array index in the ${type ?? 'ISO8601'} date type`
+      : `${type ?? 'ISO8601'} date type`,
+    error: informativeMessage.date.invalidValue
+      .replace('[valueName]', valueName)
+      .replace('[type]', type ?? 'ISO8601')
+  }
 
   const invalidFormat = (): boolean => (
     typeof value === 'number' ||
@@ -28,18 +38,14 @@ export const validateDate = ({
   )
 
   const handleAddFailed = (): void => {
-    const message = informativeMessage.date.invalidValue
-    const messageError = message
-      .replace('[valueName]', valueName)
-      .replace('[type]', type ?? 'ISO8601')
-
     callbackAddFailed({
       method: 'date',
       type: 'invalid value',
       name: valueName,
-      expect: `date type ${type ?? 'ISO8601'}`,
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 
@@ -120,12 +126,11 @@ export const validateDate = ({
   const isInvalidDate = !formattedDate || isNaN(formattedDate.getTime())
   if (isInvalidDate) {
     handleAddFailed()
-    return this
   } else {
     callbackAddPassed({
       method: 'date',
       name: valueName,
-      expect: `date type ${type ?? 'ISO8601'}`,
+      expect: message.expect,
       received: value
     })
   }

@@ -108,7 +108,7 @@ describe('Validator Time HH:MM:SS.MS Method', () => {
       {
         method: 'time',
         name: 'value_name',
-        expect: 'format HH:MM:SS.MS',
+        expect: 'HH:MM:SS.MS format',
         received: '13:51:59.100'
       }
     ])
@@ -146,7 +146,7 @@ describe('Validator Time HH:MM:SS.MS Method', () => {
       method: 'time',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'format HH:MM:SS.MS',
+      expect: 'HH:MM:SS.MS format',
       received: '13:51:59.',
       message: 'the time 13:51:59. is not in the format HH:MM:SS.MS!'
     }])
@@ -210,7 +210,7 @@ describe('Validator Time HH:MM:SS.MS Method', () => {
       {
         method: 'time',
         name: 'value_name',
-        expect: 'format HH:MM:SS.MS',
+        expect: 'HH:MM:SS.MS format',
         received: '23:59:59.1'
       }
     ])
@@ -255,7 +255,7 @@ describe('Validator Time HH:MM:SS.MS Method', () => {
         method: 'time',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'format HH:MM:SS.MS',
+        expect: 'HH:MM:SS.MS format',
         received: false,
         message: 'the time false is not in the format HH:MM:SS.MS!'
       }

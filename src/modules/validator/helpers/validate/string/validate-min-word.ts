@@ -6,39 +6,46 @@ export const validateMinWord = ({
   value,
   valueName,
   minWord,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
   minWord: number
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   const trimmedValue = String(value).trim()
   const words = trimmedValue.split(/\s+/)
   const hasMinOfWords = words.length >= minWord
+  const message = {
+    expect: indexArray !== undefined
+      ? 'array index with minimum of words'
+      : 'minimum of words',
+    error: informativeMessage.string.minWord
+      .replace('[valueName]', valueName)
+      .replace('[minWord]', String(minWord))
+  }
 
   if (hasMinOfWords) {
     callbackAddPassed({
       method: 'minWord',
       name: valueName,
-      expect: 'must have a minimum of words',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
   } else {
-    const message = informativeMessage.string.minWord
-    const messageError = message
-      .replace('[valueName]', valueName)
-      .replace('[minWord]', String(minWord))
-
     callbackAddFailed({
       method: 'minWord',
       type: 'invalid value',
       name: valueName,
-      expect: 'must have a minimum of words',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

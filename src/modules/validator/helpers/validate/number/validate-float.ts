@@ -5,32 +5,38 @@ import { isFloat, received } from '../../../../utils'
 export const validateFloat = ({
   value,
   valueName,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const message = {
+    expect: indexArray !== undefined ? 'array index in float type' : 'float type',
+    error: informativeMessage.number.float.replace('[valueName]', valueName)
+  }
+
   if (isFloat(value)) {
     callbackAddPassed({
       method: 'float',
       name: valueName,
-      expect: 'float type',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
   } else {
-    const message = informativeMessage.number.float
-    const messageError = message.replace('[valueName]', valueName)
-
     callbackAddFailed({
       method: 'float',
       type: 'invalid value',
       name: valueName,
-      expect: 'float type',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

@@ -6,6 +6,7 @@ export const validateObject = ({
   value,
   valueName,
   schema,
+  indexArray,
   callbackUpdateTest,
   callbackAddPassed,
   callbackAddFailed
@@ -13,15 +14,22 @@ export const validateObject = ({
   value: any
   valueName: string
   schema: any
+  indexArray: number
   callbackUpdateTest: (test: Tests) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const message = {
+    expect: indexArray !== undefined ? 'array index in object type' : 'object type',
+    error: informativeMessage.object.replace('[valueName]', valueName)
+  }
+
   if (isObject(value)) {
     callbackAddPassed({
       method: 'object',
       name: valueName,
-      expect: 'object type',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
 
@@ -33,9 +41,10 @@ export const validateObject = ({
       method: 'object',
       type: 'invalid value',
       name: valueName,
-      expect: 'object type',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: informativeMessage.object.replace('[valueName]', valueName)
+      message: message.error
     })
   }
 }

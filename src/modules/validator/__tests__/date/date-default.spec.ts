@@ -93,7 +93,7 @@ describe('Validator Date (default) Method', () => {
       },
       {
         method: 'date',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         name: 'value_name',
         received: new Date('2000-02-03T02:00:00.000Z')
       }
@@ -123,7 +123,7 @@ describe('Validator Date (default) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'date type ISO8601',
+      expect: 'ISO8601 date type',
       received: '27/11/21',
       message: 'the date value_name is not in the format ISO8601!'
     }])
@@ -178,7 +178,7 @@ describe('Validator Date (default) Method', () => {
       },
       {
         method: 'date',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         name: 'value_name',
         received: new Date('2000-02-03T02:00:00.000Z')
       }
@@ -214,7 +214,7 @@ describe('Validator Date (default) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'date type ISO8601',
+      expect: 'ISO8601 date type',
       received: '27/11/21',
       message: 'the date value_name is not in the format ISO8601!'
     }])

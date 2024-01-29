@@ -89,7 +89,7 @@ describe('Validator Max Date Method', () => {
       {
         method: 'date',
         name: 'value_name',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2000-02-02T02:00:00.000Z')
       },
       {
@@ -126,7 +126,7 @@ describe('Validator Max Date Method', () => {
       {
         method: 'date',
         name: 'value_name',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2000-02-03T02:00:00.000Z')
       }
     ])
@@ -192,7 +192,7 @@ describe('Validator Max Date Method', () => {
         method: 'date',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: 'undefined',
         message: 'the date value_name is not in the format ISO8601!'
       },
@@ -200,7 +200,7 @@ describe('Validator Max Date Method', () => {
         method: 'max',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'date value_name less than reference date',
+        expect: 'date less than or equal to reference date',
         received: 'undefined',
         message: 'the date value_name is not in the format date!'
       }
@@ -237,7 +237,7 @@ describe('Validator Max Date Method', () => {
       {
         method: 'date',
         name: 'value_name',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2000-03-02T02:00:00.000Z')
       },
       {
@@ -280,7 +280,7 @@ describe('Validator Max Date Method', () => {
       {
         method: 'date',
         name: 'value_name',
-        expect: 'date type ISO8601',
+        expect: 'ISO8601 date type',
         received: new Date('2000-03-02T02:00:00.001Z')
       }
     ])

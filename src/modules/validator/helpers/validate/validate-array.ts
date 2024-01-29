@@ -1,115 +1,50 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, Method, Methods, SuccessTest, Tests } from '../../../types'
+import { ErrorTest, Method, Methods, SuccessTest } from '../../../types'
 import { isArray, received } from '../../../utils'
-import { validateString } from './string/validate-string'
 
 export const validateArray = ({
   value,
   valueName,
   methods,
+  validateMethod,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
   methods: Methods
+  validateMethod: (rule: any, value: any, index: number) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const message = {
+    expect: 'array type',
+    error: informativeMessage.array.notIsArray.replace('[valueName]', valueName)
+  }
+
   if (isArray(value)) {
-    let localTests: Tests = {
-      passedAll: false,
-      passed: 0,
-      failed: 0,
-      totalTests: 0,
-      successes: [],
-      errors: [],
-      time: ''
-    }
+    callbackAddPassed({
+      method: 'array',
+      name: valueName,
+      expect: message.expect,
+      received: received(value)
+    })
 
-    const passedAll = (): void => {
-      localTests.passedAll = localTests.passed === localTests.totalTests
-    }
-
-    const addPassed = (success: SuccessTest): void => {
-      ++localTests.passed
-      ++localTests.totalTests
-      localTests.successes.push(success)
-      passedAll()
-    }
-
-    const addFailed = (error: ErrorTest): void => {
-      ++localTests.failed
-      ++localTests.totalTests
-      localTests.errors.push(error)
-      passedAll()
-    }
-
-    const resetTests = (): void => {
-      localTests = {
-        passedAll: false,
-        passed: 0,
-        failed: 0,
-        totalTests: 0,
-        successes: [],
-        errors: [],
-        time: ''
-      }
-    }
-
-    const filteredMethods = methods.filter((filteredMethod: Method) =>
-      filteredMethod.method !== 'notRequired' &&
-      filteredMethod.method !== 'alias'
+    const methodsWithoutArray = methods.filter((filteredMethod: Method) =>
+      filteredMethod.method !== 'array'
     )
 
-    value.forEach((valueIndexArr: any) => {
-      filteredMethods.forEach((filteredMethod: Method) => {
-        if (filteredMethod.method === 'string') {
-          validateString({
-            value: valueIndexArr,
-            valueName,
-            callbackAddPassed: success => addPassed(success),
-            callbackAddFailed: error => addFailed(error)
-          })
-
-          if (localTests.passedAll) {
-            callbackAddPassed({
-              method: 'array',
-              name: valueName,
-              expect: 'index of the array is of type string!',
-              received: received(valueIndexArr)
-            })
-          } else {
-            const message = informativeMessage.array.invalidValue
-            const messageError = message
-              .replace('[valueName]', valueName)
-              .replace('[arrayType]', 'string')
-
-            callbackAddFailed({
-              method: 'array',
-              type: 'invalid value',
-              name: valueName,
-              expect: 'index of the array is of type string!',
-              received: received(valueIndexArr),
-              message: messageError
-            })
-          }
-
-          resetTests()
-        }
-      })
+    value.forEach((indexValue: any, index: number) => {
+      methodsWithoutArray.forEach(rule => validateMethod(rule, indexValue, index))
     })
   } else {
-    const message = informativeMessage.array.notIsArray
-    const messageError = message.replace('[keyName]', valueName)
-
     callbackAddFailed({
       method: 'array',
       type: 'invalid value',
       name: valueName,
-      expect: 'array',
+      expect: message.expect,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

@@ -19,200 +19,68 @@ import {
   validateObject,
   validateArray
 } from './validate'
-import { informativeMessage } from '../../location'
 import { hasMethod } from '../../utils'
-import { ErrorTest, MethodTypes, Methods, SuccessTest, Tests } from '../../types'
+import { ExecuteValidateMethods } from '../../types'
 
-export const executeValidateMethods = (params: {
-  value: any
-  valueName: string
-  methods: Methods
-  resetTests: () => void
-  callbackUpdateTest: (test: Tests) => void
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
-}): void => {
+export const executeValidateMethods = (params: ExecuteValidateMethods): void => {
   params.resetTests()
-  let hasArray = false
-  let valueName = params.valueName
-  const message = { expect: '', error: '' }
+  const validateMethodParams: any = params
 
-  const arrayErrorMessage = (type: MethodTypes): string => {
-    return informativeMessage.array.invalidValue
-      .replace('[valueName]', valueName)
-      .replace('[arrayType]', 'string')
-  }
-
-  const validateMethod = (rule: any, value: any): void => {
+  const validateMethod = (rule: any, value: any, indexArray?: number): void => {
+    validateMethodParams.value = value
     if (rule.method === 'object') {
-      validateObject({
-        value,
-        valueName,
-        schema: rule.schema,
-        callbackUpdateTest: params.callbackUpdateTest,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateObject({ ...validateMethodParams, indexArray, schema: rule.schema })
     } else if (rule.method === 'string') {
-      if (hasArray) {
-        message.expect = 'index of the array is of type string!'
-        message.error = arrayErrorMessage('string')
-      } else {
-        message.expect = 'string type'
-        message.error = informativeMessage.string.invalidValue.replace('[valueName]', valueName)
-      }
-
-      validateString({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed,
-        message
-      })
+      validateString({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'minWord') {
-      validateMinWord({
-        value,
-        valueName,
-        minWord: rule.minWord,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateMinWord({ ...validateMethodParams, indexArray, minWord: rule.minWord })
     } else if (rule.method === 'email') {
-      validateEmail({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateEmail({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'UUID') {
-      validateUuid({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateUuid({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'maxLength') {
-      validateMaxLength({
-        value,
-        valueName,
-        maxLength: rule.maxLength,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
     } else if (rule.method === 'minLength') {
-      validateMinLength({
-        value,
-        valueName,
-        minLength: rule.minLength,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateMinLength({ ...validateMethodParams, indexArray, minLength: rule.minLength })
     } else if (rule.method === 'number') {
-      validateNumber({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateNumber({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'float') {
-      validateFloat({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateFloat({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'integer') {
-      validateInteger({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateInteger({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'boolean') {
-      validateBoolean({
-        value,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateBoolean({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'date') {
-      validateDate({
-        value,
-        valueName,
-        type: rule.dateType,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateDate({ ...validateMethodParams, indexArray, type: rule.dateType })
     } else if (rule.method === 'min') {
-      if (hasMethod(params.methods, 'date')) {
-        validateMinDate({
-          value,
-          valueName,
-          dateToCompare: rule.dateToCompare,
-          callbackAddPassed: params.callbackAddPassed,
-          callbackAddFailed: params.callbackAddFailed
-        })
+      if (hasMethod(validateMethodParams.methods, 'date')) {
+        validateMinDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
       }
     } else if (rule.method === 'max') {
-      if (hasMethod(params.methods, 'date')) {
-        validateMaxDate({
-          value,
-          valueName,
-          dateToCompare: rule.dateToCompare,
-          callbackAddPassed: params.callbackAddPassed,
-          callbackAddFailed: params.callbackAddFailed
-        })
+      if (hasMethod(validateMethodParams.methods, 'date')) {
+        validateMaxDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
       }
     } else if (rule.method === 'time') {
-      validateTime({
-        value,
-        valueName,
-        type: rule.timeType,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
     } else if (rule.method === 'equal') {
-      validateEqual({
-        value,
-        valueToCompare: rule.valueToCompare,
-        valueName,
-        callbackAddPassed: params.callbackAddPassed,
-        callbackAddFailed: params.callbackAddFailed
-      })
+      validateEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
     }
   }
 
-  if (hasMethod(params.methods, 'alias')) {
-    valueName = params.methods.find((item) => item.method === 'alias')?.alias as string
+  if (hasMethod(validateMethodParams.methods, 'alias')) {
+    validateMethodParams.valueName = params.methods.find((item: any) => item.method === 'alias')?.alias as string
   }
 
-  if (hasMethod(params.methods, 'notRequired')) {
-    validateNotRequired({
-      value: params.value,
-      valueName,
-      callbackAddPassed: params.callbackAddPassed
-    })
-    if (params.value === undefined) return
+  if (hasMethod(validateMethodParams.methods, 'notRequired')) {
+    validateNotRequired(validateMethodParams)
+    if (validateMethodParams.value === undefined) return
   } else {
-    validateRequired({
-      value: params.value,
-      valueName,
-      callbackAddPassed: params.callbackAddPassed,
-      callbackAddFailed: params.callbackAddFailed
-    })
+    validateRequired(validateMethodParams)
   }
 
-  if (hasMethod(params.methods, 'array')) {
-    hasArray = true
-    validateArray({
-      value: params.value,
-      valueName,
-      methods: params.methods,
-      validateMethod,
-      callbackAddPassed: params.callbackAddPassed,
-      callbackAddFailed: params.callbackAddFailed
-    })
+  if (hasMethod(validateMethodParams.methods, 'array')) {
+    validateArray({ ...validateMethodParams, validateMethod })
   } else {
-    params.methods.forEach(rule => validateMethod(rule, params.value))
+    validateMethodParams.methods.forEach((rule: any) => validateMethod(rule, validateMethodParams.value))
   }
 }

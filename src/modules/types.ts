@@ -1,4 +1,3 @@
-import { CreateSchema } from './schema'
 import { Validator } from './validator'
 
 export interface IValidator {
@@ -6,10 +5,10 @@ export interface IValidator {
   string: () => StringMethod
   boolean: () => DefaultReturn
   date: (type: DateTypes) => DateMethod
-  alias: (valueName: string) => this
-  array: () => this
+  alias: (valueName: string) => AliasMethod
+  array: () => ArrayMethod
   equal: (valueToCompare: any) => DefaultReturn
-  schema: (schema: ObjectType, config?: ObjectConfig) => CreateSchema
+  object: (schema: ObjectType) => DefaultReturn
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
   validate: (value: any) => boolean
@@ -143,15 +142,27 @@ export interface MaxDateMethod extends DefaultReturn {
   min: (dateToCompare: Date) => DefaultReturn
 }
 
+export interface AliasMethod extends DefaultReturn {
+  string: () => StringMethod
+  boolean: () => DefaultReturn
+  date: (type: DateTypes) => DateMethod
+  array: () => ArrayMethod
+  equal: (valueToCompare: any) => DefaultReturn
+  object: (schema: ObjectType) => DefaultReturn
+}
+
+export interface ArrayMethod extends DefaultReturn {
+  string: () => StringMethod
+  boolean: () => DefaultReturn
+  date: (type: DateTypes) => DateMethod
+  object: (schema: ObjectType) => DefaultReturn
+}
+
 export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
 
 export type ErrorClass<T extends Error> = new (message?: string) => T
 
 export type ErrorTypes = any // ErrorClass
-
-export type ValidatePropertyKey = string
-
-export type ValidatePropertyValue = any
 
 export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'min' | 'max' | 'time' | 'alias'
 
@@ -163,26 +174,20 @@ export interface Method {
   dateType?: DateTypes
   dateToCompare?: Date
   timeType?: TimeTypes
-  private?: boolean
   arrayType?: ArrayTypes
   arrayRules?: any
   valueToCompare?: any
   alias?: string
+  schema?: ObjectType
 }
 
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
 
 export type Methods = Method[]
 
-export type ValidateItemArrayValue = string | boolean | Date | number
-
 export type TimeTypes = 'HH:MM' | 'HH:MM:SS' | 'HH:MM:SS.MS'
 
-export type Schema = Record<string, Validator[]>
-
 export type ObjectType = Record<string, any>
-
-export type SchemaConfig = ObjectConfig
 
 export interface SetTranslationMessage {
   string?: {
@@ -208,11 +213,7 @@ export interface SetTranslationMessage {
     min?: string
     max?: string
   }
-  object?: {
-    invalidValue?: string
-    keyAbsent?: string
-    notIsObject?: string
-  }
+  object?: string
   array?: {
     invalidValue?: string
     notIsArray?: string
@@ -253,11 +254,7 @@ export interface InformativeMessage {
     min: string
     max: string
   }
-  object: {
-    invalidValue: string
-    keyAbsent: string
-    notIsObject: string
-  }
+  object: string
   array: {
     invalidValue: string
     notIsArray: string
@@ -293,6 +290,7 @@ export interface ErrorTest {
   name: string
   expect: string
   received: any
+  index?: number
   message: string
 }
 
@@ -301,23 +299,15 @@ export interface SuccessTest {
   method?: string
   name: string
   expect: string
+  index?: number
   received: any
 }
 
-export interface ValidateMethodParams {
-  keyName: string
+export interface ExecuteValidateMethods {
   value: any
-  schemaRules: any
-  callbackValidateValue: (object: ObjectType, schema: ObjectType) => Promise<void>
-  callbackUpdateTest: (test: Tests) => void
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
-}
-
-export interface SelectSchemaFormat {
-  value: ObjectType
-  schema: ObjectType
-  callbackValidateValue: (object: ObjectType, schema: ObjectType) => Promise<void>
+  valueName: string
+  methods: Methods
+  resetTests: () => void
   callbackUpdateTest: (test: Tests) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void

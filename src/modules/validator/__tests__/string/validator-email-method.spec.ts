@@ -124,7 +124,7 @@ describe('Validator Email Method', () => {
       {
         method: 'email',
         name: 'value_name',
-        expect: 'valid email',
+        expect: 'email format',
         received: 'any_email@domain.com'
       }
     ])
@@ -163,7 +163,7 @@ describe('Validator Email Method', () => {
         method: 'email',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'valid email',
+        expect: 'email format',
         received: false,
         message: 'email false is invalid!'
       }
@@ -227,7 +227,7 @@ describe('Validator Email Method', () => {
       },
       {
         method: 'email',
-        expect: 'valid email',
+        expect: 'email format',
         name: 'value_name',
         received: 'any_email@domain.com'
       }
@@ -273,7 +273,7 @@ describe('Validator Email Method', () => {
         method: 'email',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'valid email',
+        expect: 'email format',
         received: false,
         message: 'email false is invalid!'
       }

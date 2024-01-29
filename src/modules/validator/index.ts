@@ -1,6 +1,5 @@
 import { executeValidateMethods } from './helpers/execute-validate-methods'
 import { hasMethod, isObject } from '../utils'
-import { CreateSchema } from '../schema'
 import {
   MinDateMethod,
   MaxDateMethod,
@@ -18,7 +17,6 @@ import {
   MinWordMethod,
   NotRequiredMethod,
   NumberMethod,
-  ObjectConfig,
   ObjectType,
   StringMethod,
   SuccessTest,
@@ -26,7 +24,8 @@ import {
   TimeTypes,
   UUIDMethod,
   TimeMethod,
-  AliasMethod
+  AliasMethod,
+  ArrayMethod
 } from '../types'
 
 export class Validator implements IValidator {
@@ -221,7 +220,7 @@ export class Validator implements IValidator {
       date: (type: DateTypes) => this.date(type),
       array: () => this.array(),
       equal: (valueToCompare: any) => this.equal(valueToCompare),
-      schema: (schema: ObjectType, config?: ObjectConfig) => this.schema(schema, config),
+      object: (schema: ObjectType) => this.object(schema),
       ...this.defaultReturnMethods()
     }
   }
@@ -236,13 +235,15 @@ export class Validator implements IValidator {
     return this.defaultReturnMethods()
   }
 
-  array (): this {
+  array (): ArrayMethod {
     this.methodBuild({ method: 'array' })
-    return this
-  }
-
-  schema (schema: ObjectType, config?: ObjectConfig): CreateSchema {
-    return new CreateSchema(schema, config)
+    return {
+      string: () => this.string(),
+      boolean: () => this.boolean(),
+      date: (type: DateTypes) => this.date(type),
+      object: (schema: ObjectType) => this.object(schema),
+      ...this.defaultReturnMethods()
+    }
   }
 
   private methodBuild (build: Method): void {

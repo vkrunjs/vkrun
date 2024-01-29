@@ -5,32 +5,38 @@ import { isNumber, received } from '../../../../utils'
 export const validateNumber = ({
   value,
   valueName,
+  indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
+  indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const message = {
+    expect: indexArray !== undefined ? 'array index in number type' : 'number type',
+    error: informativeMessage.number.invalidValue.replace('[valueName]', valueName)
+  }
+
   if (isNumber(value)) {
     callbackAddPassed({
       method: 'number',
       name: valueName,
-      expect: 'number type',
+      expect: message.expect,
+      index: indexArray,
       received: value
     })
   } else {
-    const message = informativeMessage.number.invalidValue
-    const messageError = message.replace('[valueName]', valueName)
-
     callbackAddFailed({
       method: 'number',
       type: 'invalid value',
       name: valueName,
-      expect: 'number type',
+      expect: message.expect,
+      index: indexArray,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

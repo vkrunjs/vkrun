@@ -104,7 +104,7 @@ describe('Validator UUID Method', () => {
       {
         method: 'UUID',
         name: 'value_name',
-        expect: 'UUID format',
+        expect: 'format UUID',
         received: '550e8400-e29b-41d4-a716-446655440000'
       }
     ])
@@ -143,7 +143,7 @@ describe('Validator UUID Method', () => {
         method: 'UUID',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'UUID format',
+        expect: 'format UUID',
         received: false,
         message: 'value_name must be a UUID type!'
       }
@@ -207,7 +207,7 @@ describe('Validator UUID Method', () => {
       },
       {
         method: 'UUID',
-        expect: 'UUID format',
+        expect: 'format UUID',
         name: 'value_name',
         received: '550e8400-e29b-41d4-a716-446655440000'
       }
@@ -253,7 +253,7 @@ describe('Validator UUID Method', () => {
         method: 'UUID',
         type: 'invalid value',
         name: 'value_name',
-        expect: 'UUID format',
+        expect: 'format UUID',
         received: false,
         message: 'value_name must be a UUID type!'
       }
