@@ -1,4 +1,4 @@
 import { informativeMessage } from './informative-message'
-import { setTranslationMessage } from './set-translation-message'
+import { setLocation } from './set-location'
 
-export { informativeMessage, setTranslationMessage }
+export { informativeMessage, setLocation }

@@ -1,6 +1,5 @@
 import { InformativeMessage } from '../types'
 
-// change informativeMessage object
 export const informativeMessage: InformativeMessage = {
   string: {
     invalidValue: '[valueName] must be a string type!',
@@ -31,7 +30,7 @@ export const informativeMessage: InformativeMessage = {
     notIsArray: '[valueName] value must be an array!'
   },
   equal: 'value does not match!',
-  notToEqual: {
+  notEqual: {
     invalidValue: ''
   },
   oneOf: {

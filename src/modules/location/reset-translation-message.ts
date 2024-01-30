@@ -32,7 +32,7 @@ export const resetTranslationMessage = (): void => {
       notIsArray: '[valueName] value must be an array!'
     },
     equal: 'value does not match!',
-    notToEqual: {
+    notEqual: {
       invalidValue: ''
     },
     oneOf: {

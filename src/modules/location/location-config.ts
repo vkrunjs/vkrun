@@ -24,8 +24,8 @@ export const locationConfig: Array<{ keys: string[], reservedKeys?: string[] }> 
   { keys: ['array', 'invalidValue'], reservedKeys: ['[valueName]', '[arrayType]'] },
   { keys: ['array', 'notIsArray'], reservedKeys: ['[valueName]'] },
 
-  { keys: ['toEqual'] },
-  { keys: ['notToEqual', 'invalidValue'] },
+  { keys: ['equal'] },
+  { keys: ['notEqual', 'invalidValue'] },
   { keys: ['oneOf', 'invalidValue'] },
   { keys: ['notOneOf', 'invalidValue'] }
 ]

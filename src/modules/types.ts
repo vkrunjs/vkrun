@@ -4,7 +4,7 @@ export interface IValidator {
   notRequired: () => NotRequiredMethod
   string: () => StringMethod
   boolean: () => DefaultReturn
-  date: (type: DateTypes) => DateMethod
+  date: (type?: DateTypes) => DateMethod
   alias: (valueName: string) => AliasMethod
   array: () => ArrayMethod
   equal: (valueToCompare: any) => DefaultReturn
@@ -145,7 +145,7 @@ export interface MaxDateMethod extends DefaultReturn {
 export interface AliasMethod extends DefaultReturn {
   string: () => StringMethod
   boolean: () => DefaultReturn
-  date: (type: DateTypes) => DateMethod
+  date: (type?: DateTypes) => DateMethod
   array: () => ArrayMethod
   equal: (valueToCompare: any) => DefaultReturn
   object: (schema: ObjectType) => DefaultReturn
@@ -154,7 +154,8 @@ export interface AliasMethod extends DefaultReturn {
 export interface ArrayMethod extends DefaultReturn {
   string: () => StringMethod
   boolean: () => DefaultReturn
-  date: (type: DateTypes) => DateMethod
+  number: () => NumberMethod
+  date: (type?: DateTypes) => DateMethod
   object: (schema: ObjectType) => DefaultReturn
 }
 
@@ -189,7 +190,7 @@ export type TimeTypes = 'HH:MM' | 'HH:MM:SS' | 'HH:MM:SS.MS'
 
 export type ObjectType = Record<string, any>
 
-export interface SetTranslationMessage {
+export interface SetLocation {
   string?: {
     invalidValue?: string
     minWord?: string
@@ -260,7 +261,7 @@ export interface InformativeMessage {
     notIsArray: string
   }
   equal: string
-  notToEqual: {
+  notEqual: {
     invalidValue: string
   }
   oneOf: {

@@ -1,13 +1,14 @@
-import { AnyInformativeMessage, SetTranslationMessage } from '../types'
+import { AnyInformativeMessage, SetLocation } from '../types'
 import { locationConfig } from './location-config'
 import { informativeMessage } from './informative-message'
 
-export const setTranslationMessage = (newMessages: SetTranslationMessage): boolean => {
+export const setLocation = (newMessages: SetLocation): boolean => {
   const isString = (value: string | undefined, key: string): boolean => {
     if (typeof value === 'string') {
       return true
     } else if (value !== undefined && typeof value !== 'string') {
-      throw new Error(`setTranslationMessage: newMessages.${key} must be a string type!`)
+      console.error(`vkrun: setLocation ${key} must be a string type!`)
+      throw new Error(`vkrun: setLocation ${key} must be a string type!`)
     }
     return false
   }
@@ -23,14 +24,6 @@ export const setTranslationMessage = (newMessages: SetTranslationMessage): boole
       }
 
       const lastKey = keys[keys.length - 1]
-
-      if (reservedKeys) {
-        const hasReservedKeys = reservedKeys.every((k) => String(value).includes(k))
-        if (!hasReservedKeys) {
-          const reservedKeysString = reservedKeys.join(' and ')
-          throw new Error(`setTranslationMessage: ${lastKey} must contain the reserved key(s) ${reservedKeysString}!`)
-        }
-      }
 
       currentObject[lastKey] = value
     }
