@@ -22,13 +22,13 @@ export const validateMinDate = ({
 
   const expect = (): string => {
     if (indexArray !== undefined) {
-      if (value instanceof Date && dateToCompare instanceof Date) {
+      if (value instanceof Date) {
         return `array index at date ${formatYYYYDDMMHHMMSSMS(value)} less than or equal to ${formatYYYYDDMMHHMMSSMS(dateToCompare)}`
       } else {
         return 'array index at date less than or equal to reference date'
       }
     } else {
-      if (value instanceof Date && dateToCompare instanceof Date) {
+      if (value instanceof Date) {
         return `${formatYYYYDDMMHHMMSSMS(value)} greater than or equal to ${formatYYYYDDMMHHMMSSMS(dateToCompare)}`
       } else {
         return 'date greater than or equal to reference date'

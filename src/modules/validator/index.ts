@@ -217,7 +217,7 @@ export class Validator implements IValidator {
     return {
       string: () => this.string(),
       boolean: () => this.boolean(),
-      date: (type: DateTypes) => this.date(type),
+      date: (type?: DateTypes) => this.date(type),
       array: () => this.array(),
       equal: (valueToCompare: any) => this.equal(valueToCompare),
       object: (schema: ObjectType) => this.object(schema),
@@ -240,7 +240,8 @@ export class Validator implements IValidator {
     return {
       string: () => this.string(),
       boolean: () => this.boolean(),
-      date: (type: DateTypes) => this.date(type),
+      number: () => this.number(),
+      date: (type?: DateTypes) => this.date(type),
       object: (schema: ObjectType) => this.object(schema),
       ...this.defaultReturnMethods()
     }
