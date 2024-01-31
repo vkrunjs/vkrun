@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.16.0
+
+### Minor Changes
+
+- 5cded14: validate return a test
+
 ## 0.15.0
 
 ### Minor Changes
