@@ -234,4 +234,18 @@ describe('Validator String Method', () => {
 
     await expect(sut).rejects.toThrow('value_name must be a string type!')
   })
+
+  it('Should be able to validate the string method and throw Error if the error class does not extend Error', () => {
+    class ClassNotExtendError extends Event {
+      constructor (message: string) {
+        super(`invalid param: ${message}`)
+      }
+    }
+
+    const sut = (): void => validator()
+      .string()
+      .throw(undefined, 'value_name', new ClassNotExtendError(''))
+
+    expect(sut).toThrow('vkrun: provided class does not extend Error!')
+  })
 })

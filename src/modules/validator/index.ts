@@ -1,5 +1,5 @@
 import { executeValidateMethods } from './helpers/execute-validate-methods'
-import { hasMethod, isObject } from '../utils'
+import { hasMethod } from '../utils'
 import {
   MinDateMethod,
   MaxDateMethod,
@@ -27,6 +27,7 @@ import {
   AliasMethod,
   ArrayMethod
 } from '../types'
+import { throwError } from '../errors'
 
 export class Validator implements IValidator {
   private value: any
@@ -317,40 +318,14 @@ export class Validator implements IValidator {
     this.value = value
     this.valueName = valueName
     this.validateMethods()
-
-    if (this.tests.errors.length > 0) {
-      if (ClassError) {
-        const TestClassError = new ClassError('')
-        const extendsError = TestClassError instanceof Error
-        if (extendsError) {
-          throw new ClassError(this.tests.errors[0].message)
-        } else {
-          throw new Error('invalid param: class error provided is not valid!')
-        }
-      } else {
-        throw new Error(this.tests.errors[0].message)
-      }
-    }
+    throwError(this.tests, ClassError)
   }
 
   async throwAsync (value: any, valueName: string, ClassError?: ErrorTypes): Promise<void> {
     this.value = await value
     this.valueName = valueName
     this.validateMethods()
-
-    if (this.tests.errors.length > 0) {
-      if (ClassError) {
-        const TestClassError = new ClassError('')
-        const extendsError = TestClassError instanceof Error
-        if (extendsError) {
-          throw new ClassError(this.tests.errors[0].message)
-        } else {
-          throw new Error('invalid param: class error provided is not valid!')
-        }
-      } else {
-        throw new Error(this.tests.errors[0].message)
-      }
-    }
+    throwError(this.tests, ClassError)
   }
 
   test (value: any, valueName: string): Tests {
