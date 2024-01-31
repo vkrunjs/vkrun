@@ -697,4 +697,27 @@ describe('Validator Object Method', () => {
 
     await expect(sut).rejects.toThrow('valueE value must be an object!')
   })
+
+  it('Should be able to validate the object method and throw Error if the schema is not of type object', () => {
+    try {
+      validator().object(null as any)
+    } catch (error: any) {
+      const sut = error
+
+      expect(sut.message).toEqual('vkrun: object method received invalid parameter!')
+    }
+  })
+
+  it("Should be able to validate the object's method and throw Error if the schema has a key with different typing than the Validator class", () => {
+    try {
+      validator().object({
+        valueA: validator().string(),
+        valueB: true
+      })
+    } catch (error: any) {
+      const sut = error
+
+      expect(sut.message).toEqual('vkrun: object method received invalid parameter!')
+    }
+  })
 })

@@ -226,7 +226,11 @@ export class Validator implements IValidator {
   }
 
   object (schema: ObjectType): DefaultReturn {
-    if (!isObject(schema)) {
+    try {
+      for (const [key, rule] of Object.entries(schema) as [string, any]) {
+        rule.validate(undefined, key)
+      }
+    } catch (error) {
       console.error('vkrun: object method received invalid parameter!')
       throw Error('vkrun: object method received invalid parameter!')
     }

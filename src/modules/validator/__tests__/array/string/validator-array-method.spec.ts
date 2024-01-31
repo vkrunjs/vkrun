@@ -16,8 +16,8 @@ describe('Validator Array Method', () => {
     const objectArray = validator().array().object({ key: validator().string() }).validate([{ key: 'string' }])
     const defaultDateArray = validator().array().date().validate([new Date()])
     const dateArray = validator().array().date('ISO8601').validate([new Date()])
-    const minDateArray = validator().array().date().min(new Date()).validate([new Date()])
-    const maxDateArray = validator().array().date().max(new Date()).validate([new Date()])
+    const minDateArray = validator().array().date().min(new Date('2000/01/01')).validate([new Date('2000/01/01')])
+    const maxDateArray = validator().array().date().max(new Date('2000/01/01')).validate([new Date('2000/01/01')])
 
     expect(stringArray).toBeTruthy()
     expect(emailArray).toBeTruthy()
