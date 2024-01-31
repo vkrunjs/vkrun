@@ -1,5 +1,5 @@
 import { validator } from '../../index'
-import { InvalidParamError } from '../../../errors'
+import { AnyError } from '../../../errors'
 
 describe('Validator Date (DD-MM-YYYY and DD/MM/YYYY) Method', () => {
   it('Should be able to validate the date method and return true if the value is of type DD-MM-YYYY date', () => {
@@ -402,26 +402,26 @@ describe('Validator Date (DD-MM-YYYY and DD/MM/YYYY) Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and throw InvalidParamError if the value is not of type DD-MM-YYYY date', () => {
+  it('Should be able to validate the date method and throw AnyError if the value is not of type DD-MM-YYYY date', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .date('DD-MM-YYYY')
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
-  it('Should be able to validate the date method and throw InvalidParamError if the value is not of type DD/MM/YYYY date', () => {
+  it('Should be able to validate the date method and throw AnyError if the value is not of type DD/MM/YYYY date', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .date('DD/MM/YYYY')
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the date method and throw Error if the value is a promise and is not of type DD-MM-YYYY date', async () => {

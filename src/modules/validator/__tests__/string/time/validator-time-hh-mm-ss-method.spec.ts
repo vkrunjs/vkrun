@@ -1,5 +1,5 @@
 import { validator } from '../../../index'
-import { InvalidParamError } from '../../../../errors'
+import { AnyError } from '../../../../errors'
 
 describe('Validator Time HH:MM:SS Method', () => {
   it('Should be able to validate the time method and return true if list is valid', () => {
@@ -260,16 +260,16 @@ describe('Validator Time HH:MM:SS Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the time method and throw InvalidParamError if the value is a valid time format', () => {
+  it('Should be able to validate the time method and throw AnyError if the value is a valid time format', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .string()
       .time('HH:MM:SS')
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the time method and throw Error if the value is a promise and is a invalid time format', async () => {

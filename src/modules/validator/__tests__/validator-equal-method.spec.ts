@@ -1,5 +1,5 @@
 import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { AnyError } from '../../errors'
 
 describe('Validator Equal Method', () => {
   it('Should be able to validate the equal method and return true if the value is equal to the comparison value', () => {
@@ -252,16 +252,16 @@ describe('Validator Equal Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the equal method and throw InvalidParamError if the value is not equal to the comparison value', () => {
+  it('Should be able to validate the equal method and throw AnyError if the value is not equal to the comparison value', () => {
     const valueToCompare = true
     const value = undefined
 
     const sut = (): void => validator()
       .equal(valueToCompare)
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the equal method and throw Error if the value is a promise and is not of type boolean', async () => {

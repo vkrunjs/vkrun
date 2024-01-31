@@ -1,5 +1,5 @@
 import { validator } from '../../index'
-import { InvalidParamError } from '../../../errors'
+import { AnyError } from '../../../errors'
 
 describe('Validator MinWord Method', () => {
   it('Should be able to validate the minWord method and return true if the value has the minimum words', () => {
@@ -246,16 +246,16 @@ describe('Validator MinWord Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the minWord method and throw InvalidParamError if the value has the minimum words', () => {
+  it('Should be able to validate the minWord method and throw AnyError if the value has the minimum words', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .string()
       .minWord(2)
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the minWord method and throw Error if the value is a promise and does not have the minimum words', async () => {

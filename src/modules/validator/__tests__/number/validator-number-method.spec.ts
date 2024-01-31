@@ -1,5 +1,5 @@
 import { validator } from '../../index'
-import { InvalidParamError } from '../../../errors'
+import { AnyError } from '../../../errors'
 
 describe('Validator Number Method', () => {
   it('Should be able to validate the number method and return true if the value is of type number', () => {
@@ -208,15 +208,15 @@ describe('Validator Number Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the number method and throw InvalidParamError if the value is not of type number', () => {
+  it('Should be able to validate the number method and throw AnyError if the value is not of type number', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .number()
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the number method and throw Error if the value is a promise and is not of type number', async () => {

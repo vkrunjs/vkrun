@@ -1,5 +1,5 @@
 import { validator } from '../index'
-import { InvalidParamError } from '../../errors'
+import { AnyError } from '../../errors'
 
 describe('Validator Object Method', () => {
   it('Should be able to validate the object method and return true if the value is valid', () => {
@@ -651,7 +651,7 @@ describe('Validator Object Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the object method and throw InvalidParamError if the value is invalid', () => {
+  it('Should be able to validate the object method and throw AnyError if the value is invalid', () => {
     const schema = validator().object({
       valueA: validator().string(),
       valueB: validator().boolean(),
@@ -662,10 +662,10 @@ describe('Validator Object Method', () => {
       })
     })
 
-    const sut = (): void => schema.throw(undefined, 'value_name', InvalidParamError)
+    const sut = (): void => schema.throw(undefined, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the object method and throw Error if the value is a promise and is not of type object', async () => {

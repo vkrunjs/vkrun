@@ -1,5 +1,5 @@
 import { validator } from '../../index'
-import { InvalidParamError } from '../../../errors'
+import { AnyError } from '../../../errors'
 
 describe('Validator Email Method', () => {
   it('Should be able to validate the email method and return true if list is valid', () => {
@@ -281,16 +281,16 @@ describe('Validator Email Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the email method and throw InvalidParamError if the value is a valid email format', () => {
+  it('Should be able to validate the email method and throw AnyError if the value is a valid email format', () => {
     const value = undefined
 
     const sut = (): void => validator()
       .string()
       .email()
-      .throw(value, 'value_name', InvalidParamError)
+      .throw(value, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the email method and throw Error if the value is a promise and is a invalid email format', async () => {

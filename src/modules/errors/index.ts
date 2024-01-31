@@ -1,4 +1,2 @@
-export * from './invalid-param-error'
-export * from './missing-param-error'
-export * from './server-error'
+export * from './any-error'
 export * from './throw-error'

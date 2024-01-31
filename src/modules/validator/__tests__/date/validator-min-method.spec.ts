@@ -1,5 +1,5 @@
 import { validator } from '../../index'
-import { InvalidParamError } from '../../../errors'
+import { AnyError } from '../../../errors'
 
 describe('Validator Min Date Method', () => {
   it('Should be able to validate the min method and return true if the date is greater than the reference date', () => {
@@ -295,17 +295,17 @@ describe('Validator Min Date Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the min method and throw InvalidParamError if the value is undefined', () => {
+  it('Should be able to validate the min method and throw AnyError if the value is undefined', () => {
     const date = undefined
     const refDate = new Date('2000-03-02T02:00:00.000Z')
 
     const sut = (): void => validator()
       .date()
       .min(refDate)
-      .throw(date, 'value_name', InvalidParamError)
+      .throw(date, 'value_name', AnyError)
 
-    expect(sut).toThrow(InvalidParamError)
-    expect(sut).toThrow(new InvalidParamError('value_name is required!'))
+    expect(sut).toThrow(AnyError)
+    expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the min method and throw Error if the value is a promise and less than the reference date', async () => {
