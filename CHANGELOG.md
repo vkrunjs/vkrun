@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.16.1
+
+### Patch Changes
+
+- dc3564d: docs: update README
+
 ## 0.16.0
 
 ### Minor Changes
