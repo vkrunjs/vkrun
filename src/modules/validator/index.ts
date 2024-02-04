@@ -72,48 +72,48 @@ export class Validator implements IValidator {
       return this.defaultReturnMethods()
     }
 
-    const minLength = (minLength: number): MinLengthMethod => {
+    const minLength = (limit: number): MinLengthMethod => {
       if (hasMethod(this.methods, 'minLength')) {
         console.error('vkrun: minLength method has already been called!')
         throw Error('minLength method has already been called!')
       }
 
-      if (typeof minLength !== 'number' || minLength < 0) {
+      if (typeof limit !== 'number' || limit < 0) {
         console.error('vkrun: minLength method received invalid parameter!')
         throw Error('vkrun: minLength method received invalid parameter!')
       }
 
-      this.methodBuild({ method: 'minLength', minLength })
+      this.methodBuild({ method: 'minLength', minLength: limit })
       return { maxLength, minWord, ...this.defaultReturnMethods() }
     }
 
-    const maxLength = (maxLength: number): MaxLengthMethod => {
+    const maxLength = (limit: number): MaxLengthMethod => {
       if (hasMethod(this.methods, 'maxLength')) {
         console.error('vkrun: maxLength method has already been called!')
         throw Error('maxLength method has already been called!')
       }
 
-      if (typeof maxLength !== 'number' || maxLength < 0) {
+      if (typeof limit !== 'number' || limit < 0) {
         console.error('vkrun: maxLength method received invalid parameter!')
         throw Error('vkrun: maxLength method received invalid parameter!')
       }
 
-      this.methodBuild({ method: 'maxLength', maxLength })
+      this.methodBuild({ method: 'maxLength', maxLength: limit })
       return { minLength, minWord, ...this.defaultReturnMethods() }
     }
 
-    const minWord = (minWord: number): MinWordMethod => {
+    const minWord = (limit: number): MinWordMethod => {
       if (hasMethod(this.methods, 'minWord')) {
         console.error('vkrun: minWord method has already been called!')
         throw Error('minWord method has already been called!')
       }
 
-      if (typeof minWord !== 'number' || minWord < 0) {
+      if (typeof limit !== 'number' || limit < 0) {
         console.error('vkrun: minWord method received invalid parameter!')
         throw Error('vkrun: minWord method received invalid parameter!')
       }
 
-      this.methodBuild({ method: 'minWord', minWord })
+      this.methodBuild({ method: 'minWord', minWord: limit })
       return { minLength, maxLength, ...this.defaultReturnMethods() }
     }
 

@@ -37,9 +37,9 @@ export interface NotRequiredMethod {
 }
 
 export interface StringMethod extends DefaultReturn {
-  minLength: (minLength: number) => MinLengthMethod
-  maxLength: (maxLength: number) => MaxLengthMethod
-  minWord: (minWord: number) => MinWordMethod
+  minLength: (limit: number) => MinLengthMethod
+  maxLength: (limit: number) => MaxLengthMethod
+  minWord: (limit: number) => MinWordMethod
   email: () => EmailMethod
   UUID: () => UUIDMethod
   time: (type: TimeTypes) => TimeMethod
@@ -52,8 +52,8 @@ export interface UUIDMethod extends DefaultReturn {}
 export interface TimeMethod extends DefaultReturn {}
 
 export interface MinLengthMethod extends DefaultReturn {
-  maxLength: (maxLength: number) => {
-    minWord: (minWord: number) => DefaultReturn
+  maxLength: (limit: number) => {
+    minWord: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -62,8 +62,8 @@ export interface MinLengthMethod extends DefaultReturn {
     test: (value: any, valueName: string) => Tests
     testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-  minWord: (minWord: number) => {
-    maxLength: (maxLength: number) => DefaultReturn
+  minWord: (limit: number) => {
+    maxLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -75,8 +75,8 @@ export interface MinLengthMethod extends DefaultReturn {
 }
 
 export interface MaxLengthMethod extends DefaultReturn {
-  minLength: (minLength: number) => {
-    minWord: (minWord: number) => DefaultReturn
+  minLength: (limit: number) => {
+    minWord: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -85,8 +85,8 @@ export interface MaxLengthMethod extends DefaultReturn {
     test: (value: any, valueName: string) => Tests
     testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-  minWord: (minWord: number) => {
-    minLength: (minLength: number) => DefaultReturn
+  minWord: (limit: number) => {
+    minLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -98,8 +98,8 @@ export interface MaxLengthMethod extends DefaultReturn {
 }
 
 export interface MinWordMethod extends DefaultReturn {
-  minLength: (minLength: number) => {
-    maxLength: (maxLength: number) => DefaultReturn
+  minLength: (limit: number) => {
+    maxLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -108,8 +108,8 @@ export interface MinWordMethod extends DefaultReturn {
     test: (value: any, valueName: string) => Tests
     testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-  maxLength: (maxLength: number) => {
-    minLength: (minLength: number) => DefaultReturn
+  maxLength: (limit: number) => {
+    minLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
