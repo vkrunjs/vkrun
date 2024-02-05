@@ -13,7 +13,7 @@ export const setLocation = (newMessages: SetLocation): boolean => {
     return false
   }
 
-  const setValue = (keys: string[], value: string | undefined, reservedKeys?: string[]): void => {
+  const setValue = (keys: string[], value: string | undefined): void => {
     const keyPath = keys.join('.')
     let currentObject: AnyInformativeMessage = informativeMessage
 
@@ -37,7 +37,7 @@ export const setLocation = (newMessages: SetLocation): boolean => {
       value = value?.[key]
     }
 
-    setValue(config.keys, value, config.reservedKeys)
+    setValue(config.keys, value)
   })
 
   return true

@@ -1,28 +1,27 @@
-export const locationConfig: Array<{ keys: string[], reservedKeys?: string[] }> = [
-  { keys: ['string', 'invalidValue'], reservedKeys: ['[valueName]'] },
-  { keys: ['string', 'minWord'], reservedKeys: ['[valueName]', '[minWord]'] },
-  { keys: ['string', 'uuid'], reservedKeys: ['[valueName]'] },
-  { keys: ['string', 'email'], reservedKeys: ['[value]'] },
-  { keys: ['string', 'maxLength'], reservedKeys: ['[valueName]', '[maxLength]'] },
-  { keys: ['string', 'minLength'], reservedKeys: ['[valueName]', '[minLength]'] },
-  { keys: ['string', 'time'], reservedKeys: ['[value]', '[type]'] },
+export const locationConfig: Array<{ keys: string[] }> = [
+  { keys: ['string', 'invalidValue'] },
+  { keys: ['string', 'minWord'] },
+  { keys: ['string', 'uuid'] },
+  { keys: ['string', 'email'] },
+  { keys: ['string', 'maxLength'] },
+  { keys: ['string', 'minLength'] },
+  { keys: ['string', 'time'] },
 
-  { keys: ['number', 'invalidValue'], reservedKeys: ['[valueName]'] },
-  { keys: ['number', 'float'], reservedKeys: ['[valueName]'] },
-  { keys: ['number', 'integer'], reservedKeys: ['[valueName]'] },
+  { keys: ['number', 'invalidValue'] },
+  { keys: ['number', 'float'] },
+  { keys: ['number', 'integer'] },
 
-  { keys: ['boolean', 'invalidValue'], reservedKeys: ['[valueName]'] },
+  { keys: ['boolean', 'invalidValue'] },
 
-  { keys: ['required'], reservedKeys: ['[valueName]'] },
+  { keys: ['required'] },
 
-  { keys: ['date', 'invalidValue'], reservedKeys: ['[valueName]', '[type]'] },
-  { keys: ['date', 'min'], reservedKeys: ['[value]', '[valueName]', '[refDate]'] },
-  { keys: ['date', 'max'], reservedKeys: ['[value]', '[valueName]', '[refDate]'] },
+  { keys: ['date', 'invalidValue'] },
+  { keys: ['date', 'min'] },
+  { keys: ['date', 'max'] },
 
-  { keys: ['object'], reservedKeys: ['[valueName]'] },
+  { keys: ['object'] },
 
-  { keys: ['array', 'invalidValue'], reservedKeys: ['[valueName]', '[arrayType]'] },
-  { keys: ['array', 'notIsArray'], reservedKeys: ['[valueName]'] },
+  { keys: ['array'] },
 
   { keys: ['equal'] },
   { keys: ['notEqual', 'invalidValue'] },

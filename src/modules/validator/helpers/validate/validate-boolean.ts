@@ -17,7 +17,9 @@ export const validateBoolean = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',
-    error: informativeMessage.boolean.invalidValue.replace('[valueName]', valueName)
+    error: informativeMessage.boolean.invalidValue
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
   if (isBoolean(value)) {

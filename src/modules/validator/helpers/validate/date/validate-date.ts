@@ -24,6 +24,7 @@ export const validateDate = ({
       ? `array index in the ${type ?? 'ISO8601'} date type`
       : `${type ?? 'ISO8601'} date type`,
     error: informativeMessage.date.invalidValue
+      .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[type]', type ?? 'ISO8601')
   }

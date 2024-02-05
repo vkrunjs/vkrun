@@ -27,10 +27,7 @@ export const resetTranslationMessage = (): void => {
       max: 'the [valueName] [value] must be less than or equal to the [refDate]!'
     },
     object: '[valueName] value must be an object!',
-    array: {
-      invalidValue: 'all values in the array [valueName] must be type [arrayType]!',
-      notIsArray: '[valueName] value must be an array!'
-    },
+    array: '[valueName] value must be an array!',
     equal: 'value does not match!',
     notEqual: {
       invalidValue: ''

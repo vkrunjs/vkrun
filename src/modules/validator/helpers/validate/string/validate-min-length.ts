@@ -22,6 +22,7 @@ export const validateMinLength = ({
       ? 'array index with a length greater than or equal to the limit'
       : 'value with a length greater than or equal to the limit',
     error: informativeMessage.string.minLength
+      .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[minLength]', String(minLength))
   }
@@ -52,7 +53,9 @@ export const validateMinLength = ({
       received: value
     })
   } else {
-    message.error = informativeMessage.string.invalidValue.replace('[valueName]', valueName)
+    message.error = informativeMessage.string.invalidValue
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
     handleAddFailed()
   }
 }

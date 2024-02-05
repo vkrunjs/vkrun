@@ -19,7 +19,9 @@ export const validateUuid = ({
   const isUuid = uuidRegex.test(String(value))
   const message = {
     expect: indexArray !== undefined ? 'array index in UUID format' : 'format UUID',
-    error: informativeMessage.string.uuid.replace('[valueName]', valueName)
+    error: informativeMessage.string.uuid
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
   if (isUuid) {

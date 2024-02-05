@@ -17,7 +17,9 @@ export const validateString = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in string type' : 'string type',
-    error: informativeMessage.string.invalidValue.replace('[valueName]', valueName)
+    error: informativeMessage.string.invalidValue
+      .replace('[value]', String(value))
+      .replace('[valueName]', String(valueName))
   }
 
   if (isString(value)) {

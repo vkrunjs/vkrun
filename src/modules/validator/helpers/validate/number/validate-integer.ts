@@ -17,7 +17,9 @@ export const validateInteger = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in integer type' : 'integer type',
-    error: informativeMessage.number.integer.replace('[valueName]', valueName)
+    error: informativeMessage.number.integer
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
   if (isInteger(value)) {

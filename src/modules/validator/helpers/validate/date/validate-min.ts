@@ -39,6 +39,7 @@ export const validateMinDate = ({
   const message = {
     expect: expect(),
     error: informativeMessage.date.invalidValue
+      .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[type]', 'date')
   }
@@ -67,8 +68,8 @@ export const validateMinDate = ({
 
   if (deadlineExceeded) {
     message.error = informativeMessage.date.min
-      .replace('[valueName]', valueName)
       .replace('[value]', formatYYYYDDMMHHMMSSMS(value))
+      .replace('[valueName]', valueName)
       .replace('[refDate]', formatYYYYDDMMHHMMSSMS(dateToCompare))
 
     handleAddFailed()

@@ -17,7 +17,9 @@ export const validateNumber = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in number type' : 'number type',
-    error: informativeMessage.number.invalidValue.replace('[valueName]', valueName)
+    error: informativeMessage.number.invalidValue
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
   if (isNumber(value)) {

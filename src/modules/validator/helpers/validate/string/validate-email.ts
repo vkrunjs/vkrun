@@ -18,7 +18,9 @@ export const validateEmail = ({
   const regEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const message = {
     expect: indexArray !== undefined ? 'array index in email format' : 'email format',
-    error: informativeMessage.string.email.replace('[value]', String(value))
+    error: informativeMessage.string.email
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
   const emailFormatIsValid = regEmail.test(String(value))

@@ -215,10 +215,7 @@ export interface SetLocation {
     max?: string
   }
   object?: string
-  array?: {
-    invalidValue?: string
-    notIsArray?: string
-  }
+  array?: string
   equal?: string
   notToEqual?: {
     invalidValue?: string
@@ -256,10 +253,7 @@ export interface InformativeMessage {
     max: string
   }
   object: string
-  array: {
-    invalidValue: string
-    notIsArray: string
-  }
+  array: string
   equal: string
   notEqual: {
     invalidValue: string

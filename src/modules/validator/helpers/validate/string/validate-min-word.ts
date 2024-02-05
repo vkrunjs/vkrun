@@ -25,6 +25,7 @@ export const validateMinWord = ({
       ? 'array index with minimum of words'
       : 'minimum of words',
     error: informativeMessage.string.minWord
+      .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[minWord]', String(minWord))
   }

@@ -33,10 +33,7 @@ describe('Set translation message', () => {
         max: 'o [valueName] [value] deve ser menor ou igual a [refDate]!'
       },
       object: 'o valor de [valueName] deve ser um objeto!',
-      array: {
-        invalidValue: 'todos os valores no array [valueName] devem ser do tipo [arrayType]!',
-        notIsArray: 'o valor de [valueName] deve ser um array!'
-      },
+      array: 'o valor de [valueName] deve ser um array!',
       equal: 'o valor não corresponde!',
       notEqual: {
         invalidValue: ''
@@ -90,10 +87,7 @@ describe('Set translation message', () => {
         max: 'the [valueName] [value] must be less than or equal to the [refDate]!'
       },
       object: '[valueName] value must be an object!',
-      array: {
-        invalidValue: 'all values in the array [valueName] must be type [arrayType]!',
-        notIsArray: '[valueName] value must be an array!'
-      },
+      array: '[valueName] value must be an array!',
       equal: 'value does not match!',
       notEqual: {
         invalidValue: ''

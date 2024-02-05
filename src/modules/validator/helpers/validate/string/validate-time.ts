@@ -25,6 +25,7 @@ export const validateTime = ({
     expect: indexArray !== undefined ? `array index in ${type} format` : `${type} format`,
     error: informativeMessage.string.time
       .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
       .replace('[type]', type)
   }
 

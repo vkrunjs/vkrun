@@ -17,7 +17,9 @@ export const validateFloat = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in float type' : 'float type',
-    error: informativeMessage.number.float.replace('[valueName]', valueName)
+    error: informativeMessage.number.float
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
   if (isFloat(value)) {

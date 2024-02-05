@@ -130,7 +130,7 @@ console.log(validateB) // false
       - [.min](#min-date-array)
       - [.max](#max-date-array)
     - [.object](#object-array)
-- .setLocation
+- [.setLocation](#setLocation)
 - [Autor](#author)
 - [Licença](#license)
 
@@ -323,6 +323,76 @@ const validateC = schema.validate("123")
 console.log(validateA) // true
 console.log(validateB) // true
 console.log(validateC) // false
+```
+
+<h2 id="setLocation">
+  .<span style="color:#66B2FF">setLocation</span>()
+</h2>
+
+<p>O vkrun é permite alterar a mensagem de erro padrão de cada método.</p>
+
+- É possível utilizar as palavras chaves para personalizar sua mensagem. Palavras chaves disponíveis:
+  - string:
+    - invalidValue: [value] e [valueName]
+    - minWord: [value], [valueName] e [minWord]
+    - uuid: [value] e [valueName]
+    - email: [value] e [valueName]
+    - time: [value], [valueName] e [type]
+    - maxLength: [value], [valueName] e [maxLength],
+    - minLength: [value], [valueName] e [minLength]
+  - number:
+    - invalidValue: [value] e [valueName]
+    - float: [value] e [valueName]
+    - integer: [value] e [valueName]
+  - boolean:
+    - invalidValue: [value] e [valueName]
+  - required: [value] e [valueName]
+  - date:
+    - invalidValue: [value], [valueName] e [type]
+    - min: [value], [valueName] e [refDate]
+    - max: [value], [valueName]  e [refDate]
+  - object: [valueName]
+  - array: [valueName]
+
+```ts
+import { setLocation } from "vkrun"
+
+// change a message
+setLocation({
+  string: {
+    invalidValue: '[valueName] deve ser do tipo string!'
+  }
+})
+
+// or change all messages
+setLocation({
+  string: {
+    invalidValue: '[valueName] deve ser do tipo string!',
+    minWord: '[valueName] deve ter pelo menos [minWord] palavras!',
+    uuid: '[valueName] deve ser do tipo UUID!',
+    email: 'o email [value] é inválido!',
+    time: 'o horário [value] não está no formato [type]!',
+    maxLength: '[valueName] deve ter no máximo [maxLength] caracteres!',
+    minLength: '[valueName] deve ter no mínimo [minLength] caracteres!'
+  },
+  number: {
+    invalidValue: '[valueName] deve ser do tipo numérico!',
+    float: '[valueName] deve ser um número decimal!',
+    integer: '[valueName] deve ser um número inteiro!'
+  },
+  boolean: {
+    invalidValue: '[valueName] deve ser do tipo booleano!'
+  },
+  required: '[valueName] é obrigatório!',
+  date: {
+    invalidValue: 'a data [valueName] não está no formato [type]!',
+    min: 'o [valueName] [value] deve ser maior ou igual a [refDate]!',
+    max: 'o [valueName] [value] deve ser menor ou igual a [refDate]!'
+  },
+  object: 'o valor de [valueName] deve ser um objeto!',
+  array: 'o valor de [valueName] deve ser um array!',
+  equal: 'o valor não corresponde!'
+})
 ```
 
 <h2 id="string">
