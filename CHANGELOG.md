@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.17.0
+
+### Minor Changes
+
+- bf7728c: refactor setLocation
+
 ## 0.16.1
 
 ### Patch Changes

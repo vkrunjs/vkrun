@@ -1,5 +1,0 @@
----
-"vkrun": minor
----
-
-refactor setLocation
