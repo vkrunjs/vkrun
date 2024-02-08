@@ -333,24 +333,24 @@ console.log(validateC) // false
 
 - You can use keywords to customize your message. Available keywords:
   - string:
-    - invalidValue: [value] e [valueName]
-    - minWord: [value], [valueName] e [minWord]
-    - uuid: [value] e [valueName]
-    - email: [value] e [valueName]
-    - time: [value], [valueName] e [type]
-    - maxLength: [value], [valueName] e [maxLength],
-    - minLength: [value], [valueName] e [minLength]
+    - invalidValue: [value] and [valueName]
+    - minWord: [value], [valueName] and [minWord]
+    - uuid: [value] and [valueName]
+    - email: [value] and [valueName]
+    - time: [value], [valueName] and [type]
+    - maxLength: [value], [valueName] and [maxLength],
+    - minLength: [value], [valueName] and [minLength]
   - number:
-    - invalidValue: [value] e [valueName]
-    - float: [value] e [valueName]
-    - integer: [value] e [valueName]
+    - invalidValue: [value] and [valueName]
+    - float: [value] and [valueName]
+    - integer: [value] and [valueName]
   - boolean:
-    - invalidValue: [value] e [valueName]
-  - required: [value] e [valueName]
+    - invalidValue: [value] and [valueName]
+  - required: [value] and [valueName]
   - date:
-    - invalidValue: [value], [valueName] e [type]
-    - min: [value], [valueName] e [refDate]
-    - max: [value], [valueName]  e [refDate]
+    - invalidValue: [value], [valueName] and [type]
+    - min: [value], [valueName] and [refDate]
+    - max: [value], [valueName]  and [refDate]
   - object: [valueName]
   - array: [valueName]
 
