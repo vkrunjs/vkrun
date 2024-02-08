@@ -217,6 +217,7 @@ export class Validator implements IValidator {
     this.methodBuild({ method: 'alias', alias: valueName })
     return {
       string: () => this.string(),
+      number: () => this.number(),
       boolean: () => this.boolean(),
       date: (type?: DateTypes) => this.date(type),
       array: () => this.array(),

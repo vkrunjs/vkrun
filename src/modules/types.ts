@@ -144,6 +144,7 @@ export interface MaxDateMethod extends DefaultReturn {
 
 export interface AliasMethod extends DefaultReturn {
   string: () => StringMethod
+  number: () => NumberMethod
   boolean: () => DefaultReturn
   date: (type?: DateTypes) => DateMethod
   array: () => ArrayMethod
