@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.19.0
+
+### Minor Changes
+
+- d2e949f: create module for schema
+
 ## 0.18.0
 
 ### Minor Changes
