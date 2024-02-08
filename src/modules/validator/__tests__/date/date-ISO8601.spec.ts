@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date method and return true if the value is of type ISO8601 date', () => {
     const value = new Date()
 
-    const sut = validator()
+    const sut = schema()
       .date('ISO8601')
       .validate(value)
 
@@ -21,7 +21,7 @@ describe('Validator Date (ISO8601) Method', () => {
       new Date('2020-01-01T00:00:00Z')
     ]
 
-    const sut = validator().date('ISO8601')
+    const sut = schema().date('ISO8601')
 
     expect(validList.every((value) => sut.validate(value))).toBeTruthy()
   })
@@ -29,7 +29,7 @@ describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date method and return true if the value is a date string of type ISO8601 date', () => {
     const value = new Date().toISOString()
 
-    const sut = validator()
+    const sut = schema()
       .date('ISO8601')
       .validate(value)
 
@@ -39,7 +39,7 @@ describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date method and return false if the value is not of type ISO8601 date', () => {
     const value = '27/11/21'
 
-    const sut = validator()
+    const sut = schema()
       .date('ISO8601')
       .validate(value)
 
@@ -55,7 +55,7 @@ describe('Validator Date (ISO8601) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('ISO8601')
       .validateAsync(value())
 
@@ -71,7 +71,7 @@ describe('Validator Date (ISO8601) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('ISO8601')
       .validateAsync(value())
 
@@ -81,7 +81,7 @@ describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date method and passedAll to equal true if the value is of type ISO8601 date', () => {
     const value = new Date('2000-02-03T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date('ISO8601')
       .test(value, 'value_name')
 
@@ -110,7 +110,7 @@ describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date method and passedAll to equal false if the value is not of type ISO8601 date', () => {
     const value = '27/11/21'
 
-    const sut = validator()
+    const sut = schema()
       .date('ISO8601')
       .test(value, 'value_name')
 
@@ -138,7 +138,7 @@ describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type ISO8601 date', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .date('ISO8601')
       .notRequired()
       .test(value, 'value_name')
@@ -166,7 +166,7 @@ describe('Validator Date (ISO8601) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('ISO8601')
       .testAsync(value(), 'value_name')
 
@@ -201,7 +201,7 @@ describe('Validator Date (ISO8601) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('ISO8601')
       .testAsync(value(), 'value_name')
 
@@ -229,7 +229,7 @@ describe('Validator Date (ISO8601) Method', () => {
   it('Should be able to validate the date method and throw AnyError if the value is not of type ISO8601 date', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .date('ISO8601')
       .throw(value, 'value_name', AnyError)
 
@@ -246,7 +246,7 @@ describe('Validator Date (ISO8601) Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .date('ISO8601')
       .throwAsync(value(), 'value_name')
 

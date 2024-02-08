@@ -1,4 +1,4 @@
-import { validator } from '../index'
+import { schema } from '../../schema/index'
 import { AnyError } from '../../errors'
 
 describe('Validator Equal Method', () => {
@@ -15,7 +15,7 @@ describe('Validator Equal Method', () => {
     }]
     const value = valueToCompare
 
-    const sut = validator()
+    const sut = schema()
       .equal(valueToCompare)
       .validate(value)
 
@@ -45,7 +45,7 @@ describe('Validator Equal Method', () => {
       g: undefined
     }]
 
-    const sut = validator()
+    const sut = schema()
       .equal(valueToCompare)
       .validate(value)
 
@@ -72,7 +72,7 @@ describe('Validator Equal Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .equal(valueToCompare)
       .validateAsync(value())
 
@@ -90,7 +90,7 @@ describe('Validator Equal Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .equal(valueToCompare)
       .validateAsync(value())
 
@@ -101,7 +101,7 @@ describe('Validator Equal Method', () => {
     const valueToCompare = true
     const value = valueToCompare
 
-    const sut = validator()
+    const sut = schema()
       .equal(valueToCompare)
       .test(value, 'value_name')
 
@@ -131,7 +131,7 @@ describe('Validator Equal Method', () => {
     const valueToCompare = 1
     const value = 2
 
-    const sut = validator()
+    const sut = schema()
       .equal(valueToCompare)
       .test(value, 'value_name')
 
@@ -160,7 +160,7 @@ describe('Validator Equal Method', () => {
     const valueToCompare = 1
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .equal(valueToCompare)
       .notRequired()
       .test(value, 'value_name')
@@ -190,7 +190,7 @@ describe('Validator Equal Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .equal(valueToCompare)
       .testAsync(value(), 'value_name')
 
@@ -227,7 +227,7 @@ describe('Validator Equal Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .equal(valueToCompare)
       .testAsync(value(), 'value_name')
 
@@ -256,7 +256,7 @@ describe('Validator Equal Method', () => {
     const valueToCompare = true
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .equal(valueToCompare)
       .throw(value, 'value_name', AnyError)
 
@@ -275,7 +275,7 @@ describe('Validator Equal Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .equal(valueToCompare)
       .throwAsync(value(), 'value_name')
 

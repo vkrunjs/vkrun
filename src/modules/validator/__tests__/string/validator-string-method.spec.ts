@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator String Method', () => {
   it('Should be able to validate the string method and return true if the value is of type string', () => {
     const value = 'string'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .validate(value)
 
@@ -23,7 +23,7 @@ describe('Validator String Method', () => {
       undefined
     ]
 
-    const sut = validator().string()
+    const sut = schema().string()
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -37,7 +37,7 @@ describe('Validator String Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .validateAsync(value())
 
@@ -53,7 +53,7 @@ describe('Validator String Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .validateAsync(value())
 
@@ -63,7 +63,7 @@ describe('Validator String Method', () => {
   it('Should be able to validate the string method and passedAll to equal true if the value is of type string', () => {
     const value = 'string'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .test(value, 'value_name')
 
@@ -92,7 +92,7 @@ describe('Validator String Method', () => {
   it('Should be able to validate the string method and passedAll to equal false if the value is not of type string', () => {
     const value = false
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .test(value, 'value_name')
 
@@ -120,7 +120,7 @@ describe('Validator String Method', () => {
   it('Should be able to validate the string and passAll method as equal to true when it is not required, undefined value and not of type string', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .notRequired()
       .test(value, 'value_name')
@@ -148,7 +148,7 @@ describe('Validator String Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .testAsync(value(), 'value_name')
 
@@ -183,7 +183,7 @@ describe('Validator String Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .testAsync(value(), 'value_name')
 
@@ -211,7 +211,7 @@ describe('Validator String Method', () => {
   it('Should be able to validate the string method and throw AnyError if the value is not of type string', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .throw(value, 'value_name', AnyError)
 
@@ -228,7 +228,7 @@ describe('Validator String Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .string()
       .throwAsync(value(), 'value_name')
 
@@ -242,7 +242,7 @@ describe('Validator String Method', () => {
       }
     }
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .throw(undefined, 'value_name', new ClassNotExtendError(''))
 

@@ -1,11 +1,11 @@
-import { validator } from '../index'
+import { schema } from '../../schema/index'
 import { AnyError } from '../../errors'
 
 describe('Validator Boolean Method', () => {
   it('Should be able to validate the boolean method and return true if the value is of type boolean', () => {
     const value = true
 
-    const sut = validator()
+    const sut = schema()
       .boolean()
       .validate(value)
 
@@ -23,7 +23,7 @@ describe('Validator Boolean Method', () => {
       undefined
     ]
 
-    const sut = validator().boolean()
+    const sut = schema().boolean()
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -37,7 +37,7 @@ describe('Validator Boolean Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .boolean()
       .validateAsync(value())
 
@@ -53,7 +53,7 @@ describe('Validator Boolean Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .boolean()
       .validateAsync(value())
 
@@ -63,7 +63,7 @@ describe('Validator Boolean Method', () => {
   it('Should be able to validate the boolean method and passedAll to equal true if the value is of type boolean', () => {
     const value = true
 
-    const sut = validator()
+    const sut = schema()
       .boolean()
       .test(value, 'value_name')
 
@@ -92,7 +92,7 @@ describe('Validator Boolean Method', () => {
   it('Should be able to validate the boolean method and passedAll to equal false if the value is not of type boolean', () => {
     const value = 1
 
-    const sut = validator()
+    const sut = schema()
       .boolean()
       .test(value, 'value_name')
 
@@ -120,7 +120,7 @@ describe('Validator Boolean Method', () => {
   it('Should be able to validate the boolean and passAll method as equal to true when it is not required, undefined value and not of type boolean', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .boolean()
       .notRequired()
       .test(value, 'value_name')
@@ -148,7 +148,7 @@ describe('Validator Boolean Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .boolean()
       .testAsync(value(), 'value_name')
 
@@ -183,7 +183,7 @@ describe('Validator Boolean Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .boolean()
       .testAsync(value(), 'value_name')
 
@@ -211,7 +211,7 @@ describe('Validator Boolean Method', () => {
   it('Should be able to validate the boolean method and throw AnyError if the value is not of type boolean', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .boolean()
       .throw(value, 'value_name', AnyError)
 
@@ -228,7 +228,7 @@ describe('Validator Boolean Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .boolean()
       .throwAsync(value(), 'value_name')
 

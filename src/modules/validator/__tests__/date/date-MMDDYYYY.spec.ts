@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and return true if the value is of type MM-DD-YYYY date', () => {
     const value = '12-30-2000'
 
-    const sut = validator()
+    const sut = schema()
       .date('MM-DD-YYYY')
       .validate(value)
 
@@ -15,7 +15,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and return true if the value is of type MM/DD/YYYY date', () => {
     const value = '12/30/2000'
 
-    const sut = validator()
+    const sut = schema()
       .date('MM/DD/YYYY')
       .validate(value)
 
@@ -25,7 +25,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and return false if the value is not of type MM-DD-YYYY date', () => {
     const value = '30-12-2000'
 
-    const sut = validator()
+    const sut = schema()
       .date('MM-DD-YYYY')
       .validate(value)
 
@@ -35,7 +35,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and return false if the value is not of type MM/DD/YYYY date', () => {
     const value = '30/12/2000'
 
-    const sut = validator()
+    const sut = schema()
       .date('MM/DD/YYYY')
       .validate(value)
 
@@ -51,7 +51,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM-DD-YYYY')
       .validateAsync(value())
 
@@ -67,7 +67,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM/DD/YYYY')
       .validateAsync(value())
 
@@ -83,7 +83,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM-DD-YYYY')
       .validateAsync(value())
 
@@ -99,7 +99,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM/DD/YYYY')
       .validateAsync(value())
 
@@ -109,7 +109,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and passedAll to equal true if the value is of type MM-DD-YYYY date', () => {
     const value = '12-30-2000'
 
-    const sut = validator()
+    const sut = schema()
       .date('MM-DD-YYYY')
       .test(value, 'value_name')
 
@@ -138,7 +138,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and passedAll to equal true if the value is of type MM/DD/YYYY date', () => {
     const value = '12/30/2000'
 
-    const sut = validator()
+    const sut = schema()
       .date('MM/DD/YYYY')
       .test(value, 'value_name')
 
@@ -167,7 +167,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and passedAll to equal false if the value is not of type MM-DD-YYYY date', () => {
     const value = new Date('2000-02-03T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date('MM-DD-YYYY')
       .test(value, 'value_name')
 
@@ -195,7 +195,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and passedAll to equal false if the value is not of type MM/DD/YYYY date', () => {
     const value = new Date('2000-02-03T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date('MM/DD/YYYY')
       .test(value, 'value_name')
 
@@ -223,7 +223,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type MM-DD-YYYY date', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .date('MM-DD-YYYY')
       .notRequired()
       .test(value, 'value_name')
@@ -245,7 +245,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type MM/DD/YYYY date', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .date('MM/DD/YYYY')
       .notRequired()
       .test(value, 'value_name')
@@ -273,7 +273,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM-DD-YYYY')
       .testAsync(value(), 'value_name')
 
@@ -308,7 +308,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM/DD/YYYY')
       .testAsync(value(), 'value_name')
 
@@ -343,7 +343,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM-DD-YYYY')
       .testAsync(value(), 'value_name')
 
@@ -377,7 +377,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date('MM/DD/YYYY')
       .testAsync(value(), 'value_name')
 
@@ -405,7 +405,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and throw AnyError if the value is not of type MM-DD-YYYY date', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .date('MM-DD-YYYY')
       .throw(value, 'value_name', AnyError)
 
@@ -416,7 +416,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
   it('Should be able to validate the date method and throw AnyError if the value is not of type MM/DD/YYYY date', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .date('MM/DD/YYYY')
       .throw(value, 'value_name', AnyError)
 
@@ -433,7 +433,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .date('MM-DD-YYYY')
       .throwAsync(value(), 'value_name')
 
@@ -449,7 +449,7 @@ describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .date('MM/DD/YYYY')
       .throwAsync(value(), 'value_name')
 

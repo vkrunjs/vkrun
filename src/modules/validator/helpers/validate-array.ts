@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, Method, Methods, SuccessTest } from '../../../types'
-import { isArray, received } from '../../../utils'
+import { informativeMessage } from '../../location'
+import { ErrorTest, Method, Methods, SuccessTest } from '../../types'
+import { isArray, received } from '../../utils'
 
 export const validateArray = ({
   value,

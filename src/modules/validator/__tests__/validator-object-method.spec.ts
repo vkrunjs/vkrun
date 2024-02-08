@@ -1,19 +1,19 @@
-import { validator } from '../index'
+import { schema } from '../../schema/index'
 import { AnyError } from '../../errors'
 
 describe('Validator Object Method', () => {
   it('Should be able to validate the object method and return true if the value is valid', () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
-    const sut = schema.validate({
+    const sut = objectSchema.validate({
       valueA: 'any value',
       valueB: true,
       valueC: 123,
@@ -27,17 +27,17 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the object method and return false if the value is invalid', () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
-    const sut = schema.validate({
+    const sut = objectSchema.validate({
       valueA: 'any value',
       valueB: true,
       valueC: 123,
@@ -49,13 +49,13 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the object method when value is promise and return true if the value is valid', async () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
@@ -75,19 +75,19 @@ describe('Validator Object Method', () => {
       })
     }
 
-    const sut = await schema.validateAsync(value())
+    const sut = await objectSchema.validateAsync(value())
 
     expect(sut).toBeTruthy()
   })
 
   it('Should be able to validate the object method when value is promise and return false if the value is invalid', async () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
@@ -105,23 +105,23 @@ describe('Validator Object Method', () => {
       })
     }
 
-    const sut = await schema.validateAsync(value())
+    const sut = await objectSchema.validateAsync(value())
 
     expect(sut).toBeFalsy()
   })
 
   it('Should be able to validate the object method and passedAll to equal true if the value is valid', () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
-    const sut = schema.test({
+    const sut = objectSchema.test({
       valueA: 'any value',
       valueB: true,
       valueC: 123,
@@ -246,17 +246,17 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the object method and passedAll to equal false if the value is invalid', () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
-    const sut = schema.test({
+    const sut = objectSchema.test({
       valueA: 'any value',
       valueB: true,
       valueC: 123,
@@ -360,17 +360,17 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the object and passAll method as equal to true when it is not required abd value is undefined', () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     }).notRequired()
 
-    const sut = schema.test(undefined, 'value_name')
+    const sut = objectSchema.test(undefined, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
     expect(sut.passed).toEqual(1)
@@ -387,13 +387,13 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the boolean method and passedAll to equal true if the value is promise and valid', async () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
@@ -413,7 +413,7 @@ describe('Validator Object Method', () => {
       })
     }
 
-    const sut = await schema.testAsync(value(), 'value_name')
+    const sut = await objectSchema.testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
     expect(sut.passed).toEqual(14)
@@ -530,13 +530,13 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the object method and passedAll to equal false if the value is a promise and invalid', async () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
@@ -554,7 +554,7 @@ describe('Validator Object Method', () => {
       })
     }
 
-    const sut = await schema.testAsync(value(), 'value_name')
+    const sut = await objectSchema.testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(11)
@@ -652,30 +652,30 @@ describe('Validator Object Method', () => {
   })
 
   it('Should be able to validate the object method and throw AnyError if the value is invalid', () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
-    const sut = (): void => schema.throw(undefined, 'value_name', AnyError)
+    const sut = (): void => objectSchema.throw(undefined, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
     expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
   it('Should be able to validate the object method and throw Error if the value is a promise and is not of type object', async () => {
-    const schema = validator().object({
-      valueA: validator().string(),
-      valueB: validator().boolean(),
-      valueC: validator().number(),
-      valueD: validator().date(),
-      valueE: validator().object({
-        valueF: validator().string()
+    const objectSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().boolean(),
+      valueC: schema().number(),
+      valueD: schema().date(),
+      valueE: schema().object({
+        valueF: schema().string()
       })
     })
 
@@ -693,14 +693,14 @@ describe('Validator Object Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await schema.throwAsync(value(), 'value_name')
+    const sut = async (): Promise<void> => await objectSchema.throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('valueE value must be an object!')
   })
 
   it('Should be able to validate the object method and throw Error if the schema is not of type object', () => {
     try {
-      validator().object(null as any)
+      schema().object(null as any)
     } catch (error: any) {
       const sut = error
 
@@ -710,8 +710,8 @@ describe('Validator Object Method', () => {
 
   it("Should be able to validate the object's method and throw Error if the schema has a key with different typing than the Validator class", () => {
     try {
-      validator().object({
-        valueA: validator().string(),
+      schema().object({
+        valueA: schema().string(),
         valueB: true
       })
     } catch (error: any) {

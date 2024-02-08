@@ -1,4 +1,4 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator UUID Method', () => {
@@ -16,7 +16,7 @@ describe('Validator UUID Method', () => {
       'fe1db6e1-38a9-4c44-8b7b-3d0c25d58d09'
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .UUID()
 
@@ -35,7 +35,7 @@ describe('Validator UUID Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .UUID()
 
@@ -51,7 +51,7 @@ describe('Validator UUID Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .UUID()
       .validateAsync(value())
@@ -68,7 +68,7 @@ describe('Validator UUID Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .UUID()
       .validateAsync(value())
@@ -79,7 +79,7 @@ describe('Validator UUID Method', () => {
   it('Should be able to validate the UUID method and passedAll to equal true if the value is a valid UUID format', () => {
     const value = '550e8400-e29b-41d4-a716-446655440000'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .UUID()
       .test(value, 'value_name')
@@ -115,7 +115,7 @@ describe('Validator UUID Method', () => {
   it('Should be able to validate the UUID method and passedAll to equal false if the value is a invalid UUID format', () => {
     const value = false
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .UUID()
       .test(value, 'value_name')
@@ -154,7 +154,7 @@ describe('Validator UUID Method', () => {
   it('Should be able to validate the UUID and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .UUID()
       .notRequired()
@@ -183,7 +183,7 @@ describe('Validator UUID Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .UUID()
       .testAsync(value(), 'value_name')
@@ -225,7 +225,7 @@ describe('Validator UUID Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .UUID()
       .testAsync(value(), 'value_name')
@@ -264,7 +264,7 @@ describe('Validator UUID Method', () => {
   it('Should be able to validate the UUID method and throw AnyError if the value is a valid UUID format', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .UUID()
       .throw(value, 'value_name', AnyError)
@@ -282,7 +282,7 @@ describe('Validator UUID Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .string()
       .UUID()
       .throwAsync(value(), 'value_name')

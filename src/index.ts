@@ -1,5 +1,5 @@
-import { validator } from './modules/validator'
+import { schema } from './modules/schema'
 import { setLocation } from './modules/location'
 
-export default validator
+export default schema
 export { setLocation }

@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { isNumber, received } from '../../../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { isString, received } from '../../../utils'
 
-export const validateNumber = ({
+export const validateString = ({
   value,
   valueName,
   indexArray,
@@ -16,15 +16,15 @@ export const validateNumber = ({
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   const message = {
-    expect: indexArray !== undefined ? 'array index in number type' : 'number type',
-    error: informativeMessage.number.invalidValue
+    expect: indexArray !== undefined ? 'array index in string type' : 'string type',
+    error: informativeMessage.string.invalidValue
       .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
+      .replace('[valueName]', String(valueName))
   }
 
-  if (isNumber(value)) {
+  if (isString(value)) {
     callbackAddPassed({
-      method: 'number',
+      method: 'string',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -32,12 +32,12 @@ export const validateNumber = ({
     })
   } else {
     callbackAddFailed({
-      method: 'number',
+      method: 'string',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
+      index: indexArray,
       message: message.error
     })
   }

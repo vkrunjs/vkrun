@@ -1,7 +1,7 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { received } from '../../../utils'
-import { deepEqual } from '../../../utils/deep-equal'
+import { informativeMessage } from '../../location'
+import { ErrorTest, SuccessTest } from '../../types'
+import { received } from '../../utils'
+import { deepEqual } from '../../utils/deep-equal'
 
 export const validateEqual = ({
   value,

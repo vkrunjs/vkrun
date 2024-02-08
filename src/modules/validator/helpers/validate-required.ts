@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
-import { received } from '../../../utils'
+import { informativeMessage } from '../../location'
+import { ErrorTest, SuccessTest } from '../../types'
+import { received } from '../../utils'
 
 export const validateRequired = ({
   value,

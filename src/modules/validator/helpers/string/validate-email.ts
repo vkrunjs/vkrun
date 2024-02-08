@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { isInteger, received } from '../../../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { received } from '../../../utils'
 
-export const validateInteger = ({
+export const validateEmail = ({
   value,
   valueName,
   indexArray,
@@ -15,16 +15,18 @@ export const validateInteger = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const regEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const message = {
-    expect: indexArray !== undefined ? 'array index in integer type' : 'integer type',
-    error: informativeMessage.number.integer
+    expect: indexArray !== undefined ? 'array index in email format' : 'email format',
+    error: informativeMessage.string.email
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }
 
-  if (isInteger(value)) {
+  const emailFormatIsValid = regEmail.test(String(value))
+  if (emailFormatIsValid) {
     callbackAddPassed({
-      method: 'integer',
+      method: 'email',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -32,7 +34,7 @@ export const validateInteger = ({
     })
   } else {
     callbackAddFailed({
-      method: 'integer',
+      method: 'email',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

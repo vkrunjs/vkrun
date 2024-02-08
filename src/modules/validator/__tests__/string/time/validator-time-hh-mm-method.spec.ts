@@ -1,4 +1,4 @@
-import { validator } from '../../../index'
+import { schema } from '../../../../schema/index'
 import { AnyError } from '../../../../errors'
 
 describe('Validator Time HH:MM Method', () => {
@@ -12,7 +12,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const completeListOfHoursAndMinutes = Array.from(setList)
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .time('HH:MM')
 
@@ -33,7 +33,7 @@ describe('Validator Time HH:MM Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .time('HH:MM')
 
@@ -49,7 +49,7 @@ describe('Validator Time HH:MM Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .time('HH:MM')
       .validateAsync(value())
@@ -66,7 +66,7 @@ describe('Validator Time HH:MM Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .time('HH:MM')
       .validateAsync(value())
@@ -77,7 +77,7 @@ describe('Validator Time HH:MM Method', () => {
   it('Should be able to validate the time method and passedAll to equal true if the value is a valid time format', () => {
     const value = '13:51'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .time('HH:MM')
       .test(value, 'value_name')
@@ -113,7 +113,7 @@ describe('Validator Time HH:MM Method', () => {
   it('Should be able to validate the time method and passedAll to equal false if the value is a invalid time format', () => {
     const value = '13:5'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .time('HH:MM')
       .test(value, 'value_name')
@@ -150,7 +150,7 @@ describe('Validator Time HH:MM Method', () => {
   it('Should be able to validate the time and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .time('HH:MM')
       .notRequired()
@@ -179,7 +179,7 @@ describe('Validator Time HH:MM Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .time('HH:MM')
       .testAsync(value(), 'value_name')
@@ -221,7 +221,7 @@ describe('Validator Time HH:MM Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .time('HH:MM')
       .testAsync(value(), 'value_name')
@@ -260,7 +260,7 @@ describe('Validator Time HH:MM Method', () => {
   it('Should be able to validate the time method and throw AnyError if the value is a valid time format', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .time('HH:MM')
       .throw(value, 'value_name', AnyError)
@@ -278,7 +278,7 @@ describe('Validator Time HH:MM Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .string()
       .time('HH:MM')
       .throwAsync(value(), 'value_name')
@@ -289,7 +289,7 @@ describe('Validator Time HH:MM Method', () => {
   /* eslint-disable */
   it('Should be able to throw an error if the time method received invalid parameter', () => {
     try {
-      validator()
+      schema()
         .string()
         // @ts-ignore
         .time(false)

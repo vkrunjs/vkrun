@@ -1,8 +1,8 @@
 import { informativeMessage } from '../../../location'
 import { ErrorTest, SuccessTest } from '../../../types'
-import { isBoolean, received } from '../../../utils'
+import { received } from '../../../utils'
 
-export const validateBoolean = ({
+export const validateUuid = ({
   value,
   valueName,
   indexArray,
@@ -15,16 +15,18 @@ export const validateBoolean = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+  const isUuid = uuidRegex.test(String(value))
   const message = {
-    expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',
-    error: informativeMessage.boolean.invalidValue
+    expect: indexArray !== undefined ? 'array index in UUID format' : 'format UUID',
+    error: informativeMessage.string.uuid
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }
 
-  if (isBoolean(value)) {
+  if (isUuid) {
     callbackAddPassed({
-      method: 'boolean',
+      method: 'UUID',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -32,7 +34,7 @@ export const validateBoolean = ({
     })
   } else {
     callbackAddFailed({
-      method: 'boolean',
+      method: 'UUID',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

@@ -1,4 +1,4 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Max Date Method', () => {
@@ -6,7 +6,7 @@ describe('Validator Max Date Method', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .max(refDate)
 
@@ -21,7 +21,7 @@ describe('Validator Max Date Method', () => {
       new Date('2000-02-02T02:00:00.000Z')
     ]
 
-    const dateSchema = validator().date()
+    const dateSchema = schema().date()
 
     expect(invalidList.every(
       (sut) => dateSchema
@@ -40,7 +40,7 @@ describe('Validator Max Date Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .max(refDate)
       .validateAsync(date())
@@ -58,7 +58,7 @@ describe('Validator Max Date Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .max(refDate)
       .validateAsync(date())
@@ -70,7 +70,7 @@ describe('Validator Max Date Method', () => {
     const date = new Date('2000-02-02T02:00:00.000Z')
     const refDate = new Date('2000-02-03T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .max(refDate)
       .test(date, 'value_name')
@@ -107,7 +107,7 @@ describe('Validator Max Date Method', () => {
     const date = new Date('2000-02-03T02:00:00.000Z')
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .max(refDate)
       .test(date, 'value_name')
@@ -145,7 +145,7 @@ describe('Validator Max Date Method', () => {
     const date = undefined
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .max(refDate)
       .notRequired()
@@ -169,7 +169,7 @@ describe('Validator Max Date Method', () => {
     const date = undefined
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .max(refDate)
       .test(date, 'value_name')
@@ -218,7 +218,7 @@ describe('Validator Max Date Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .max(refDate)
       .testAsync(date(), 'value_name')
@@ -261,7 +261,7 @@ describe('Validator Max Date Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .max(refDate)
       .testAsync(date(), 'value_name')
@@ -299,7 +299,7 @@ describe('Validator Max Date Method', () => {
     const date = undefined
     const refDate = new Date('2000-03-02T02:00:00.000Z')
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .date()
       .max(refDate)
       .throw(date, 'value_name', AnyError)
@@ -318,7 +318,7 @@ describe('Validator Max Date Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .date()
       .max(refDate)
       .throwAsync(date(), 'value_name')
@@ -331,7 +331,7 @@ describe('Validator Max Date Method', () => {
     const refDate = new Date('2000-02-02T02:00:00.000Z')
 
     try {
-      const sut: void = validator()
+      const sut: void = schema()
       .date()
       .max(refDate)
       .min(refDate)
@@ -345,7 +345,7 @@ describe('Validator Max Date Method', () => {
 
   it('Should be able to throw an error if the max method received invalid parameter', () => {
     try {
-      validator()
+      schema()
         .date()
         // @ts-ignore
         .max(false)

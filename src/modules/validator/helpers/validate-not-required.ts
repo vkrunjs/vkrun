@@ -1,5 +1,5 @@
-import { SuccessTest } from '../../../types'
-import { received } from '../../../utils'
+import { SuccessTest } from '../../types'
+import { received } from '../../utils'
 
 export const validateNotRequired = ({
   value,

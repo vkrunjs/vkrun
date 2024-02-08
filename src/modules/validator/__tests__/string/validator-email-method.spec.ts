@@ -1,4 +1,4 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Email Method', () => {
@@ -10,7 +10,7 @@ describe('Validator Email Method', () => {
       'any_123_email@domain.com'
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .email()
 
@@ -55,7 +55,7 @@ describe('Validator Email Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .email()
 
@@ -71,7 +71,7 @@ describe('Validator Email Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .email()
       .validateAsync(value())
@@ -88,7 +88,7 @@ describe('Validator Email Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .email()
       .validateAsync(value())
@@ -99,7 +99,7 @@ describe('Validator Email Method', () => {
   it('Should be able to validate the email method and passedAll to equal true if the value is a valid email format', () => {
     const value = 'any_email@domain.com'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .email()
       .test(value, 'value_name')
@@ -135,7 +135,7 @@ describe('Validator Email Method', () => {
   it('Should be able to validate the email method and passedAll to equal false if the value is a invalid email format', () => {
     const value = false
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .email()
       .test(value, 'value_name')
@@ -174,7 +174,7 @@ describe('Validator Email Method', () => {
   it('Should be able to validate the email and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .email()
       .notRequired()
@@ -203,7 +203,7 @@ describe('Validator Email Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .email()
       .testAsync(value(), 'value_name')
@@ -245,7 +245,7 @@ describe('Validator Email Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .email()
       .testAsync(value(), 'value_name')
@@ -284,7 +284,7 @@ describe('Validator Email Method', () => {
   it('Should be able to validate the email method and throw AnyError if the value is a valid email format', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .email()
       .throw(value, 'value_name', AnyError)
@@ -302,7 +302,7 @@ describe('Validator Email Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .string()
       .email()
       .throwAsync(value(), 'value_name')

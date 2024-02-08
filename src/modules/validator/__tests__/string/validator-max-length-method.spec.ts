@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator MaxLength Method', () => {
   it('Should be able to validate the maxLength method and return true if the value does not exceed the maximum number of characters', () => {
     const value = 'abcde'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .maxLength(5)
 
@@ -24,7 +24,7 @@ describe('Validator MaxLength Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .maxLength(5)
 
@@ -40,7 +40,7 @@ describe('Validator MaxLength Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .maxLength(5)
       .validateAsync(value())
@@ -57,7 +57,7 @@ describe('Validator MaxLength Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .maxLength(5)
       .validateAsync(value())
@@ -68,7 +68,7 @@ describe('Validator MaxLength Method', () => {
   it('Should be able to validate the maxLength method and passedAll to equal true if the value does not exceed the maximum number of characters', () => {
     const value = 'abcde'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .maxLength(5)
       .test(value, 'value_name')
@@ -104,7 +104,7 @@ describe('Validator MaxLength Method', () => {
   it('Should be able to validate the maxLength method and passedAll to equal false if the value exceed the maximum number of characters', () => {
     const value = 'abcdef'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .maxLength(5)
       .test(value, 'value_name')
@@ -141,7 +141,7 @@ describe('Validator MaxLength Method', () => {
   it('Should be able to validate the maxLength and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .maxLength(5)
       .notRequired()
@@ -170,7 +170,7 @@ describe('Validator MaxLength Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .maxLength(5)
       .testAsync(value(), 'value_name')
@@ -212,7 +212,7 @@ describe('Validator MaxLength Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .maxLength(5)
       .testAsync(value(), 'value_name')
@@ -249,7 +249,7 @@ describe('Validator MaxLength Method', () => {
   it('Should be able to validate the maxLength method and throw AnyError if the value is undefined', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .maxLength(5)
       .throw(value, 'value_name', AnyError)
@@ -267,7 +267,7 @@ describe('Validator MaxLength Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .string()
       .maxLength(5)
       .throwAsync(value(), 'value_name')
@@ -280,7 +280,7 @@ describe('Validator MaxLength Method', () => {
     const value = 'abcde'
 
     try {
-      const sut: void = validator()
+      const sut: void = schema()
       .string()
       .maxLength(5)
       .minLength(5)
@@ -294,7 +294,7 @@ describe('Validator MaxLength Method', () => {
 
   it('Should be able to throw an error if the maxLength method received invalid parameter', () => {
     try {
-      validator()
+      schema()
         .string()
         // @ts-ignore
         .maxLength(false)

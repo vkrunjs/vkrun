@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Integer Method', () => {
   it('Should be able to validate the integer method and return true if the value is integer', () => {
     const value = 1
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .integer()
       .validate(value)
@@ -25,7 +25,7 @@ describe('Validator Integer Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .integer()
 
@@ -41,7 +41,7 @@ describe('Validator Integer Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .integer()
       .validateAsync(value())
@@ -58,7 +58,7 @@ describe('Validator Integer Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .integer()
       .validateAsync(value())
@@ -69,7 +69,7 @@ describe('Validator Integer Method', () => {
   it('Should be able to validate the integer method and passedAll to equal true if the value is integer', () => {
     const value = 1
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .integer()
       .test(value, 'value_name')
@@ -105,7 +105,7 @@ describe('Validator Integer Method', () => {
   it('Should be able to validate the integer method and passedAll to equal false if the value is not integer', () => {
     const value = 1.5
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .integer()
       .test(value, 'value_name')
@@ -142,7 +142,7 @@ describe('Validator Integer Method', () => {
   it('Should be able to validate the integer and passAll method as equal to true when it is not required, undefined value and not integer', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .integer()
       .notRequired()
@@ -171,7 +171,7 @@ describe('Validator Integer Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .integer()
       .testAsync(value(), 'value_name')
@@ -213,7 +213,7 @@ describe('Validator Integer Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .integer()
       .testAsync(value(), 'value_name')
@@ -252,7 +252,7 @@ describe('Validator Integer Method', () => {
   it('Should be able to validate the integer method and throw AnyError if the value is not integer', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .number()
       .integer()
       .throw(value, 'value_name', AnyError)
@@ -270,7 +270,7 @@ describe('Validator Integer Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .number()
       .integer()
       .throwAsync(value(), 'value_name')

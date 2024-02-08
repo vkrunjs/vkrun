@@ -1,38 +1,30 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { received } from '../../../../utils'
+import { informativeMessage } from '../../location'
+import { ErrorTest, SuccessTest } from '../../types'
+import { isBoolean, received } from '../../utils'
 
-export const validateMinWord = ({
+export const validateBoolean = ({
   value,
   valueName,
-  minWord,
   indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
-  minWord: number
   indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const trimmedValue = String(value).trim()
-  const words = trimmedValue.split(/\s+/)
-  const hasMinOfWords = words.length >= minWord
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index with minimum of words'
-      : 'minimum of words',
-    error: informativeMessage.string.minWord
+    expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',
+    error: informativeMessage.boolean.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
-      .replace('[minWord]', String(minWord))
   }
 
-  if (hasMinOfWords) {
+  if (isBoolean(value)) {
     callbackAddPassed({
-      method: 'minWord',
+      method: 'boolean',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -40,7 +32,7 @@ export const validateMinWord = ({
     })
   } else {
     callbackAddFailed({
-      method: 'minWord',
+      method: 'boolean',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

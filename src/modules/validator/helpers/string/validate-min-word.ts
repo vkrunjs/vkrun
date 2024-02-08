@@ -1,32 +1,38 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { received } from '../../../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { received } from '../../../utils'
 
-export const validateUuid = ({
+export const validateMinWord = ({
   value,
   valueName,
+  minWord,
   indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
+  minWord: number
   indexArray: number
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-  const isUuid = uuidRegex.test(String(value))
+  const trimmedValue = String(value).trim()
+  const words = trimmedValue.split(/\s+/)
+  const hasMinOfWords = words.length >= minWord
   const message = {
-    expect: indexArray !== undefined ? 'array index in UUID format' : 'format UUID',
-    error: informativeMessage.string.uuid
+    expect: indexArray !== undefined
+      ? 'array index with minimum of words'
+      : 'minimum of words',
+    error: informativeMessage.string.minWord
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
+      .replace('[minWord]', String(minWord))
   }
 
-  if (isUuid) {
+  if (hasMinOfWords) {
     callbackAddPassed({
-      method: 'UUID',
+      method: 'minWord',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -34,7 +40,7 @@ export const validateUuid = ({
     })
   } else {
     callbackAddFailed({
-      method: 'UUID',
+      method: 'minWord',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

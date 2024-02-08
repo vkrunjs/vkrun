@@ -1,44 +1,38 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest, Tests } from '../../../types'
-import { isObject, received } from '../../../utils'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { isInteger, received } from '../../../utils'
 
-export const validateObject = ({
+export const validateInteger = ({
   value,
   valueName,
-  schema,
   indexArray,
-  callbackUpdateTest,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
-  schema: any
   indexArray: number
-  callbackUpdateTest: (test: Tests) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
   const message = {
-    expect: indexArray !== undefined ? 'array index in object type' : 'object type',
-    error: informativeMessage.object.replace('[valueName]', valueName)
+    expect: indexArray !== undefined ? 'array index in integer type' : 'integer type',
+    error: informativeMessage.number.integer
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
   }
 
-  if (isObject(value)) {
+  if (isInteger(value)) {
     callbackAddPassed({
-      method: 'object',
+      method: 'integer',
       name: valueName,
       expect: message.expect,
       index: indexArray,
       received: value
     })
-
-    for (const [key, rule] of Object.entries(schema) as [string, any]) {
-      callbackUpdateTest(rule.test(value[key], key))
-    }
   } else {
     callbackAddFailed({
-      method: 'object',
+      method: 'integer',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

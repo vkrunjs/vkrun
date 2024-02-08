@@ -1,8 +1,9 @@
-import { Validator } from './validator'
+import { Schema } from './schema'
 
-export interface IValidator {
+export interface ISchema {
   notRequired: () => NotRequiredMethod
   string: () => StringMethod
+  number: () => NumberMethod
   boolean: () => DefaultReturn
   date: (type?: DateTypes) => DateMethod
   alias: (valueName: string) => AliasMethod
@@ -183,7 +184,7 @@ export interface Method {
   schema?: ObjectType
 }
 
-export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Validator[]>
+export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Schema[]>
 
 export type Methods = Method[]
 

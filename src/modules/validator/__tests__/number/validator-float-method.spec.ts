@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Float Method', () => {
   it('Should be able to validate the float method and return true if the value is float', () => {
     const value = 1.5
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .float()
       .validate(value)
@@ -25,7 +25,7 @@ describe('Validator Float Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .float()
 
@@ -41,7 +41,7 @@ describe('Validator Float Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .float()
       .validateAsync(value())
@@ -58,7 +58,7 @@ describe('Validator Float Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .float()
       .validateAsync(value())
@@ -69,7 +69,7 @@ describe('Validator Float Method', () => {
   it('Should be able to validate the float method and passedAll to equal true if the value is float', () => {
     const value = 1.5
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .float()
       .test(value, 'value_name')
@@ -105,7 +105,7 @@ describe('Validator Float Method', () => {
   it('Should be able to validate the float method and passedAll to equal false if the value is not float', () => {
     const value = 1
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .float()
       .test(value, 'value_name')
@@ -142,7 +142,7 @@ describe('Validator Float Method', () => {
   it('Should be able to validate the float and passAll method as equal to true when it is not required, undefined value and not float', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .float()
       .notRequired()
@@ -171,7 +171,7 @@ describe('Validator Float Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .float()
       .testAsync(value(), 'value_name')
@@ -213,7 +213,7 @@ describe('Validator Float Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .float()
       .testAsync(value(), 'value_name')
@@ -252,7 +252,7 @@ describe('Validator Float Method', () => {
   it('Should be able to validate the float method and throw AnyError if the value is not float', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .number()
       .float()
       .throw(value, 'value_name', AnyError)
@@ -270,7 +270,7 @@ describe('Validator Float Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .number()
       .float()
       .throwAsync(value(), 'value_name')

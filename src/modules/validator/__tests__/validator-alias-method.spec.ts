@@ -1,8 +1,8 @@
-import { validator } from '../index'
+import { schema } from '../../schema/index'
 
 describe('Validator Alias Method', () => {
   it('Should be able to validate the alias method change value name', () => {
-    const sut = validator()
+    const sut = schema()
       .alias('new_value_name')
       .test(true, 'value_name')
 
@@ -24,7 +24,7 @@ describe('Validator Alias Method', () => {
   it('Should be able to throw an error if the alias method received invalid parameter', () => {
     try {
       // @ts-ignore
-      validator().alias(false)
+      schema().alias(false)
     } catch (error: any) {
       const sut = error
       expect(sut.message).toEqual('vkrun: alias method received invalid parameter!')

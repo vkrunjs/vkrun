@@ -1,6 +1,6 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { isFloat, received } from '../../../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { isFloat, received } from '../../../utils'
 
 export const validateFloat = ({
   value,

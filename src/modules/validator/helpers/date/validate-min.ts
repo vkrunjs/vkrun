@@ -1,8 +1,8 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { formatYYYYDDMMHHMMSSMS, received } from '../../../../utils'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
+import { formatYYYYDDMMHHMMSSMS, received } from '../../../utils'
 
-export const validateMaxDate = ({
+export const validateMinDate = ({
   value,
   valueName,
   dateToCompare,
@@ -29,9 +29,9 @@ export const validateMaxDate = ({
       }
     } else {
       if (value instanceof Date) {
-        return `${formatYYYYDDMMHHMMSSMS(value)} less than or equal to ${formatYYYYDDMMHHMMSSMS(dateToCompare)}`
+        return `${formatYYYYDDMMHHMMSSMS(value)} greater than or equal to ${formatYYYYDDMMHHMMSSMS(dateToCompare)}`
       } else {
-        return 'date less than or equal to reference date'
+        return 'date greater than or equal to reference date'
       }
     }
   }
@@ -46,7 +46,7 @@ export const validateMaxDate = ({
 
   const handleAddFailed = (): void => {
     callbackAddFailed({
-      method: 'max',
+      method: 'min',
       type: 'invalid value',
       name: valueName,
       expect: expect(),
@@ -64,7 +64,7 @@ export const validateMaxDate = ({
   const dateTimestamp = value.getTime()
   const dateToCompareTimestamp = dateToCompare.getTime()
 
-  const deadlineExceeded = dateTimestamp > dateToCompareTimestamp && value.getMilliseconds() >= dateToCompare.getMilliseconds()
+  const deadlineExceeded = dateTimestamp < dateToCompareTimestamp && value.getMilliseconds() <= dateToCompare.getMilliseconds()
 
   if (deadlineExceeded) {
     message.error = informativeMessage.date.min
@@ -77,7 +77,7 @@ export const validateMaxDate = ({
   }
 
   callbackAddPassed({
-    method: 'max',
+    method: 'min',
     name: valueName,
     expect: expect(),
     index: indexArray,

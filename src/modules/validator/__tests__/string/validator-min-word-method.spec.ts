@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator MinWord Method', () => {
   it('Should be able to validate the minWord method and return true if the value has the minimum words', () => {
     const value = 'Full Name'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .minWord(2)
 
@@ -24,7 +24,7 @@ describe('Validator MinWord Method', () => {
       undefined
     ]
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .minWord(2)
 
@@ -40,7 +40,7 @@ describe('Validator MinWord Method', () => {
       })
     }
 
-    const test = await validator()
+    const test = await schema()
       .string()
       .minWord(2)
       .validateAsync(value())
@@ -57,7 +57,7 @@ describe('Validator MinWord Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .minWord(2)
       .validateAsync(value())
@@ -68,7 +68,7 @@ describe('Validator MinWord Method', () => {
   it('Should be able to validate the minWord method and passedAll to equal true if the value has the minimum words', () => {
     const value = 'Full Name'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .minWord(2)
       .test(value, 'value_name')
@@ -104,7 +104,7 @@ describe('Validator MinWord Method', () => {
   it('Should be able to validate the minWord method and passedAll to equal false if the value does not have the minimum words', () => {
     const value = 'Full'
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .minWord(2)
       .test(value, 'value_name')
@@ -141,7 +141,7 @@ describe('Validator MinWord Method', () => {
   it('Should be able to validate the minWord and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .string()
       .minWord(2)
       .notRequired()
@@ -170,7 +170,7 @@ describe('Validator MinWord Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .minWord(2)
       .testAsync(value(), 'value_name')
@@ -212,7 +212,7 @@ describe('Validator MinWord Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .string()
       .minWord(2)
       .testAsync(value(), 'value_name')
@@ -249,7 +249,7 @@ describe('Validator MinWord Method', () => {
   it('Should be able to validate the minWord method and throw AnyError if the value has the minimum words', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .string()
       .minWord(2)
       .throw(value, 'value_name', AnyError)
@@ -267,7 +267,7 @@ describe('Validator MinWord Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .string()
       .minWord(2)
       .throwAsync(value(), 'value_name')
@@ -280,7 +280,7 @@ describe('Validator MinWord Method', () => {
     const value = 'Full Name'
 
     try {
-      const sut: void = validator()
+      const sut: void = schema()
       .string()
       .minWord(2)
       .maxLength(5)
@@ -294,7 +294,7 @@ describe('Validator MinWord Method', () => {
 
   it('Should be able to throw an error if the minWord method received invalid parameter', () => {
     try {
-      validator()
+      schema()
         .string()
         // @ts-ignore
         .minWord(false)

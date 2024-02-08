@@ -1,4 +1,4 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Date (default) Method', () => {
@@ -11,7 +11,7 @@ describe('Validator Date (default) Method', () => {
       new Date('2020-01-01T00:00:00Z')
     ]
 
-    const sut = validator().date()
+    const sut = schema().date()
 
     expect(validList.every((value) => sut.validate(value))).toBeTruthy()
   })
@@ -26,7 +26,7 @@ describe('Validator Date (default) Method', () => {
       false
     ]
 
-    const sut = validator().date()
+    const sut = schema().date()
 
     expect(validList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -34,7 +34,7 @@ describe('Validator Date (default) Method', () => {
   it('Should be able to validate the date method and return false if the value is not of type default date', () => {
     const value = '27/11/21'
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .validate(value)
 
@@ -50,7 +50,7 @@ describe('Validator Date (default) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .validateAsync(value())
 
@@ -66,7 +66,7 @@ describe('Validator Date (default) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .validateAsync(value())
 
@@ -76,7 +76,7 @@ describe('Validator Date (default) Method', () => {
   it('Should be able to validate the date method and passedAll to equal true if the value is of type default date', () => {
     const value = new Date('2000-02-03T02:00:00.000Z')
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .test(value, 'value_name')
 
@@ -105,7 +105,7 @@ describe('Validator Date (default) Method', () => {
   it('Should be able to validate the date method and passedAll to equal false if the value is not of type default date', () => {
     const value = '27/11/21'
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .test(value, 'value_name')
 
@@ -133,7 +133,7 @@ describe('Validator Date (default) Method', () => {
   it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type default date', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .date()
       .notRequired()
       .test(value, 'value_name')
@@ -161,7 +161,7 @@ describe('Validator Date (default) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .testAsync(value(), 'value_name')
 
@@ -196,7 +196,7 @@ describe('Validator Date (default) Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .date()
       .testAsync(value(), 'value_name')
 
@@ -224,7 +224,7 @@ describe('Validator Date (default) Method', () => {
   it('Should be able to validate the date method and throw AnyError if the value is not of type default date', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .date()
       .throw(value, 'value_name', AnyError)
 
@@ -241,7 +241,7 @@ describe('Validator Date (default) Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .date()
       .throwAsync(value(), 'value_name')
 
@@ -252,7 +252,7 @@ describe('Validator Date (default) Method', () => {
   it('Should be able to throw an error if the date method received invalid parameter', () => {
     try {
       // @ts-ignore
-      validator().date(false)
+      schema().date(false)
     } catch (error: any) {
       const sut = error
       expect(sut.message).toEqual('vkrun: date method received invalid parameter!')

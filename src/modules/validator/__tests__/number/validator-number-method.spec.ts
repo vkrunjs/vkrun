@@ -1,11 +1,11 @@
-import { validator } from '../../index'
+import { schema } from '../../../schema/index'
 import { AnyError } from '../../../errors'
 
 describe('Validator Number Method', () => {
   it('Should be able to validate the number method and return true if the value is of type number', () => {
     const value = 1
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .validate(value)
 
@@ -23,7 +23,7 @@ describe('Validator Number Method', () => {
       undefined
     ]
 
-    const sut = validator().number()
+    const sut = schema().number()
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -37,7 +37,7 @@ describe('Validator Number Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .validateAsync(value())
 
@@ -53,7 +53,7 @@ describe('Validator Number Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .validateAsync(value())
 
@@ -63,7 +63,7 @@ describe('Validator Number Method', () => {
   it('Should be able to validate the number method and passedAll to equal true if the value is of type number', () => {
     const value = 1
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .test(value, 'value_name')
 
@@ -92,7 +92,7 @@ describe('Validator Number Method', () => {
   it('Should be able to validate the number method and passedAll to equal false if the value is not of type number', () => {
     const value = false
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .test(value, 'value_name')
 
@@ -120,7 +120,7 @@ describe('Validator Number Method', () => {
   it('Should be able to validate the number and passAll method as equal to true when it is not required, undefined value and not of type number', () => {
     const value = undefined
 
-    const sut = validator()
+    const sut = schema()
       .number()
       .notRequired()
       .test(value, 'value_name')
@@ -148,7 +148,7 @@ describe('Validator Number Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .testAsync(value(), 'value_name')
 
@@ -183,7 +183,7 @@ describe('Validator Number Method', () => {
       })
     }
 
-    const sut = await validator()
+    const sut = await schema()
       .number()
       .testAsync(value(), 'value_name')
 
@@ -211,7 +211,7 @@ describe('Validator Number Method', () => {
   it('Should be able to validate the number method and throw AnyError if the value is not of type number', () => {
     const value = undefined
 
-    const sut = (): void => validator()
+    const sut = (): void => schema()
       .number()
       .throw(value, 'value_name', AnyError)
 
@@ -228,7 +228,7 @@ describe('Validator Number Method', () => {
       })
     }
 
-    const sut = async (): Promise<void> => await validator()
+    const sut = async (): Promise<void> => await schema()
       .number()
       .throwAsync(value(), 'value_name')
 
