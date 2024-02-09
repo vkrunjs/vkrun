@@ -2,7 +2,7 @@ export type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' 
 
 export type LogExtension = 'log' | 'txt' | 'json'
 
-export interface CreateLogFile {
+export interface CreateLog {
   level: LogLevel
   message: any
 }

@@ -1,6 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { ConfigParams, CreateLogFile, SetConfigParams } from './types'
+import { ConfigParams, CreateLog, SetConfigParams } from './types'
 
 const configParams: ConfigParams = {
   logLevel: 'silly',
@@ -20,7 +20,7 @@ const configParams: ConfigParams = {
   maxDaysToStoreLogs: 7, // default 7 days
   filename: '',
   extension: 'log',
-  path: path.join(process.cwd(), 'logs')
+  path: ''
 }
 enum levels {
   error = 0,
@@ -57,10 +57,13 @@ const config = (params: SetConfigParams): void => {
   if (params.maxDaysToStore) configParams.maxDaysToStoreLogs = params.maxDaysToStore
   if (params.filename) configParams.filename = params.filename
   if (params.extension) configParams.extension = params.extension
+  if (params.path) configParams.path = params.path
 }
 
-export const createLogFile = (data: CreateLogFile): void => {
+export const createLog = (data: CreateLog): void => {
   try {
+    if (!configParams.path) return
+
     const currentDate = new Date()
     const year = currentDate.getFullYear()
     const month = (currentDate.getMonth() + 1).toString().padStart(2, '0')
@@ -157,12 +160,12 @@ const sanitizeLogs = (): void => {
 setInterval(sanitizeLogs, 24 * 60 * 60 * 1000) // Uma vez por dia remove arquivos antigos
 
 export const logger = {
-  error: (message: any): void => createLogFile({ level: 'error', message }),
-  warn: (message: any): void => createLogFile({ level: 'warn', message }),
-  info: (message: any): void => createLogFile({ level: 'info', message }),
-  http: (message: any): void => createLogFile({ level: 'http', message }),
-  verbose: (message: any): void => createLogFile({ level: 'verbose', message }),
-  debug: (message: any): void => createLogFile({ level: 'debug', message }),
-  silly: (message: any): void => createLogFile({ level: 'silly', message }),
+  error: (message: any): void => createLog({ level: 'error', message }),
+  warn: (message: any): void => createLog({ level: 'warn', message }),
+  info: (message: any): void => createLog({ level: 'info', message }),
+  http: (message: any): void => createLog({ level: 'http', message }),
+  verbose: (message: any): void => createLog({ level: 'verbose', message }),
+  debug: (message: any): void => createLog({ level: 'debug', message }),
+  silly: (message: any): void => createLog({ level: 'silly', message }),
   config
 }
