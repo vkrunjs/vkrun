@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.20.0
+
+### Minor Changes
+
+- a8688a7: create logger module to create log files
+
 ## 0.19.0
 
 ### Minor Changes
