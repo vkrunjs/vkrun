@@ -61,12 +61,12 @@ yarn add vkrun
   - .throwAsync(value: any, valueName: string, ClassError?: ErrorTypes): Promise<void>
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const userSchema = v().object({
-  id: v().string().UUID(),
-  fullName: v().string().minWord(2),
-  email: v().string().email()
+const userSchema = schema().object({
+  id: schema().string().UUID(),
+  fullName: schema().string().minWord(2),
+  email: schema().string().email()
 })
 
 const validateA = userSchema.validate({
@@ -88,7 +88,7 @@ console.log(validateB) // false
 ### Conteúdo
 - [Introdução](#introduction)
 - [Instalação](#installation)
-- Vkrun
+- schema
   - Tipos de validações
     - [.validate](#validate)
     - [.validateAsync](#validateAsync)
@@ -130,7 +130,7 @@ console.log(validateB) // false
       - [.min](#min-date-array)
       - [.max](#max-date-array)
     - [.object](#object-array)
-- [.setLocation](#setLocation)
+  - [.setLocation](#setLocation)
 - [Autor](#author)
 - [Licença](#license)
 
@@ -144,9 +144,9 @@ console.log(validateB) // false
 - Validação retorna boolean.
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const schema = v().number()
+const schema = schema().number()
 
 const validateA = schema.validate(123)
 const validateB = schema.validate("123")
@@ -163,9 +163,9 @@ console.log(validateB) // false
 - Validação retorna Promise<boolean>.
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const userSchema = v().string().email()
+const userSchema = schema().string().email()
 
 const validatedSchema = await userSchema.validateAsync(getEmail())
 
@@ -180,9 +180,9 @@ console.log(validatedSchema) // true
 - valueName: É o nome do valor testado e será referenciado nos testes e mensagens de erro.
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const schema = v().number()
+const schema = schema().number()
 
 const validatedSchema = schema.test(123, "value_name")
 ```
@@ -222,9 +222,9 @@ const validatedSchema = schema.test(123, "value_name")
 - valueName: É o nome do valor testado e será referenciado nos testes e mensagens de erro.
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const schema = v().number().float()
+const schema = schema().number().float()
 
 const validatedSchema = await schema.testAsync(getNumber(), "value_name")
 ```
@@ -274,9 +274,9 @@ const validatedSchema = await schema.testAsync(getNumber(), "value_name")
 - Quando a validação falhar será gerado um erro com a mensagem do primeiro teste falho.
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const schema = v().number().float()
+const schema = schema().number().float()
 
 try {
   schema.throw("123", "value_name")
@@ -294,9 +294,9 @@ try {
 - Quando a validação falhar será gerado um erro com a mensagem do primeiro teste falho.
 
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const schema = v().number().float()
+const schema = schema().number().float()
 
 try {
   await schema.throw(getNumber(), "value_name")
@@ -312,9 +312,9 @@ try {
 <p>Por padrão o vkrun tipa o valor como obrigatório, ou seja, o valor tem que ser diferente de undefined. Caso o valor não seja obrigatório e deve ser validado apenas se for fornecido um valor diferente de undefined, sendo assim devemos utilizar o método notRequired.</p>
   
 ```ts
-import v from "vkrun"
+import { schema } from "vkrun"
 
-const schema = v().number().notRequired()
+const schema = schema().number().notRequired()
 
 const validateA = schema.validate(undefined)
 const validateB = schema.validate(123)
@@ -400,9 +400,9 @@ setLocation({
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string()
+const schema = schema().string()
 
 const validateA = schema.validate("any text")
 const validateB = schema.validate(false)
@@ -416,9 +416,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().minLength(5)
+const schema = schema().string().minLength(5)
 
 const validateA = schema.validate("12345")
 const validateB = schema.validate("1234")
@@ -432,9 +432,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().maxLength(5)
+const schema = schema().string().maxLength(5)
 
 const validateA = schema.validate("12345")
 const validateB = schema.validate("123456")
@@ -448,9 +448,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().email()
+const schema = schema().string().email()
 
 const validateA = schema.validate("any_email@mail.com")
 const validateB = schema.validate("any_email@mail")
@@ -464,9 +464,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().UUID()
+const schema = schema().string().UUID()
 
 const validateA = schema.validate("550e8400-e29b-41d4-a716-446655440000")
 const validateB = schema.validate("123")
@@ -480,9 +480,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().minWord(2)
+const schema = schema().string().minWord(2)
 
 const validateA = schema.validate("one two")
 const validateB = schema.validate("one")
@@ -496,9 +496,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().time("HH:MMM")
+const schema = schema().string().time("HH:MMM")
 
 const validateA = schema.validate("20:03")
 const validateB = schema.validate("20:1")
@@ -512,9 +512,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().number()
+const schema = schema().number()
 
 const validateA = schema.validate(123)
 const validateB = schema.validate("123")
@@ -528,9 +528,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().number().float()
+const schema = schema().number().float()
 
 const validateA = schema.validate(123.5)
 const validateB = schema.validate(123)
@@ -544,9 +544,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().number().integer()
+const schema = schema().number().integer()
 
 const validateA = schema.validate(123)
 const validateB = schema.validate(123.5)
@@ -560,9 +560,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().boolean()
+const schema = schema().boolean()
 
 const validateA = schema.validate(false)
 const validateB = schema.validate("false")
@@ -576,9 +576,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().date()
+const schema = schema().date()
 
 const validateA = schema.validate(new date())
 const validateB = schema.validate(true)
@@ -592,9 +592,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().date().min(new Date(2020-05-05))
+const schema = schema().date().min(new Date(2020-05-05))
 
 const validateA = schema.validate(new Date(2020-05-05))
 const validateB = schema.validate(new Date(2020-05-04))
@@ -608,9 +608,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().date().max(new Date(2020-05-05))
+const schema = schema().date().max(new Date(2020-05-05))
 
 const validateA = schema.validate(new Date(2020-05-05))
 const validateB = schema.validate(new Date(2020-05-06))
@@ -624,9 +624,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().equal({
+const schema = schema().equal({
   keyA: "any value",
   keyB: false,
   keyC: [1, 2, 3]
@@ -653,12 +653,12 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().object({
-  id: vkrun().string().UUID(),
-  fullName: vkrun().string().minWord(2),
-  description: vkrun().string().notRequired()
+const schema = schema().object({
+  id: schema().string().UUID(),
+  fullName: schema().string().minWord(2),
+  description: schema().string().notRequired()
 })
 
 const validateA = schema.validate({
@@ -682,12 +682,12 @@ console.log(validateB) // false
 <p>Ao criar um schema do tipo object, cada key recebe o valueName como nome da key. Quando necessário alterar o valueName utilizamos o método alias.</p>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().object({
-  id: vkrun().string().UUID(), // valueName is id
-  fullName: vkrun().alias("full name").string().minWord(2), // alias changes valueName from "fullName" to "full name"
-  description: vkrun().string().notRequired() // valueName is description
+const schema = schema().object({
+  id: schema().string().UUID(), // valueName is id
+  fullName: schema().alias("full name").string().minWord(2), // alias changes valueName from "fullName" to "full name"
+  description: schema().string().notRequired() // valueName is description
 })
 
 const validatedSchema = schema.test({
@@ -786,9 +786,9 @@ const validatedSchema = schema.test({
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array()
+const schema = schema().array()
 
 const validateA = schema.validate([])
 const validateB = schema.validate({})
@@ -802,9 +802,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().string()
+const schema = schema().array().string()
 
 const validateA = schema.validate(["any text", "any text"])
 const validateB = schema.validate(["any text", false])
@@ -818,9 +818,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().string().minLength(5)
+const schema = schema().array().string().minLength(5)
 
 const validateA = schema.validate(["12345", "12345"])
 const validateB = schema.validate(["12345", "1234"])
@@ -834,9 +834,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().string().string().maxLength(5)
+const schema = schema().string().string().maxLength(5)
 
 const validateA = schema.validate(["12345", "12345"])
 const validateB = schema.validate(["12345", "123456"])
@@ -850,9 +850,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().string().email()
+const schema = schema().array().string().email()
 
 const validateA = schema.validate(["any_email@mail.com"])
 const validateB = schema.validate(["any_email@mail.com", "any_email@mail"])
@@ -866,9 +866,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().string().UUID()
+const schema = schema().array().string().UUID()
 
 const validateA = schema.validate([
   "550e8400-e29b-41d4-a716-446655440000",
@@ -888,9 +888,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().string().minWord(2)
+const schema = schema().array().string().minWord(2)
 
 const validateA = schema.validate(["one two", "one two"])
 const validateB = schema.validate(["one two", "one"])
@@ -904,9 +904,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().string().time("HH:MMM")
+const schema = schema().array().string().time("HH:MMM")
 
 const validateA = schema.validate(["20:04", "20:03"])
 const validateB = schema.validate(["20:03", "20:1"])
@@ -920,9 +920,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().number()
+const schema = schema().array().number()
 
 const validateA = schema.validate([123, 123])
 const validateB = schema.validate([123, "123"])
@@ -936,9 +936,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().number().float()
+const schema = schema().array().number().float()
 
 const validateA = schema.validate([12.5, 123.5])
 const validateB = schema.validate([12.5, 123])
@@ -952,9 +952,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().number().integer()
+const schema = schema().array().number().integer()
 
 const validateA = schema.validate([12, 123])
 const validateB = schema.validate([12, 123.5])
@@ -968,9 +968,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().boolean()
+const schema = schema().array().boolean()
 
 const validateA = schema.validate([true, false])
 const validateB = schema.validate([true, "false"])
@@ -984,9 +984,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().date()
+const schema = schema().array().date()
 
 const validateA = schema.validate([new date(), new date()])
 const validateB = schema.validate([new date(), true])
@@ -1000,9 +1000,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().date().min(new Date(2020-05-05))
+const schema = schema().array().date().min(new Date(2020-05-05))
 
 const validateA = schema.validate([new Date(2020-05-05), new Date(2020-05-05)])
 const validateB = schema.validate([new Date(2020-05-05), new Date(2020-05-04)])
@@ -1016,9 +1016,9 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().date().max(new Date(2020-05-05))
+const schema = schema().array().date().max(new Date(2020-05-05))
 
 const validateA = schema.validate([new Date(2020-05-05), new Date(2020-05-05)])
 const validateB = schema.validate([new Date(2020-05-05), new Date(2020-05-06)])
@@ -1032,12 +1032,12 @@ console.log(validateB) // false
 </h2>
 
 ```ts
-import vkrun from "vkrun"
+import { schema } from "vkrun"
 
-const schema = vkrun().array().object({
-  id: vkrun().string().UUID(),
-  fullName: vkrun().string().minWord(2),
-  description: vkrun().string().notRequired()
+const schema = schema().array().object({
+  id: schema().string().UUID(),
+  fullName: schema().string().minWord(2),
+  description: schema().string().notRequired()
 })
 
 const validateA = schema.validate([
