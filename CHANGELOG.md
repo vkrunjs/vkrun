@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.21.0
+
+### Minor Changes
+
+- c0a85ab: change path in config logger
+
 ## 0.20.0
 
 ### Minor Changes
