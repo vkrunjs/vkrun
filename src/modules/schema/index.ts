@@ -1,5 +1,6 @@
-import { validator } from '../validator'
+import { validator } from './validator'
 import { hasMethod } from '../utils'
+import { throwError } from './throw-error'
 import {
   MinDateMethod,
   MaxDateMethod,
@@ -26,8 +27,7 @@ import {
   TimeMethod,
   AliasMethod,
   ArrayMethod
-} from '../types'
-import { throwError } from '../errors'
+} from './types'
 
 export class Schema implements ISchema {
   private value: any
@@ -64,8 +64,8 @@ export class Schema implements ISchema {
 
     const time = (type: TimeTypes): TimeMethod => {
       if (!['HH:MM', 'HH:MM:SS', 'HH:MM:SS.MS'].includes(type)) {
-        console.error('vkrun: time method received invalid parameter!')
-        throw Error('vkrun: time method received invalid parameter!')
+        console.error('vkrun-schema: time method received invalid parameter!')
+        throw Error('vkrun-schema: time method received invalid parameter!')
       }
 
       this.methodBuild({ method: 'time', timeType: type })
@@ -74,13 +74,13 @@ export class Schema implements ISchema {
 
     const minLength = (limit: number): MinLengthMethod => {
       if (hasMethod(this.methods, 'minLength')) {
-        console.error('vkrun: minLength method has already been called!')
+        console.error('vkrun-schema: minLength method has already been called!')
         throw Error('minLength method has already been called!')
       }
 
       if (typeof limit !== 'number' || limit < 0) {
-        console.error('vkrun: minLength method received invalid parameter!')
-        throw Error('vkrun: minLength method received invalid parameter!')
+        console.error('vkrun-schema: minLength method received invalid parameter!')
+        throw Error('vkrun-schema: minLength method received invalid parameter!')
       }
 
       this.methodBuild({ method: 'minLength', minLength: limit })
@@ -89,13 +89,13 @@ export class Schema implements ISchema {
 
     const maxLength = (limit: number): MaxLengthMethod => {
       if (hasMethod(this.methods, 'maxLength')) {
-        console.error('vkrun: maxLength method has already been called!')
+        console.error('vkrun-schema: maxLength method has already been called!')
         throw Error('maxLength method has already been called!')
       }
 
       if (typeof limit !== 'number' || limit < 0) {
-        console.error('vkrun: maxLength method received invalid parameter!')
-        throw Error('vkrun: maxLength method received invalid parameter!')
+        console.error('vkrun-schema: maxLength method received invalid parameter!')
+        throw Error('vkrun-schema: maxLength method received invalid parameter!')
       }
 
       this.methodBuild({ method: 'maxLength', maxLength: limit })
@@ -104,13 +104,13 @@ export class Schema implements ISchema {
 
     const minWord = (limit: number): MinWordMethod => {
       if (hasMethod(this.methods, 'minWord')) {
-        console.error('vkrun: minWord method has already been called!')
-        throw Error('minWord method has already been called!')
+        console.error('vkrun-schema: minWord method has already been called!')
+        throw Error('vkrun-schema: minWord method has already been called!')
       }
 
       if (typeof limit !== 'number' || limit < 0) {
-        console.error('vkrun: minWord method received invalid parameter!')
-        throw Error('vkrun: minWord method received invalid parameter!')
+        console.error('vkrun-schema: minWord method received invalid parameter!')
+        throw Error('vkrun-schema: minWord method received invalid parameter!')
       }
 
       this.methodBuild({ method: 'minWord', minWord: limit })
@@ -164,20 +164,20 @@ export class Schema implements ISchema {
   date (type?: DateTypes): DateMethod {
     const dateTypes = ['ISO8601', 'DD/MM/YYYY', 'MM/DD/YYYY', 'DD-MM-YYYY', 'MM-DD-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'YYYY-MM-DD', 'YYYY-DD-MM']
     if (type !== undefined && !dateTypes.includes(type)) {
-      console.error('vkrun: date method received invalid parameter!')
-      throw Error('vkrun: date method received invalid parameter!')
+      console.error('vkrun-schema: date method received invalid parameter!')
+      throw Error('vkrun-schema: date method received invalid parameter!')
     }
 
     this.methodBuild({ method: 'date', dateType: type })
 
     const min = (dateToCompare: Date): MinDateMethod => {
       if (!(dateToCompare instanceof Date)) {
-        console.error('vkrun: min method received invalid parameter!')
-        throw Error('vkrun: min method received invalid parameter!')
+        console.error('vkrun-schema: min method received invalid parameter!')
+        throw Error('vkrun-schema: min method received invalid parameter!')
       }
 
       if (hasMethod(this.methods, 'min')) {
-        console.error('vkrun: min method has already been called!')
+        console.error('vkrun-schema: min method has already been called!')
         throw Error('min method has already been called!')
       }
 
@@ -187,12 +187,12 @@ export class Schema implements ISchema {
 
     const max = (dateToCompare: Date): MaxDateMethod => {
       if (!(dateToCompare instanceof Date)) {
-        console.error('vkrun: max method received invalid parameter!')
-        throw Error('vkrun: max method received invalid parameter!')
+        console.error('vkrun-schema: max method received invalid parameter!')
+        throw Error('vkrun-schema: max method received invalid parameter!')
       }
 
       if (hasMethod(this.methods, 'max')) {
-        console.error('vkrun: max method has already been called!')
+        console.error('vkrun-schema: max method has already been called!')
         throw Error('max method has already been called!')
       }
 
@@ -210,8 +210,8 @@ export class Schema implements ISchema {
 
   alias (valueName: string): AliasMethod {
     if (typeof valueName !== 'string') {
-      console.error('vkrun: alias method received invalid parameter!')
-      throw Error('vkrun: alias method received invalid parameter!')
+      console.error('vkrun-schema: alias method received invalid parameter!')
+      throw Error('vkrun-schema: alias method received invalid parameter!')
     }
 
     this.methodBuild({ method: 'alias', alias: valueName })
@@ -233,8 +233,8 @@ export class Schema implements ISchema {
         rule.validate(undefined, key)
       }
     } catch (error) {
-      console.error('vkrun: object method received invalid parameter!')
-      throw Error('vkrun: object method received invalid parameter!')
+      console.error('vkrun-schema: object method received invalid parameter!')
+      throw Error('vkrun-schema: object method received invalid parameter!')
     }
 
     this.methodBuild({ method: 'object', schema })
