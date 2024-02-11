@@ -20,8 +20,11 @@ const config: Config = {
   coveragePathIgnorePatterns: [
     '<rootDir>/src/.*\\.d\\.ts$',
     '<rootDir>/src/index.ts$',
-    '<rootDir>/src/modules/types.ts$',
-    '<rootDir>/src/modules/location/index.ts$'
+    '<rootDir>/src/modules/location/index.ts$',
+    '<rootDir>/src/modules/location/types.ts$',
+    '<rootDir>/src/modules/logger/types.ts$',
+    '<rootDir>/src/modules/utils/types.ts$',
+    '<rootDir>/src/modules/schema/types.ts$',
   ]
 }
 
