@@ -1,4 +1,4 @@
-import { MethodTypes } from '../types'
+import { MethodTypes } from '../schema/types'
 
 export const hasMethod = (value: any, method: MethodTypes): boolean => {
   if (!value) return false
