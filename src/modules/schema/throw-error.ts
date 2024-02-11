@@ -1,4 +1,4 @@
-import { ErrorTypes, Tests } from '../types'
+import { ErrorTypes, Tests } from './types'
 
 export const throwError = (tests: Tests, ClassError: ErrorTypes): void => {
   if (tests.errors.length > 0) {
