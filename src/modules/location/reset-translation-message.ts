@@ -1,5 +1,5 @@
-import { InformativeMessage } from '../types'
 import { informativeMessage } from './informative-message'
+import { InformativeMessage } from './types'
 
 export const resetTranslationMessage = (): void => {
   const newInformativeMessage: InformativeMessage = {

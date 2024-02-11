@@ -1,4 +1,4 @@
-import { InformativeMessage } from '../types'
+import { InformativeMessage } from './types'
 
 export const informativeMessage: InformativeMessage = {
   string: {

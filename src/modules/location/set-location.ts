@@ -1,6 +1,6 @@
-import { AnyInformativeMessage, SetLocation } from '../types'
 import { locationConfig } from './location-config'
 import { informativeMessage } from './informative-message'
+import { AnyInformativeMessage, SetLocation } from './types'
 
 export const setLocation = (newMessages: SetLocation): boolean => {
   const isString = (value: string | undefined, key: string): boolean => {
