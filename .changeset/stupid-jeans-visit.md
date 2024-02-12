@@ -1,0 +1,5 @@
+---
+"vkrun": minor
+---
+
+refactor logger
