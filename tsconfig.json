@@ -1,4 +1,5 @@
 {
+  "exclude": ["coverage", "./dist", "__tests__", "jest.config.ts", "jest-e2e.config.ts", "jest-all.config.ts"],
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",

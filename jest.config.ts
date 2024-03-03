@@ -13,9 +13,8 @@ const config: Config = {
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   testEnvironment: 'node',
-  transform: {
-    '.+\\.ts$': 'ts-jest'
-  },
+  transform: {'.+\\.ts$': 'ts-jest'},
+  testRegex: ".spec.ts",
   testPathIgnorePatterns: ['<rootDir>/src/.*\\.types\\.ts$'],
   coveragePathIgnorePatterns: [
     '<rootDir>/src/.*\\.d\\.ts$',
