@@ -1,19 +1,21 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
-import { received, isUUID } from '../../../../utils'
+import * as type from '../../../../types'
+import * as util from '../../../../utils'
 
 export const validateUuid = ({
   value,
   valueName,
+  uuidVersion,
   indexArray,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
+  uuidVersion?: type.UUIDVersion
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: type.SuccessTest) => void
+  callbackAddFailed: (error: type.ErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in UUID format' : 'format UUID',
@@ -22,7 +24,7 @@ export const validateUuid = ({
       .replace('[valueName]', valueName)
   }
 
-  if (isUUID(value)) {
+  if (util.isUUID(value, uuidVersion)) {
     callbackAddPassed({
       method: 'UUID',
       name: valueName,
@@ -37,7 +39,7 @@ export const validateUuid = ({
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: received(value),
+      received: util.received(value),
       message: message.error
     })
   }

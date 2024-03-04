@@ -1,4 +1,5 @@
 import { Schema } from '../schema/schema'
+import { UUIDVersion } from './utils-types'
 
 export interface ISchema {
   notRequired: () => NotRequiredMethod
@@ -42,7 +43,7 @@ export interface StringMethod extends DefaultReturn {
   maxLength: (limit: number) => MaxLengthMethod
   minWord: (limit: number) => MinWordMethod
   email: () => EmailMethod
-  UUID: () => UUIDMethod
+  UUID: (version?: UUIDVersion) => UUIDMethod
   time: (type: TimeTypes) => TimeMethod
 }
 
@@ -182,6 +183,7 @@ export interface Method {
   valueToCompare?: any
   alias?: string
   schema?: ObjectType
+  uuidVersion?: UUIDVersion
 }
 
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Schema[]>

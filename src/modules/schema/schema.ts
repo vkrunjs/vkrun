@@ -31,8 +31,8 @@ export class Schema implements type.ISchema {
       return this.defaultReturnMethods()
     }
 
-    const UUID = (): type.UUIDMethod => {
-      this.methodBuild({ method: 'UUID' })
+    const UUID = (version?: type.UUIDVersion): type.UUIDMethod => {
+      this.methodBuild({ method: 'UUID', uuidVersion: version })
       return this.defaultReturnMethods()
     }
 

@@ -37,7 +37,7 @@ export const validator = (params: ExecuteValidateMethods): void => {
     } else if (rule.method === 'email') {
       validateEmail({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'UUID') {
-      validateUuid({ ...validateMethodParams, indexArray })
+      validateUuid({ ...validateMethodParams, indexArray, uuidVersion: rule.uuidVersion })
     } else if (rule.method === 'maxLength') {
       validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
     } else if (rule.method === 'minLength') {
