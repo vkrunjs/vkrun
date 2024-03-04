@@ -1,9 +1,17 @@
+import * as util from '../utils'
+
 export const deepEqual = (value: any, valueToCompare: any): boolean => {
   if (typeof value !== typeof valueToCompare) {
     return false
   }
+  if (value instanceof Date && valueToCompare instanceof Date) {
+    return value.getTime() === valueToCompare.getTime()
+  }
 
-  if ((typeof value === 'object' && value !== null) && (typeof valueToCompare === 'object' && valueToCompare !== null)) {
+  if (
+    !util.isArray(value) && util.isObject(value) && value !== null &&
+    !util.isArray(valueToCompare) && util.isObject(valueToCompare) && valueToCompare !== null
+  ) {
     const keysA = Object.keys(value)
     const keysB = Object.keys(valueToCompare)
 
@@ -14,7 +22,7 @@ export const deepEqual = (value: any, valueToCompare: any): boolean => {
     return keysA.every(key => deepEqual(value[key], valueToCompare[key]))
   }
 
-  if (Array.isArray(value) && Array.isArray(valueToCompare)) {
+  if (util.isArray(value) && util.isArray(valueToCompare)) {
     if (value.length !== valueToCompare.length) {
       return false
     }
