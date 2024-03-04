@@ -19,7 +19,6 @@ describe('isExpired', () => {
     const now = Date.now()
     const expiresIn = 0 // Immediately expires
     const createdAt = now - 500 // 500 milliseconds ago
-    console.log({ now, expiresIn, createdAt })
     expect(isExpired(createdAt, expiresIn)).toBeTruthy()
   })
 
