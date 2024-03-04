@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.22.0
+
+### Minor Changes
+
+- 33e5e70: refactor logger
+
 ## 0.21.0
 
 ### Minor Changes
