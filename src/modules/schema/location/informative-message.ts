@@ -1,6 +1,6 @@
-import { InformativeMessage } from './types'
+import * as type from '../../types'
 
-export const informativeMessage: InformativeMessage = {
+export const informativeMessage: type.InformativeMessage = {
   string: {
     invalidValue: '[valueName] must be a string type!',
     minWord: '[valueName] must have at least [minWord] words!',

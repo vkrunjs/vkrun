@@ -1,8 +1,8 @@
 import { informativeMessage } from './informative-message'
-import { InformativeMessage } from './types'
+import * as type from '../../types'
 
 export const resetTranslationMessage = (): void => {
-  const newInformativeMessage: InformativeMessage = {
+  const newInformativeMessage: type.InformativeMessage = {
     string: {
       invalidValue: '[valueName] must be a string type!',
       minWord: '[valueName] must have at least [minWord] words!',

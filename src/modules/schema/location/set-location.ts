@@ -1,8 +1,8 @@
 import { locationConfig } from './location-config'
 import { informativeMessage } from './informative-message'
-import { AnyInformativeMessage, SetLocation } from './types'
+import * as type from '../../types'
 
-export const setLocation = (newMessages: SetLocation): boolean => {
+export const setLocation = (newMessages: type.SetLocation): void => {
   const isString = (value: string | undefined, key: string): boolean => {
     if (typeof value === 'string') {
       return true
@@ -15,7 +15,7 @@ export const setLocation = (newMessages: SetLocation): boolean => {
 
   const setValue = (keys: string[], value: string | undefined): void => {
     const keyPath = keys.join('.')
-    let currentObject: AnyInformativeMessage = informativeMessage
+    let currentObject: type.AnyInformativeMessage = informativeMessage
 
     if (isString(value, keyPath)) {
       for (let i = 0; i < keys.length - 1; i++) {
@@ -39,6 +39,4 @@ export const setLocation = (newMessages: SetLocation): boolean => {
 
     setValue(config.keys, value)
   })
-
-  return true
 }

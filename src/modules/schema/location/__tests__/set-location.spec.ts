@@ -46,9 +46,8 @@ describe('Set translation message', () => {
       }
     }
 
-    const sut = setLocation(newInformativeMessage)
+    setLocation(newInformativeMessage)
 
-    expect(sut).toBeTruthy()
     expect(informativeMessage).toEqual(newInformativeMessage)
   })
 
@@ -59,9 +58,8 @@ describe('Set translation message', () => {
       }
     }
 
-    const sut = setLocation(newInformativeMessage)
+    setLocation(newInformativeMessage)
 
-    expect(sut).toBeTruthy()
     expect(informativeMessage).toEqual({
       string: {
         invalidValue: '[valueName] must be a string type!',
@@ -110,7 +108,7 @@ describe('Set translation message', () => {
       }
     }
 
-    const sut = (): any => setLocation(newInformativeMessage)
+    const sut = (): any => { setLocation(newInformativeMessage) }
 
     expect(sut).toThrow('vkrun: setLocation string.minWord must be a string type!')
   })
@@ -119,9 +117,8 @@ describe('Set translation message', () => {
     const informativeMessageMock = informativeMessage
     const newInformativeMessage: any = undefined
 
-    const sut = setLocation(newInformativeMessage)
+    setLocation(newInformativeMessage)
 
-    expect(sut).toBeTruthy()
     expect(informativeMessage).toEqual(informativeMessageMock)
   })
 })
