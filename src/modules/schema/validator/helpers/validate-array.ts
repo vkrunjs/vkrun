@@ -1,5 +1,5 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, Method, Methods, SuccessTest } from '../../types'
+import { informativeMessage } from '../../location'
+import { ErrorTest, Method, Methods, SuccessTest } from '../../../types'
 import { isArray, received } from '../../../utils'
 
 export const validateArray = ({
@@ -35,7 +35,7 @@ export const validateArray = ({
     )
 
     value.forEach((indexValue: any, index: number) => {
-      methodsWithoutArray.forEach(rule => validateMethod(rule, indexValue, index))
+      methodsWithoutArray.forEach(rule => { validateMethod(rule, indexValue, index) })
     })
   } else {
     callbackAddFailed({

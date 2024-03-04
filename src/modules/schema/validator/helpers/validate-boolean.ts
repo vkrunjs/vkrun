@@ -1,5 +1,5 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../types'
+import { informativeMessage } from '../../location'
+import { ErrorTest, SuccessTest } from '../../../types'
 import { isBoolean, received } from '../../../utils'
 
 export const validateBoolean = ({

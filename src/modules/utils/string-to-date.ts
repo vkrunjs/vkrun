@@ -1,4 +1,4 @@
-import { StringToDateTypes } from './types'
+import { StringToDateTypes } from '../types'
 
 export const stringToDate = (stringDate: string, type?: StringToDateTypes): Date => {
   let year: number = 0

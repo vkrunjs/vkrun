@@ -4,8 +4,8 @@ import { getLog } from '../helpers/get-log'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'
 
 describe('Create log', () => {
-  beforeEach(async () => await removeLogsFolder())
-  afterEach(async () => await removeLogsFolder())
+  beforeEach(async () => { await removeLogsFolder() })
+  afterEach(async () => { await removeLogsFolder() })
 
   it('Should create a logs folder', async () => {
     const logger = createLogger({ level: 'error', daysToStoreLogs: 0 })
@@ -169,7 +169,7 @@ describe('Create log', () => {
   })
 
   it('Should create logs only for level errors and warn', async () => {
-    const logger = createLogger({ level: 'warn', daysToStoreLogs: 0 })
+    const logger = createLogger({ level: 'warn', daysToStoreLogs: 0, print: { enabled: true } })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -207,7 +207,7 @@ describe('Create log', () => {
     const logErrorEntry = `{"level":"error","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logWarnEntry = `{"level":"warn","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logInfoEntry = `{"level":"info","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
- 
+
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
     expect(log.content[2]).toEqual(logInfoEntry)

@@ -1,5 +1,5 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
 import { dateToString, received } from '../../../../utils'
 
 export const validateMinDate = ({

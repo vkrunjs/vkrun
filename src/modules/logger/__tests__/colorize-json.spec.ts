@@ -2,8 +2,8 @@ import { colorizeJSON } from '../colorize-json'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'
 
 describe('Colorize JSON', () => {
-  beforeEach(async () => await removeLogsFolder())
-  afterEach(async () => await removeLogsFolder())
+  beforeEach(async () => { await removeLogsFolder() })
+  afterEach(async () => { await removeLogsFolder() })
 
   it('Should color key, string, boolean and number of a JSON', async () => {
     const colorize = colorizeJSON(

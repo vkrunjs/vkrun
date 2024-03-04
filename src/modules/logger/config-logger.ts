@@ -1,4 +1,4 @@
-import { ConfigLogger } from './types'
+import { ConfigLogger } from '../types'
 
 export const configLogger = (): ConfigLogger => {
   return {

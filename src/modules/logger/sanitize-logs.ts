@@ -1,6 +1,6 @@
-import fs from 'fs'
+import * as fs from 'fs'
 import * as path from 'path'
-import { ConfigLogger } from './types'
+import { ConfigLogger } from '../types'
 
 export const sanitizeLogs = (config: ConfigLogger): void => {
   const logFolders = fs.readdirSync(config.path)

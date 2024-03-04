@@ -1,7 +1,7 @@
 import { configLogger } from './config-logger'
 import { createLog } from './create-log'
 import { sanitizeLogs } from './sanitize-logs'
-import { CreateLogger, SetConfigLogger } from './types'
+import { CreateLogger, SetConfigLogger } from '../types'
 
 export const createLogger = (configParams: SetConfigLogger): CreateLogger => {
   const config = configLogger()
@@ -20,16 +20,16 @@ export const createLogger = (configParams: SetConfigLogger): CreateLogger => {
   /* eslint-enable */
 
   if (config.daysToStoreLogs > 0) {
-    setInterval(() => sanitizeLogs(config), config.daysToStoreLogs * 24 * 60 * 60 * 1000)
+    setInterval(() => { sanitizeLogs(config) }, config.daysToStoreLogs * 24 * 60 * 60 * 1000)
   }
 
   return {
-    error: (message: any): void => createLog({ level: 'error', config, message }),
-    warn: (message: any): void => createLog({ level: 'warn', config, message }),
-    info: (message: any): void => createLog({ level: 'info', config, message }),
-    http: (message: any): void => createLog({ level: 'http', config, message }),
-    verbose: (message: any): void => createLog({ level: 'verbose', config, message }),
-    debug: (message: any): void => createLog({ level: 'debug', config, message }),
-    silly: (message: any): void => createLog({ level: 'silly', config, message })
+    error: (message: any): void => { createLog({ level: 'error', config, message }) },
+    warn: (message: any): void => { createLog({ level: 'warn', config, message }) },
+    info: (message: any): void => { createLog({ level: 'info', config, message }) },
+    http: (message: any): void => { createLog({ level: 'http', config, message }) },
+    verbose: (message: any): void => { createLog({ level: 'verbose', config, message }) },
+    debug: (message: any): void => { createLog({ level: 'debug', config, message }) },
+    silly: (message: any): void => { createLog({ level: 'silly', config, message }) }
   }
 }

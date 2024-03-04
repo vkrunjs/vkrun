@@ -1,5 +1,5 @@
-import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest, Tests } from '../../types'
+import { informativeMessage } from '../../location'
+import { ErrorTest, SuccessTest, Tests } from '../../../types'
 import { isObject, received } from '../../../utils'
 
 export const validateObject = ({
@@ -34,6 +34,7 @@ export const validateObject = ({
     })
 
     for (const [key, rule] of Object.entries(schema) as [string, any]) {
+      // @ts-ignore
       callbackUpdateTest(rule.test(value[key], key))
     }
   } else {

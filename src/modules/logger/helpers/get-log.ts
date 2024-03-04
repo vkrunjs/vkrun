@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { LogExtension } from '../types'
+import { LogExtension } from '../../types'
 
 export const getLog = (format: 'default' | 'indented', extension: LogExtension): {
   year: number

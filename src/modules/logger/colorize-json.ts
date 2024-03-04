@@ -1,4 +1,4 @@
-import { Colors, PrintColors } from './types'
+import { Colors, PrintColors } from '../types'
 
 export const colorizeJSON = (jsonString: string, colors: Colors, printColors: PrintColors): string => {
   // change color json key
@@ -6,7 +6,7 @@ export const colorizeJSON = (jsonString: string, colors: Colors, printColors: Pr
 
   // change color string
   jsonString = jsonString.replace(/"([^"]*)"/g, (_: string, p1: string) => {
-    if (!p1.trim()) return _ // Se a string estiver vazia, não colorize
+    if (!p1.trim()) return _ // If the string is empty, do not colorize
     return `"${colors[printColors.string]}${p1}${colors.reset}"`
   })
 

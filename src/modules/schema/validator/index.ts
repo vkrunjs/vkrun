@@ -20,7 +20,7 @@ import {
   validateArray
 } from './helpers'
 import { hasMethod } from '../../utils'
-import { ExecuteValidateMethods } from '../types'
+import { ExecuteValidateMethods } from '../../types'
 
 export const validator = (params: ExecuteValidateMethods): void => {
   params.resetTests()
@@ -68,7 +68,8 @@ export const validator = (params: ExecuteValidateMethods): void => {
   }
 
   if (hasMethod(validateMethodParams.methods, 'alias')) {
-    validateMethodParams.valueName = params.methods.find((item: any) => item.method === 'alias')?.alias as string
+    // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain, @typescript-eslint/no-non-null-assertion
+    validateMethodParams.valueName = params.methods.find((item: any) => item.method === 'alias')?.alias!
   }
 
   if (hasMethod(validateMethodParams.methods, 'notRequired')) {
@@ -81,6 +82,6 @@ export const validator = (params: ExecuteValidateMethods): void => {
   if (hasMethod(validateMethodParams.methods, 'array')) {
     validateArray({ ...validateMethodParams, validateMethod })
   } else {
-    validateMethodParams.methods.forEach((rule: any) => validateMethod(rule, validateMethodParams.value))
+    validateMethodParams.methods.forEach((rule: any) => { validateMethod(rule, validateMethodParams.value) })
   }
 }

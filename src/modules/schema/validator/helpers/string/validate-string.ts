@@ -1,5 +1,5 @@
-import { informativeMessage } from '../../../../location'
-import { ErrorTest, SuccessTest } from '../../../types'
+import { informativeMessage } from '../../../location'
+import { ErrorTest, SuccessTest } from '../../../../types'
 import { isString, received } from '../../../../utils'
 
 export const validateString = ({

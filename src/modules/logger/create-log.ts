@@ -1,9 +1,9 @@
-import fs from 'fs'
+import * as fs from 'fs'
 import * as path from 'path'
 import { colorizeJSON } from './colorize-json'
 import { sanitizeLogs } from './sanitize-logs'
 import { dateToString } from '../utils'
-import { Log } from './types'
+import { Log } from '../types'
 
 export const createLog = (log: Log): void => {
   try {
