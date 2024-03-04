@@ -12,14 +12,14 @@ export const convertExpiresIn = (expiresIn: string | number): number => {
 
   const value = parseInt(matches[1])
   const unit = matches[2]
-  console.log({ value, unit })
-  if (!value && !unit) {
-    return 0
-  } else if (unit === 'm') {
+
+  if (unit === 'm') {
     return value * 60 * 1000 // minutes
   } else if (unit === 'h') {
     return value * 60 * 60 * 1000 // hours
-  } else {
+  } else if (unit === 'd') {
     return value * 24 * 60 * 60 * 1000 // days
+  } else {
+    return 0
   }
 }
