@@ -4,7 +4,7 @@ export const deepEqual = (value: any, valueToCompare: any): boolean => {
   if (typeof value !== typeof valueToCompare) {
     return false
   }
-  if (value instanceof Date && valueToCompare instanceof Date) {
+  if (util.isDate(value) && valueToCompare instanceof Date) {
     return value.getTime() === valueToCompare.getTime()
   }
 
