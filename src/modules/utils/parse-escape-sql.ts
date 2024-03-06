@@ -1,7 +1,5 @@
 /* eslint-disable no-control-regex */
 export const escape = {
-  REGEX_GLOBAL_ID: /`/g,
-  REGEX_QUAL_GLOBAL: /\./g,
   // eslint-disable-next-line no-useless-escape
   REGEX_CHARS_GLOBAL: /[\0\b\t\n\r\x1a\"\'\\]/g,
   REGEX_WORLDS_SQL: /(SELECT|INSERT|UPDATE|DELETE|FROM|WHERE)/i,
@@ -34,7 +32,6 @@ export const parseEscapeSQL = (value: string): string => {
     }
 
     if (chunkIndex === 0) {
-      // Nada foi escapado
       return "'" + value + "'"
     }
 
@@ -44,7 +41,6 @@ export const parseEscapeSQL = (value: string): string => {
 
     return "'" + escapedVal + "'"
   } else {
-    // Se não contiver palavras-chave SQL, retorna a string original
     return value
   }
 }
