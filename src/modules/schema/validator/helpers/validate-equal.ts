@@ -1,7 +1,7 @@
 import { informativeMessage } from '../../location'
 import { ErrorTest, SuccessTest } from '../../../types'
 import { received } from '../../../utils'
-import { deepEqual } from '../../../utils/deep-equal'
+import { isEqual } from '../../../utils/is-equal'
 
 export const validateEqual = ({
   value,
@@ -16,7 +16,7 @@ export const validateEqual = ({
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
-  if (deepEqual(value, valueToCompare)) {
+  if (isEqual(value, valueToCompare)) {
     callbackAddPassed({
       method: 'equal',
       name: valueName,

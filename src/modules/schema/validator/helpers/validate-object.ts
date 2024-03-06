@@ -32,9 +32,7 @@ export const validateObject = ({
       index: indexArray,
       received: value
     })
-
     for (const [key, rule] of Object.entries(schema) as [string, any]) {
-      // @ts-ignore
       callbackUpdateTest(rule.test(value[key], key))
     }
   } else {

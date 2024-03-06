@@ -17,6 +17,14 @@ export const dateToString = (date: Date, type: type.DateToStringTypes, timestamp
     return `${year}/${month}/${day} ${hours}:${minutes}`
   } else if (type === 'YYYY/MM/DD') {
     return `${year}/${month}/${day}`
+  } else if (type === 'YYYY/DD/MM HH:MM:SS.MS') {
+    return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}.${milliseconds}`
+  } else if (type === 'YYYY/DD/MM HH:MM:SS') {
+    return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`
+  } else if (type === 'YYYY/DD/MM HH:MM') {
+    return `${year}/${month}/${day} ${hours}:${minutes}`
+  } else if (type === 'YYYY/DD/MM') {
+    return `${year}/${month}/${day}`
   } else if (type === 'MM/DD/YYYY HH:MM:SS.MS') {
     return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}.${milliseconds}`
   } else if (type === 'MM/DD/YYYY HH:MM:SS') {
