@@ -1,6 +1,6 @@
 import * as util from '../utils'
 
-export const deepEqual = (value: any, valueToCompare: any): boolean => {
+export const isEqual = (value: any, valueToCompare: any): boolean => {
   if (typeof value !== typeof valueToCompare) {
     return false
   }
@@ -19,7 +19,7 @@ export const deepEqual = (value: any, valueToCompare: any): boolean => {
       return false
     }
 
-    return keysA.every(key => deepEqual(value[key], valueToCompare[key]))
+    return keysA.every(key => isEqual(value[key], valueToCompare[key]))
   }
 
   if (util.isArray(value) && util.isArray(valueToCompare)) {
@@ -27,7 +27,7 @@ export const deepEqual = (value: any, valueToCompare: any): boolean => {
       return false
     }
 
-    return value.every((value, index) => deepEqual(value, valueToCompare[index]))
+    return value.every((value, index) => isEqual(value, valueToCompare[index]))
   }
 
   return value === valueToCompare
