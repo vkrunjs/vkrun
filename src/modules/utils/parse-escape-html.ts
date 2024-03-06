@@ -29,9 +29,5 @@ export const parseEscapeHTML = (value: string): string => {
     }
   }
 
-  if (lastIndex !== value.length) {
-    escapedHtml += value.substring(lastIndex)
-  }
-
   return escapedHtml
 }
