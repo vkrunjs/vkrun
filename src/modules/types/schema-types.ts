@@ -1,4 +1,4 @@
-import { Schema } from '../schema/schema'
+import { Schema } from '../schema'
 import { UUIDVersion } from './utils-types'
 
 export interface ISchema {
