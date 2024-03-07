@@ -18,8 +18,8 @@ export type RateLimitRequests = Map<string, {
 }>
 
 export interface ExceededRequest {
-  route: string
-  method: string
+  route?: string
+  method?: string
 }
 
 export interface RateLimitConfig {

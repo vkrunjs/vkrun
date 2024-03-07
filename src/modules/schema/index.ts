@@ -279,8 +279,12 @@ export class Schema implements type.ISchema {
   private defaultReturnMethods (): type.DefaultReturn {
     return {
       notRequired: () => this.notRequired(),
-      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => { this.throw(value, valueName, ClassError) },
-      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
+      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => {
+        this.throw(value, valueName, ClassError)
+      },
+      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => {
+        await this.throwAsync(value, valueName, ClassError)
+      },
       validate: (value: any) => this.validate(value),
       validateAsync: async (value: any) => await this.validateAsync(value),
       test: (value: any, valueName: string) => this.test(value, valueName),
