@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from './router-types'
+
 export type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
 
 export type LogExtension = 'log' | 'txt' | 'json'
@@ -10,6 +12,7 @@ export interface CreateLogger {
   verbose: (message: any) => void
   debug: (message: any) => void
   silly: (message: any) => void
+  middleware: (request: Request, response: Response, next: NextFunction) => void
 }
 
 export interface Log {

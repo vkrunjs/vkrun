@@ -1,9 +1,9 @@
 import { configLogger } from './config-logger'
 import { createLog } from './create-log'
 import { sanitizeLogs } from './sanitize-logs'
-import { CreateLogger, SetConfigLogger } from '../types'
+import * as type from '../types'
 
-export const createLogger = (configParams: SetConfigLogger): CreateLogger => {
+export const createLogger = (configParams: type.SetConfigLogger): type.CreateLogger => {
   const config = configLogger()
 
   /* eslint-disable */
@@ -23,6 +23,24 @@ export const createLogger = (configParams: SetConfigLogger): CreateLogger => {
     setInterval(() => { sanitizeLogs(config) }, config.daysToStoreLogs * 24 * 60 * 60 * 1000)
   }
 
+  const middleware = (request: type.Request, response: type.Response, next: type.NextFunction): void => {
+    createLog({
+      level: 'http',
+      config,
+      message: { request }
+    })
+
+    response.on('finish', () => {
+      createLog({
+        level: 'http',
+        config,
+        message: { response }
+      })
+    })
+
+    next()
+  }
+
   return {
     error: (message: any): void => { createLog({ level: 'error', config, message }) },
     warn: (message: any): void => { createLog({ level: 'warn', config, message }) },
@@ -30,6 +48,7 @@ export const createLogger = (configParams: SetConfigLogger): CreateLogger => {
     http: (message: any): void => { createLog({ level: 'http', config, message }) },
     verbose: (message: any): void => { createLog({ level: 'verbose', config, message }) },
     debug: (message: any): void => { createLog({ level: 'debug', config, message }) },
-    silly: (message: any): void => { createLog({ level: 'silly', config, message }) }
+    silly: (message: any): void => { createLog({ level: 'silly', config, message }) },
+    middleware
   }
 }
