@@ -1,6 +1,7 @@
 import { IncomingMessage, ServerResponse } from 'http'
 
 export interface Request extends IncomingMessage {
+  requestId?: string
   route?: Route
   body?: Record<string, string | number | boolean | Date> | JSON | string | undefined | any
   params?: Record<string, string | number | boolean | Date>
@@ -16,6 +17,7 @@ export interface CustomResponseMethods {
   json: (data: object) => void
   send: (data: any) => void
   setCookie: (name: string, value: string, options?: CookieOptions) => void
+  _body: any
 }
 
 export interface CookieOptions {

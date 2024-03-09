@@ -12,11 +12,18 @@ export const customResponse = (_response: ServerResponse): type.Response => {
 
   response.json = function (body: object): void {
     this.setHeader('Content-Type', 'application/json')
-    if (util.isObject(body)) { this.end(JSON.stringify(body)) } else this.end(JSON.stringify({}))
+    if (util.isObject(body)) {
+      response._body = body
+      this.end(JSON.stringify(body))
+    } else {
+      response._body = {}
+      this.end(JSON.stringify({}))
+    }
   }
 
   response.send = function (body: any): void {
     const hasHeadersContentType = response.hasHeader('content-type')
+    response._body = body
 
     if (hasHeadersContentType) this.end(body)
     else {

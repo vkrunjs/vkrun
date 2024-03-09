@@ -1,5 +1,6 @@
 import { VkrunCors } from '../middleware/cors'
 import * as type from '../types'
+import * as util from '../utils'
 
 export class VkrunRouter {
   private readonly routes: type.Route[] = []
@@ -87,7 +88,7 @@ export class VkrunRouter {
       })
 
       // Para cada grupo de rotas com o mesmo caminho (path), injeta o middleware OPTIONS
-      routeGroups.forEach((methods, path) => {
+      routeGroups.forEach((_methods, path) => {
         const optionsRouteExists = this.routeExists(path, 'OPTIONS')
         // Verifica se já existe uma rota OPTIONS para o caminho atual
         if (!optionsRouteExists) {
@@ -122,6 +123,9 @@ export class VkrunRouter {
   }
 
   public async handleRequest (request: type.Request, response: type.Response, middlewares: any[]): Promise<void> {
+    const requestId = util.randomUUID()
+    request.requestId = requestId
+    response.setHeader('Request-Id', requestId)
     this.addRoutesOptionsWithCors(middlewares)
 
     const { url, method } = request
