@@ -402,4 +402,23 @@ describe('Create log', () => {
       }
     ])
   })
+
+  it('Should create a log with indented log', async () => {
+    const logger = createLogger({
+      level: 'silly',
+      daysToStoreLogs: 0,
+      extension: 'log',
+      format: 'indented'
+    })
+
+    logger.error({ error: 'Any Text' })
+
+    const log = getLog('indented', 'log')
+
+    expect(log.content).toEqual({
+      level: 'error',
+      date: `${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}`,
+      message: { error: 'Any Text' }
+    })
+  })
 })
