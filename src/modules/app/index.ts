@@ -1,6 +1,6 @@
 import * as http from 'http'
 import { VkrunRouter } from '../router'
-import { customResponse } from '../router/custom-response'
+import { customResponse } from '../router/helpers/custom-response'
 import * as type from '../types'
 
 export const app = (): type.App => {

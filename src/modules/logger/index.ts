@@ -1,6 +1,6 @@
-import { configLogger } from './config-logger'
-import { createLog } from './create-log'
-import { sanitizeLogs } from './sanitize-logs'
+import { configLogger } from './helpers/config-logger'
+import { createLog } from './helpers/create-log'
+import { sanitizeLogs } from './helpers/sanitize-logs'
 import * as type from '../types'
 
 export const createLogger = (configParams: type.SetConfigLogger): type.CreateLogger => {
@@ -23,46 +23,48 @@ export const createLogger = (configParams: type.SetConfigLogger): type.CreateLog
     setInterval(() => { sanitizeLogs(config) }, config.daysToStoreLogs * 24 * 60 * 60 * 1000)
   }
 
-  const middleware = (_request: type.Request, response: type.Response, next: type.NextFunction): void => {
-    response.on('finish', () => {
-      createLog({
-        level: 'http',
-        config,
-        message: {
-          request: {
-            /* eslint-disable */
-            // @ts-ignore
-            requestId: response.req.requestId,
-            /* eslint-enable */
-            url: response.req.url,
-            method: response.req.method,
-            socket: {
-              remoteAddress: response.req.socket.remoteAddress,
-              remotePort: response.req.socket.remotePort
+  const middleware = (): (_request: type.Request, response: type.Response, next: type.NextFunction) => void => {
+    return (_request: type.Request, response: type.Response, next: type.NextFunction) => {
+      response.on('finish', () => {
+        createLog({
+          level: 'http',
+          config,
+          message: {
+            request: {
+              /* eslint-disable */
+              // @ts-ignore
+              requestId: response.req.requestId,
+              /* eslint-enable */
+              url: response.req.url,
+              method: response.req.method,
+              socket: {
+                remoteAddress: response.req.socket.remoteAddress,
+                remotePort: response.req.socket.remotePort
+              },
+              header: response.req.headers,
+              /* eslint-disable */
+              // @ts-expect-error
+              body: response.req.body,
+              // @ts-expect-error
+              params: response.req.params,
+              // @ts-expect-error
+              query: response.req.query,
+              // @ts-expect-error
+              files: response.req.files
+              /* eslint-enable */
             },
-            header: response.req.headers,
-            /* eslint-disable */
-            // @ts-expect-error
-            body: response.req.body,
-            // @ts-expect-error
-            params: response.req.params,
-            // @ts-expect-error
-            query: response.req.query,
-            // @ts-expect-error
-            files: response.req.files
-            /* eslint-enable */
-          },
-          response: {
-            statusCode: response.statusCode,
-            statusMessage: response.statusMessage,
-            headers: response.getHeaders(),
-            body: response._body
+            response: {
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              headers: response.getHeaders(),
+              body: response._body
+            }
           }
-        }
+        })
       })
-    })
 
-    next()
+      next()
+    }
   }
 
   return {

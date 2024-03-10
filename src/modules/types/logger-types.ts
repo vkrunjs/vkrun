@@ -12,7 +12,7 @@ export interface CreateLogger {
   verbose: (message: any) => void
   debug: (message: any) => void
   silly: (message: any) => void
-  middleware: (request: Request, response: Response, next: NextFunction) => void
+  middleware: () => (request: Request, response: Response, next: NextFunction) => void
 }
 
 export interface Log {

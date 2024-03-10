@@ -1,4 +1,4 @@
-import { VkrunCors } from '../middleware/cors'
+import { VkrunCors } from '../cors'
 import * as type from '../types'
 import * as util from '../utils'
 
