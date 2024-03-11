@@ -1,12 +1,12 @@
 export interface CorsOptions {
-  origin: string
+  origin: string | string[]
   methods: string | string[]
   preflightNext: boolean
   successStatus: number
   allowedHeaders?: string | undefined
   exposedHeaders?: string | undefined
   credentials?: boolean | undefined
-  maxAge?: string | undefined
+  maxAge?: number | undefined
 }
 
 export interface SetCorsOptions {

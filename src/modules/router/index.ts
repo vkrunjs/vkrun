@@ -1,16 +1,13 @@
 import { VkrunCors } from '../cors'
 import * as type from '../types'
 import * as util from '../utils'
+import * as helper from './helpers'
 
 export class VkrunRouter {
   private readonly routes: type.Route[] = []
 
-  private routeExists (path: string, method: string): boolean {
-    return !!this.routes.find(route => route.path === path && route.method === method)
-  }
-
   public get (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'GET')) {
+    if (helper.routeExists(path, 'GET', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for GET method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for GET method.`)
     }
@@ -18,7 +15,7 @@ export class VkrunRouter {
   }
 
   public head (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'HEAD')) {
+    if (helper.routeExists(path, 'HEAD', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for HEAD method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for HEAD method.`)
     }
@@ -26,7 +23,7 @@ export class VkrunRouter {
   }
 
   public post (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'POST')) {
+    if (helper.routeExists(path, 'POST', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for POST method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for POST method.`)
     }
@@ -34,7 +31,7 @@ export class VkrunRouter {
   }
 
   public put (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'PUT')) {
+    if (helper.routeExists(path, 'PUT', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for PUT method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for PUT method.`)
     }
@@ -42,7 +39,7 @@ export class VkrunRouter {
   }
 
   public patch (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'PATCH')) {
+    if (helper.routeExists(path, 'PATCH', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for PATCH method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for PATCH method.`)
     }
@@ -50,7 +47,7 @@ export class VkrunRouter {
   }
 
   public delete (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'DELETE')) {
+    if (helper.routeExists(path, 'DELETE', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for DELETE method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for DELETE method.`)
     }
@@ -58,27 +55,19 @@ export class VkrunRouter {
   }
 
   public options (path: string, ...handlers: any): void {
-    if (this.routeExists(path, 'OPTIONS')) {
+    if (helper.routeExists(path, 'OPTIONS', this.routes)) {
       console.error(`vkrun-router: ${path} route is duplicated for OPTIONS method.`)
       throw new Error(`vkrun-router: ${path} route is duplicated for OPTIONS method.`)
     }
     this.routes.push({ path, method: 'OPTIONS', handlers })
   }
 
-  private corsOptionsDefault (): any {
-    return (_request: type.Request, response: type.Response): any => {
-      response.end()
-    }
-  }
-
   private addRoutesOptionsWithCors (middlewares: any[]): void {
     const corsMiddleware = middlewares.find(middleware => middleware instanceof VkrunCors)
 
     if (corsMiddleware) {
-      // Cria um mapa para agrupar as rotas pelo caminho (path) e métodos permitidos
       const routeGroups = new Map<string, string[]>()
 
-      // Agrupa as rotas pelo caminho (path)
       this.routes.forEach((route) => {
         if (route.method !== 'OPTIONS') {
           const existingMethods = routeGroups.get(route.path) ?? []
@@ -87,38 +76,15 @@ export class VkrunRouter {
         }
       })
 
-      // Para cada grupo de rotas com o mesmo caminho (path), injeta o middleware OPTIONS
       routeGroups.forEach((_methods, path) => {
-        const optionsRouteExists = this.routeExists(path, 'OPTIONS')
-        // Verifica se já existe uma rota OPTIONS para o caminho atual
+        const optionsRouteExists = helper.routeExists(path, 'OPTIONS', this.routes)
+
         if (!optionsRouteExists) {
-          let handlers: any[] = []
-          // Verifica se já existe algum handler definido para essa rota OPTIONS
-          const existingRoute = this.routes.find(route => route.path === path && route.method === 'OPTIONS')
-          if (existingRoute) {
-            handlers = existingRoute.handlers
-          } else {
-            // Se não houver nenhum handler definido, usamos o handler padrão do CORS
-            handlers = [this.corsOptionsDefault()]
-          }
+          console.log('test')
+          const handlers: any[] = [() => null]
           this.routes.push({ path, method: 'OPTIONS', handlers })
         }
       })
-    }
-  }
-
-  private async executeMiddleware (
-    middleware: any,
-    request: type.Request,
-    response: type.Response,
-    nextMiddleware: () => void
-  ): Promise<void> {
-    if (typeof middleware?.handle === 'function' && middleware?.handle.length === 3) {
-      await middleware.handle(request, response, nextMiddleware)
-    } else if (typeof middleware === 'function' && middleware?.length === 3) {
-      await middleware(request, response, nextMiddleware)
-    } else {
-      throw new Error('vkrun-router: method use received invalid middleware.')
     }
   }
 
@@ -168,12 +134,13 @@ export class VkrunRouter {
             const hasErrorHandler = typeof latestMiddleware === 'function' && latestMiddleware.length === 4
 
             try {
-              await this.executeMiddleware(middleware, request, response, nextMiddleware)
+              await helper.executeMiddleware(middleware, request, response, nextMiddleware)
             } catch (error: any) {
-              if (error?.message === 'The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object') {
-                throw Error(`vkrun-router: route ${route.path} with method ${route.method} returns a value in the response that does not match the content type.`)
+              if (hasErrorHandler) {
+                await latestMiddleware(error, request, response, nextMiddleware)
+              } else {
+                throw new Error(error.message)
               }
-              if (hasErrorHandler) await latestMiddleware(error, request, response, nextMiddleware)
             }
           }
 
