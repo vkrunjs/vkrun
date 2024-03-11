@@ -488,5 +488,49 @@ describe('Router', () => {
     server.close()
   })
 
-  // testar app.use middleware handler e function, parse data e cors
+  it('Should response error message if response invalid format', async () => {
+    try {
+      const invalidMiddleware = (_request: type.Request, response: type.Response, _next: type.NextFunction): void => {
+        response.setHeader('Content-Type', 'text/plain')
+        response.status(500).write({ message: 'ok' })
+      }
+
+      class ErrorMiddleware implements type.ErrorHandlerMiddleware {
+        public handle (error: any, _request: type.Request, response: type.Response, _next: type.NextFunction): void {
+          response.setHeader('Content-Type', 'text/plain')
+          response.status(500).end(error.message)
+        }
+      }
+
+      class ExampleController implements type.Controller {
+        public handle (_request: type.Request, response: type.Response): void {
+          response.setHeader('Content-Type', 'text/plain')
+          response.status(200).end('Return controller')
+        }
+      }
+
+      const app = vkrun()
+      app.use(invalidMiddleware)
+      app.use(errorHandleAdapter(new ErrorMiddleware()))
+      const router = Router()
+      router.get('/', controllerAdapter(new ExampleController()))
+      app.use(router)
+      const server = app.server()
+
+      server.listen(3688)
+
+      await axios.get('http://localhost:3688/')
+        .then((response) => {
+          expect(response).toEqual(undefined)
+        }).catch((error) => {
+          expect(error.response.status).toEqual(500)
+          expect(error.response.headers['content-type']).toEqual('text/plain')
+          expect(error.response.data).toEqual('The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object')
+        })
+
+      server.close()
+    } catch (error) {
+      console.log({ error })
+    }
+  })
 })
