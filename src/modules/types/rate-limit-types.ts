@@ -18,6 +18,7 @@ export type RateLimitRequests = Map<string, {
 }>
 
 export interface ExceededRequest {
+  requestId?: string
   route?: string
   method?: string
 }

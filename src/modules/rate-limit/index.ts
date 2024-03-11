@@ -44,6 +44,7 @@ export class VkrunRateLimit {
     } else {
       requestInfo.exceeded.count++
       requestInfo.exceeded.requests.push({
+        requestId: request.requestId,
         method: request.method,
         route: request.url
       })

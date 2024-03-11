@@ -1,6 +1,7 @@
 import * as http from 'http'
 import axios from 'axios'
 import vkrun, { rateLimit, Router, controllerAdapter } from '../../../index'
+import * as util from '../../utils'
 import * as type from '../../types'
 
 class RateLimitController implements type.Controller {
@@ -217,18 +218,15 @@ describe('Rate Limit', () => {
         expect(error.response.data).toEqual('Too Many Requests')
       })
 
-    expect(accessData).toEqual({
-      remoteAddress: '::1',
-      remoteFamily: 'IPv6',
-      userAgent: 'axios/1.6.7',
-      exceeded: {
-        count: 1,
-        requests: [{
-          method: 'GET',
-          route: '/rate-limit'
-        }]
-      }
-    })
+    expect(accessData.remoteAddress).toEqual('::1')
+    expect(accessData.remoteFamily).toEqual('IPv6')
+    expect(accessData.userAgent).toEqual('axios/1.6.7')
+    expect(accessData.exceeded.count).toEqual(1)
+
+    const request = accessData.exceeded.requests[0]
+    expect(request.method).toEqual('GET')
+    expect(request.route).toEqual('/rate-limit')
+    expect(util.isUUID(request.requestId)).toBeTruthy()
 
     server.close()
   })
