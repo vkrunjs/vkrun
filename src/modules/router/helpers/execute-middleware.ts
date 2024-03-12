@@ -6,9 +6,9 @@ export const executeMiddleware = async (
   response: type.Response,
   nextMiddleware: () => void
 ): Promise<void> => {
-  if (typeof middleware?.handle === 'function' && middleware?.handle.length === 3) {
+  if (typeof middleware.handle === 'function' && middleware.handle.length === 3) {
     await middleware.handle(request, response, nextMiddleware)
-  } else if (typeof middleware === 'function' && middleware?.length === 3) {
+  } else if (typeof middleware === 'function' && middleware.length === 3) {
     await middleware(request, response, nextMiddleware)
   } else {
     throw new Error('vkrun-router: method use received invalid middleware.')

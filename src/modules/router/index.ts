@@ -133,14 +133,14 @@ export class VkrunRouter {
             const latestMiddleware = middlewares[middlewares.length - 1]
             const hasErrorHandler = typeof latestMiddleware === 'function' && latestMiddleware.length === 4
 
-            try {
-              await helper.executeMiddleware(middleware, request, response, nextMiddleware)
-            } catch (error: any) {
-              if (hasErrorHandler) {
+            if (hasErrorHandler) {
+              try {
+                await helper.executeMiddleware(middleware, request, response, nextMiddleware)
+              } catch (error: any) {
                 await latestMiddleware(error, request, response, nextMiddleware)
-              } else {
-                throw new Error(error.message)
               }
+            } else {
+              await helper.executeMiddleware(middleware, request, response, nextMiddleware)
             }
           }
 
