@@ -8,11 +8,18 @@ export const app = (): type.App => {
   const middlewares: any[] = []
 
   const server = (): type.CreateServer => {
-    return http.createServer((request, _response) => {
-      const response = customResponse(_response)
+    return http.createServer((request, response) => {
+      const _response = customResponse(response)
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      router.handleRequest(request, response, middlewares)
+      router.handleRequest(request, _response, middlewares)
     })
+  }
+
+  const serverMock = async (request: type.Request, response: type.Response): Promise<type.Response> => {
+    const _response = customResponse(response)
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    await router.handleRequest(request, _response, middlewares)
+    return response
   }
 
   const use = (middleware: Record<string, any>): void => {
@@ -23,5 +30,5 @@ export const app = (): type.App => {
     }
   }
 
-  return { server, use }
+  return { server, use, serverMock }
 }
