@@ -13,7 +13,7 @@ export const vkrunTest = (app: any): type.VkrunTest => {
     })
 
     const httpResponse = helper.createHttpResponse(httpRequest)
-    const serverResponse = await app.serverMock(httpRequest, httpResponse)
+    const serverResponse = await app.serverFake(httpRequest, httpResponse)
     httpRequest.abort()
 
     return {
