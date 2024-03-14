@@ -13,15 +13,10 @@ export const superRequest = (app: any): type.SuperRequest => {
     })
 
     const httpResponse = helper.createHttpResponse(httpRequest)
-    const serverResponse = await app.serverFake(httpRequest, httpResponse)
+    const serverResponse = await app.serverMock(httpRequest, httpResponse)
+    serverResponse.data = helper.formatResponseData(serverResponse)
     httpRequest.abort()
-
-    return {
-      statusCode: serverResponse.statusCode,
-      headers: serverResponse.headers,
-      data: helper.formatResponseData(serverResponse),
-      statusText: serverResponse.statusText
-    }
+    return serverResponse
   }
 
   const get = async (path: any, options?: Record<string, any>): Promise<type.SuperRequestCreateMethod> => {

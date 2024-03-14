@@ -1,4 +1,4 @@
-export const statusTexts: Record<number, string> = {
+export const STATUS_CODES: Record<number, string> = {
   100: 'Continue',
   101: 'Switching Protocols',
   102: 'Processing',

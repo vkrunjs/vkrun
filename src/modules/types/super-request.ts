@@ -12,5 +12,5 @@ export interface SuperRequestCreateMethod {
   statusCode: number
   headers: Record<string, string>
   data: any
-  statusText: string
+  statusMessage: string
 }

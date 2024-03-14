@@ -26,7 +26,7 @@ describe('App', () => {
     const sut = await superRequest(app).post('/post', data, options)
 
     expect(sut.statusCode).toEqual(200)
-    expect(sut.statusText).toEqual('OK')
+    expect(sut.statusMessage).toEqual('OK')
     expect(util.isUUID(sut.headers['request-id'])).toBeTruthy()
     expect(sut.headers['content-type']).toEqual('application/json')
     expect(sut.data).toEqual({ message: 'POST OK' })
@@ -45,7 +45,7 @@ describe('App', () => {
     const sut = await superRequest(app).get('/get')
     console.log({ sut })
     expect(sut.statusCode).toEqual(200)
-    expect(sut.statusText).toEqual('OK')
+    expect(sut.statusMessage).toEqual('OK')
     expect(util.isUUID(sut.headers['request-id'])).toBeTruthy()
     expect(sut.headers['content-type']).toEqual('application/json')
     expect(sut.data).toEqual({ message: 'GET OK' })
