@@ -15,7 +15,7 @@ export const app = (): type.App => {
     })
   }
 
-  const serverFake = async (request: type.Request, response: type.Response): Promise<type.Response> => {
+  const serverMock = async (request: type.Request, response: type.Response): Promise<type.Response> => {
     const _response = customResponse(response)
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     await router.handleRequest(request, _response, middlewares)
@@ -30,5 +30,5 @@ export const app = (): type.App => {
     }
   }
 
-  return { server, use, serverFake }
+  return { server, use, serverMock }
 }

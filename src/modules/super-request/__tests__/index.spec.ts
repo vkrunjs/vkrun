@@ -1,4 +1,4 @@
-import { vkrunTest } from '..'
+import { superRequest } from '..'
 import { Router } from '../../router'
 import vkrun from '../../..'
 import { parseData } from '../../parse-data'
@@ -23,7 +23,7 @@ describe('App', () => {
       }
     }
 
-    const sut = await vkrunTest(app).post('/post', data, options)
+    const sut = await superRequest(app).post('/post', data, options)
 
     expect(sut.statusCode).toEqual(200)
     expect(sut.statusText).toEqual('OK')
@@ -42,7 +42,7 @@ describe('App', () => {
     app.use(parseData())
     app.use(router)
 
-    const sut = await vkrunTest(app).get('/get')
+    const sut = await superRequest(app).get('/get')
     console.log({ sut })
     expect(sut.statusCode).toEqual(200)
     expect(sut.statusText).toEqual('OK')

@@ -5,6 +5,6 @@ export type CreateServer = http.Server<typeof http.IncomingMessage, typeof http.
 
 export interface App {
   server: () => CreateServer
-  serverFake: (request: type.Request, response: type.Response) => Promise<type.Response>
+  serverMock: (request: type.Request, response: type.Response) => Promise<type.Response>
   use: (middleware: Record<string, any>) => void
 }
