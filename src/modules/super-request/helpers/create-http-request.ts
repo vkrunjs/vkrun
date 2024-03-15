@@ -17,7 +17,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
 
   request.socket = new Socket()
   request.method = method
-  request.url = path
+  request.url = path.replaceAll(' ', '%20')
   const lowercaseHeaders: any = {}
 
   for (const key in headers) {
@@ -43,6 +43,8 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
       if (!headerContentType?.includes('boundary=')) {
         request.headers['content-type'] = `${headerContentType}; boundary=${data._boundary}`
       }
+
+      if (!data) return data
 
       const filteredData = data._streams.filter((element: any) => typeof element !== 'function')
       let result = ''

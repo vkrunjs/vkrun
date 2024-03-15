@@ -2,6 +2,7 @@ import { readFileSync, unlinkSync, writeFileSync } from 'fs'
 import FormData from 'form-data'
 import path from 'path'
 import vkrun, { Router, parseData, superRequest } from '../../../index'
+import * as util from '../../utils'
 import * as type from '../../types'
 
 describe('Parse Data - end to end testing using super request', () => {
@@ -23,6 +24,9 @@ describe('Parse Data - end to end testing using super request', () => {
     const response = await superRequest(app).get(`/query?${query}`)
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -49,6 +53,10 @@ describe('Parse Data - end to end testing using super request', () => {
     const response = await superRequest(app).get('/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z')
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestParams).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -85,10 +93,14 @@ describe('Parse Data - end to end testing using super request', () => {
     }
 
     const response = await superRequest(app).post('/body-post', data, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' }
     })
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
   })
 
@@ -115,10 +127,14 @@ describe('Parse Data - end to end testing using super request', () => {
     }
 
     const response = await superRequest(app).put('/body-put', data, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' }
     })
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
   })
 
@@ -145,10 +161,14 @@ describe('Parse Data - end to end testing using super request', () => {
     }
 
     const response = await superRequest(app).patch('/body-patch', data, {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' }
     })
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
   })
 
@@ -169,10 +189,14 @@ describe('Parse Data - end to end testing using super request', () => {
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
     const response = await superRequest(app).post('/body-post', urlencoded, {
-      headers: { 'content-type': 'application/x-www-form-urlencoded' }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -199,10 +223,14 @@ describe('Parse Data - end to end testing using super request', () => {
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
     const response = await superRequest(app).put('/body-put', urlencoded, {
-      headers: { 'content-type': 'application/x-www-form-urlencoded' }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -229,10 +257,14 @@ describe('Parse Data - end to end testing using super request', () => {
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
     const response = await superRequest(app).patch('/body-patch', urlencoded, {
-      headers: { 'content-type': 'application/x-www-form-urlencoded' }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -273,25 +305,16 @@ describe('Parse Data - end to end testing using super request', () => {
     data.append('file', fileBuffer, fileName)
 
     const response = await superRequest(app).post('/body-post', data, {
-      headers: { 'Content-type': 'Multipart/form-data' }
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
-
-    // await axios.post('http://localhost:3992/body-post', data, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data'
-    //   }
-    // }).then((response) => {
-    //   expect(response.status).toEqual(200)
-    // }).catch((error) => {
-    //   expect(error).toEqual(undefined)
-    // }).finally(() => {
-    //   // Remover arquivo após o teste
-    //   unlinkSync(filePath)
-    // })
 
     unlinkSync(filePath)
 
     expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -300,7 +323,7 @@ describe('Parse Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     })
   })
-/*
+
   it('Should be able to parse the form data body in the PUT method', async () => {
     let requestBody
 
@@ -314,8 +337,6 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3991)
 
     const data = new FormData()
     data.append('string', 'any@mail.com')
@@ -324,18 +345,15 @@ describe('Parse Data - end to end testing using super request', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    await axios.put('http://localhost:3991/body-put', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then((response) => {
-      expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+    const response = await superRequest(app).put('/body-put', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    server.close()
-
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -358,8 +376,6 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3990)
 
     const data = new FormData()
     data.append('string', 'any@mail.com')
@@ -368,18 +384,15 @@ describe('Parse Data - end to end testing using super request', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    await axios.patch('http://localhost:3990/body-patch', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then((response) => {
-      expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+    const response = await superRequest(app).patch('/body-patch', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    server.close()
-
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -402,8 +415,6 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3989)
 
     const data = {
       string: 'any@mail.com',
@@ -413,18 +424,15 @@ describe('Parse Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    await axios.post('http://localhost:3989/body-post', data, {
-      headers: {
-        'Content-Type': 'text/plain'
-      }
-    }).then((response) => {
-      expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+    const response = await superRequest(app).post('/body-post', data, {
+      headers: { 'Content-Type': 'text/plain' }
     })
 
-    server.close()
-
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(JSON.stringify(data))
   })
 
@@ -441,25 +449,19 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3988)
 
     const data = {
       sql: 'SELECT * FROM USER;'
     }
 
-    await axios.post('http://localhost:3988/body-post', data)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    const response = await superRequest(app).post('/body-post', data)
 
-    server.close()
-
-    expect(requestBody).toEqual({
-      sql: "'SELECT * FROM USER;'"
-    })
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
+    expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is urlencoded', async () => {
@@ -475,22 +477,19 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3987)
 
     const urlencoded = 'sql=SELECT * FROM USER;'
 
-    await axios.post('http://localhost:3987/body-post', urlencoded, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+    const response = await superRequest(app).post('/body-post', urlencoded, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
-    server.close()
-
-    expect(requestBody).toEqual({
-      sql: "'SELECT * FROM USER;'"
-    })
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
+    expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is form data', async () => {
@@ -506,23 +505,20 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3986)
 
     const data = new FormData()
     data.append('sql', 'SELECT * FROM USER;')
 
-    await axios.post('http://localhost:3986/body-post', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+    const response = await superRequest(app).post('/body-post', data, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    server.close()
-
-    expect(requestBody).toEqual({
-      sql: "'SELECT * FROM USER;'"
-    })
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
+    expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
   it('Should be able to parse a string and parse it if there is SQL with others content types', async () => {
@@ -538,19 +534,18 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3986)
 
     const data = 'SELECT * FROM USER;'
 
-    await axios.post('http://localhost:3986/body-post', data, {
-      headers: {
-        'Content-Type': 'text/plain'
-      }
+    const response = await superRequest(app).post('/body-post', data, {
+      headers: { 'Content-Type': 'text/plain' }
     })
 
-    server.close()
-
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual("'SELECT * FROM USER;'")
   })
 
@@ -567,19 +562,16 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3985)
 
     const query = 'sql=SELECT * FROM USER;'
-    await axios.get(`http://localhost:3985/query?${query}`)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
 
-    server.close()
+    const response = await superRequest(app).get(`/query?${query}`)
 
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
@@ -596,50 +588,41 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3984)
 
     const data = 'SELECT * FROM USER;'
-    await axios.get(`http://localhost:3984/${data}`)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
 
-    server.close()
-
+    const response = await superRequest(app).get(`/${data}`)
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({ sql: "'SELECT%20*%20FROM%20USER;'" })
   })
 
   it('Return bad request if invalid request data', async () => {
-    const requestMock: any = {
-      socket: {},
-      headers: { 'Content-Type': 'application/json' },
-      _httpMessage: {},
-      body: ''
-    }
+    const app = vkrun()
+    app.use(parseData())
+    const router = Router()
 
-    const server = http.createServer((_request: any, response: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      parseData().handle(requestMock, response, () => {})
-    })
-    server.listen(3983)
-
-    const data = ''
-
-    await axios.post('http://localhost:3983/body-post', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
-    }).catch((error) => {
-      expect(error.response.status).toEqual(400)
-      expect(error.response.data).toEqual('Invalid Request Data')
+    router.post('/body-post', (_request: type.Request, response: type.Response) => {
+      response.status(200).end()
     })
 
-    server.close()
+    app.use(router)
+    const data = 'Hello World!'
+
+    const response = await superRequest(app).post('/body-post', data, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    expect(response.statusCode).toEqual(400)
+    expect(response.statusMessage).toEqual('Bad Request')
+    expect(Object.keys(response.headers).length).toEqual(3)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.headers['access-control-allow-origin']).toEqual('*')
+    expect(response.headers['content-type']).toEqual('text/plain')
+    expect(response.data).toEqual('Invalid Request Data')
   })
 
   it('Should be able to return undefined body if request body is empty and content type is multipart/form-data', async () => {
@@ -655,21 +638,16 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3982)
 
-    await axios.post('http://localhost:3982/body-post', '', {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }).then((response) => {
-      expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+    const response = await superRequest(app).post('/body-post', '', {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    server.close()
-
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(undefined)
   })
 
@@ -693,8 +671,6 @@ describe('Parse Data - end to end testing using super request', () => {
     })
 
     app.use(router)
-    const server = app.server()
-    server.listen(3981)
 
     const data = {
       string: 'any@mail.com',
@@ -708,19 +684,15 @@ describe('Parse Data - end to end testing using super request', () => {
       }
     }
 
-    await axios.post('http://localhost:3981/', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+    const response = await superRequest(app).post('/', data, {
+      headers: { 'Content-Type': 'application/json' }
     })
 
-    server.close()
-
-    expect(requestBody).toEqual('{"string":"any@mail.com","integer":123,"float":1.56,"boolean":true,"date":"2000-02-03T02:00:00.000Z","array":["string",true,false,123,1.56,"2000-02-03T02:00:00.000Z"],"object":{"key":"string"}}')
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.data).toEqual(undefined)
+    expect(requestBody).toEqual(JSON.stringify(data))
   })
-  */
 })

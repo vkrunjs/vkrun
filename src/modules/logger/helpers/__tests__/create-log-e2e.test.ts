@@ -38,7 +38,6 @@ describe('Logger Middleware', () => {
       .then((response) => {
         expect(response.status).toEqual(200)
       }).catch((error) => {
-        console.log({ error })
         expect(error).toEqual(undefined)
       })
 
@@ -56,7 +55,7 @@ describe('Logger Middleware', () => {
     expect(request.method).toEqual('POST')
 
     const socket = request.socket
-    expect(socket.remoteAddress).toEqual('::1')
+    expect(socket.remoteAddress).toEqual('::ffff:127.0.0.1')
     expect(util.isNumber(socket.remotePort)).toBeTruthy()
 
     const header = request.header

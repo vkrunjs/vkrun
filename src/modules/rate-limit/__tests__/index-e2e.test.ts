@@ -217,7 +217,7 @@ describe('Rate Limit', () => {
         expect(error.response.data).toEqual('Too Many Requests')
       })
 
-    expect(accessData.remoteAddress).toEqual('::1')
+    expect(accessData.remoteAddress).toEqual('::ffff:127.0.0.1')
     expect(accessData.remoteFamily).toEqual('IPv6')
     expect(accessData.userAgent).toEqual('axios/1.6.7')
     expect(accessData.exceeded.count).toEqual(1)

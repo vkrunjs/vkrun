@@ -182,7 +182,6 @@ describe('cors', () => {
 
     await axios.options('http://localhost:3595/')
       .then((response) => {
-        console.log({ response })
         expect(response.status).toEqual(204)
         expect(response.data).toEqual('')
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
@@ -193,7 +192,6 @@ describe('cors', () => {
         expect(response.headers.connection).toEqual('close')
         expect(response.headers['content-length']).toEqual('0')
       }).catch((error) => {
-        console.log({ error })
         expect(error).toEqual(undefined)
       })
 
