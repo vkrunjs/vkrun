@@ -30,17 +30,21 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
 
   request.headers = lowercaseHeaders
 
-  const generateBufferData = (headers: Record<string, any>): any => {
-    const headerContentType = request.headers['content-type']
+  const headerContentType = request.headers['content-type']
 
+  if (!headerContentType && util.isObject(data)) {
+    request.headers['content-type'] = 'application/json'
+  } else if (!headerContentType && data) {
+    request.headers['content-type'] = 'text/plain'
+  }
+
+  const generateBufferData = (): any => {
     if (headerContentType?.includes('multipart/form-data')) {
       if (!headerContentType?.includes('boundary=')) {
         request.headers['content-type'] = `${headerContentType}; boundary=${data._boundary}`
       }
 
-      const dataArr = data._streams
-      dataArr.push(data._boundary)
-      const filteredData = dataArr.filter((element: any) => typeof element !== 'function')
+      const filteredData = data._streams.filter((element: any) => typeof element !== 'function')
       let result = ''
 
       for (let i = 0; i < filteredData.length; i += 2) {
@@ -56,7 +60,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
       return data.toString()
     }
   }
-  const bufferData = generateBufferData(request.headers)
+  const bufferData = generateBufferData()
 
   request.on = (event: string, listener: any) => {
     if (event === 'data') {
