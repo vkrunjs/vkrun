@@ -21,16 +21,12 @@ export const app = (): type.App => {
     timers = []
   }
 
-  const validateInstance = (): void => {
+  const server = (): type.CreateServer => {
     if (instance === 'closed') {
       throw new Error('vkrun-app: app server is closed.')
     } else if (instance === 'server' || instance === 'serverMock') {
       throw new Error('vkrun-app: app server is already instantiated.')
     }
-  }
-
-  const server = (): type.CreateServer => {
-    validateInstance()
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     createdServer = http.createServer(async (request, response) => {
       instance = 'server'
@@ -44,7 +40,7 @@ export const app = (): type.App => {
   }
 
   const serverMock = async (request: type.Request, response: type.Response): Promise<type.Response> => {
-    validateInstance()
+    if (instance === 'closed') throw new Error('vkrun-app: app server is closed.')
     instance = 'serverMock'
     const _request = request
     _request.setTimer = setTimer
