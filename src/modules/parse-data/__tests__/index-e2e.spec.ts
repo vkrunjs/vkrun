@@ -34,6 +34,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse params url', async () => {
@@ -64,6 +66,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse the JSON body in the POST method', async () => {
@@ -102,6 +106,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
+
+    app.close()
   })
 
   it('Should be able to parse the JSON body in the PUT method', async () => {
@@ -136,6 +142,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
+
+    app.close()
   })
 
   it('Should be able to parse the JSON body in the PATCH method', async () => {
@@ -170,6 +178,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
+
+    app.close()
   })
 
   it('Should be able to parse the urlencoded body in the POST method', async () => {
@@ -204,6 +214,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse the urlencoded body in the PUT method', async () => {
@@ -238,6 +250,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse the urlencoded body in the PATCH method', async () => {
@@ -272,6 +286,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse the form data body in the POST method', async () => {
@@ -322,6 +338,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse the form data body in the PUT method', async () => {
@@ -361,6 +379,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to parse the form data body in the PATCH method', async () => {
@@ -400,6 +420,8 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+
+    app.close()
   })
 
   it('Should be able to use a string body in the POST, PUT, or PATCH method when not providing a content type supported by the data analysis module', async () => {
@@ -434,6 +456,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(JSON.stringify(data))
+
+    app.close()
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is JSON', async () => {
@@ -462,6 +486,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
+
+    app.close()
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is urlencoded', async () => {
@@ -490,6 +516,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
+
+    app.close()
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is form data', async () => {
@@ -519,6 +547,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
+
+    app.close()
   })
 
   it('Should be able to parse a string and parse it if there is SQL with others content types', async () => {
@@ -547,6 +577,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual("'SELECT * FROM USER;'")
+
+    app.close()
   })
 
   it('Should be able to parse the query if there is SQL', async () => {
@@ -573,6 +605,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({ sql: "'SELECT * FROM USER;'" })
+
+    app.close()
   })
 
   it('Should be able to parse the params if there is SQL', async () => {
@@ -598,6 +632,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({ sql: "'SELECT%20*%20FROM%20USER;'" })
+
+    app.close()
   })
 
   it('Return bad request if invalid request data', async () => {
@@ -623,6 +659,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(response.headers['access-control-allow-origin']).toEqual('*')
     expect(response.headers['content-type']).toEqual('text/plain')
     expect(response.data).toEqual('Invalid Request Data')
+
+    app.close()
   })
 
   it('Should be able to return undefined body if request body is empty and content type is multipart/form-data', async () => {
@@ -649,6 +687,8 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(undefined)
+
+    app.close()
   })
 
   it('Should be able to return string json body if all config parse data is false', async () => {
@@ -694,5 +734,7 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(JSON.stringify(data))
+
+    app.close()
   })
 })

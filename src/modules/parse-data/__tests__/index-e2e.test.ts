@@ -31,7 +31,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestQuery).toEqual({
       string: 'any@mail.com',
@@ -65,7 +65,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestParams).toEqual({
       string: 'any@mail.com',
@@ -111,7 +111,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual(data)
   })
@@ -147,7 +147,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual(data)
   })
@@ -183,7 +183,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual(data)
   })
@@ -216,7 +216,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -255,7 +255,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -294,7 +294,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -350,7 +350,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       unlinkSync(filePath)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -394,7 +394,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -438,7 +438,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -483,7 +483,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual(JSON.stringify(data))
   })
@@ -515,7 +515,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       sql: "'SELECT * FROM USER;'"
@@ -546,7 +546,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       }
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       sql: "'SELECT * FROM USER;'"
@@ -578,7 +578,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       }
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual({
       sql: "'SELECT * FROM USER;'"
@@ -609,7 +609,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       }
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual("'SELECT * FROM USER;'")
   })
@@ -638,7 +638,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestQuery).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
@@ -667,7 +667,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     expect(requestQuery).toEqual({ sql: "'SELECT%20*%20FROM%20USER;'" })
   })
@@ -728,7 +728,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual(undefined)
   })
@@ -778,7 +778,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       expect(error).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
 
     expect(requestBody).toEqual('{"string":"any@mail.com","integer":123,"float":1.56,"boolean":true,"date":"2000-02-03T02:00:00.000Z","array":["string",true,false,123,1.56,"2000-02-03T02:00:00.000Z"],"object":{"key":"string"}}')
   })
