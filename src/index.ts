@@ -8,6 +8,7 @@ import { rateLimit } from './modules/rate-limit'
 import { Session } from './modules/session'
 import { validateRouteData } from './modules/validate-route-data'
 import { jwt } from './modules/jwt'
+import { superRequest } from './modules/super-request'
 export * from './modules/router/helpers/adapters'
 export * from './modules/types'
 
@@ -22,5 +23,6 @@ export {
   rateLimit,
   jwt,
   Session,
-  validateRouteData
+  validateRouteData,
+  superRequest
 }

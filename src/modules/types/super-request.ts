@@ -1,16 +1,16 @@
 export interface SuperRequest {
-  get: (path: any, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
-  post: (path: any, data: Record<string, any>, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
-  put: (path: any, data: Record<string, any>, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
-  patch: (path: any, data: Record<string, any>, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
-  delete: (path: any, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
-  head: (path: any, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
-  options: (path: any, options?: Record<string, any>) => Promise<SuperRequestCreateMethod>
+  get: (path: any, options?: Record<string, any>) => Promise<SuperRequestMethod>
+  post: (path: any, data: Record<string, any> | string, options?: Record<string, any>) => Promise<SuperRequestMethod>
+  put: (path: any, data: Record<string, any> | string, options?: Record<string, any>) => Promise<SuperRequestMethod>
+  patch: (path: any, data: Record<string, any> | string, options?: Record<string, any>) => Promise<SuperRequestMethod>
+  delete: (path: any, options?: Record<string, any>) => Promise<SuperRequestMethod>
+  head: (path: any, options?: Record<string, any>) => Promise<SuperRequestMethod>
+  options: (path: any, options?: Record<string, any>) => Promise<SuperRequestMethod>
 }
 
-export interface SuperRequestCreateMethod {
+export interface SuperRequestMethod {
   statusCode: number
+  statusMessage: string
   headers: Record<string, string>
   data: any
-  statusMessage: string
 }

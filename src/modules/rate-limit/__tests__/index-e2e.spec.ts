@@ -1,4 +1,3 @@
-import * as http from 'http'
 import axios from 'axios'
 import vkrun, { rateLimit, Router, controllerAdapter } from '../../../index'
 import * as util from '../../utils'
@@ -231,30 +230,6 @@ describe('Rate Limit', () => {
     server.close()
   })
 
-  it('Return bad request if remote address is missing', async () => {
-    const rateLimitConfig = { windowMs: 15 * 60 * 1000, limit: 100 }
-    const socketMock = { remoteAddress: undefined, remoteFamily: 'IPv6' }
-    const requestMock: any = {
-      socket: socketMock,
-      headers: { 'user-agent': null },
-      _httpMessage: {}
-    }
-    const server = http.createServer((_request: any, response: any) => {
-      rateLimit(rateLimitConfig).handle(requestMock, response, () => {})
-    })
-
-    server.listen(3893)
-
-    await axios.get('http://localhost:3893/rate-limit').then((response) => {
-      expect(response).toEqual(undefined)
-    }).catch((error: any) => {
-      expect(error.response.status).toEqual(400)
-      expect(error.response.data).toEqual('Missing Remote Address')
-    })
-
-    server.close()
-  })
-
   it('Should be able to call any route with default config', async () => {
     const app = vkrun()
     app.use(rateLimit())
@@ -278,28 +253,6 @@ describe('Rate Limit', () => {
       }).catch((error) => {
         expect(error).toEqual(undefined)
       })
-
-    server.close()
-  })
-
-  it('Return bad request if socket and user agent is missing', async () => {
-    const requestMock: any = {
-      socket: undefined,
-      headers: { 'user-agent': undefined },
-      _httpMessage: {}
-    }
-    const server = http.createServer((_request: any, response: any) => {
-      rateLimit().handle(requestMock, response, () => {})
-    })
-
-    server.listen(3891)
-
-    await axios.get('http://localhost:3891/rate-limit').then((response) => {
-      expect(response).toEqual(undefined)
-    }).catch((error: any) => {
-      expect(error.response.status).toEqual(400)
-      expect(error.response.data).toEqual('Missing Remote Address')
-    })
 
     server.close()
   })

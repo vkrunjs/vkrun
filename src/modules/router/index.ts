@@ -80,7 +80,6 @@ export class VkrunRouter {
         const optionsRouteExists = helper.routeExists(path, 'OPTIONS', this.routes)
 
         if (!optionsRouteExists) {
-          console.log('test')
           const handlers: any[] = [() => null]
           this.routes.push({ path, method: 'OPTIONS', handlers })
         }

@@ -20,17 +20,10 @@ export class VkrunRateLimit {
   }
 
   handle (request: type.Request, response: type.Response, next: type.NextFunction): void {
-    const remoteAddress = request.socket?.remoteAddress
-    const remoteFamily = request.socket?.remoteFamily ?? ''
+    const remoteAddress = request.socket.remoteAddress ?? '127.0.0.1'
+    const remoteFamily = request.socket.remoteFamily ?? ''
     const userAgent = request.headers['user-agent'] ?? ''
     const key = `${remoteAddress}-${remoteFamily}`
-
-    if (!remoteAddress) {
-      response.setHeader('Content-Type', 'text/plain')
-      response.statusCode = 400
-      response.end('Missing Remote Address')
-      return
-    }
 
     let requestInfo = this.requests.get(key)
     if (!requestInfo) {

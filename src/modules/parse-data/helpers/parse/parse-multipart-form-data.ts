@@ -5,7 +5,6 @@ export const parseMultipartFormData = (request: type.Request, escapeSQL: boolean
   const headerContentType = request.headers['content-type']
   const boundary = headerContentType?.split('boundary=')[1]
   const parts = request.body.split(`--${boundary}`)
-
   const formData: Record<string, string | number | boolean | Date> = {}
 
   for (const part of parts) {

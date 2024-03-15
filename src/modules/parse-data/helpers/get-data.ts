@@ -1,13 +1,13 @@
+import * as util from '../../utils'
 import * as type from '../../types'
 
 export const getData = async (request: type.Request): Promise<string> => {
   return await new Promise((resolve) => {
     let body = ''
     const files: any = []
-
     const headerContentType = request.headers['content-type']
 
-    if (headerContentType?.includes('multipart/form-data')) {
+    if (util.isString(headerContentType) && headerContentType?.includes('multipart/form-data')) {
       request.on('data', (chunk) => {
         body += chunk.toString()
       })

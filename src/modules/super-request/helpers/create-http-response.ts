@@ -20,7 +20,7 @@ export const createHttpResponse = (request: any): any => {
       if (util.isObject(response._body)) {
         response.data = JSON.stringify(response._body)
       } else {
-        response.data = response._body.toString().trim()
+        if (response._body) response.data = response._body.toString().trim()
       }
     }
 

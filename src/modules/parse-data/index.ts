@@ -29,17 +29,18 @@ export class VkrunParseData {
   async handle (request: type.Request, response: type.Response, next: () => void): Promise<void> {
     try {
       const headerContentType = request.headers['content-type']
+
       request.body = await getData(request)
       if (this.params) request.params = parseParams(request, this.escapeSQL)
       if (this.query) request.query = parseQuery(request, this.escapeSQL)
 
       if (request.body) {
         if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH') {
-          if (this.json && headerContentType && headerContentType.includes('application/json')) {
+          if (this.json && headerContentType && headerContentType?.includes('application/json')) {
             request.body = parseJSON(request, this.escapeSQL)
-          } else if (this.urlencoded && headerContentType && headerContentType.includes('application/x-www-form-urlencoded')) {
+          } else if (this.urlencoded && headerContentType && headerContentType?.includes('application/x-www-form-urlencoded')) {
             request.body = parseFormUrlEncoded(request, this.escapeSQL)
-          } else if (this.formData && headerContentType && headerContentType.includes('multipart/form-data')) {
+          } else if (this.formData && headerContentType && headerContentType?.includes('multipart/form-data')) {
             request.body = parseMultipartFormData(request, this.escapeSQL)
           } else {
             if (this.escapeSQL && util.isString(request.body)) {
