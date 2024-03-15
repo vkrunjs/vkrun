@@ -8,6 +8,7 @@ export interface Request extends IncomingMessage {
   query?: Record<string, string | number | boolean | Date>
   session?: any
   files?: any[]
+  setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
 export type Response = ServerResponse & CustomResponseMethods

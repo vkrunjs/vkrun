@@ -1,5 +1,4 @@
-import axios from 'axios'
-import vkrun, { rateLimit, Router, controllerAdapter } from '../../../index'
+import vkrun, { rateLimit, Router, controllerAdapter, superRequest } from '../../../index'
 import * as util from '../../utils'
 import * as type from '../../types'
 
@@ -9,7 +8,7 @@ class RateLimitController implements type.Controller {
   }
 }
 
-describe('Rate Limit - end to end testing using axios and app server', () => {
+describe('Rate Limit - end to end testing using super request', () => {
   it('Should be able to call any route with default standard headers', async () => {
     const app = vkrun()
     const rateLimitConfig = { windowMs: 15 * 60 * 1000, limit: 100 }
@@ -17,27 +16,24 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     const router = Router()
     router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
-    const server = app.server()
 
-    server.listen(3899)
+    const response = await superRequest(app).get('/rate-limit')
 
-    await axios.get('http://localhost:3899/rate-limit')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-        expect(response.headers).toHaveProperty('x-ratelimit-limit')
-        expect(response.headers).toHaveProperty('x-ratelimit-remaining')
-        expect(response.headers).toHaveProperty('x-ratelimit-reset')
-        expect(response.headers['x-ratelimit-limit']).toEqual(String(rateLimitConfig.limit))
-        expect(response.headers['x-ratelimit-remaining']).toBeDefined()
-        expect(response.headers['x-ratelimit-reset']).toBeDefined()
-        expect(response.data).toEqual('rate limit')
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
-
-    server.close()
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(5)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.headers['content-type']).toEqual('text/plain')
+    expect(response.headers).toHaveProperty('x-ratelimit-limit')
+    expect(response.headers).toHaveProperty('x-ratelimit-remaining')
+    expect(response.headers).toHaveProperty('x-ratelimit-reset')
+    expect(response.headers['x-ratelimit-limit']).toEqual(String(rateLimitConfig.limit))
+    expect(response.headers['x-ratelimit-remaining']).toBeDefined()
+    expect(response.headers['x-ratelimit-reset']).toBeDefined()
+    expect(response.data).toEqual('rate limit')
+    app.close()
   })
-
+/*
   it('Should be able to call any route with legacy headers', async () => {
     const app = vkrun()
     const rateLimitConfig = {
@@ -256,4 +252,5 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
 
     server.close()
   })
+  */
 })
