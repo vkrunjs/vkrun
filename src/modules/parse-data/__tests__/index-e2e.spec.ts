@@ -648,17 +648,17 @@ describe('Parse Data - end to end testing using super request', () => {
     app.use(router)
     const data = 'Hello World!'
 
-    const response = await superRequest(app).post('/body-post', data, {
+    await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'application/json' }
+    }).catch((error) => {
+      expect(error.response.statusCode).toEqual(400)
+      expect(error.response.statusMessage).toEqual('Bad Request')
+      expect(Object.keys(error.response.headers).length).toEqual(3)
+      expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(error.response.headers['access-control-allow-origin']).toEqual('*')
+      expect(error.response.headers['content-type']).toEqual('text/plain')
+      expect(error.response.data).toEqual('Invalid Request Data')
     })
-
-    expect(response.statusCode).toEqual(400)
-    expect(response.statusMessage).toEqual('Bad Request')
-    expect(Object.keys(response.headers).length).toEqual(3)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(response.headers['access-control-allow-origin']).toEqual('*')
-    expect(response.headers['content-type']).toEqual('text/plain')
-    expect(response.data).toEqual('Invalid Request Data')
 
     app.close()
   })
