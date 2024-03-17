@@ -4,9 +4,19 @@ import FormData from 'form-data'
 import axios from 'axios'
 import path from 'path'
 import vkrun, { Router, parseData } from '../../../index'
+import * as util from '../../utils'
 import * as type from '../../types'
 
 describe('Parse Data - end to end testing using axios and app server', () => {
+  let server: any
+
+  afterEach(() => {
+    // close server if test fails or causes error
+    if (server?.listening) {
+      server.close()
+    }
+  })
+
   it('Should be able to parse query url', async () => {
     let requestQuery
 
@@ -20,16 +30,19 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3999)
 
     const query = 'string=any@mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
-    await axios.get(`http://localhost:3999/query?${query}`)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.get(`http://localhost:3999/query?${query}`).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+      expect(response.data).toEqual('')
+    })
 
     app.close()
 
@@ -55,15 +68,18 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3998)
 
-    await axios.get('http://localhost:3998/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.get('http://localhost:3998/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z').then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+      expect(response.data).toEqual('')
+    })
 
     app.close()
 
@@ -89,7 +105,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3997)
 
     const data = {
@@ -104,12 +120,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       }
     }
 
-    await axios.post('http://localhost:3997/body-post', data)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.post('http://localhost:3997/body-post', data).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+    })
 
     app.close()
 
@@ -129,7 +147,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3996)
 
     const data = {
@@ -140,12 +158,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    await axios.put('http://localhost:3996/body-put', data)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.put('http://localhost:3996/body-put', data).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+    })
 
     app.close()
 
@@ -165,7 +185,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3995)
 
     const data = {
@@ -176,12 +196,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    await axios.patch('http://localhost:3995/body-patch', data)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.patch('http://localhost:3995/body-patch', data).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+    })
 
     app.close()
 
@@ -201,19 +223,20 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3994)
 
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
     await axios.post('http://localhost:3994/body-post', urlencoded, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -240,19 +263,20 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3993)
 
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
     await axios.put('http://localhost:3993/body-put', urlencoded, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -279,19 +303,20 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3993)
 
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
     await axios.patch('http://localhost:3993/body-patch', urlencoded, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -318,7 +343,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3992)
 
     const fileContent = 'Text file'
@@ -339,13 +364,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     data.append('file', fileBuffer, fileName)
 
     await axios.post('http://localhost:3992/body-post', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     }).finally(() => {
       unlinkSync(filePath)
     })
@@ -374,7 +400,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3991)
 
     const data = new FormData()
@@ -385,13 +411,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
     await axios.put('http://localhost:3991/body-put', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -418,7 +445,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3990)
 
     const data = new FormData()
@@ -429,13 +456,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
     await axios.patch('http://localhost:3990/body-patch', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -462,7 +490,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3989)
 
     const data = {
@@ -474,13 +502,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }
 
     await axios.post('http://localhost:3989/body-post', data, {
-      headers: {
-        'Content-Type': 'text/plain'
-      }
+      headers: { 'Content-Type': 'text/plain' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -501,25 +530,23 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3988)
 
-    const data = {
-      sql: 'SELECT * FROM USER;'
-    }
+    const data = { sql: 'SELECT * FROM USER;' }
 
-    await axios.post('http://localhost:3988/body-post', data)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.post('http://localhost:3988/body-post', data).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+    })
 
     app.close()
 
-    expect(requestBody).toEqual({
-      sql: "'SELECT * FROM USER;'"
-    })
+    expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is urlencoded', async () => {
@@ -535,22 +562,25 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3987)
 
     const urlencoded = 'sql=SELECT * FROM USER;'
 
     await axios.post('http://localhost:3987/body-post', urlencoded, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
 
-    expect(requestBody).toEqual({
-      sql: "'SELECT * FROM USER;'"
-    })
+    expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
   it('Should be able to parse a string and parse it if there is SQL when the content type is form data', async () => {
@@ -566,23 +596,26 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3986)
 
     const data = new FormData()
     data.append('sql', 'SELECT * FROM USER;')
 
     await axios.post('http://localhost:3986/body-post', data, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
 
-    expect(requestBody).toEqual({
-      sql: "'SELECT * FROM USER;'"
-    })
+    expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
   })
 
   it('Should be able to parse a string and parse it if there is SQL with others content types', async () => {
@@ -598,15 +631,20 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3986)
 
     const data = 'SELECT * FROM USER;'
 
     await axios.post('http://localhost:3986/body-post', data, {
-      headers: {
-        'Content-Type': 'text/plain'
-      }
+      headers: { 'Content-Type': 'text/plain' }
+    }).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -627,16 +665,18 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3985)
 
     const query = 'sql=SELECT * FROM USER;'
-    await axios.get(`http://localhost:3985/query?${query}`)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.get(`http://localhost:3985/query?${query}`).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+    })
 
     app.close()
 
@@ -656,16 +696,18 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3984)
 
     const data = 'SELECT * FROM USER;'
-    await axios.get(`http://localhost:3984/${data}`)
-      .then((response) => {
-        expect(response.status).toEqual(200)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.get(`http://localhost:3984/${data}`).then((response) => {
+      expect(response.status).toEqual(200)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
+    })
 
     app.close()
 
@@ -689,11 +731,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     const data = ''
 
     await axios.post('http://localhost:3983/body-post', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { 'Content-Type': 'application/json' }
     }).catch((error) => {
       expect(error.response.status).toEqual(400)
       expect(error.response.data).toEqual('Invalid Request Data')
@@ -715,17 +753,18 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3982)
 
     await axios.post('http://localhost:3982/body-post', '', {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+      headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
@@ -753,7 +792,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     })
 
     app.use(router)
-    const server = app.server()
+    server = app.server()
     server.listen(3981)
 
     const data = {
@@ -769,13 +808,14 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }
 
     await axios.post('http://localhost:3981/', data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     }).then((response) => {
       expect(response.status).toEqual(200)
-    }).catch((error) => {
-      expect(error).toEqual(undefined)
+      expect(Object.keys(response.headers).length).toEqual(4)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('0')
     })
 
     app.close()
