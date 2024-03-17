@@ -1,4 +1,5 @@
 import * as helper from './helpers'
+import * as util from '../utils'
 import * as type from '../types'
 
 export const superRequest = (app: any): type.SuperRequest => {
@@ -16,18 +17,23 @@ export const superRequest = (app: any): type.SuperRequest => {
         })
 
         const httpResponse = helper.createHttpResponse(httpRequest)
-        const serverResponse = await app.serverMock(httpRequest, httpResponse)
+        const serverResponse = await app._reqWithoutServer(httpRequest, httpResponse)
         serverResponse.data = helper.formatResponseData(serverResponse)
         serverResponse.headers.connection = 'close'
         serverResponse.headers.date = new Date().toUTCString()
-        serverResponse.headers['content-length'] = serverResponse.data ? String(serverResponse.data.length) : '0'
+        const contentLength = (): string => {
+          if (serverResponse.data === undefined) return '0'
+          else if (util.isObject(serverResponse.data)) return JSON.stringify(serverResponse.data).length.toString()
+          return String(serverResponse.data.length)
+        }
+        serverResponse.headers['content-length'] = contentLength()
         httpRequest.abort()
 
         const response: type.SuperRequestSuccess = {
           statusCode: serverResponse.statusCode,
           statusMessage: serverResponse.statusMessage,
           headers: serverResponse.headers,
-          data: serverResponse.data
+          data: serverResponse.data === undefined ? '' : serverResponse.data
         }
 
         if (serverResponse.statusCode < 400) {
@@ -46,15 +52,15 @@ export const superRequest = (app: any): type.SuperRequest => {
     return await request('GET', path, '', options)
   }
 
-  const post = async (path: any, data: Record<string, any> | string, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
+  const post = async (path: any, data?: Record<string, any> | string, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
     return await request('POST', path, data, options)
   }
 
-  const put = async (path: any, data: Record<string, any> | string, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
+  const put = async (path: any, data?: Record<string, any> | string, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
     return await request('PUT', path, data, options)
   }
 
-  const patch = async (path: any, data: Record<string, any> | string, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
+  const patch = async (path: any, data?: Record<string, any> | string, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
     return await request('PATCH', path, data, options)
   }
 

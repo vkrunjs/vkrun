@@ -1,15 +1,14 @@
+import axios from 'axios'
 import vkrun, {
   Session,
   Router,
   controllerAdapter,
   Controller,
   Request,
-  Response,
-  superRequest
+  Response
 } from '../../../index'
 import { generateSecretKey } from '../helpers'
 import * as util from '../../utils'
-import * as type from '../../types'
 
 const secretKey = generateSecretKey()
 const session = Session({ secretKey, sanitizationEvery: '5m' })
@@ -29,6 +28,7 @@ router.post('/session',
 router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
 
 describe('Session', () => {
+  let server: any
   let cookie: string
   let sessionId: string
   let sessionToken: string
@@ -46,9 +46,15 @@ describe('Session', () => {
     cookie = `session-id=${sessionId};session-token=${sessionToken}`
   }
 
+  afterEach(() => {
+    // close server if test fails or causes error
+    if (server?.listening) {
+      server.close()
+    }
+  })
+
   const validateSessionSuccess = (response: any): void => {
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
+    expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(10)
     expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
     expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
@@ -67,9 +73,8 @@ describe('Session', () => {
     expect(response.data).toEqual({})
   }
 
-  const validateSessionUnauthorized = (error: type.SuperRequestError): void => {
-    expect(error.response.statusCode).toEqual(401)
-    expect(error.response.statusMessage).toEqual('Unauthorized')
+  const validateSessionUnauthorized = (error: any): void => {
+    expect(error.response.status).toEqual(401)
     expect(Object.keys(error.response.headers).length).toEqual(13)
     expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
     expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
@@ -91,8 +96,7 @@ describe('Session', () => {
   }
 
   const validateProtectSuccess = (response: any): void => {
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
+    expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(5)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.headers['content-type']).toEqual('application/json')
@@ -107,8 +111,10 @@ describe('Session', () => {
   it('should be able to create session', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3799)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3799/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
@@ -131,13 +137,15 @@ describe('Session', () => {
   it('should be able to access a protected route with correct headers', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3798)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3798/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3798/protect', {}, {
       headers: { cookie }
     }).then((response) => {
       validateProtectSuccess(response)
@@ -149,15 +157,17 @@ describe('Session', () => {
   it('return unauthorized when session token is invalid', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3797)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3797/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3797/protect', {}, {
       headers: { cookie: `session-id=${sessionId}; session-token=123` }
-    }).catch((error: type.SuperRequestError) => {
+    }).catch((error: any) => {
       validateSessionUnauthorized(error)
     })
 
@@ -167,15 +177,17 @@ describe('Session', () => {
   it('return unauthorized when session ID is invalid', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3796)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3796/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3796/protect', {}, {
       headers: { cookie: `session-id=123; session-token=${sessionToken}` }
-    }).catch((error: type.SuperRequestError) => {
+    }).catch((error: any) => {
       validateSessionUnauthorized(error)
     })
 
@@ -185,16 +197,18 @@ describe('Session', () => {
   it('return bad request when session id is not passed in headers', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3795)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3795/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3795/protect', {}, {
       headers: { cookie: `session-token=${sessionToken}` }
-    }).catch((error: type.SuperRequestError) => {
-      expect(error.response.statusCode).toEqual(400)
+    }).catch((error: any) => {
+      expect(error.response.status).toEqual(400)
       expect(Object.keys(error.response.headers).length).toEqual(12)
       expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
       expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
@@ -216,15 +230,17 @@ describe('Session', () => {
   it('return unauthorized when session token is not passed in headers', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3794)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3794/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3794/protect', {}, {
       headers: { cookie: `session-id=${sessionId}` }
-    }).catch((error: type.SuperRequestError) => {
+    }).catch((error: any) => {
       validateSessionUnauthorized(error)
     })
 
@@ -251,14 +267,17 @@ describe('Session', () => {
     router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
 
     app.use(router)
+    const server = app.server()
 
-    await superRequest(app).post('/session').then((response) => {
+    server.listen(3793)
+
+    await axios.post('http://localhost:3793/session').then((response) => {
       getCookies(response)
     })
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3793/protect', {}, {
       headers: { cookie }
-    }).catch((error: type.SuperRequestError) => {
+    }).catch((error: any) => {
       validateSessionUnauthorized(error)
     })
 
@@ -279,8 +298,11 @@ describe('Session', () => {
     router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
 
     app.use(router)
+    const server = app.server()
 
-    await superRequest(app).post('/session').then((response) => {
+    server.listen(3792)
+
+    await axios.post('http://localhost:3792/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
@@ -289,9 +311,9 @@ describe('Session', () => {
 
     await delay(1001)
 
-    await superRequest(app).post('/protect', {}, {
+    await axios.post('http://localhost:3792/protect', {}, {
       headers: { cookie }
-    }).catch((error: type.SuperRequestError) => {
+    }).catch((error) => {
       validateSessionUnauthorized(error)
     })
 
@@ -312,8 +334,11 @@ describe('Session', () => {
     )
 
     app.use(router)
+    const server = app.server()
 
-    await superRequest(app).post('/session').then((response) => {
+    server.listen(3781)
+
+    await axios.post('http://localhost:3781/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
       const cookies: any = response.headers['set-cookie']
@@ -324,7 +349,7 @@ describe('Session', () => {
       })
     })
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3781/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
       const cookies: any = response.headers['set-cookie']
@@ -341,13 +366,15 @@ describe('Session', () => {
   it('should be able to update session', async () => {
     const app = vkrun()
     app.use(router)
+    server = app.server()
+    server.listen(3780)
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3780/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/session').then((response) => {
+    await axios.post('http://localhost:3780/session').then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })

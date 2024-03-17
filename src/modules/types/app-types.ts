@@ -5,7 +5,7 @@ export type CreateServer = http.Server<typeof http.IncomingMessage, typeof http.
 
 export interface App {
   server: () => CreateServer
-  serverMock: (request: type.Request, response: type.Response) => Promise<type.Response>
+  _reqWithoutServer: (request: type.Request, response: type.Response) => Promise<type.Response>
   use: (middleware: Record<string, any>) => void
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
   clearTimers: () => void

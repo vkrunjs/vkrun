@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { createLogger } from '../..'
+import { createLogger, loggerSanitizeInterval } from '../..'
 import { getLog } from '../get-log'
 import { removeLogsFolder } from '../remove-logs-folder'
 
@@ -18,6 +18,7 @@ describe('Create log', () => {
 
     const logFolderPath = 'logs'
     const logFileExists = fs.existsSync(logFolderPath)
+    clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
   })
@@ -42,6 +43,7 @@ describe('Create log', () => {
     const logFileName = `${hour}:00-${nextHour}:00.log`
     const logFilePath = `${logFolderPath}/${logFileName}`
     const logFileExists = fs.existsSync(logFilePath)
+    clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
   })
@@ -57,6 +59,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"error","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -72,6 +75,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"warn","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -87,6 +91,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"info","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -102,6 +107,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"http","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -117,6 +123,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"verbose","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -132,6 +139,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"debug","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -147,6 +155,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"silly","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -164,6 +173,7 @@ describe('Create log', () => {
 
     const log = getLog('default', 'log')
     const logEntry = `{"level":"error","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logEntry)
   })
@@ -182,6 +192,7 @@ describe('Create log', () => {
     const log = getLog('default', 'log')
     const logErrorEntry = `{"level":"error","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logWarnEntry = `{"level":"warn","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
@@ -207,6 +218,7 @@ describe('Create log', () => {
     const logErrorEntry = `{"level":"error","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logWarnEntry = `{"level":"warn","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logInfoEntry = `{"level":"info","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
@@ -233,6 +245,7 @@ describe('Create log', () => {
     const logWarnEntry = `{"level":"warn","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logInfoEntry = `{"level":"info","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logHttpEntry = `{"level":"http","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
@@ -260,6 +273,7 @@ describe('Create log', () => {
     const logInfoEntry = `{"level":"info","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logHttpEntry = `{"level":"http","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logVerboseEntry = `{"level":"verbose","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
@@ -288,6 +302,7 @@ describe('Create log', () => {
     const logHttpEntry = `{"level":"http","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logVerboseEntry = `{"level":"verbose","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logDebugEntry = `{"level":"debug","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
@@ -317,6 +332,7 @@ describe('Create log', () => {
     const logVerboseEntry = `{"level":"verbose","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logDebugEntry = `{"level":"debug","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
     const logSillyEntry = `{"level":"silly","date":"${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}","message":{"error":"Any Error"}}`
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content[0]).toEqual(logErrorEntry)
     expect(log.content[1]).toEqual(logWarnEntry)
@@ -347,6 +363,7 @@ describe('Create log', () => {
     const logFileName = `${hour}:00-${nextHour}:00.log`
     const logFilePath = `${logFolderPath}/${logFileName}`
     const logFileExists = fs.existsSync(logFilePath)
+    clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
   })
@@ -372,6 +389,7 @@ describe('Create log', () => {
     const logFileName = `${hour}:00-${nextHour}:00.json`
     const logFilePath = `${logFolderPath}/${logFileName}`
     const logFileExists = fs.existsSync(logFilePath)
+    clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
   })
@@ -388,6 +406,7 @@ describe('Create log', () => {
     logger.warn({ error: 'Any Text' })
 
     const log = getLog('indented', 'json')
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content).toEqual([
       {
@@ -414,6 +433,7 @@ describe('Create log', () => {
     logger.error({ error: 'Any Text' })
 
     const log = getLog('indented', 'log')
+    clearInterval(loggerSanitizeInterval)
 
     expect(log.content).toEqual({
       level: 'error',

@@ -2,9 +2,10 @@ import * as http from 'http'
 import { VkrunRouter } from '../router'
 import { customResponse } from '../router/helpers/custom-response'
 import * as type from '../types'
+import { loggerSanitizeInterval } from '../logger'
 
 export const app = (): type.App => {
-  let instance: 'server' | 'serverMock' | 'closed' | undefined
+  let instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
   let router: VkrunRouter
   const middlewares: any[] = []
   let createdServer: any
@@ -19,14 +20,10 @@ export const app = (): type.App => {
   const clearTimers = (): void => {
     timers.forEach(timerId => clearTimeout(timerId))
     timers = []
+    if (loggerSanitizeInterval) clearInterval(loggerSanitizeInterval)
   }
 
   const server = (): type.CreateServer => {
-    if (instance === 'closed') {
-      throw new Error('vkrun-app: app server is closed.')
-    } else if (instance === 'server' || instance === 'serverMock') {
-      throw new Error('vkrun-app: app server is already instantiated.')
-    }
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     createdServer = http.createServer(async (request, response) => {
       instance = 'server'
@@ -39,9 +36,8 @@ export const app = (): type.App => {
     return createdServer
   }
 
-  const serverMock = async (request: type.Request, response: type.Response): Promise<type.Response> => {
-    if (instance === 'closed') throw new Error('vkrun-app: app server is closed.')
-    instance = 'serverMock'
+  const _reqWithoutServer = async (request: type.Request, response: type.Response): Promise<type.Response> => {
+    instance = '_reqWithoutServer'
     const _request = request
     _request.setTimer = setTimer
     createdServer = customResponse(response)
@@ -60,10 +56,9 @@ export const app = (): type.App => {
   const close = (): void => {
     if (instance === 'server') createdServer.close()
     createdServer = null
-    timers.forEach(timerId => clearTimeout(timerId))
-    timers = []
+    clearTimers()
     instance = 'closed'
   }
 
-  return { server, use, serverMock, close, setTimer, clearTimers }
+  return { server, use, _reqWithoutServer, close, setTimer, clearTimers }
 }

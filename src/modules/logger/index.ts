@@ -3,6 +3,8 @@ import { createLog } from './helpers/create-log'
 import { sanitizeLogs } from './helpers/sanitize-logs'
 import * as type from '../types'
 
+export let loggerSanitizeInterval: NodeJS.Timeout
+
 export const createLogger = (configParams: type.SetConfigLogger): type.CreateLogger => {
   const config = configLogger()
 
@@ -20,7 +22,7 @@ export const createLogger = (configParams: type.SetConfigLogger): type.CreateLog
   /* eslint-enable */
 
   if (config.daysToStoreLogs > 0) {
-    setInterval(() => { sanitizeLogs(config) }, config.daysToStoreLogs * 24 * 60 * 60 * 1000)
+    loggerSanitizeInterval = setInterval(() => { sanitizeLogs(config) }, config.daysToStoreLogs * 24 * 60 * 60 * 1000)
   }
 
   const middleware = (): (_request: type.Request, response: type.Response, next: type.NextFunction) => void => {
@@ -31,8 +33,7 @@ export const createLogger = (configParams: type.SetConfigLogger): type.CreateLog
           config,
           message: {
             request: {
-              /* eslint-disable */
-              // @ts-ignore
+              /* eslint-disable */ // @ts-ignore
               requestId: response.req.requestId,
               /* eslint-enable */
               url: response.req.url,

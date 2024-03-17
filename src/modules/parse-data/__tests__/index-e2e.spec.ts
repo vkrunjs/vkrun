@@ -14,7 +14,7 @@ describe('Parse Data - end to end testing using super request', () => {
     expect(util.isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    expect(response.data).toEqual('')
   }
 
   it('Should be able to parse query url', async () => {

@@ -59,7 +59,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
     } else if (util.isObject(data)) {
       return JSON.stringify(data)
     } else {
-      return data.toString()
+      return data ? data.toString() : ''
     }
   }
   const bufferData = generateBufferData()
