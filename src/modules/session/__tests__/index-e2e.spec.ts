@@ -94,6 +94,17 @@ describe('Session', () => {
     expect(error.response.data).toEqual('Unauthorized')
   }
 
+  const validateProtectSuccess = (response: any): void => {
+    expect(response.status).toEqual(200)
+    expect(Object.keys(response.headers).length).toEqual(5)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.headers['content-type']).toEqual('application/json')
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('49')
+    expect(response.data.session).toEqual({ userId: 123, email: 'any@mail.com' })
+  }
+
   it('should be able to create session', async () => {
     const app = vkrun()
     app.use(router)
@@ -134,8 +145,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3798/protect', {}, {
       headers: { cookie }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(response.data.session).toEqual({ userId: 123, email: 'any@mail.com' })
+      validateProtectSuccess(response)
     })
 
     app.close()
@@ -175,8 +185,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3796/protect', {}, {
       headers: { cookie: `session-id=123; session-token=${sessionToken}` }
     }).catch((error: any) => {
-      expect(error.response.status).toEqual(401)
-      expect(error.response.data).toEqual('Unauthorized')
+      validateSessionUnauthorized(error)
     })
 
     app.close()
@@ -197,6 +206,18 @@ describe('Session', () => {
       headers: { cookie: `session-token=${sessionToken}` }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(400)
+      expect(Object.keys(error.response.headers).length).toEqual(12)
+      expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
+      expect(error.response.headers.pragma).toEqual('no-cache')
+      expect(error.response.headers.expires).toEqual('0')
+      expect(error.response.headers['x-content-type-options']).toEqual('nosniff')
+      expect(error.response.headers['x-frame-options']).toEqual('DENY')
+      expect(error.response.headers['content-security-policy']).toEqual("default-src 'self'")
+      expect(error.response.headers['x-xss-protection']).toEqual('1; mode=block')
+      expect(error.response.headers['content-type']).toEqual('text/plain')
+      expect(error.response.headers.connection).toEqual('close')
+      expect(error.response.headers['content-length']).toEqual('18')
       expect(error.response.data).toEqual('Invalid session ID')
     })
 
@@ -217,8 +238,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3794/protect', {}, {
       headers: { cookie: `session-id=${sessionId}` }
     }).catch((error: any) => {
-      expect(error.response.status).toEqual(401)
-      expect(error.response.data).toEqual('Unauthorized')
+      validateSessionUnauthorized(error)
     })
 
     app.close()
@@ -255,8 +275,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3793/protect', {}, {
       headers: { cookie }
     }).catch((error: any) => {
-      expect(error.response.status).toEqual(401)
-      expect(error.response.data).toEqual('Unauthorized')
+      validateSessionUnauthorized(error)
     })
 
     app.close()
