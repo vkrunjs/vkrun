@@ -53,7 +53,7 @@ describe('Session', () => {
     }
   })
 
-  const validateSessionHeadersSuccess = (response: any): void => {
+  const validateSessionSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
     expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
@@ -72,7 +72,7 @@ describe('Session', () => {
     expect(response.data.body).toEqual(undefined)
   }
 
-  const validateSessionHeadersUnauthorized = (error: any): void => {
+  const validateSessionUnauthorized = (error: any): void => {
     expect(error.response.status).toEqual(401)
     expect(Object.keys(error.response.headers).length).toEqual(13)
     expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
@@ -102,7 +102,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3799/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     app.close()
@@ -128,7 +128,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3798/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     await axios.post('http://localhost:3798/protect', {}, {
@@ -149,13 +149,13 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3797/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     await axios.post('http://localhost:3797/protect', {}, {
       headers: { cookie: `session-id=${sessionId}; session-token=123` }
     }).catch((error: any) => {
-      validateSessionHeadersUnauthorized(error)
+      validateSessionUnauthorized(error)
     })
 
     app.close()
@@ -169,7 +169,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3796/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     await axios.post('http://localhost:3796/protect', {}, {
@@ -190,7 +190,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3795/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     await axios.post('http://localhost:3795/protect', {}, {
@@ -211,7 +211,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3794/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     await axios.post('http://localhost:3794/protect', {}, {
@@ -282,7 +282,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3792/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
     })
 
     const delay = async (ms: number): Promise<void> => await new Promise<void>((resolve) => setTimeout(resolve, ms))
@@ -292,7 +292,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3792/protect', {}, {
       headers: { cookie }
     }).catch((error) => {
-      validateSessionHeadersUnauthorized(error)
+      validateSessionUnauthorized(error)
     })
 
     app.close()
@@ -318,7 +318,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3781/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
       const cookies: any = response.headers['set-cookie']
       cookies.forEach((cookie: string) => {
         if (cookie.startsWith('session-id=')) {
@@ -329,7 +329,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3781/session').then((response) => {
       getCookies(response)
-      validateSessionHeadersSuccess(response)
+      validateSessionSuccess(response)
       const cookies: any = response.headers['set-cookie']
       cookies.forEach((cookie: string) => {
         if (cookie.startsWith('session-id=')) {

@@ -6,6 +6,17 @@ import * as util from '../../utils'
 import * as type from '../../types'
 
 describe('Parse Data - end to end testing using super request', () => {
+  const validateSuccess = (response: any): void => {
+    expect(response.statusCode).toEqual(200)
+    expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(4)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
+    expect(response.data).toEqual(undefined)
+  }
+
   it('Should be able to parse query url', async () => {
     let requestQuery
 
@@ -23,14 +34,7 @@ describe('Parse Data - end to end testing using super request', () => {
     const query = 'string=any@mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
     const response = await superRequest(app).get(`/query?${query}`)
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestQuery).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -58,14 +62,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const response = await superRequest(app).get('/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z')
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestParams).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -107,14 +104,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/json' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual(data)
 
     app.close()
@@ -146,14 +136,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/json' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual(data)
 
     app.close()
@@ -185,14 +168,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/json' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual(data)
 
     app.close()
@@ -218,14 +194,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -257,14 +226,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -296,14 +258,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -351,14 +306,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     unlinkSync(filePath)
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -395,14 +343,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -439,14 +380,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -484,14 +418,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'text/plain' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual(JSON.stringify(data))
 
     app.close()
@@ -517,14 +444,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const response = await superRequest(app).post('/body-post', data)
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
 
     app.close()
@@ -550,14 +470,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
 
     app.close()
@@ -584,14 +497,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
 
     app.close()
@@ -617,14 +523,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'text/plain' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual("'SELECT * FROM USER;'")
 
     app.close()
@@ -648,14 +547,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const response = await superRequest(app).get(`/query?${query}`)
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestQuery).toEqual({ sql: "'SELECT * FROM USER;'" })
 
     app.close()
@@ -678,14 +570,7 @@ describe('Parse Data - end to end testing using super request', () => {
     const data = 'SELECT * FROM USER;'
 
     const response = await superRequest(app).get(`/${data}`)
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestQuery).toEqual({ sql: "'SELECT%20*%20FROM%20USER;'" })
 
     app.close()
@@ -739,14 +624,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual(undefined)
 
     app.close()
@@ -789,14 +667,7 @@ describe('Parse Data - end to end testing using super request', () => {
       headers: { 'Content-Type': 'application/json' }
     })
 
-    expect(response.statusCode).toEqual(200)
-    expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(4)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(util.isString(response.headers.date)).toBeTruthy()
-    expect(response.headers.connection).toEqual('close')
-    expect(response.headers['content-length']).toEqual('0')
-    expect(response.data).toEqual(undefined)
+    validateSuccess(response)
     expect(requestBody).toEqual(JSON.stringify(data))
 
     app.close()

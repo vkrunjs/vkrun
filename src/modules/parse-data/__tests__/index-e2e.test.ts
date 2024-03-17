@@ -17,6 +17,16 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }
   })
 
+  const validateHeaderSuccess = (response: any): void => {
+    expect(response.status).toEqual(200)
+    expect(Object.keys(response.headers).length).toEqual(4)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
+    expect(response.data).toEqual('')
+  }
+
   it('Should be able to parse query url', async () => {
     let requestQuery
 
@@ -35,13 +45,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     const query = 'string=any@mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
     await axios.get(`http://localhost:3999/query?${query}`).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
-      expect(response.data).toEqual('')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -72,13 +76,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     server.listen(3998)
 
     await axios.get('http://localhost:3998/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z').then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
-      expect(response.data).toEqual('')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -121,12 +119,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }
 
     await axios.post('http://localhost:3997/body-post', data).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -159,12 +152,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }
 
     await axios.put('http://localhost:3996/body-put', data).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -197,12 +185,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }
 
     await axios.patch('http://localhost:3995/body-patch', data).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -231,12 +214,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3994/body-post', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -271,12 +249,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.put('http://localhost:3993/body-put', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -311,12 +284,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.patch('http://localhost:3993/body-patch', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -366,12 +334,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3992/body-post', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     }).finally(() => {
       unlinkSync(filePath)
     })
@@ -413,12 +376,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.put('http://localhost:3991/body-put', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -458,12 +416,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.patch('http://localhost:3990/body-patch', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -504,12 +457,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3989/body-post', data, {
       headers: { 'Content-Type': 'text/plain' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -536,12 +484,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     const data = { sql: 'SELECT * FROM USER;' }
 
     await axios.post('http://localhost:3988/body-post', data).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -570,12 +513,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3987/body-post', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -605,12 +543,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3986/body-post', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -639,12 +572,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3986/body-post', data, {
       headers: { 'Content-Type': 'text/plain' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -670,12 +598,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     const query = 'sql=SELECT * FROM USER;'
     await axios.get(`http://localhost:3985/query?${query}`).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -701,12 +624,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     const data = 'SELECT * FROM USER;'
     await axios.get(`http://localhost:3984/${data}`).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -759,12 +677,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3982/body-post', '', {
       headers: { 'Content-Type': 'multipart/form-data' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
@@ -810,12 +723,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     await axios.post('http://localhost:3981/', data, {
       headers: { 'Content-Type': 'application/json' }
     }).then((response) => {
-      expect(response.status).toEqual(200)
-      expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      validateHeaderSuccess(response)
     })
 
     app.close()
