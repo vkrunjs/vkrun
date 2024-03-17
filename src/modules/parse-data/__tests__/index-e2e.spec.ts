@@ -25,7 +25,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({
       string: 'any@mail.com',
@@ -56,8 +60,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestParams).toEqual({
       string: 'any@mail.com',
@@ -102,8 +109,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
 
@@ -138,8 +148,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
 
@@ -174,8 +187,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(data)
 
@@ -204,8 +220,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -240,8 +259,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -276,8 +298,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -328,8 +353,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -369,8 +397,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -410,8 +441,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({
       string: 'any@mail.com',
@@ -452,8 +486,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(JSON.stringify(data))
 
@@ -482,8 +519,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
 
@@ -512,8 +552,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
 
@@ -543,8 +586,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
 
@@ -573,8 +619,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual("'SELECT * FROM USER;'")
 
@@ -601,8 +650,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({ sql: "'SELECT * FROM USER;'" })
 
@@ -628,8 +680,11 @@ describe('Parse Data - end to end testing using super request', () => {
     const response = await superRequest(app).get(`/${data}`)
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestQuery).toEqual({ sql: "'SELECT%20*%20FROM%20USER;'" })
 
@@ -653,10 +708,13 @@ describe('Parse Data - end to end testing using super request', () => {
     }).catch((error) => {
       expect(error.response.statusCode).toEqual(400)
       expect(error.response.statusMessage).toEqual('Bad Request')
-      expect(Object.keys(error.response.headers).length).toEqual(3)
+      expect(Object.keys(error.response.headers).length).toEqual(6)
       expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
       expect(error.response.headers['access-control-allow-origin']).toEqual('*')
       expect(error.response.headers['content-type']).toEqual('text/plain')
+      expect(util.isString(error.response.headers.date)).toBeTruthy()
+      expect(error.response.headers.connection).toEqual('close')
+      expect(error.response.headers['content-length']).toEqual('20')
       expect(error.response.data).toEqual('Invalid Request Data')
     })
 
@@ -683,8 +741,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(undefined)
 
@@ -730,8 +791,11 @@ describe('Parse Data - end to end testing using super request', () => {
 
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(Object.keys(response.headers).length).toEqual(1)
+    expect(Object.keys(response.headers).length).toEqual(4)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual(undefined)
     expect(requestBody).toEqual(JSON.stringify(data))
 

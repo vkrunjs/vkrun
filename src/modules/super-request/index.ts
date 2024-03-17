@@ -18,6 +18,9 @@ export const superRequest = (app: any): type.SuperRequest => {
         const httpResponse = helper.createHttpResponse(httpRequest)
         const serverResponse = await app.serverMock(httpRequest, httpResponse)
         serverResponse.data = helper.formatResponseData(serverResponse)
+        serverResponse.headers.connection = 'close'
+        serverResponse.headers.date = new Date().toUTCString()
+        serverResponse.headers['content-length'] = serverResponse.data ? String(serverResponse.data.length) : '0'
         httpRequest.abort()
 
         const response: type.SuperRequestSuccess = {
