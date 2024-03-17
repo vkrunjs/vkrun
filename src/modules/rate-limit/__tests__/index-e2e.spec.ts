@@ -53,6 +53,7 @@ describe('Rate Limit - end to end testing using super request', () => {
     expect(response.statusMessage).toEqual('OK')
     expect(Object.keys(response.headers).length).toEqual(5)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.headers['content-type']).toEqual('text/plain')
     expect(response.headers).toHaveProperty('x-ratelimit-limit-legacy')
     expect(response.headers).toHaveProperty('x-ratelimit-remaining-legacy')
     expect(response.headers).toHaveProperty('x-ratelimit-reset-legacy')
@@ -83,6 +84,7 @@ describe('Rate Limit - end to end testing using super request', () => {
     expect(response.statusMessage).toEqual('OK')
     expect(Object.keys(response.headers).length).toEqual(8)
     expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(response.headers['content-type']).toEqual('text/plain')
     expect(response.headers).toHaveProperty('x-ratelimit-limit')
     expect(response.headers).toHaveProperty('x-ratelimit-remaining')
     expect(response.headers).toHaveProperty('x-ratelimit-reset')
@@ -110,17 +112,31 @@ describe('Rate Limit - end to end testing using super request', () => {
 
     await superRequest(app).get('/rate-limit').then((response) => {
       expect(response.statusCode).toEqual(200)
+      expect(response.statusMessage).toEqual('OK')
+      expect(Object.keys(response.headers).length).toEqual(5)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.headers).toHaveProperty('x-ratelimit-limit')
+      expect(response.headers).toHaveProperty('x-ratelimit-remaining')
+      expect(response.headers).toHaveProperty('x-ratelimit-reset')
+      expect(response.headers['x-ratelimit-limit']).toEqual(String(rateLimitConfig.limit))
+      expect(response.headers['x-ratelimit-remaining']).toBeDefined()
+      expect(response.headers['x-ratelimit-reset']).toBeDefined()
       expect(response.data).toEqual('rate limit')
     })
 
-    await superRequest(app).get('/rate-limit').catch((error) => {
+    await superRequest(app).get('/rate-limit').catch((error: type.SuperRequestError) => {
       expect(error.response.statusCode).toEqual(429)
+      expect(error.response.statusMessage).toEqual('Too Many Requests')
+      expect(Object.keys(error.response.headers).length).toEqual(2)
+      expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(error.response.headers['content-type']).toEqual('text/plain')
       expect(error.response.data).toEqual('Too Many Requests')
     })
 
     app.close()
   })
-/*
+
   it('Return to many requests if limit is reached and reset count requests', async () => {
     const app = vkrun()
     const rateLimitConfig = { windowMs: 50, limit: 1 }
@@ -128,39 +144,51 @@ describe('Rate Limit - end to end testing using super request', () => {
     const router = Router()
     router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
-    const server = app.server()
 
-    server.listen(3895)
+    await superRequest(app).get('/rate-limit').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.statusMessage).toEqual('OK')
+      expect(Object.keys(response.headers).length).toEqual(5)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.headers).toHaveProperty('x-ratelimit-limit')
+      expect(response.headers).toHaveProperty('x-ratelimit-remaining')
+      expect(response.headers).toHaveProperty('x-ratelimit-reset')
+      expect(response.headers['x-ratelimit-limit']).toEqual(String(rateLimitConfig.limit))
+      expect(response.headers['x-ratelimit-remaining']).toBeDefined()
+      expect(response.headers['x-ratelimit-reset']).toBeDefined()
+      expect(response.data).toEqual('rate limit')
+    })
 
-    await axios.get('http://localhost:3895/rate-limit')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-        expect(response.data).toEqual('rate limit')
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
-
-    await axios.get('http://localhost:3895/rate-limit')
-      .then((response) => {
-        expect(response).toEqual(undefined)
-      }).catch((error) => {
-        expect(error.response.status).toEqual(429)
-        expect(error.response.data).toEqual('Too Many Requests')
-      })
+    await superRequest(app).get('/rate-limit').catch((error: type.SuperRequestError) => {
+      expect(error.response.statusCode).toEqual(429)
+      expect(error.response.statusMessage).toEqual('Too Many Requests')
+      expect(Object.keys(error.response.headers).length).toEqual(2)
+      expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(error.response.headers['content-type']).toEqual('text/plain')
+      expect(error.response.data).toEqual('Too Many Requests')
+    })
 
     const delay = async (ms: number): Promise<void> => await new Promise<void>((resolve) => setTimeout(resolve, ms))
 
     await delay(100)
 
-    await axios.get('http://localhost:3895/rate-limit')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-        expect(response.data).toEqual('rate limit')
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await superRequest(app).get('/rate-limit').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.statusMessage).toEqual('OK')
+      expect(Object.keys(response.headers).length).toEqual(5)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.headers).toHaveProperty('x-ratelimit-limit')
+      expect(response.headers).toHaveProperty('x-ratelimit-remaining')
+      expect(response.headers).toHaveProperty('x-ratelimit-reset')
+      expect(response.headers['x-ratelimit-limit']).toEqual(String(rateLimitConfig.limit))
+      expect(response.headers['x-ratelimit-remaining']).toBeDefined()
+      expect(response.headers['x-ratelimit-reset']).toBeDefined()
+      expect(response.data).toEqual('rate limit')
+    })
 
-    server.close()
+    app.close()
   })
 
   it('Return to many requests if limit is reached and call notification', async () => {
@@ -178,37 +206,43 @@ describe('Rate Limit - end to end testing using super request', () => {
     const router = Router()
     router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
-    const server = app.server()
 
-    server.listen(3894)
+    await superRequest(app).get('/rate-limit').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.statusMessage).toEqual('OK')
+      expect(Object.keys(response.headers).length).toEqual(5)
+      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.headers).toHaveProperty('x-ratelimit-limit')
+      expect(response.headers).toHaveProperty('x-ratelimit-remaining')
+      expect(response.headers).toHaveProperty('x-ratelimit-reset')
+      expect(response.headers['x-ratelimit-limit']).toEqual(String(rateLimitConfig.limit))
+      expect(response.headers['x-ratelimit-remaining']).toBeDefined()
+      expect(response.headers['x-ratelimit-reset']).toBeDefined()
+      expect(response.data).toEqual('rate limit')
+    })
 
-    await axios.get('http://localhost:3894/rate-limit')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-        expect(response.data).toEqual('rate limit')
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await superRequest(app).get('/rate-limit').catch((error: type.SuperRequestError) => {
+      expect(error.response.statusCode).toEqual(429)
+      expect(error.response.statusMessage).toEqual('Too Many Requests')
+      expect(Object.keys(error.response.headers).length).toEqual(2)
+      expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(error.response.headers['content-type']).toEqual('text/plain')
+      expect(error.response.data).toEqual('Too Many Requests')
+    })
 
-    await axios.get('http://localhost:3894/rate-limit')
-      .then((response) => {
-        expect(response).toEqual(undefined)
-      }).catch((error) => {
-        expect(error.response.status).toEqual(429)
-        expect(error.response.data).toEqual('Too Many Requests')
-      })
-
-    expect(accessData.remoteAddress).toEqual('::ffff:127.0.0.1')
-    expect(accessData.remoteFamily).toEqual('IPv6')
-    expect(accessData.userAgent).toEqual('axios/1.6.7')
+    expect(accessData.remoteAddress).toEqual('127.0.0.1')
+    expect(accessData.remoteFamily).toEqual('')
+    expect(accessData.userAgent).toEqual('')
     expect(accessData.exceeded.count).toEqual(1)
 
-    const request = accessData.exceeded.requests[0]
-    expect(request.method).toEqual('GET')
-    expect(request.route).toEqual('/rate-limit')
-    expect(util.isUUID(request.requestId)).toBeTruthy()
+    const requests = accessData.exceeded.requests
+    expect(accessData.exceeded.requests.length).toEqual(1)
+    expect(requests[0].method).toEqual('GET')
+    expect(requests[0].route).toEqual('/rate-limit')
+    expect(util.isUUID(requests[0].requestId)).toBeTruthy()
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call any route with default config', async () => {
@@ -217,25 +251,21 @@ describe('Rate Limit - end to end testing using super request', () => {
     const router = Router()
     router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
-    const server = app.server()
 
-    server.listen(3892)
-
-    await axios.get('http://localhost:3892/rate-limit')
+    await superRequest(app).get('/rate-limit')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
+        expect(response.statusMessage).toEqual('OK')
+        expect(Object.keys(response.headers).length).toEqual(5)
+        expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+        expect(response.headers['content-type']).toEqual('text/plain')
         expect(response.headers).toHaveProperty('x-ratelimit-limit')
         expect(response.headers).toHaveProperty('x-ratelimit-remaining')
         expect(response.headers).toHaveProperty('x-ratelimit-reset')
-        expect(response.headers['x-ratelimit-limit']).toEqual(String(100))
+        expect(response.headers['x-ratelimit-limit']).toEqual('100')
         expect(response.headers['x-ratelimit-remaining']).toBeDefined()
         expect(response.headers['x-ratelimit-reset']).toBeDefined()
         expect(response.data).toEqual('rate limit')
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
       })
-
-    server.close()
   })
-  */
 })

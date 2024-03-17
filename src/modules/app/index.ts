@@ -58,11 +58,8 @@ export const app = (): type.App => {
   }
 
   const close = (): void => {
-    if (instance === 'server') {
-      createdServer.close()
-    } else {
-      createdServer = null
-    }
+    if (instance === 'server') createdServer.close()
+    createdServer = null
     timers.forEach(timerId => clearTimeout(timerId))
     timers = []
     instance = 'closed'
