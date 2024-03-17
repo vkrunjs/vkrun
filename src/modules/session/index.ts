@@ -8,7 +8,7 @@ class VkrunSession {
   private readonly sessions: type.Sessions = new Map()
   // eslint-disable-next-line @typescript-eslint/prefer-readonly
   private sanitizationActive: boolean = false
-  private readonly sanitizationEvery: number = util.convertExpiresIn('5m')
+  private readonly sanitizationEvery: number = util.convertExpiresIn('5m') // used in the startSanitization function
 
   constructor (config: type.SessionConfig) {
     util.validateSecretKey(config.secretKey, 'session')
