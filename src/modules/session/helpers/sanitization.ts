@@ -2,7 +2,7 @@ import * as util from '../../utils'
 
 export const startSanitization = (params: any): void => {
   params.sanitizationActive = true
-  const sanitizationInterval = setInterval(() => {
+  const sanitizationInterval = params.request.setTimer(() => {
     for (const [sessionId, session] of params.sessions.entries()) {
       if (session) {
         const isExpired = util.isExpired(session.createdAt, session.expiresIn)

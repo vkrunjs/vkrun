@@ -24,6 +24,7 @@ export interface CustomResponseMethods {
 export interface CookieOptions {
   httpOnly?: boolean
   secure?: boolean
+  expires?: string
   maxAge?: number
   path?: string
   sameSite?: 'Strict' | 'Lax' | 'None'

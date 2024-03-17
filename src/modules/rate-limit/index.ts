@@ -66,9 +66,6 @@ export class VkrunRateLimit {
       return
     }
 
-    // setTimeout(() => {
-    //   this.requests.delete(key)
-    // }, this.windowMs)
     request.setTimer(() => {
       this.requests.delete(key)
     }, this.windowMs)

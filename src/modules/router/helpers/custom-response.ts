@@ -71,6 +71,9 @@ export const customResponse = (_response: ServerResponse): type.Response => {
       if (options.priority !== undefined) {
         defaultOptions.priority = options.priority
       }
+      if (options.expires !== undefined) {
+        defaultOptions.expires = options.expires
+      }
     }
 
     cookie += `; HttpOnly=${defaultOptions.httpOnly}; Max-Age=${defaultOptions.maxAge}; Path=${defaultOptions.path}; Secure=${defaultOptions.secure}`
@@ -83,6 +86,9 @@ export const customResponse = (_response: ServerResponse): type.Response => {
     }
     if (defaultOptions.priority) {
       cookie += `; Priority=${defaultOptions.priority}`
+    }
+    if (defaultOptions.expires) {
+      cookie += `; Expires=${defaultOptions.expires}`
     }
 
     cookies.push(cookie)

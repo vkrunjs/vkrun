@@ -10,7 +10,6 @@ import vkrun, {
 import { generateSecretKey } from '../helpers'
 import * as util from '../../utils'
 
-const app = vkrun()
 const secretKey = generateSecretKey()
 const session = Session({ secretKey, sanitizationEvery: '5m' })
 const router = Router()
@@ -28,52 +27,59 @@ router.post('/session',
 
 router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
 
-app.use(router)
-const server = app.server()
+describe('Session', () => {
+  let server: any
+  let cookie: string
+  let sessionId: string
+  let sessionToken: string
 
-let sessionId: string
-let sessionToken: string
+  const getCookies = (response: any): void => {
+    const setCookie = response.headers['set-cookie']
 
-const getCookies = (response: any): void => {
-  const cookies: any = response.headers['set-cookie']
+    setCookie.forEach((cookie: string) => {
+      if (cookie.startsWith('session-id=')) {
+        sessionId = cookie.split('=')[1].split(';')[0]
+      } else if (cookie.startsWith('session-token=')) {
+        sessionToken = cookie.split('=')[1].split(';')[0]
+      }
+    })
+    cookie = `session-id=${sessionId};session-token=${sessionToken}`
+  }
 
-  cookies.forEach((cookie: string) => {
-    if (cookie.startsWith('session-id=')) {
-      sessionId = cookie.split('=')[1].split(';')[0]
-    } else if (cookie.startsWith('session-token=')) {
-      sessionToken = cookie.split('=')[1].split(';')[0]
+  afterEach(() => {
+    // close server if test fails or causes error
+    if (server?.listening) {
+      server.close()
     }
   })
-}
 
-describe('Session', () => {
   it('should be able to create session', async () => {
+    const app = vkrun()
+    app.use(router)
+    server = app.server()
     server.listen(3799)
 
-    await axios.post('http://localhost:3799/session')
-      .then((response) => {
-        getCookies(response)
-        expect(response.status).toEqual(200)
-        expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
-        expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
-        expect(response.headers.expires).toEqual('0')
-        expect(response.headers['x-xss-protection']).toEqual('1; mode=block')
-        const arrCookies = response.headers['set-cookie'] as string[]
-        expect(arrCookies.length).toEqual(2)
-        expect(arrCookies[0].startsWith('session-id=')).toBeTruthy()
-        expect(arrCookies[1].startsWith('session-token=')).toBeTruthy()
-        expect(response.headers['content-type']).toEqual('application/json')
-        expect(response.headers.connection).toEqual('close')
-        expect(response.headers['content-length']).toEqual('2')
-        expect(typeof sessionId).toEqual('string')
-        expect(util.isUUID(sessionId)).toBeTruthy()
-        expect(typeof sessionToken).toEqual('string')
-        expect(response.data.body).toEqual(undefined)
-      }).catch((error: any) => {
-        expect(error.message).toEqual(undefined)
-      })
+    await axios.post('http://localhost:3799/session').then((response) => {
+      getCookies(response)
+      expect(response.status).toEqual(200)
+      expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
+      expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
+      expect(response.headers.expires).toEqual('0')
+      expect(response.headers['x-xss-protection']).toEqual('1; mode=block')
+      const arrCookies = response.headers['set-cookie'] as string[]
+      expect(arrCookies.length).toEqual(2)
+      expect(arrCookies[0].startsWith('session-id=')).toBeTruthy()
+      expect(arrCookies[1].startsWith('session-token=')).toBeTruthy()
+      expect(response.headers['content-type']).toEqual('application/json')
+      expect(response.headers.connection).toEqual('close')
+      expect(response.headers['content-length']).toEqual('2')
+      expect(typeof sessionId).toEqual('string')
+      expect(util.isUUID(sessionId)).toBeTruthy()
+      expect(typeof sessionToken).toEqual('string')
+      expect(response.data.body).toEqual(undefined)
+    })
 
-    server.close()
+    app.close()
   })
 
   it('throw new Error when secret key is invalid', async () => {
@@ -89,91 +95,103 @@ describe('Session', () => {
   })
 
   it('should be able to access a protected route with correct headers', async () => {
+    const app = vkrun()
+    app.use(router)
+    server = app.server()
     server.listen(3798)
 
+    await axios.post('http://localhost:3798/session').then((response) => {
+      getCookies(response)
+    })
+
     await axios.post('http://localhost:3798/protect', {}, {
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        'X-Session-Id': sessionId
-      }
+      headers: { cookie }
     }).then((response) => {
       expect(response.status).toEqual(200)
       expect(response.data.session).toEqual({ userId: 123, email: 'any@mail.com' })
-    }).catch((error: any) => {
-      expect(error.message).toEqual(undefined)
     })
 
-    server.close()
+    app.close()
   })
 
   it('return unauthorized when session token is invalid', async () => {
+    const app = vkrun()
+    app.use(router)
+    server = app.server()
     server.listen(3797)
 
+    await axios.post('http://localhost:3797/session').then((response) => {
+      getCookies(response)
+    })
+
     await axios.post('http://localhost:3797/protect', {}, {
-      headers: {
-        Authorization: 'Bearer 123',
-        'X-Session-Id': sessionId
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { cookie: `session-id=${sessionId}; session-token=123` }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(401)
       expect(error.response.data).toEqual('Unauthorized')
     })
 
-    server.close()
+    app.close()
   })
 
   it('return unauthorized when session ID is invalid', async () => {
+    const app = vkrun()
+    app.use(router)
+    server = app.server()
     server.listen(3796)
 
+    await axios.post('http://localhost:3796/session').then((response) => {
+      getCookies(response)
+    })
+
     await axios.post('http://localhost:3796/protect', {}, {
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        'X-Session-Id': '123'
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { cookie: `session-id=123; session-token=${sessionToken}` }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(401)
       expect(error.response.data).toEqual('Unauthorized')
     })
 
-    server.close()
+    app.close()
   })
 
   it('return bad request when session id is not passed in headers', async () => {
+    const app = vkrun()
+    app.use(router)
+    server = app.server()
     server.listen(3795)
 
+    await axios.post('http://localhost:3795/session').then((response) => {
+      getCookies(response)
+    })
+
     await axios.post('http://localhost:3795/protect', {}, {
-      headers: {
-        Authorization: `Bearer ${sessionToken}`
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { cookie: `session-token=${sessionToken}` }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(400)
       expect(error.response.data).toEqual('Invalid session ID')
     })
 
-    server.close()
+    app.close()
   })
 
   it('return unauthorized when session token is not passed in headers', async () => {
+    const app = vkrun()
+    app.use(router)
+    server = app.server()
     server.listen(3794)
 
+    await axios.post('http://localhost:3794/session').then((response) => {
+      getCookies(response)
+    })
+
     await axios.post('http://localhost:3794/protect', {}, {
-      headers: {
-        'X-Session-Id': sessionId
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { cookie: `session-id=${sessionId}` }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(401)
       expect(error.response.data).toEqual('Unauthorized')
     })
 
-    server.close()
+    app.close()
   })
 
   it('return unauthorized when session token is expired', async () => {
@@ -200,26 +218,18 @@ describe('Session', () => {
 
     server.listen(3793)
 
-    await axios.post('http://localhost:3793/session')
-      .then(async (response) => {
-        getCookies(response)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.post('http://localhost:3793/session').then((response) => {
+      getCookies(response)
+    })
 
     await axios.post('http://localhost:3793/protect', {}, {
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        'X-Session-Id': sessionId
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { cookie }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(401)
       expect(error.response.data).toEqual('Unauthorized')
     })
 
-    server.close()
+    app.close()
   })
 
   it('return unauthorized when session is expired', async () => {
@@ -246,30 +256,22 @@ describe('Session', () => {
 
     server.listen(3792)
 
-    await axios.post('http://localhost:3792/session')
-      .then(async (response) => {
-        getCookies(response)
-      }).catch((error) => {
-        expect(error).toEqual(undefined)
-      })
+    await axios.post('http://localhost:3792/session').then((response) => {
+      getCookies(response)
+    })
 
     const delay = async (ms: number): Promise<void> => await new Promise<void>((resolve) => setTimeout(resolve, ms))
 
     await delay(1001)
 
     await axios.post('http://localhost:3792/protect', {}, {
-      headers: {
-        Authorization: `Bearer ${sessionToken}`,
-        'X-Session-Id': sessionId
-      }
-    }).then((response) => {
-      expect(response).toEqual(undefined)
+      headers: { cookie }
     }).catch((error: any) => {
       expect(error.response.status).toEqual(401)
       expect(error.response.data).toEqual('Unauthorized')
     })
 
-    server.close()
+    app.close()
   })
 
   it('should be able to update session', async () => {
@@ -290,32 +292,26 @@ describe('Session', () => {
 
     server.listen(3781)
 
-    await axios.post('http://localhost:3781/session')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-        const cookies: any = response.headers['set-cookie']
-        cookies.forEach((cookie: string) => {
-          if (cookie.startsWith('session-id=')) {
-            expect(cookie.split('=')[1].split(';')[0]).toEqual(sessionId)
-          }
-        })
-      }).catch((error: any) => {
-        expect(error.message).toEqual(undefined)
+    await axios.post('http://localhost:3781/session').then((response) => {
+      expect(response.status).toEqual(200)
+      const cookies: any = response.headers['set-cookie']
+      cookies.forEach((cookie: string) => {
+        if (cookie.startsWith('session-id=')) {
+          expect(cookie.split('=')[1].split(';')[0]).toEqual(sessionId)
+        }
       })
+    })
 
-    await axios.post('http://localhost:3781/session')
-      .then((response) => {
-        expect(response.status).toEqual(200)
-        const cookies: any = response.headers['set-cookie']
-        cookies.forEach((cookie: string) => {
-          if (cookie.startsWith('session-id=')) {
-            expect(cookie.split('=')[1].split(';')[0]).toEqual(sessionId)
-          }
-        })
-      }).catch((error: any) => {
-        expect(error.message).toEqual(undefined)
+    await axios.post('http://localhost:3781/session').then((response) => {
+      expect(response.status).toEqual(200)
+      const cookies: any = response.headers['set-cookie']
+      cookies.forEach((cookie: string) => {
+        if (cookie.startsWith('session-id=')) {
+          expect(cookie.split('=')[1].split(';')[0]).toEqual(sessionId)
+        }
       })
+    })
 
-    server.close()
+    app.close()
   })
 })
