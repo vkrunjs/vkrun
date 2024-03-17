@@ -31,6 +31,7 @@ describe('Rate Limit - end to end testing using super request', () => {
     expect(response.headers['x-ratelimit-remaining']).toBeDefined()
     expect(response.headers['x-ratelimit-reset']).toBeDefined()
     expect(response.data).toEqual('rate limit')
+
     app.close()
   })
 
@@ -267,5 +268,7 @@ describe('Rate Limit - end to end testing using super request', () => {
         expect(response.headers['x-ratelimit-reset']).toBeDefined()
         expect(response.data).toEqual('rate limit')
       })
+
+    app.close()
   })
 })
