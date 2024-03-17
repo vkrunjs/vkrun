@@ -53,6 +53,47 @@ describe('Session', () => {
     }
   })
 
+  const validateSessionHeadersSuccess = (response: any): void => {
+    expect(response.status).toEqual(200)
+    expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
+    expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
+    expect(response.headers.expires).toEqual('0')
+    expect(response.headers['x-xss-protection']).toEqual('1; mode=block')
+    const arrCookies = response.headers['set-cookie'] as string[]
+    expect(arrCookies.length).toEqual(2)
+    expect(arrCookies[0].startsWith('session-id=')).toBeTruthy()
+    expect(arrCookies[1].startsWith('session-token=')).toBeTruthy()
+    expect(response.headers['content-type']).toEqual('application/json')
+    expect(response.headers.connection).toEqual('close')
+    expect(response.headers['content-length']).toEqual('2')
+    expect(typeof sessionId).toEqual('string')
+    expect(util.isUUID(sessionId)).toBeTruthy()
+    expect(typeof sessionToken).toEqual('string')
+    expect(response.data.body).toEqual(undefined)
+  }
+
+  const validateSessionHeadersUnauthorized = (error: any): void => {
+    expect(error.response.status).toEqual(401)
+    expect(Object.keys(error.response.headers).length).toEqual(13)
+    expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+    expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
+    expect(error.response.headers.pragma).toEqual('no-cache')
+    expect(error.response.headers.expires).toEqual('0')
+    expect(error.response.headers['x-content-type-options']).toEqual('nosniff')
+    expect(error.response.headers['x-frame-options']).toEqual('DENY')
+    expect(error.response.headers['content-security-policy']).toEqual("default-src 'self'")
+    expect(error.response.headers['x-xss-protection']).toEqual('1; mode=block')
+    expect(error.response.headers['content-type']).toEqual('text/plain')
+    expect(error.response.headers['set-cookie']).toEqual([
+      'session-id=; HttpOnly=true; Max-Age=0; Path=/; Secure=true; SameSite=Strict; Priority=High; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+      'session-token=; HttpOnly=true; Max-Age=0; Path=/; Secure=true; SameSite=Strict; Priority=High; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    ])
+    expect(util.isString(error.response.headers.date)).toBeTruthy()
+    expect(error.response.headers.connection).toEqual('close')
+    expect(error.response.headers['content-length']).toEqual('12')
+    expect(error.response.data).toEqual('Unauthorized')
+  }
+
   it('should be able to create session', async () => {
     const app = vkrun()
     app.use(router)
@@ -61,22 +102,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3799/session').then((response) => {
       getCookies(response)
-      expect(response.status).toEqual(200)
-      expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
-      expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
-      expect(response.headers.expires).toEqual('0')
-      expect(response.headers['x-xss-protection']).toEqual('1; mode=block')
-      const arrCookies = response.headers['set-cookie'] as string[]
-      expect(arrCookies.length).toEqual(2)
-      expect(arrCookies[0].startsWith('session-id=')).toBeTruthy()
-      expect(arrCookies[1].startsWith('session-token=')).toBeTruthy()
-      expect(response.headers['content-type']).toEqual('application/json')
-      expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('2')
-      expect(typeof sessionId).toEqual('string')
-      expect(util.isUUID(sessionId)).toBeTruthy()
-      expect(typeof sessionToken).toEqual('string')
-      expect(response.data.body).toEqual(undefined)
+      validateSessionHeadersSuccess(response)
     })
 
     app.close()
@@ -102,6 +128,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3798/session').then((response) => {
       getCookies(response)
+      validateSessionHeadersSuccess(response)
     })
 
     await axios.post('http://localhost:3798/protect', {}, {
@@ -122,13 +149,13 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3797/session').then((response) => {
       getCookies(response)
+      validateSessionHeadersSuccess(response)
     })
 
     await axios.post('http://localhost:3797/protect', {}, {
       headers: { cookie: `session-id=${sessionId}; session-token=123` }
     }).catch((error: any) => {
-      expect(error.response.status).toEqual(401)
-      expect(error.response.data).toEqual('Unauthorized')
+      validateSessionHeadersUnauthorized(error)
     })
 
     app.close()
@@ -142,6 +169,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3796/session').then((response) => {
       getCookies(response)
+      validateSessionHeadersSuccess(response)
     })
 
     await axios.post('http://localhost:3796/protect', {}, {
@@ -162,6 +190,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3795/session').then((response) => {
       getCookies(response)
+      validateSessionHeadersSuccess(response)
     })
 
     await axios.post('http://localhost:3795/protect', {}, {
@@ -182,6 +211,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3794/session').then((response) => {
       getCookies(response)
+      validateSessionHeadersSuccess(response)
     })
 
     await axios.post('http://localhost:3794/protect', {}, {
@@ -238,12 +268,6 @@ describe('Session', () => {
     const session = Session({ secretKey, sanitizationEvery: 1 })
     const router = Router()
 
-    class ExampleController implements Controller {
-      public handle (_request: Request, response: Response): any {
-        response.status(200).end()
-      }
-    }
-
     router.post('/session',
       session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: 1 }),
       controllerAdapter(new ExampleController())
@@ -258,6 +282,7 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3792/session').then((response) => {
       getCookies(response)
+      validateSessionHeadersSuccess(response)
     })
 
     const delay = async (ms: number): Promise<void> => await new Promise<void>((resolve) => setTimeout(resolve, ms))
@@ -266,9 +291,8 @@ describe('Session', () => {
 
     await axios.post('http://localhost:3792/protect', {}, {
       headers: { cookie }
-    }).catch((error: any) => {
-      expect(error.response.status).toEqual(401)
-      expect(error.response.data).toEqual('Unauthorized')
+    }).catch((error) => {
+      validateSessionHeadersUnauthorized(error)
     })
 
     app.close()
@@ -293,7 +317,8 @@ describe('Session', () => {
     server.listen(3781)
 
     await axios.post('http://localhost:3781/session').then((response) => {
-      expect(response.status).toEqual(200)
+      getCookies(response)
+      validateSessionHeadersSuccess(response)
       const cookies: any = response.headers['set-cookie']
       cookies.forEach((cookie: string) => {
         if (cookie.startsWith('session-id=')) {
@@ -303,7 +328,8 @@ describe('Session', () => {
     })
 
     await axios.post('http://localhost:3781/session').then((response) => {
-      expect(response.status).toEqual(200)
+      getCookies(response)
+      validateSessionHeadersSuccess(response)
       const cookies: any = response.headers['set-cookie']
       cookies.forEach((cookie: string) => {
         if (cookie.startsWith('session-id=')) {

@@ -6,6 +6,7 @@ describe('Session - Response Unauthorized', () => {
       setHeader: (name: string, value: string) => {
         responseMock.headers[name] = value
       },
+      setCookie: (name: string, value: string) => {},
       headers: {},
       data: undefined,
       end: (data: any) => {

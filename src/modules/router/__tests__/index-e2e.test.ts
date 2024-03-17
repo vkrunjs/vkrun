@@ -24,7 +24,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call the route in the HEAD method', async () => {
@@ -48,7 +48,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call the route in the POST method', async () => {
@@ -72,7 +72,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call the route in the PUT method', async () => {
@@ -96,7 +96,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call the route in the PATCH method', async () => {
@@ -120,7 +120,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call the route in the DELETE method', async () => {
@@ -144,7 +144,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to call the route in the OPTIONS method', async () => {
@@ -168,7 +168,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('throw new Error when duplicate route in GET method', async () => {
@@ -321,7 +321,7 @@ describe('Router', () => {
         expect(error.response.data).toEqual('Not Found')
       })
 
-    server.close()
+    app.close()
   })
 
   it('Return no content if the route has no handler', async () => {
@@ -343,7 +343,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to manipulate multiple handlers with method handle', async () => {
@@ -381,7 +381,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should be able to manipulate multiple handler functions', async () => {
@@ -411,7 +411,7 @@ describe('Router', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('throw new Error when using invalid middleware with error handler with method handle', async () => {
@@ -450,7 +450,7 @@ describe('Router', () => {
         expect(error.response.data).toEqual('vkrun-router: method use received invalid middleware.')
       })
 
-    server.close()
+    app.close()
   })
 
   it('throw new Error when using invalid middleware with error handler function', async () => {
@@ -485,7 +485,7 @@ describe('Router', () => {
         expect(error.response.data).toEqual('vkrun-router: method use received invalid middleware.')
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should respond error message if response is in invalid format and has ErrorHandler middleware', async () => {
@@ -527,6 +527,6 @@ describe('Router', () => {
         expect(error.response.data).toEqual('The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object')
       })
 
-    server.close()
+    app.close()
   })
 })

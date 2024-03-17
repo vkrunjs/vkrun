@@ -33,7 +33,7 @@ describe('cors', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should return status 403 if the request origin is not in the origin options', async () => {
@@ -74,7 +74,7 @@ describe('cors', () => {
         expect(error.response.headers['content-length']).toEqual('0')
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should return status 403 if the request origin is not in the origin array options', async () => {
@@ -115,7 +115,7 @@ describe('cors', () => {
         expect(error.response.headers['content-length']).toEqual('0')
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should return status 204 when method is OPTIONS and valid origin', async () => {
@@ -164,7 +164,7 @@ describe('cors', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should add default CORS options handler when route does not have OPTIONS method defined', async () => {
@@ -195,7 +195,7 @@ describe('cors', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should use custom CORS options handler when route has OPTIONS method defined', async () => {
@@ -231,7 +231,7 @@ describe('cors', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 
   it('Should use custom CORS options handler when route has OPTIONS method defined and preflightNext is false', async () => {
@@ -267,6 +267,6 @@ describe('cors', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
   })
 })

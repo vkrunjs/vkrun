@@ -41,7 +41,7 @@ describe('Logger Middleware', () => {
         expect(error).toEqual(undefined)
       })
 
-    server.close()
+    app.close()
 
     const log = getLog('default', 'log')
     const receivedLog = JSON.parse(log.content[0])
