@@ -56,6 +56,7 @@ describe('Session', () => {
   const validateSessionSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(10)
+    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
     expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
     expect(response.headers.expires).toEqual('0')
