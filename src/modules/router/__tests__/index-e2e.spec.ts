@@ -1,18 +1,14 @@
-import axios from 'axios'
-import vkrun, { Router, controllerAdapter, errorHandleAdapter, middlewareAdapter } from '../../../index'
+import vkrun, {
+  Router,
+  controllerAdapter,
+  errorHandleAdapter,
+  middlewareAdapter,
+  superRequest
+} from '../../../index'
 import * as util from '../../utils'
 import * as type from '../../types'
 
 describe('Router', () => {
-  let server: any
-
-  afterEach(() => {
-    // close server if test fails or causes error
-    if (server?.listening) {
-      server.close()
-    }
-  })
-
   it('Should be able to call the route in the GET method', async () => {
     const app = vkrun()
     const router = Router()
@@ -23,12 +19,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3699)
 
-    await axios.get('http://localhost:3699/')
+    await superRequest(app).get('/')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
         expect(Object.keys(response.headers).length).toEqual(5)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -51,12 +45,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3698)
 
-    await axios.head('http://localhost:3698/')
+    await superRequest(app).head('/')
       .then((response) => {
-        expect(response.status).toEqual(204)
+        expect(response.statusCode).toEqual(204)
         expect(Object.keys(response.headers).length).toEqual(4)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -78,12 +70,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3697)
 
-    await axios.post('http://localhost:3697/')
+    await superRequest(app).post('/')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
         expect(Object.keys(response.headers).length).toEqual(5)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -106,12 +96,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3696)
 
-    await axios.put('http://localhost:3696/')
+    await superRequest(app).put('/')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
         expect(Object.keys(response.headers).length).toEqual(5)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -134,12 +122,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3695)
 
-    await axios.patch('http://localhost:3695/')
+    await superRequest(app).patch('/')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
         expect(Object.keys(response.headers).length).toEqual(5)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -162,12 +148,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3694)
 
-    await axios.delete('http://localhost:3694/')
+    await superRequest(app).delete('/')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
         expect(Object.keys(response.headers).length).toEqual(5)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -190,12 +174,10 @@ describe('Router', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3693)
 
-    await axios.options('http://localhost:3693/')
+    await superRequest(app).options('/')
       .then((response) => {
-        expect(response.status).toEqual(200)
+        expect(response.statusCode).toEqual(200)
         expect(Object.keys(response.headers).length).toEqual(5)
         expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
         expect(response.headers['content-type']).toEqual('text/plain')
@@ -345,18 +327,13 @@ describe('Router', () => {
   //   const app = vkrun()
   //   const router = Router()
   //   app.use(router)
-  //   server = app.server()
-  //   server.listen(3692)
 
-  //   await axios.get('http://localhost:3692/')
-  //     .then((response) => {
-  //       expect(response).toEqual(undefined)
-  //     }).catch((error) => {
-  //       expect(error.response.status).toEqual(404)
-  //       expect(error.response.headers['content-type']).toEqual('text/plain')
-  //       expect(error.response.headers['access-control-allow-origin']).toEqual('*')
-  //       expect(error.response.data).toEqual('Not Found')
-  //     })
+  //   await superRequest(app).get('/').catch((error) => {
+  //     expect(error.response.statusCode).toEqual(404)
+  //     expect(error.response.headers['content-type']).toEqual('text/plain')
+  //     expect(error.response.headers['access-control-allow-origin']).toEqual('*')
+  //     expect(error.response.data).toEqual('Not Found')
+  //   })
 
   //   app.close()
   // })
@@ -366,13 +343,10 @@ describe('Router', () => {
   //   const router = Router()
   //   router.get('/route-without-handler')
   //   app.use(router)
-  //   server = app.server()
 
-  //   server.listen(3691)
-
-  //   await axios.get('http://localhost:3691/route-without-handler')
+  //   await superRequest(app).get('/route-without-handler')
   //     .then((response) => {
-  //       expect(response.status).toEqual(204)
+  //       expect(response.statusCode).toEqual(204)
   //       expect(response.headers['content-type']).toEqual('text/plain')
   //       expect(response.headers['access-control-allow-origin']).toEqual('*')
   //       expect(response.data).toEqual('')
@@ -403,13 +377,10 @@ describe('Router', () => {
   //     controllerAdapter(new ExampleController())
   //   )
   //   app.use(router)
-  //   server = app.server()
 
-  //   server.listen(3690)
-
-  //   await axios.get('http://localhost:3690/multiple-handlers')
+  //   await superRequest(app).get('/multiple-handlers')
   //     .then((response) => {
-  //       expect(response.status).toEqual(200)
+  //       expect(response.statusCode).toEqual(200)
   //       expect(response.headers['content-type']).toEqual('text/plain')
   //       expect(response.data).toEqual('Return controller')
   //     })
@@ -431,13 +402,10 @@ describe('Router', () => {
   //   const router = Router()
   //   router.get('/multiple-handlers', exampleMiddleware, exampleController)
   //   app.use(router)
-  //   server = app.server()
 
-  //   server.listen(3689)
-
-  //   await axios.get('http://localhost:3689/multiple-handlers')
+  //   await superRequest(app).get('/multiple-handlers')
   //     .then((response) => {
-  //       expect(response.status).toEqual(200)
+  //       expect(response.statusCode).toEqual(200)
   //       expect(response.headers['content-type']).toEqual('text/plain')
   //       expect(response.data).toEqual('Return controller')
   //     })
@@ -468,18 +436,12 @@ describe('Router', () => {
   //   const router = Router()
   //   router.get('/', controllerAdapter(new ExampleController()))
   //   app.use(router)
-  //   server = app.server()
 
-  //   server.listen(3688)
-
-  //   await axios.get('http://localhost:3688/')
-  //     .then((response) => {
-  //       expect(response).toEqual(undefined)
-  //     }).catch((error) => {
-  //       expect(error.response.status).toEqual(500)
-  //       expect(error.response.headers['content-type']).toEqual('text/plain')
-  //       expect(error.response.data).toEqual('vkrun-router: method use received invalid middleware.')
-  //     })
+  //   await superRequest(app).get('/').catch((error) => {
+  //     expect(error.response.statusCode).toEqual(500)
+  //     expect(error.response.headers['content-type']).toEqual('text/plain')
+  //     expect(error.response.data).toEqual('vkrun-router: method use received invalid middleware.')
+  //   })
 
   //   app.close()
   // })
@@ -503,18 +465,12 @@ describe('Router', () => {
   //   const router = Router()
   //   router.get('/', exampleController)
   //   app.use(router)
-  //   server = app.server()
 
-  //   server.listen(3687)
-
-  //   await axios.get('http://localhost:3687/')
-  //     .then((response) => {
-  //       expect(response).toEqual(undefined)
-  //     }).catch((error) => {
-  //       expect(error.response.status).toEqual(500)
-  //       expect(error.response.headers['content-type']).toEqual('text/plain')
-  //       expect(error.response.data).toEqual('vkrun-router: method use received invalid middleware.')
-  //     })
+  //   await superRequest(app).get('/').catch((error) => {
+  //     expect(error.response.statusCode).toEqual(500)
+  //     expect(error.response.headers['content-type']).toEqual('text/plain')
+  //     expect(error.response.data).toEqual('vkrun-router: method use received invalid middleware.')
+  //   })
 
   //   app.close()
   // })
@@ -545,18 +501,12 @@ describe('Router', () => {
   //   const router = Router()
   //   router.get('/', controllerAdapter(new ExampleController()))
   //   app.use(router)
-  //   server = app.server()
 
-  //   server.listen(3686)
-
-  //   await axios.get('http://localhost:3686/')
-  //     .then((response) => {
-  //       expect(response).toEqual(undefined)
-  //     }).catch((error) => {
-  //       expect(error.response.status).toEqual(500)
-  //       expect(error.response.headers['content-type']).toEqual('text/plain')
-  //       expect(error.response.data).toEqual('The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object')
-  //     })
+  //   await superRequest(app).get('/').catch((error) => {
+  //     expect(error.response.statusCode).toEqual(500)
+  //     expect(error.response.headers['content-type']).toEqual('text/plain')
+  //     expect(error.response.data).toEqual('The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object')
+  //   })
 
   //   app.close()
   // })
