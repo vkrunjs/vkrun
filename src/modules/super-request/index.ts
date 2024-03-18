@@ -21,12 +21,15 @@ export const superRequest = (app: any): type.SuperRequest => {
         serverResponse.data = helper.formatResponseData(serverResponse)
         serverResponse.headers.connection = 'close'
         serverResponse.headers.date = new Date().toUTCString()
-        const contentLength = (): string => {
-          if (serverResponse.data === undefined) return '0'
-          else if (util.isObject(serverResponse.data)) return JSON.stringify(serverResponse.data).length.toString()
-          return String(serverResponse.data.length)
+        const contentLength = (): void => {
+          let value = ''
+          if (method === 'HEAD') return
+          if (serverResponse.data === undefined) value = '0'
+          else if (util.isObject(serverResponse.data)) value = JSON.stringify(serverResponse.data).length.toString()
+          value = String(serverResponse.data.length)
+          serverResponse.headers['content-length'] = value
         }
-        serverResponse.headers['content-length'] = contentLength()
+        contentLength()
         httpRequest.abort()
 
         const response: type.SuperRequestSuccess = {
