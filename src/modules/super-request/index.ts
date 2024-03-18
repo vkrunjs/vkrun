@@ -26,7 +26,7 @@ export const superRequest = (app: any): type.SuperRequest => {
           if (method === 'HEAD') return
           if (serverResponse.data === undefined) value = '0'
           else if (util.isObject(serverResponse.data)) value = JSON.stringify(serverResponse.data).length.toString()
-          value = String(serverResponse.data.length)
+          else value = String(serverResponse.data.length)
           serverResponse.headers['content-length'] = value
         }
         contentLength()
