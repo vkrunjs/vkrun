@@ -363,10 +363,10 @@ describe('Session', () => {
     app.close()
   })
 
-  it('should be able to update session', async () => {
+  it('Should be able to update the session when it has the session ID and session token in the cookie', async () => {
     const app = vkrun()
     app.use(router)
-    server = app.server()
+    const server = app.server()
     server.listen(3780)
 
     await axios.post('http://localhost:3780/session').then((response) => {
@@ -374,7 +374,9 @@ describe('Session', () => {
       validateSessionSuccess(response)
     })
 
-    await axios.post('http://localhost:3780/session').then((response) => {
+    await axios.post('http://localhost:3780/session', {}, {
+      headers: { cookie }
+    }).then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })

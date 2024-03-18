@@ -104,7 +104,7 @@ describe('Session', () => {
     })
   }
 
-  it('should be able to create session', async () => {
+  it('Should be able to create session', async () => {
     const app = vkrun()
     app.use(router)
 
@@ -128,7 +128,7 @@ describe('Session', () => {
     }
   })
 
-  it('should be able to access a protected route with correct headers', async () => {
+  it('Should be able to access a protected route with correct headers', async () => {
     const app = vkrun()
     app.use(router)
 
@@ -298,7 +298,7 @@ describe('Session', () => {
     app.close()
   })
 
-  it('should be able to update session when passed session id', async () => {
+  it('Should be able to update session when passed session id', async () => {
     const sessionId = util.randomUUID()
 
     const app = vkrun()
@@ -338,7 +338,7 @@ describe('Session', () => {
     app.close()
   })
 
-  it('should be able to update session', async () => {
+  it('Should be able to update the session when it has the session ID and session token in the cookie', async () => {
     const app = vkrun()
     app.use(router)
 
@@ -347,7 +347,9 @@ describe('Session', () => {
       validateSessionSuccess(response)
     })
 
-    await superRequest(app).post('/session').then((response) => {
+    await superRequest(app).post('/session', {}, {
+      headers: { cookie }
+    }).then((response) => {
       getCookies(response)
       validateSessionSuccess(response)
     })
