@@ -22,8 +22,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest --coverage=false",
-    "test:e2e": "jest --coverage --detectOpenHandles=false --config=jest-e2e.config.ts --forceExit",
-    "test:all": "jest --coverage --detectOpenHandles=false --config=jest-all.config.ts --forceExit",
+    "test:e2e": "jest --coverage --config=jest-e2e.config.ts",
+    "test:all": "jest --coverage --config=jest-all.config.ts",
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",
     "test:ci": "npm test -- --coverage=true",
