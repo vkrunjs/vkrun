@@ -1,10 +1,10 @@
-import vkrun, { Router, parseData } from '../../../../index'
+import vkrun, { Router, parseData } from '../../../index'
 import axios from 'axios'
-import { createLogger } from '../../'
-import { getLog } from '../get-log'
-import { removeLogsFolder } from '../remove-logs-folder'
-import * as util from '../../../utils'
-import * as type from '../../../types'
+import { createLogger } from '..'
+import { getLog } from '../helpers/get-log'
+import { removeLogsFolder } from '../helpers/remove-logs-folder'
+import * as util from '../../utils'
+import * as type from '../../types'
 
 describe('Logger Middleware', () => {
   beforeEach(async () => { await removeLogsFolder() })
