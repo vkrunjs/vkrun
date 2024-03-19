@@ -6,46 +6,42 @@ export const superRequest = (app: any): type.SuperRequest => {
   const request = async (method: string, path: any, data: any, options?: Record<string, any>): Promise<type.SuperRequestSuccess> => {
     // eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
     return await new Promise(async (resolve, reject) => {
-      try {
-        const httpRequest: any = helper.createHttpRequest({
-          method,
-          path,
-          headers: options?.headers ?? {},
-          data,
-          host: 'localhost',
-          port: Math.floor(10000 + Math.random() * 55535)
-        })
+      const httpRequest: any = helper.createHttpRequest({
+        method,
+        path,
+        headers: options?.headers ?? {},
+        data,
+        host: 'localhost',
+        port: Math.floor(10000 + Math.random() * 55535)
+      })
 
-        const httpResponse = helper.createHttpResponse(httpRequest)
-        const serverResponse = await app._reqWithoutServer(httpRequest, httpResponse)
-        serverResponse.data = helper.formatResponseData(serverResponse)
-        serverResponse.headers.connection = 'close'
-        serverResponse.headers.date = new Date().toUTCString()
-        const contentLength = (): void => {
-          let value = ''
-          if (method === 'HEAD') return
-          if (serverResponse.data === undefined) value = '0'
-          else if (util.isObject(serverResponse.data)) value = JSON.stringify(serverResponse.data).length.toString()
-          else value = String(serverResponse.data.length)
-          serverResponse.headers['content-length'] = value
-        }
-        contentLength()
-        httpRequest.abort()
+      const httpResponse = helper.createHttpResponse(httpRequest)
+      const serverResponse = await app._reqWithoutServer(httpRequest, httpResponse)
+      serverResponse.data = helper.formatResponseData(serverResponse)
+      serverResponse.headers.connection = 'close'
+      serverResponse.headers.date = new Date().toUTCString()
+      const contentLength = (): void => {
+        let value = ''
+        if (method === 'HEAD') return
+        if (serverResponse.data === undefined) value = '0'
+        else if (util.isObject(serverResponse.data)) value = JSON.stringify(serverResponse.data).length.toString()
+        else value = String(serverResponse.data.length)
+        serverResponse.headers['content-length'] = value
+      }
+      contentLength()
+      httpRequest.abort()
 
-        const response: type.SuperRequestSuccess = {
-          statusCode: serverResponse.statusCode,
-          statusMessage: serverResponse.statusMessage,
-          headers: serverResponse.headers,
-          data: serverResponse.data === undefined ? '' : serverResponse.data
-        }
+      const response: type.SuperRequestSuccess = {
+        statusCode: serverResponse.statusCode,
+        statusMessage: serverResponse.statusMessage,
+        headers: serverResponse.headers,
+        data: serverResponse.data === undefined ? '' : serverResponse.data
+      }
 
-        if (serverResponse.statusCode < 400) {
-          resolve(response)
-        } else {
-          const error: type.SuperRequestError = { response }
-          reject(error)
-        }
-      } catch (error) {
+      if (serverResponse.statusCode < 400) {
+        resolve(response)
+      } else {
+        const error: type.SuperRequestError = { response }
         reject(error)
       }
     })
