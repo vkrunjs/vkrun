@@ -164,7 +164,7 @@ describe('Router', () => {
 
     router.options('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
-      response.status(200).end('OPTIONS ok')
+      response.status(200).end('')
     })
 
     app.use(router)
@@ -176,8 +176,8 @@ describe('Router', () => {
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
       expect(util.isString(response.headers.date)).toBeTruthy()
-      expect(response.headers['content-length']).toEqual('10')
-      expect(response.data).toEqual('OPTIONS ok')
+      expect(response.headers['content-length']).toEqual('0')
+      expect(response.data).toEqual('')
     })
 
     app.close()

@@ -23,7 +23,7 @@ export const superRequest = (app: any): type.SuperRequest => {
       const contentLength = (): void => {
         let value = ''
         if (method === 'HEAD') return
-        if (serverResponse.data === undefined) value = '0'
+        else if (serverResponse.data === undefined) value = '0'
         else if (util.isObject(serverResponse.data)) value = JSON.stringify(serverResponse.data).length.toString()
         else value = String(serverResponse.data.length)
         serverResponse.headers['content-length'] = value
@@ -35,7 +35,7 @@ export const superRequest = (app: any): type.SuperRequest => {
         statusCode: serverResponse.statusCode,
         statusMessage: serverResponse.statusMessage,
         headers: serverResponse.headers,
-        data: serverResponse.data === undefined ? '' : serverResponse.data
+        data: serverResponse.data === undefined || method === 'OPTIONS' ? '' : serverResponse.data
       }
 
       if (serverResponse.statusCode < 400) {

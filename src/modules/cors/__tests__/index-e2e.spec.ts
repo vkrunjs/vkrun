@@ -1,18 +1,8 @@
-import vkrun, { Router, cors } from '../../../index'
-import axios from 'axios'
+import vkrun, { Router, cors, superRequest } from '../../../index'
 import * as util from '../../utils'
 import * as type from '../../types'
 
 describe('cors', () => {
-  let server: any
-
-  afterEach(() => {
-    // close server if test fails or causes error
-    if (server?.listening) {
-      server.close()
-    }
-  })
-
   it('Should return status 200 when default cors', async () => {
     const app = vkrun()
     app.use(cors())
@@ -24,11 +14,9 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3599)
 
-    await axios.get('http://localhost:3599/').then((response) => {
-      expect(response.status).toEqual(200)
+    await superRequest(app).get('/').then((response) => {
+      expect(response.statusCode).toEqual(200)
       expect(response.data).toEqual('GET ok')
       expect(Object.keys(response.headers).length).toEqual(7)
       expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
@@ -64,11 +52,9 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3598)
 
-    await axios.get('http://localhost:3598/').catch((error: any) => {
-      expect(error.response.status).toEqual(403)
+    await superRequest(app).get('/').catch((error: any) => {
+      expect(error.response.statusCode).toEqual(403)
       expect(Object.keys(error.response.headers).length).toEqual(6)
       expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
       expect(error.response.headers['access-control-allow-origin']).toEqual('http://localhost:3000')
@@ -103,11 +89,9 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3597)
 
-    await axios.get('http://localhost:3597/').catch((error: any) => {
-      expect(error.response.status).toEqual(403)
+    await superRequest(app).get('/').catch((error: any) => {
+      expect(error.response.statusCode).toEqual(403)
       expect(error.response.data).toEqual('')
       expect(Object.keys(error.response.headers).length).toEqual(6)
       expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
@@ -142,15 +126,13 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3596)
 
-    await axios.options('http://localhost:3596/route', {
+    await superRequest(app).options('/route', {
       headers: {
         Origin: 'http://localhost:3596'
       }
     }).then((response) => {
-      expect(response.status).toEqual(204)
+      expect(response.statusCode).toEqual(204)
       expect(response.data).toEqual('')
       expect(Object.keys(response.headers).length).toEqual(10)
       expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
@@ -178,11 +160,9 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3595)
 
-    await axios.options('http://localhost:3595/').then((response) => {
-      expect(response.status).toEqual(204)
+    await superRequest(app).options('/').then((response) => {
+      expect(response.statusCode).toEqual(204)
       expect(response.data).toEqual('')
       expect(Object.keys(response.headers).length).toEqual(7)
       expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
@@ -212,11 +192,9 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3594)
 
-    await axios.options('http://localhost:3594/').then((response) => {
-      expect(response.status).toEqual(204)
+    await superRequest(app).options('/').then((response) => {
+      expect(response.statusCode).toEqual(204)
       expect(response.data).toEqual('')
       expect(Object.keys(response.headers).length).toEqual(7)
       expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
@@ -246,12 +224,9 @@ describe('cors', () => {
     })
 
     app.use(router)
-    server = app.server()
-    server.listen(3593)
 
-    await axios.options('http://localhost:3593/').then((response) => {
-      expect(response.status).toEqual(200)
-      expect(response.data).toEqual('')
+    await superRequest(app).options('/').then((response) => {
+      expect(response.statusCode).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(7)
       expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['access-control-allow-origin']).toEqual('*')
@@ -259,7 +234,8 @@ describe('cors', () => {
       expect(response.headers['access-control-allow-headers']).toEqual('Content-Type, Authorization')
       expect(util.isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
-      expect(response.headers['content-length']).toEqual('0')
+      expect(response.headers['content-length']).toEqual('10')
+      expect(response.data).toEqual('')
     })
 
     app.close()
