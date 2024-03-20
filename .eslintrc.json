@@ -1,19 +1,19 @@
 {
-  "overrides": [
-    {
-      "files": ["*.ts"],
-      "extends": "standard-with-typescript",
-      "parserOptions": {
-        "project": "./tsconfig.json"
-      },
-      "rules": {
-        "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/consistent-type-imports": "off",
-        "@typescript-eslint/no-unsafe-argument": "off",
-        "@typescript-eslint/no-confusing-void-expression": "off",
-        "@typescript-eslint/non-nullable-type-assertion-style": "off"
+    "overrides": [
+      {
+        "files": ["*.ts"],
+        "extends": "standard-with-typescript",
+        "parserOptions": {
+          "project": "./tsconfig.json"
+        },
+        "rules": {
+          "@typescript-eslint/strict-boolean-expressions": "off",
+          "@typescript-eslint/consistent-type-imports": "off",
+          "@typescript-eslint/no-unsafe-argument": "off",
+          "@typescript-eslint/no-confusing-void-expression": "off",
+          "@typescript-eslint/non-nullable-type-assertion-style": "off"
+        }
       }
-    }
-  ],
-  "ignorePatterns": ["lib/"]
-}
+    ],
+    "ignorePatterns": ["lib/"]
+  }

@@ -1,6 +1,10 @@
-import { StringToDateTypes } from './types'
+import { StringToDateTypes } from '../types'
 
-export const stringToDate = (stringDate: string, type?: StringToDateTypes): Date => {
+export const stringToDate = (
+  stringDate: string,
+  type: StringToDateTypes,
+  timestamp?: 'UTC' | 'local'
+): Date => {
   let year: number = 0
   let month: number = 0
   let day: number = 0
@@ -12,28 +16,33 @@ export const stringToDate = (stringDate: string, type?: StringToDateTypes): Date
     return invalidDay || invalidMonth || invalidYear
   }
 
-  if (type === 'DD/MM/YYYY') {
-    [day, month, year] = String(stringDate).split('/').map(Number)
+  if (type === 'ISO8601') {
+    return new Date(stringDate)
+  } else if (type === 'DD/MM/YYYY') {
+    [day, month, year] = stringDate.split('/').map(Number)
   } else if (type === 'MM/DD/YYYY') {
-    [month, day, year] = String(stringDate).split('/').map(Number)
+    [month, day, year] = stringDate.split('/').map(Number)
   } else if (type === 'DD-MM-YYYY') {
-    [day, month, year] = String(stringDate).split('-').map(Number)
+    [day, month, year] = stringDate.split('-').map(Number)
   } else if (type === 'MM-DD-YYYY') {
-    [month, day, year] = String(stringDate).split('-').map(Number)
+    [month, day, year] = stringDate.split('-').map(Number)
   } else if (type === 'YYYY/MM/DD') {
-    [year, month, day] = String(stringDate).split('/').map(Number)
+    [year, month, day] = stringDate.split('/').map(Number)
   } else if (type === 'YYYY/DD/MM') {
-    [year, day, month] = String(stringDate).split('/').map(Number)
+    [year, day, month] = stringDate.split('/').map(Number)
   } else if (type === 'YYYY-MM-DD') {
-    [year, month, day] = String(stringDate).split('-').map(Number)
+    [year, month, day] = stringDate.split('-').map(Number)
   } else if (type === 'YYYY-DD-MM') {
-    [year, day, month] = String(stringDate).split('-').map(Number)
+    [year, day, month] = stringDate.split('-').map(Number)
   } else {
-    const date = new Date(stringDate)
-    if (isNaN(date.getTime())) return new Date('invalid date')
-    return date
+    return new Date('invalid date')
   }
 
   if (invalidDate()) return new Date('invalid date')
-  return new Date(year, month - 1, day)
+
+  if (!timestamp || timestamp === 'local') {
+    return new Date(year, month - 1, day)
+  } else {
+    return new Date(Date.UTC(year, month - 1, day)) // UTC
+  }
 }

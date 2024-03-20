@@ -1,6 +1,6 @@
-import { DateToStringTypes } from './types'
+import * as type from '../types'
 
-export const dateToString = (date: Date, type: DateToStringTypes, timestamp?: 'UTC' | 'local'): string => {
+export const dateToString = (date: Date, type: type.DateToStringTypes, timestamp?: 'UTC' | 'local'): string => {
   const year = timestamp === 'UTC' ? date.getUTCFullYear() : date.getFullYear()
   const month = (timestamp === 'UTC' ? date.getUTCMonth() + 1 : date.getMonth() + 1).toString().padStart(2, '0')
   const day = (timestamp === 'UTC' ? date.getUTCDate() : date.getDate()).toString().padStart(2, '0')
@@ -17,6 +17,14 @@ export const dateToString = (date: Date, type: DateToStringTypes, timestamp?: 'U
     return `${year}/${month}/${day} ${hours}:${minutes}`
   } else if (type === 'YYYY/MM/DD') {
     return `${year}/${month}/${day}`
+  } else if (type === 'YYYY/DD/MM HH:MM:SS.MS') {
+    return `${year}/${day}/${month} ${hours}:${minutes}:${seconds}.${milliseconds}`
+  } else if (type === 'YYYY/DD/MM HH:MM:SS') {
+    return `${year}/${day}/${month} ${hours}:${minutes}:${seconds}`
+  } else if (type === 'YYYY/DD/MM HH:MM') {
+    return `${year}/${day}/${month} ${hours}:${minutes}`
+  } else if (type === 'YYYY/DD/MM') {
+    return `${year}/${day}/${month}`
   } else if (type === 'MM/DD/YYYY HH:MM:SS.MS') {
     return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}.${milliseconds}`
   } else if (type === 'MM/DD/YYYY HH:MM:SS') {
