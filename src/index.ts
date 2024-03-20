@@ -26,3 +26,5 @@ export {
   validateRouteData,
   superRequest
 }
+
+export default app
