@@ -12,7 +12,6 @@ import { superRequest } from './modules/super-request'
 export * from './modules/router/helpers/adapters'
 export * from './modules/types'
 
-export default app
 export {
   cors,
   schema,
@@ -26,3 +25,5 @@ export {
   validateRouteData,
   superRequest
 }
+
+export default app
