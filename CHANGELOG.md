@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.22.1
+
+### Patch Changes
+
+- f60b366: transform lib into framework
+
 ## 0.22.0
 
 ### Minor Changes
