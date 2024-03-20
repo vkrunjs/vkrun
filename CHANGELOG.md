@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.25.0
+
+### Minor Changes
+
+- 70ab3f3: fix export app
+
 ## 0.24.0
 
 ### Minor Changes
