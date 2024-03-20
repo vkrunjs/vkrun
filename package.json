@@ -30,8 +30,7 @@
     "test:ci": "npm test -- --coverage=false --config=jest-all.config.ts",
     "pre-commit": "lint-staged",
     "changeset": "packages/cli/bin.js",
-    "release": "yarn build && changeset publish",
-    "start": "ts-node src/server.ts"
+    "release": "yarn build && changeset publish"
   },
   "lint-staged": {
     "*.ts": [
