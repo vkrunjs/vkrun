@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.23.0
+
+### Minor Changes
+
+- 563888a: router when running the middleware is not skipping the error handler
+
 ## 0.22.1
 
 ### Patch Changes
