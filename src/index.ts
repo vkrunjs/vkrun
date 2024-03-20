@@ -13,6 +13,7 @@ export * from './modules/router/helpers/adapters'
 export * from './modules/types'
 
 export {
+  app,
   cors,
   schema,
   setLocation,
@@ -25,5 +26,3 @@ export {
   validateRouteData,
   superRequest
 }
-
-export default app
