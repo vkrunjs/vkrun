@@ -2,7 +2,7 @@ import vkrun, { Router, cors, superRequest } from '../../../index'
 import * as util from '../../utils'
 import * as type from '../../types'
 
-describe('cors', () => {
+describe('Cors - end to end testing using super request', () => {
   it('Should return status 200 when default cors', async () => {
     const app = vkrun()
     app.use(cors())

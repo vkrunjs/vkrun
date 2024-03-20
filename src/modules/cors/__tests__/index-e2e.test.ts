@@ -3,7 +3,7 @@ import axios from 'axios'
 import * as util from '../../utils'
 import * as type from '../../types'
 
-describe('cors', () => {
+describe('Cors - end to end testing using axios and app server', () => {
   let server: any
 
   afterEach(() => {

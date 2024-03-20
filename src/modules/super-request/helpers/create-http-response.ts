@@ -30,6 +30,12 @@ export const createHttpResponse = (request: any): any => {
     response.req.end()
   }
 
+  response.on = (event: string, listener: any) => {
+    if (event === 'finish') {
+      listener()
+    }
+  }
+
   response.hasHeader = (name: string): boolean => {
     return !!response.headers[name.toLowerCase()]
   }
