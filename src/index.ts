@@ -1,4 +1,4 @@
-import { app } from './modules/app'
+import { App } from './modules/app'
 import { schema, setLocation } from './modules/schema'
 import { createLogger } from './modules/logger'
 import { Router } from './modules/router'
@@ -13,7 +13,7 @@ export * from './modules/router/helpers/adapters'
 export * from './modules/types'
 
 export {
-  app,
+  App,
   cors,
   schema,
   setLocation,
@@ -27,4 +27,4 @@ export {
   superRequest
 }
 
-export default app
+export default App

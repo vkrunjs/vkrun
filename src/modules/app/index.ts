@@ -4,7 +4,7 @@ import { customResponse } from '../router/helpers/custom-response'
 import * as type from '../types'
 import { loggerSanitizeInterval } from '../logger'
 
-export const app = (): type.App => {
+export const App = (): type.App => {
   let instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
   let router: VkrunRouter
   const middlewares: any[] = []
