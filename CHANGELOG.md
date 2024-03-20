@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.26.0
+
+### Minor Changes
+
+- a2f48eb: change function name
+
 ## 0.25.0
 
 ### Minor Changes
