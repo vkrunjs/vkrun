@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.24.0
+
+### Minor Changes
+
+- 1a011a8: export default app
+
 ## 0.23.0
 
 ### Minor Changes
