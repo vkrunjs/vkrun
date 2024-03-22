@@ -49,7 +49,7 @@
     "test:all": "jest --coverage=false --config=jest-all.config.ts",
     "test:all-c": "jest --coverage --config=jest-all.config.ts",
     "test:coverage": "jest",
-    "test:staged": "jest --config=jest-all.config.ts --passWithNoTests",
+    "test:staged": "jest --passWithNoTests",
     "test:ci": "npm test -- --coverage=false",
     "pre-commit": "lint-staged",
     "changeset": "packages/cli/bin.js",
