@@ -50,7 +50,7 @@
     "test:all-c": "jest --coverage --config=jest-all.config.ts",
     "test:coverage": "jest",
     "test:staged": "jest --config=jest-all.config.ts --passWithNoTests",
-    "test:ci": "npm test -- --coverage=false --config=jest-all.config.ts",
+    "test:ci": "npm test -- --coverage=false",
     "pre-commit": "lint-staged",
     "changeset": "packages/cli/bin.js",
     "release": "yarn build && changeset publish"
