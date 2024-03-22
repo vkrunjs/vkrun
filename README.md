@@ -79,7 +79,7 @@ yarn add vkrun
 
 <h2 id="security-issues">Security Issues</h2>
 
-If you discover a security vulnerability in Express, please see [Security Policies and Procedures](SECURITY.md).
+If you discover a security vulnerability in Express, please see [Security Policies and Procedures](Security.md).
 
 <h2 id="contributing">Contributing</h2>
 
