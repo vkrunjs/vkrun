@@ -11,13 +11,19 @@
 
 <h2 align="center">Quick Start</h2>
 
+#### Installation command:
+```bash
+npm install vkrun
+```
+
+#### index.js:
 ```ts
-import { App, Router, Request, Response } from 'vkrun'
+import { App, Router } from 'vkrun'
 
 const app = App()
 const router = Router()
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/plain')
   res.status(200).end('Hello World!')
 })
@@ -27,6 +33,12 @@ app.use(router)
 app.server().listen(3000, () => {
   console.log('Vkrun started on port 3000')
 })
+```
+
+#### Running the project:
+
+```bash
+node index.js
 ```
 
 <hr/>
@@ -57,21 +69,15 @@ app.server().listen(3000, () => {
 
 <h2 id="installation">Installation</h2>
 
-This is a module for [Node.js](https://nodejs.org/en/) available through the [npm registry](https://www.npmjs.com/package/vkrun).
+If you need a step-by-step guide on how to install and use Vkrun, use the [Installation Guide](Installation-Guide.md)
 
-Before installing, [download and install Node.js](https://nodejs.org/en/download/). Node.js 0.10 or higher is required.
-
-For new projects, make sure to create the `package.json` file using the [`npm init`](https://docs.npmjs.com/creating-a-package-json-file) command.
-
-Vkrun installation is done through the following commands:
-
-#### NPM
+##### NPM
 
 ```bash
 npm install vkrun
 ```
 
-#### YARN
+##### YARN
 
 ```bash
 yarn add vkrun
