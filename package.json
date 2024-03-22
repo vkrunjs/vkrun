@@ -8,6 +8,7 @@
   "types": "lib/index.d.ts",
   "keywords": [
     "vkrun",
+    "vkrunjs",
     "framework",
     "web",
     "http",
@@ -32,10 +33,10 @@
     "Readme.md",
     "lib"
   ],
-  "homepage": "https://github.com/jukerah/vkrun#readme",
+  "homepage": "https://github.com/jukerah/vkrunjs#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jukerah/vkrun.git"
+    "url": "git+https://github.com/jukerah/vkrunjs.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
