@@ -31,10 +31,10 @@ Your package.json should look like:
 ```json
 {
   "name": "project-name",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node src/index.js"
+    "dev": "node index.js"
   },
   "dependencies": {
     "vkrun": "^0.26.0"
@@ -63,9 +63,9 @@ Your package.json should look like:
 ```json
 {
   "name": "project-name",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
-    "dev": "ts-node src/index.js"
+    "dev": "ts-node index.ts"
   },
   "dependencies": {
     "vkrun": "^0.26.0"

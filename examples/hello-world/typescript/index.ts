@@ -1,4 +1,4 @@
-import { App, Router, Request, Response } from '../../src/index'
+import { App, Router, Request, Response } from 'vkrun'
 
 const app = App()
 const router = Router()
