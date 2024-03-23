@@ -15,5 +15,5 @@
         }
       }
     ],
-    "ignorePatterns": ["lib/"]
+    "ignorePatterns": ["lib/", "examples/"]
   }

@@ -1,19 +1,42 @@
 {
   "name": "vkrun",
   "version": "0.26.0",
-  "description": "Vkrun is a runtime data validation library",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "keywords": [],
+  "description": "Vkrun is a Node.js framework for building server-side applications",
   "author": "Mario Elvio",
   "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "keywords": [
+    "vkrun",
+    "vkrunjs",
+    "framework",
+    "web",
+    "http",
+    "rest",
+    "restful",
+    "router",
+    "app",
+    "api",
+    "schema",
+    "cors",
+    "validate",
+    "validator",
+    "rate limit",
+    "parse data",
+    "jwt",
+    "logger",
+    "session",
+    "super request"
+  ],
   "files": [
+    "LICENSE",
+    "Readme.md",
     "lib"
   ],
-  "homepage": "https://github.com/jukerah/vkrun#readme",
+  "homepage": "https://github.com/jukerah/vkrunjs#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jukerah/vkrun.git"
+    "url": "git+https://github.com/jukerah/vkrunjs.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -26,8 +49,8 @@
     "test:all": "jest --coverage=false --config=jest-all.config.ts",
     "test:all-c": "jest --coverage --config=jest-all.config.ts",
     "test:coverage": "jest",
-    "test:staged": "jest --config=jest-all.config.ts --passWithNoTests",
-    "test:ci": "npm test -- --coverage=false --config=jest-all.config.ts",
+    "test:staged": "jest --passWithNoTests",
+    "test:ci": "npm test -- --coverage=false",
     "pre-commit": "lint-staged",
     "changeset": "packages/cli/bin.js",
     "release": "yarn build && changeset publish"

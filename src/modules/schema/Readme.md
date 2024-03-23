@@ -1,58 +1,38 @@
 <div align="center">
-  <img src="logo.svg" width="200px" align="center" alt="Vkrun logo" />
-  <h1 align="center">Vkrun</h1>
+  <img src="../../../logo.svg" width="200px" align="center" alt="Vkrun logo" />
+  <h1 align="center">Vkrun - Schema</h1>
   <br/>
   <p align="center">
-    O Vkrun é uma biblioteca de validação de dados em tempo de execução. 
+    Schema is a Vkrun module for data validation at runtime. 
   </p>
 
   <p align="center">
-    Simplificando e aprimorando a validação de diversos tipos de dados em projetos JavaScript e TypeScript, também oferece a flexibilidade de definir esquemas validações complexas e interdependentes, proporcionando uma solução robusta, personalizável e escalável para suas necessidades de validação.
+    Simplifying and enhancing the validation of various data types in JavaScript and TypeScript projects, it also provides the flexibility to define complex and interdependent validation schemas, offering a robust, customizable, and scalable solution for your validation needs.
   </p>
 
 </div>
 
-<h3 align="center">Recursos</h3>
+<h3 align="center">Features</h3>
 
-- Criação de schemas simples a complexos.
-- Suporte a JavaScript e Typescript.
-- Suporte a validação síncrona e assíncrona.
-- Funciona no lado do servidor e do lado do cliente.
+- Creation of simple to complex schemas.
+- Support for JavaScript and TypeScript.
+- Support for synchronous and asynchronous validation.
+- Works on both server and client side.
 
 <hr/>
 
 <p align="center">
-  <a href="https://github.com/jukerah" rel="nofollow"><img src="https://img.shields.io/badge/criado%20por-Mario%20Elvio-blue.svg" alt="Criado por Mario Elvio"></a>
+  <a href="https://github.com/jukerah" rel="nofollow"><img src="https://img.shields.io/badge/created%20by-Mario%20Elvio-blue.svg" alt="created by Mario Elvio"></a>
   <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://img.shields.io/badge/License%20-MIT-blue.svg" alt="License MIT"></a>
-  <a href="https://www.npmjs.com/package/vkrun" rel="nofollow"><img src="https://img.shields.io/npm/dw/vkrun.svg?color=blue
-" alt="npm"></a>
+  <a href="https://www.npmjs.com/package/vkrun" rel="nofollow"><img src="https://img.shields.io/npm/dw/vkrun.svg?color=blue" alt="npm"></a>
   <a href="https://www.npmjs.com/package/vkrun" rel="nofollow"><img src="https://img.shields.io/github/stars/jukerah/vkrun" alt="stars"></a>
 </p>
 
-<h2 align="center">Idiomas do README</h2>
+<h2 align="center">Quick Start</h2>
 
-<p align="center">
-  <a href="#" rel="nofollow"><img src="https://img.shields.io/badge/%F0%9F%87%A7%F0%9F%87%B7-Português-blue" alt="Criado por Mario Elvio"></a>
-  <a href="https://github.com/jukerah/vkrun/blob/main/README.md" rel="nofollow"><img src="https://img.shields.io/badge/%F0%9F%87%BA%F0%9F%87%B8-Inglês-blue" alt="License MIT"></a>
-</p>
-
-<h2 align="center" id="installation">Instalação</h2>
-
-##### NPM
-```bash
-npm install vkrun
-```
-
-##### YARN
-```bash
-yarn add vkrun
-```
-
-<h2 align="center">Utilizando o Vkrun</h2>
-
-- import o vkrun.
-- Encadeie métodos para construir um esquema.
-- Após finalizar o schema, chame um método de validação com o valor de entrada:
+- Import schema.
+- Chain methods to build a schema.
+- After completing the schema, call a validation method with the input value:
   - .validate(value: any): boolean
   - .validateAsync(value: any): Promise<boolean>
   - .test(value: any, valueName: string): Tests
@@ -85,11 +65,11 @@ console.log(validateA) // true
 console.log(validateB) // false
 ```
 
-### Conteúdo
-- [Introdução](#introduction)
-- [Instalação](#installation)
+### Content
+- [Vkrun](../../../Readme.md)
+- [Introduction](#introduction)
 - schema
-  - Tipos de validações
+  - Types of Validations
     - [.validate](#validate)
     - [.validateAsync](#validateAsync)
     - [.test](#test)
@@ -131,17 +111,15 @@ console.log(validateB) // false
       - [.max](#max-date-array)
     - [.object](#object-array)
   - [.setLocation](#setLocation)
-- [Autor](#author)
-- [Licença](#license)
 
-<h2 align="center">Tipos de validações</h2>
+<h2 align="center">Types of Validations</h2>
   
 <h2 id="validate">
   .<span style="color:#66B2FF">validate</span>(<span style="color:#66B2FF">value</span>: <span style="color:#99CC99">any</span>): <span style="color:#99CC99">boolean</span>
 </h2>
 
-- value: É o valor a ser testado.
-- Validação retorna boolean.
+- value: It is the value to be tested.
+- Validation returns a boolean.
 
 ```ts
 import { schema } from "vkrun"
@@ -159,8 +137,8 @@ console.log(validateB) // false
   .<span style="color:#66B2FF">validateAsync</span>(<span style="color:#66B2FF">value</span>: <span style="color:#99CC99">any</span>): <span style="color:#66B2FF">Promise</span><<span style="color:#99CC99">boolean</span>>
 </h2>
 
-- value: É uma Promise do valor a ser testado.
-- Validação retorna Promise<boolean>.
+- value: It is a Promise of the value to be tested.
+- Validation returns a Promise<boolean>.
 
 ```ts
 import { schema } from "vkrun"
@@ -176,8 +154,8 @@ console.log(validatedSchema) // true
   .<span style="color:#66B2FF">test</span>(<span style="color:#66B2FF">value</span>: <span style="color:#99CC99">any</span>, <span style="color:#66B2FF">valueName</span>: <span style="color:#99CC99">string</span>): <span style="color:#99CC99">Tests</span>
 </h2>
 
-- value: É o valor a ser testado.
-- valueName: É o nome do valor testado e será referenciado nos testes e mensagens de erro.
+- value: It is the value to be tested.
+- valueName: It is the name of the tested value and will be referenced in tests and error messages.
 
 ```ts
 import { schema } from "vkrun"
@@ -218,8 +196,8 @@ const validatedSchema = schema.test(123, "value_name")
   .<span style="color:#66B2FF">testAsync</span>(<span style="color:#66B2FF">value</span>: <span style="color:#99CC99">any</span>, <span style="color:#66B2FF">valueName</span>: <span style="color:#99CC99">string</span>): <span style="color:#66B2FF">Promise</span><<span style="color:#99CC99">Tests</span>>
 </h2>
 
-- value: É uma Promise do valor a ser testado.
-- valueName: É o nome do valor testado e será referenciado nos testes e mensagens de erro.
+- value: It is a Promise of the value to be tested.
+- valueName: It is the name of the tested value and will be referenced in tests and error messages.
 
 ```ts
 import { schema } from "vkrun"
@@ -269,9 +247,9 @@ const validatedSchema = await schema.testAsync(getNumber(), "value_name")
   .<span style="color:#66B2FF">throw</span>(<span style="color:#66B2FF">value</span>: <span style="color:#99CC99">any</span>, <span style="color:#66B2FF">valueName</span>: <span style="color:#99CC99">string</span>, <span style="color:#66B2FF">ClassError</span>?: <span style="color:#99CC99">string</span>): <span style="color:#99CC99">void</span>
 </h2>
 
-- value: É o valor a ser testado.
-- valueName: É o nome do valor testado e será referenciado nos testes e mensagens de erro.
-- Quando a validação falhar será gerado um erro com a mensagem do primeiro teste falho.
+- value: It is the value to be tested.
+- valueName: It is the name of the tested value and will be referenced in tests and error messages.
+- When validation fails, an error will be generated with the message from the first failed test.
 
 ```ts
 import { schema } from "vkrun"
@@ -289,9 +267,9 @@ try {
   .<span style="color:#66B2FF">throwAsync</span>(<span style="color:#66B2FF">value</span>: <span style="color:#99CC99">any</span>, <span style="color:#66B2FF">valueName</span>: <span style="color:#99CC99">string</span>, <span style="color:#66B2FF">ClassError</span>?: <span style="color:#99CC99">string</span>): <span style="color:#66B2FF">Promise</span><<span style="color:#99CC99">void</span>>
 </h2>
 
-- value: É uma Promise do valor a ser testado.
-- valueName: É o nome do valor testado e será referenciado nos testes e mensagens de erro.
-- Quando a validação falhar será gerado um erro com a mensagem do primeiro teste falho.
+- value: It is a Promise of the value to be tested.
+- valueName: It is the name of the tested value and will be referenced in tests and error messages.
+- When validation fails, an error will be generated with the message from the first failed test.
 
 ```ts
 import { schema } from "vkrun"
@@ -309,7 +287,7 @@ try {
   .<span style="color:#66B2FF">notRequired</span>()
 </h2>
 
-<p>Por padrão o vkrun tipa o valor como obrigatório, ou seja, o valor tem que ser diferente de undefined. Caso o valor não seja obrigatório e deve ser validado apenas se for fornecido um valor diferente de undefined, sendo assim devemos utilizar o método notRequired.</p>
+<p>By default, vkrun types the value as required, meaning the value must be different from undefined. If the value is not required and should be validated only if a value other than undefined is provided, we should use the notRequired method.</p>
   
 ```ts
 import { schema } from "vkrun"
@@ -329,28 +307,28 @@ console.log(validateC) // false
   .<span style="color:#66B2FF">setLocation</span>()
 </h2>
 
-<p>O vkrun é permite alterar a mensagem de erro padrão de cada método.</p>
+<p>The vkrun allows you to change the default error message for each method.</p>
 
-- É possível utilizar as palavras chaves para personalizar sua mensagem. Palavras chaves disponíveis:
+- You can use keywords to customize your message. Available keywords:
   - string:
-    - invalidValue: [value] e [valueName]
-    - minWord: [value], [valueName] e [minWord]
-    - uuid: [value] e [valueName]
-    - email: [value] e [valueName]
-    - time: [value], [valueName] e [type]
-    - maxLength: [value], [valueName] e [maxLength],
-    - minLength: [value], [valueName] e [minLength]
+    - invalidValue: [value] and [valueName]
+    - minWord: [value], [valueName] and [minWord]
+    - uuid: [value] and [valueName]
+    - email: [value] and [valueName]
+    - time: [value], [valueName] and [type]
+    - maxLength: [value], [valueName] and [maxLength],
+    - minLength: [value], [valueName] and [minLength]
   - number:
-    - invalidValue: [value] e [valueName]
-    - float: [value] e [valueName]
-    - integer: [value] e [valueName]
+    - invalidValue: [value] and [valueName]
+    - float: [value] and [valueName]
+    - integer: [value] and [valueName]
   - boolean:
-    - invalidValue: [value] e [valueName]
-  - required: [value] e [valueName]
+    - invalidValue: [value] and [valueName]
+  - required: [value] and [valueName]
   - date:
-    - invalidValue: [value], [valueName] e [type]
-    - min: [value], [valueName] e [refDate]
-    - max: [value], [valueName]  e [refDate]
+    - invalidValue: [value], [valueName] and [type]
+    - min: [value], [valueName] and [refDate]
+    - max: [value], [valueName]  and [refDate]
   - object: [valueName]
   - array: [valueName]
 
@@ -360,38 +338,38 @@ import { setLocation } from "vkrun"
 // change a message
 setLocation({
   string: {
-    invalidValue: '[valueName] deve ser do tipo string!'
+    invalidValue: '[valueName] must be a string type!'
   }
 })
 
 // or change all messages
 setLocation({
   string: {
-    invalidValue: '[valueName] deve ser do tipo string!',
-    minWord: '[valueName] deve ter pelo menos [minWord] palavras!',
-    uuid: '[valueName] deve ser do tipo UUID!',
-    email: 'o email [value] é inválido!',
-    time: 'o horário [value] não está no formato [type]!',
-    maxLength: '[valueName] deve ter no máximo [maxLength] caracteres!',
-    minLength: '[valueName] deve ter no mínimo [minLength] caracteres!'
+    invalidValue: '[valueName] must be a string type!',
+    minWord: '[valueName] must have at least [minWord] words!',
+    uuid: '[valueName] must be a UUID type!',
+    email: 'email [value] is invalid!',
+    time: 'the time [value] is not in the format [type]!',
+    maxLength: '[valueName] must have a maximum of [maxLength] characters!',
+    minLength: '[valueName] must have a minimum of [minLength] characters!'
   },
   number: {
-    invalidValue: '[valueName] deve ser do tipo numérico!',
-    float: '[valueName] deve ser um número decimal!',
-    integer: '[valueName] deve ser um número inteiro!'
+    invalidValue: '[valueName] must be a number type!',
+    float: '[valueName] must be a float!',
+    integer: '[valueName] must be a integer!'
   },
   boolean: {
-    invalidValue: '[valueName] deve ser do tipo booleano!'
+    invalidValue: '[valueName] must be a boolean type!'
   },
-  required: '[valueName] é obrigatório!',
+  required: '[valueName] is required!',
   date: {
-    invalidValue: 'a data [valueName] não está no formato [type]!',
-    min: 'o [valueName] [value] deve ser maior ou igual a [refDate]!',
-    max: 'o [valueName] [value] deve ser menor ou igual a [refDate]!'
+    invalidValue: 'the date [valueName] is not in the format [type]!',
+    min: 'the [valueName] [value] must be greater than or equal to the [refDate]!',
+    max: 'the [valueName] [value] must be less than or equal to the [refDate]!'
   },
-  object: 'o valor de [valueName] deve ser um objeto!',
-  array: 'o valor de [valueName] deve ser um array!',
-  equal: 'o valor não corresponde!'
+  object: '[valueName] value must be an object!',
+  array: '[valueName] value must be an array!',
+  equal: 'value does not match!'
 })
 ```
 
@@ -679,7 +657,7 @@ console.log(validateB) // false
   .<span style="color:#66B2FF">alias</span>(<span style="color:#66B2FF">valueName</span>: <span style="color:#99CC99">string</span>)
 </h2>
 
-<p>Ao criar um schema do tipo object, cada key recebe o valueName como nome da key. Quando necessário alterar o valueName utilizamos o método alias.</p>
+<p>When creating an object-type schema, each key receives the valueName as the key name. When it's necessary to change the valueName, we use the alias method.</p>
 
 ```ts
 import { schema } from "vkrun"
@@ -1067,25 +1045,3 @@ const validateB = schema.validate([
 console.log(validateA) // true
 console.log(validateB) // false
 ```
-
-<h2 align="center" id="author">Autor</h2>
-
-<p align="center">
-  <a href="https://marioelvio.com" target="_blank">
-  <img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/81795443?v=4" width="100px;" alt=""/>
-  </a>
-</p>
-<p align="center">
-  <a href="https://marioelvio.com" title="Mario Elvio" target="_blank">Mario Elvio</a>
-</p>
-<p align="center">
-  <a href="https://github.com/jukerah" target="_blank"><img src="https://img.shields.io/badge/GitHub-blue?style=for-the-badge&logo=github&logoColor=white" target="_blank"></a>
-  <a href = "mailto:juka.mebaj@gmail.com"><img src="https://img.shields.io/badge/Gmail-blue?style=for-the-badge&logo=gmail&logoColor=white" target="_blank"></a>
-  <a href="https://www.linkedin.com/in/marioelvio" target="_blank"><img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
-  <a href="https://api.whatsapp.com/send?phone=5516988658468" target="_blank"><img src="https://img.shields.io/badge/WhatsApp-blue?style=for-the-badge&logo=whatsapp&logoColor=white" target="_blank"></a> 
-</p>
-
-<h2 align="center" id="license">Licença</h2>
-
-## Licença
-> Está biblioteca é lançada sob a licença MIT.
