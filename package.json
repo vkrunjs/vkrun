@@ -33,10 +33,10 @@
     "Readme.md",
     "lib"
   ],
-  "homepage": "https://github.com/jukerah/vkrunjs#readme",
+  "homepage": "https://github.com/vkrunjs/vkrunjs#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jukerah/vkrunjs.git"
+    "url": "git+https://github.com/vkrunjs/vkrunjs.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
