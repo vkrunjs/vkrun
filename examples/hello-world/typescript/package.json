@@ -1,0 +1,15 @@
+{
+  "name": "vkrun-hello-world-with-typescript",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "ts-node index.ts"
+  },
+  "dependencies": {
+    "vkrun": "^0.26.0"
+  },
+  "devDependencies": {
+    "typescript": "*",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.10.4"
+  }
+}

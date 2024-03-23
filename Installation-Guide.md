@@ -31,10 +31,10 @@ Your package.json should look like:
 ```json
 {
   "name": "project-name",
-  "main": "src/index.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node src/index.js"
+    "dev": "node index.js"
   },
   "dependencies": {
     "vkrun": "^0.26.0"
@@ -63,9 +63,9 @@ Your package.json should look like:
 ```json
 {
   "name": "project-name",
-  "main": "src/index.ts",
+  "main": "index.ts",
   "scripts": {
-    "dev": "ts-node src/index.js"
+    "dev": "ts-node index.ts"
   },
   "dependencies": {
     "vkrun": "^0.26.0"
@@ -101,7 +101,7 @@ Your tsconfig.json should look like:
 }
 ```
 
-If this is your first time using Vkrun, you can choose a template from index.ts, [list of examples](./examples).
+If this is your first time using Vkrun, you can choose a template from index.ts, [example projects](./examples).
 
 #### Step 6: Running the project
 

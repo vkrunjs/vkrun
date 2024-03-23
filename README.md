@@ -62,6 +62,7 @@ node index.js
 - Logger
 - JWT
 - Cors
+- [Example projects](#example-projects)
 - [Security Issues](#security-issues)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
@@ -82,6 +83,14 @@ npm install vkrun
 ```bash
 yarn add vkrun
 ```
+
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](./examples)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.
 
 <h2 id="security-issues">Security Issues</h2>
 
