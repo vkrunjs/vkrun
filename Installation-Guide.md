@@ -7,11 +7,14 @@
 #### Step 2: Create a new directory for your project. (For new projects)
 
 #### Step 3: Create the `package.json` file. (For new projects)
-  ```bash
-  npm init
-  ```
+
+```bash
+npm init
+```
 
 #### Step 4: Installing the Vkrun Framework
+
+##### NPM
 
 ```bash
 npm install vkrun
@@ -43,6 +46,8 @@ Your package.json should look like:
 
 ##### If you're working on a TypeScript project, you also need to install TypeScript:
 
+##### NPM
+
 ```bash
 npm install typescript @types/node ts-node --save-dev
 ```
@@ -58,7 +63,7 @@ Your package.json should look like:
 ```json
 {
   "name": "project-name",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
     "dev": "ts-node src/index.js"
   },
@@ -100,12 +105,14 @@ If this is your first time using Vkrun, you can choose a template from index.ts,
 
 #### Step 6: Running the project
 
+##### NPM
+
 ```bash
-npm run start
+npm run dev
 ```
 
 ##### YARN
 
 ```bash
-yarn start
+yarn dev
 ```
