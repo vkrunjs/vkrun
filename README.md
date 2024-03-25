@@ -16,12 +16,11 @@
 npm install vkrun
 ```
 
-#### index.js:
 ```ts
-import { App, Router } from 'vkrun'
+import v from 'vkrun'
 
-const app = App()
-const router = Router()
+const app = v.App()
+const router = v.Router()
 
 router.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/plain')
@@ -35,12 +34,6 @@ app.server().listen(3000, () => {
 })
 ```
 
-#### Running the project:
-
-```bash
-node index.js
-```
-
 <hr/>
 
 <a href="https://github.com/jukerah" rel="nofollow"><img src="https://img.shields.io/badge/created%20by-Mario%20Elvio-blue.svg" alt="Created by Mario Elvio"></a>
@@ -52,7 +45,7 @@ node index.js
 
 ### Content
 - [Installation](#installation)
-- Router
+- [Router](./src/modules/router/Readme.md)
 - [Schema](./src/modules/schema/Readme.md)
 - Validate Route Data
 - Super Request
@@ -88,7 +81,7 @@ yarn add vkrun
 
 If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
 
-[Example Projects](./examples)
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples)
 
 Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.
 
