@@ -1,5 +1,11 @@
 # vkrun
 
+## 0.28.0
+
+### Minor Changes
+
+- c5efc38: add documentation for router module
+
 ## 0.27.0
 
 ### Minor Changes
