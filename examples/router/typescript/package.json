@@ -1,5 +1,5 @@
 {
-  "name": "vkrun-hello-world-with-typescript",
+  "name": "vkrun-router-with-typescript",
   "main": "index.ts",
   "scripts": {
     "dev": "ts-node index.ts"

@@ -1,9 +1,9 @@
-import { App, Router, Request, Response } from 'vkrun'
+import v from 'vkrun'
 
-const app = App()
-const router = Router()
+const app = v.App()
+const router = v.Router()
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', (req: v.Request, res: v.Response) => {
   res.setHeader('Content-Type', 'text/plain')
   res.status(200).end('Hello World!')
 })

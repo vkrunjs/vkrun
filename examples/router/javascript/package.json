@@ -1,5 +1,5 @@
 {
-  "name": "vkrun-hello-world-with-javascript",
+  "name": "vkrun-router-with-javascript",
   "main": "index.js",
   "type": "module",
   "scripts": {
