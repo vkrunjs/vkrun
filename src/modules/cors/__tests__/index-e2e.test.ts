@@ -1,4 +1,4 @@
-import v from '../../../index'
+import * as v from '../../../index'
 import axios from 'axios'
 
 describe('Cors - end to end testing using axios and app server', () => {

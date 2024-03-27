@@ -1,4 +1,4 @@
-import v from '../../../index'
+import * as v from '../../../index'
 import { generateSecretKey } from '../helpers'
 
 const secretKey = generateSecretKey()

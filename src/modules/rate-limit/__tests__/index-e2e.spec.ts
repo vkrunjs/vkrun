@@ -1,4 +1,4 @@
-import v from '../../../index'
+import * as v from '../../../index'
 
 class RateLimitController implements v.Controller {
   public handle (_request: v.Request, response: v.Response): any {

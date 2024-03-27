@@ -3,7 +3,7 @@ import * as helper from './helpers'
 import * as util from '../utils'
 import * as type from '../types'
 
-class VkrunSession {
+export class VkrunSession {
   private readonly secretKey: string | string[]
   private readonly sessions: type.Sessions = new Map()
   // eslint-disable-next-line @typescript-eslint/prefer-readonly

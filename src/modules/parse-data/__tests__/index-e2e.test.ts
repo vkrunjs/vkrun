@@ -1,4 +1,4 @@
-import v from '../../../index'
+import * as v from '../../../index'
 import * as http from 'http'
 import { readFileSync, unlinkSync, writeFileSync } from 'fs'
 import FormData from 'form-data'

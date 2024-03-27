@@ -1,4 +1,4 @@
-import v from '../../../index'
+import * as v from '../../../index'
 import axios from 'axios'
 import { createLogger } from '..'
 import { getLog } from '../helpers/get-log'

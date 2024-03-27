@@ -33,7 +33,7 @@ Routes are created using Router methods that correspond to HTTP methods; for exa
 Routing methods specify a callback function to be called when the application receives a request to the specified HTTP route and method. Vkrun app listens for requests that match the specified routes and methods and, when there is a match, calls the specified callback function.
 
 ```ts
-import v from 'vkrun'
+import * as v from 'vkrun'
 
 const app = v.App()
 const router = v.Router()
@@ -56,7 +56,7 @@ app.server().listen(3000, () => {
 Um método do Router é derivado a partir de um dos métodos HTTP, e é anexado a uma instância da classe express.
 
 ```ts
-import v from 'vkrun'
+import * as v from 'vkrun'
 
 const app = v.App()
 const router = v.Router()

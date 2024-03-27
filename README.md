@@ -17,7 +17,7 @@ npm install vkrun
 ```
 
 ```ts
-import v from 'vkrun'
+import * as v from 'vkrun'
 
 const app = v.App()
 const router = v.Router()

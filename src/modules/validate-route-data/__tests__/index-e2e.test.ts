@@ -1,5 +1,5 @@
 import axios from 'axios'
-import v from '../../../index'
+import * as v from '../../../index'
 import * as type from '../../types'
 
 describe('Validate Route Data - end to end testing using axios and app server', () => {
