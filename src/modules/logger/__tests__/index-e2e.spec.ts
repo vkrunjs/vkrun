@@ -1,4 +1,4 @@
-import vkrun, { Router, parseData, superRequest } from '../../../index'
+import v from '../../../index'
 import { createLogger } from '..'
 import { getLog } from '../helpers/get-log'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'
@@ -10,10 +10,10 @@ describe('Logger Middleware - end to end testing using super request', () => {
   afterEach(async () => { await removeLogsFolder() })
 
   it('Should create a log with middleware', async () => {
-    const app = vkrun()
+    const app = v.App()
     const logger = createLogger({ level: 'http' })
-    const router = Router()
-    app.use(parseData())
+    const router = v.Router()
+    app.use(v.parseData())
     app.use(logger.middleware())
     app.use(router)
 
@@ -30,7 +30,7 @@ describe('Logger Middleware - end to end testing using super request', () => {
 
     const path = '/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
 
-    await superRequest(app).post(path, data).then((response) => {
+    await v.superRequest(app).post(path, data).then((response) => {
       expect(response.statusCode).toEqual(200)
     })
 

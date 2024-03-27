@@ -1,12 +1,12 @@
-import vkrun, { Router, cors, superRequest } from '../../../index'
+import v from '../../../index'
 import * as util from '../../utils'
 import * as type from '../../types'
 
 describe('Cors - end to end testing using super request', () => {
   it('Should return status 200 when default cors', async () => {
-    const app = vkrun()
-    app.use(cors())
-    const router = Router()
+    const app = v.App()
+    app.use(v.cors())
+    const router = v.Router()
 
     router.get('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
@@ -15,7 +15,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).get('/').then((response) => {
+    await v.superRequest(app).get('/').then((response) => {
       expect(response.statusCode).toEqual(200)
       expect(response.data).toEqual('GET ok')
       expect(Object.keys(response.headers).length).toEqual(7)
@@ -32,7 +32,7 @@ describe('Cors - end to end testing using super request', () => {
   })
 
   it('Should return status 403 if the request origin is not in the origin options', async () => {
-    const app = vkrun()
+    const app = v.App()
     const options: type.SetCorsOptions = {
       origin: 'http://localhost:3000',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
@@ -43,8 +43,8 @@ describe('Cors - end to end testing using super request', () => {
       credentials: true,
       maxAge: 3600
     }
-    app.use(cors(options))
-    const router = Router()
+    app.use(v.cors(options))
+    const router = v.Router()
 
     router.get('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
@@ -53,7 +53,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).get('/').catch((error: any) => {
+    await v.superRequest(app).get('/').catch((error: any) => {
       expect(error.response.statusCode).toEqual(403)
       expect(Object.keys(error.response.headers).length).toEqual(6)
       expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
@@ -69,7 +69,7 @@ describe('Cors - end to end testing using super request', () => {
   })
 
   it('Should return status 403 if the request origin is not in the origin array options', async () => {
-    const app = vkrun()
+    const app = v.App()
     const options: type.SetCorsOptions = {
       origin: ['http://localhost:3000'],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
@@ -80,8 +80,8 @@ describe('Cors - end to end testing using super request', () => {
       credentials: true,
       maxAge: 3600
     }
-    app.use(cors(options))
-    const router = Router()
+    app.use(v.cors(options))
+    const router = v.Router()
 
     router.get('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
@@ -90,7 +90,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).get('/').catch((error: any) => {
+    await v.superRequest(app).get('/').catch((error: any) => {
       expect(error.response.statusCode).toEqual(403)
       expect(error.response.data).toEqual('')
       expect(Object.keys(error.response.headers).length).toEqual(6)
@@ -106,7 +106,7 @@ describe('Cors - end to end testing using super request', () => {
   })
 
   it('Should return status 204 when method is OPTIONS and valid origin', async () => {
-    const app = vkrun()
+    const app = v.App()
     const options: type.SetCorsOptions = {
       origin: 'http://localhost:3596',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
@@ -117,8 +117,8 @@ describe('Cors - end to end testing using super request', () => {
       credentials: true,
       maxAge: 3600
     }
-    app.use(cors(options))
-    const router = Router()
+    app.use(v.cors(options))
+    const router = v.Router()
 
     router.get('/route', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
@@ -127,7 +127,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).options('/route', {
+    await v.superRequest(app).options('/route', {
       headers: {
         Origin: 'http://localhost:3596'
       }
@@ -151,9 +151,9 @@ describe('Cors - end to end testing using super request', () => {
   })
 
   it('Should add default CORS options handler when route does not have OPTIONS method defined', async () => {
-    const app = vkrun()
-    app.use(cors())
-    const router = Router()
+    const app = v.App()
+    app.use(v.cors())
+    const router = v.Router()
 
     router.get('/', (_request: type.Request, response: type.Response) => {
       response.status(200).json({ message: 'GET ok' })
@@ -161,7 +161,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).options('/').then((response) => {
+    await v.superRequest(app).options('/').then((response) => {
       expect(response.statusCode).toEqual(204)
       expect(response.data).toEqual('')
       expect(Object.keys(response.headers).length).toEqual(7)
@@ -178,9 +178,9 @@ describe('Cors - end to end testing using super request', () => {
   })
 
   it('Should use custom CORS options handler when route has OPTIONS method defined', async () => {
-    const app = vkrun()
-    app.use(cors())
-    const router = Router()
+    const app = v.App()
+    app.use(v.cors())
+    const router = v.Router()
 
     router.get('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
@@ -193,7 +193,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).options('/').then((response) => {
+    await v.superRequest(app).options('/').then((response) => {
       expect(response.statusCode).toEqual(204)
       expect(response.data).toEqual('')
       expect(Object.keys(response.headers).length).toEqual(7)
@@ -210,9 +210,9 @@ describe('Cors - end to end testing using super request', () => {
   })
 
   it('Should use custom CORS options handler when route has OPTIONS method defined and preflightNext is false', async () => {
-    const app = vkrun()
-    app.use(cors({ preflightNext: true }))
-    const router = Router()
+    const app = v.App()
+    app.use(v.cors({ preflightNext: true }))
+    const router = v.Router()
 
     router.get('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
@@ -225,7 +225,7 @@ describe('Cors - end to end testing using super request', () => {
 
     app.use(router)
 
-    await superRequest(app).options('/').then((response) => {
+    await v.superRequest(app).options('/').then((response) => {
       expect(response.statusCode).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(7)
       expect(util.isUUID(response.headers['request-id'])).toBeTruthy()

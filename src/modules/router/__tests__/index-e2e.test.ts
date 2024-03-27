@@ -1,7 +1,5 @@
+import v from '../../../index'
 import axios from 'axios'
-import vkrun, { Router, controllerAdapter, errorHandleAdapter, middlewareAdapter } from '../../../index'
-import * as util from '../../utils'
-import * as type from '../../types'
 
 describe('Router', () => {
   let server: any
@@ -14,10 +12,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the GET method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.get('/', (_request: type.Request, response: type.Response) => {
+    router.get('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('GET ok')
     })
@@ -29,10 +27,10 @@ describe('Router', () => {
     await axios.get('http://localhost:3699/').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(5)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers['content-length']).toEqual('6')
       expect(response.data).toEqual('GET ok')
     })
@@ -41,10 +39,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the HEAD method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.head('/', (_request: type.Request, response: type.Response) => {
+    router.head('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(204).end('HEAD ok')
     })
@@ -56,9 +54,9 @@ describe('Router', () => {
     await axios.head('http://localhost:3698/').then((response) => {
       expect(response.status).toEqual(204)
       expect(Object.keys(response.headers).length).toEqual(4)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.data).toEqual('')
     })
@@ -67,10 +65,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the POST method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.post('/', (_request: type.Request, response: type.Response) => {
+    router.post('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('POST ok')
     })
@@ -82,10 +80,10 @@ describe('Router', () => {
     await axios.post('http://localhost:3697/').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(5)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers['content-length']).toEqual('7')
       expect(response.data).toEqual('POST ok')
     })
@@ -94,10 +92,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the PUT method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.put('/', (_request: type.Request, response: type.Response) => {
+    router.put('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('PUT ok')
     })
@@ -109,10 +107,10 @@ describe('Router', () => {
     await axios.put('http://localhost:3696/').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(5)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers['content-length']).toEqual('6')
       expect(response.data).toEqual('PUT ok')
     })
@@ -121,10 +119,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the PATCH method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.patch('/', (_request: type.Request, response: type.Response) => {
+    router.patch('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('PATCH ok')
     })
@@ -136,10 +134,10 @@ describe('Router', () => {
     await axios.patch('http://localhost:3695/').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(5)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers['content-length']).toEqual('8')
       expect(response.data).toEqual('PATCH ok')
     })
@@ -148,10 +146,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the DELETE method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.delete('/', (_request: type.Request, response: type.Response) => {
+    router.delete('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('DELETE ok')
     })
@@ -163,10 +161,10 @@ describe('Router', () => {
     await axios.delete('http://localhost:3694/').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(5)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers['content-length']).toEqual('9')
       expect(response.data).toEqual('DELETE ok')
     })
@@ -175,10 +173,10 @@ describe('Router', () => {
   })
 
   it('Should be able to call the route in the OPTIONS method', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
 
-    router.options('/', (_request: type.Request, response: type.Response) => {
+    router.options('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('OPTIONS ok')
     })
@@ -190,10 +188,10 @@ describe('Router', () => {
     await axios.options('http://localhost:3693/').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(5)
-      expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
       expect(response.headers['content-type']).toEqual('text/plain')
       expect(response.headers.connection).toEqual('close')
-      expect(util.isString(response.headers.date)).toBeTruthy()
+      expect(v.isString(response.headers.date)).toBeTruthy()
       expect(response.headers['content-length']).toEqual('10')
       expect(response.data).toEqual('OPTIONS ok')
     })
@@ -203,14 +201,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in GET method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.get('/get-route', (_request: type.Request, response: type.Response) => {
+      router.get('/get-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.get('/get-route', (_request: type.Request, response: type.Response) => {
+      router.get('/get-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -222,14 +220,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in HEAD method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.head('/head-route', (_request: type.Request, response: type.Response) => {
+      router.head('/head-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.head('/head-route', (_request: type.Request, response: type.Response) => {
+      router.head('/head-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -241,14 +239,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in POST method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.post('/post-route', (_request: type.Request, response: type.Response) => {
+      router.post('/post-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.post('/post-route', (_request: type.Request, response: type.Response) => {
+      router.post('/post-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -260,14 +258,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in PUT method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.put('/put-route', (_request: type.Request, response: type.Response) => {
+      router.put('/put-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.put('/put-route', (_request: type.Request, response: type.Response) => {
+      router.put('/put-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -279,14 +277,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in PATCH method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.patch('/patch-route', (_request: type.Request, response: type.Response) => {
+      router.patch('/patch-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.patch('/patch-route', (_request: type.Request, response: type.Response) => {
+      router.patch('/patch-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -298,14 +296,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in DELETE method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.delete('/delete-route', (_request: type.Request, response: type.Response) => {
+      router.delete('/delete-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.delete('/delete-route', (_request: type.Request, response: type.Response) => {
+      router.delete('/delete-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -317,14 +315,14 @@ describe('Router', () => {
 
   it('throw new Error when duplicate route in OPTIONS method', async () => {
     try {
-      const app = vkrun()
-      const router = Router()
+      const app = v.App()
+      const router = v.Router()
 
-      router.options('/options-route', (_request: type.Request, response: type.Response) => {
+      router.options('/options-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
-      router.options('/options-route', (_request: type.Request, response: type.Response) => {
+      router.options('/options-route', (_request: v.Request, response: v.Response) => {
         response.status(200).end()
       })
 
@@ -335,8 +333,8 @@ describe('Router', () => {
   })
 
   it('Return not found if the route does not exist', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
     app.use(router)
     server = app.server()
     server.listen(3692)
@@ -352,8 +350,8 @@ describe('Router', () => {
   })
 
   it('Return no content if the route has no handler', async () => {
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
     router.get('/route-without-handler')
     app.use(router)
     server = app.server()
@@ -371,25 +369,25 @@ describe('Router', () => {
   })
 
   it('Should be able to manipulate multiple handlers with method handle', async () => {
-    class ExampleMiddleware implements type.Middleware {
-      public handle (_request: type.Request, _response: type.Response, next: type.NextFunction): void {
+    class ExampleMiddleware implements v.Middleware {
+      public handle (_request: v.Request, _response: v.Response, next: v.NextFunction): void {
         next()
       }
     }
 
-    class ExampleController implements type.Controller {
-      public handle (_request: type.Request, response: type.Response): void {
+    class ExampleController implements v.Controller {
+      public handle (_request: v.Request, response: v.Response): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(200).end('Return controller')
       }
     }
 
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
     router.get(
       '/multiple-handlers',
-      middlewareAdapter(new ExampleMiddleware()),
-      controllerAdapter(new ExampleController())
+      v.middlewareAdapter(new ExampleMiddleware()),
+      v.controllerAdapter(new ExampleController())
     )
     app.use(router)
     server = app.server()
@@ -406,17 +404,17 @@ describe('Router', () => {
   })
 
   it('Should be able to manipulate multiple handler functions', async () => {
-    const exampleMiddleware = (_request: type.Request, _response: type.Response, next: type.NextFunction): void => {
+    const exampleMiddleware = (_request: v.Request, _response: v.Response, next: v.NextFunction): void => {
       next()
     }
 
-    const exampleController = (_request: type.Request, response: type.Response): void => {
+    const exampleController = (_request: v.Request, response: v.Response): void => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('Return controller')
     }
 
-    const app = vkrun()
-    const router = Router()
+    const app = v.App()
+    const router = v.Router()
     router.get('/multiple-handlers', exampleMiddleware, exampleController)
     app.use(router)
     server = app.server()
@@ -435,25 +433,25 @@ describe('Router', () => {
   it('throw new Error when using invalid middleware with error handler with method handle', async () => {
     const invalidMiddleware = (): any => {}
 
-    class ErrorMiddleware implements type.ErrorHandlerMiddleware {
-      public handle (error: any, _request: type.Request, response: type.Response, _next: type.NextFunction): void {
+    class ErrorMiddleware implements v.ErrorHandlerMiddleware {
+      public handle (error: any, _request: v.Request, response: v.Response, _next: v.NextFunction): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(500).end(error.message)
       }
     }
 
-    class ExampleController implements type.Controller {
-      public handle (_request: type.Request, response: type.Response): void {
+    class ExampleController implements v.Controller {
+      public handle (_request: v.Request, response: v.Response): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(200).end('Return controller')
       }
     }
 
-    const app = vkrun()
+    const app = v.App()
     app.use(invalidMiddleware)
-    app.use(errorHandleAdapter(new ErrorMiddleware()))
-    const router = Router()
-    router.get('/', controllerAdapter(new ExampleController()))
+    app.use(v.errorHandleAdapter(new ErrorMiddleware()))
+    const router = v.Router()
+    router.get('/', v.controllerAdapter(new ExampleController()))
     app.use(router)
     server = app.server()
 
@@ -471,20 +469,20 @@ describe('Router', () => {
   it('throw new Error when using invalid middleware with error handler function', async () => {
     const invalidMiddleware = (): any => {}
 
-    const errorMiddleware = (error: any, _request: type.Request, response: type.Response, _next: type.NextFunction): void => {
+    const errorMiddleware = (error: any, _request: v.Request, response: v.Response, _next: v.NextFunction): void => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(500).end(error.message)
     }
 
-    const exampleController = (_request: type.Request, response: type.Response): void => {
+    const exampleController = (_request: v.Request, response: v.Response): void => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('Return controller')
     }
 
-    const app = vkrun()
+    const app = v.App()
     app.use(invalidMiddleware)
     app.use(errorMiddleware)
-    const router = Router()
+    const router = v.Router()
     router.get('/', exampleController)
     app.use(router)
     server = app.server()
@@ -501,30 +499,30 @@ describe('Router', () => {
   })
 
   it('Should respond error message if response is in invalid format and has ErrorHandler middleware', async () => {
-    const invalidMiddleware = (_request: type.Request, response: type.Response, _next: type.NextFunction): void => {
+    const invalidMiddleware = (_request: v.Request, response: v.Response, _next: v.NextFunction): void => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(500).write({ message: 'ok' })
     }
 
-    class ErrorMiddleware implements type.ErrorHandlerMiddleware {
-      public handle (error: Error, _request: type.Request, response: type.Response, _next: type.NextFunction): void {
+    class ErrorMiddleware implements v.ErrorHandlerMiddleware {
+      public handle (error: Error, _request: v.Request, response: v.Response, _next: v.NextFunction): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(500).end(error.message)
       }
     }
 
-    class ExampleController implements type.Controller {
-      public handle (_request: type.Request, response: type.Response): void {
+    class ExampleController implements v.Controller {
+      public handle (_request: v.Request, response: v.Response): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(200).end('Return controller')
       }
     }
 
-    const app = vkrun()
+    const app = v.App()
     app.use(invalidMiddleware)
-    app.use(errorHandleAdapter(new ErrorMiddleware()))
-    const router = Router()
-    router.get('/', controllerAdapter(new ExampleController()))
+    app.use(v.errorHandleAdapter(new ErrorMiddleware()))
+    const router = v.Router()
+    router.get('/', v.controllerAdapter(new ExampleController()))
     app.use(router)
     server = app.server()
 

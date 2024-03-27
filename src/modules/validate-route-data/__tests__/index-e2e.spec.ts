@@ -1,5 +1,4 @@
-import vkrun, { Router, parseData, validateRouteData, schema, superRequest } from '../../../index'
-import * as type from '../../types'
+import v from '../../../index'
 
 describe('Validate Route Data - end to end testing using super request', () => {
   let server: any
@@ -11,33 +10,33 @@ describe('Validate Route Data - end to end testing using super request', () => {
     }
   })
 
-  const schemaData = schema().object({
-    params: schema().object({
-      string: schema().string().email(),
-      integer: schema().number().integer()
+  const schemaData = v.schema().object({
+    params: v.schema().object({
+      string: v.schema().string().email(),
+      integer: v.schema().number().integer()
     }),
-    query: schema().object({
-      float: schema().number().float(),
-      boolean: schema().boolean(),
-      date: schema().date()
+    query: v.schema().object({
+      float: v.schema().number().float(),
+      boolean: v.schema().boolean(),
+      date: v.schema().date()
     }),
-    files: schema().array().notRequired(),
-    body: schema().object({
-      string: schema().string().email(),
-      integer: schema().number().integer(),
-      float: schema().number().float(),
-      boolean: schema().boolean(),
-      date: schema().date()
+    files: v.schema().array().notRequired(),
+    body: v.schema().object({
+      string: v.schema().string().email(),
+      integer: v.schema().number().integer(),
+      float: v.schema().number().float(),
+      boolean: v.schema().boolean(),
+      date: v.schema().date()
     })
   })
 
   it('Should validate and successfully pass through the middleware', async () => {
-    const app = vkrun()
-    app.use(parseData())
-    app.use(validateRouteData(schemaData))
-    const router = Router()
+    const app = v.App()
+    app.use(v.parseData())
+    app.use(v.validateRouteData(schemaData))
+    const router = v.Router()
 
-    router.post('/params/:string/:integer/query', (request: type.Request, response: type.Response) => {
+    router.post('/params/:string/:integer/query', (request: v.Request, response: v.Response) => {
       const requestData = {
         query: request.query,
         params: request.params,
@@ -77,7 +76,7 @@ describe('Validate Route Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    await superRequest(app).post(`/${path}`, data).then((response) => {
+    await v.superRequest(app).post(`/${path}`, data).then((response) => {
       expect(response.statusCode).toEqual(200)
       expect(response.data).toEqual('Success!')
     })
@@ -86,12 +85,12 @@ describe('Validate Route Data - end to end testing using super request', () => {
   })
 
   it('Should validate and return bad request when it has any invalid data', async () => {
-    const app = vkrun()
-    app.use(parseData())
-    app.use(validateRouteData(schemaData))
-    const router = Router()
+    const app = v.App()
+    app.use(v.parseData())
+    app.use(v.validateRouteData(schemaData))
+    const router = v.Router()
 
-    router.post('/params/:string/:integer/query', (request: type.Request, response: type.Response) => {
+    router.post('/params/:string/:integer/query', (request: v.Request, response: v.Response) => {
       response.status(200).json({
         query: request.query,
         params: request.params,
@@ -111,7 +110,7 @@ describe('Validate Route Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    await superRequest(app).post(`/${path}`, data).catch((error) => {
+    await v.superRequest(app).post(`/${path}`, data).catch((error) => {
       expect(error.response.data).toEqual('email any@ is invalid!')
     })
 

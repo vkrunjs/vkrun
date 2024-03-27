@@ -1,31 +1,23 @@
+import v from '../../../index'
 import axios from 'axios'
-import vkrun, {
-  Session,
-  Router,
-  controllerAdapter,
-  Controller,
-  Request,
-  Response
-} from '../../../index'
 import { generateSecretKey } from '../helpers'
-import * as util from '../../utils'
 
 const secretKey = generateSecretKey()
-const session = Session({ secretKey, sanitizationEvery: '5m' })
-const router = Router()
+const session = v.Session({ secretKey, sanitizationEvery: '5m' })
+const router = v.Router()
 
-class ExampleController implements Controller {
-  public handle (request: Request, response: Response): any {
+class ExampleController implements v.Controller {
+  public handle (request: v.Request, response: v.Response): any {
     response.status(200).json({ session: request.session })
   }
 }
 
 router.post('/session',
   session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: '15m' }),
-  controllerAdapter(new ExampleController())
+  v.controllerAdapter(new ExampleController())
 )
 
-router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
+router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
 
 describe('Session', () => {
   let server: any
@@ -56,7 +48,7 @@ describe('Session', () => {
   const validateSessionSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(10)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
     expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
     expect(response.headers.expires).toEqual('0')
@@ -69,7 +61,7 @@ describe('Session', () => {
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('2')
     expect(typeof sessionId).toEqual('string')
-    expect(util.isUUID(sessionId)).toBeTruthy()
+    expect(v.isUUID(sessionId)).toBeTruthy()
     expect(typeof sessionToken).toEqual('string')
     expect(response.data).toEqual({})
   }
@@ -77,7 +69,7 @@ describe('Session', () => {
   const validateSessionUnauthorized = (error: any): void => {
     expect(error.response.status).toEqual(401)
     expect(Object.keys(error.response.headers).length).toEqual(13)
-    expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+    expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
     expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
     expect(error.response.headers.pragma).toEqual('no-cache')
     expect(error.response.headers.expires).toEqual('0')
@@ -90,7 +82,7 @@ describe('Session', () => {
       'session-id=; HttpOnly=true; Max-Age=0; Path=/; Secure=true; SameSite=Strict; Priority=High; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
       'session-token=; HttpOnly=true; Max-Age=0; Path=/; Secure=true; SameSite=Strict; Priority=High; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
     ])
-    expect(util.isString(error.response.headers.date)).toBeTruthy()
+    expect(v.isString(error.response.headers.date)).toBeTruthy()
     expect(error.response.headers.connection).toEqual('close')
     expect(error.response.headers['content-length']).toEqual('12')
     expect(error.response.data).toEqual('Unauthorized')
@@ -99,9 +91,9 @@ describe('Session', () => {
   const validateProtectSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(5)
-    expect(util.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.headers['content-type']).toEqual('application/json')
-    expect(util.isString(response.headers.date)).toBeTruthy()
+    expect(v.isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('49')
     expect(response.data).toEqual({
@@ -110,7 +102,7 @@ describe('Session', () => {
   }
 
   it('should be able to create session', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     server = app.server()
     server.listen(3799)
@@ -125,8 +117,8 @@ describe('Session', () => {
 
   it('throw new Error when secret key is invalid', async () => {
     try {
-      const router = Router()
-      const session = Session({ secretKey: '123' })
+      const router = v.Router()
+      const session = v.Session({ secretKey: '123' })
       router.post('/session',
         session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: '15m' })
       )
@@ -136,7 +128,7 @@ describe('Session', () => {
   })
 
   it('should be able to access a protected route with correct headers', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     server = app.server()
     server.listen(3798)
@@ -156,7 +148,7 @@ describe('Session', () => {
   })
 
   it('return unauthorized when session token is invalid', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     server = app.server()
     server.listen(3797)
@@ -176,7 +168,7 @@ describe('Session', () => {
   })
 
   it('return unauthorized when session ID is invalid', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     server = app.server()
     server.listen(3796)
@@ -196,7 +188,7 @@ describe('Session', () => {
   })
 
   it('return bad request when session id is not passed in headers', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     server = app.server()
     server.listen(3795)
@@ -211,7 +203,7 @@ describe('Session', () => {
     }).catch((error: any) => {
       expect(error.response.status).toEqual(400)
       expect(Object.keys(error.response.headers).length).toEqual(12)
-      expect(util.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
       expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
       expect(error.response.headers.pragma).toEqual('no-cache')
       expect(error.response.headers.expires).toEqual('0')
@@ -229,7 +221,7 @@ describe('Session', () => {
   })
 
   it('return unauthorized when session token is not passed in headers', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     server = app.server()
     server.listen(3794)
@@ -249,23 +241,23 @@ describe('Session', () => {
   })
 
   it('return unauthorized when session token is expired', async () => {
-    const app = vkrun()
+    const app = v.App()
     const secretKey = generateSecretKey()
-    const session = Session({ secretKey, sanitizationEvery: '5m' })
-    const router = Router()
+    const session = v.Session({ secretKey, sanitizationEvery: '5m' })
+    const router = v.Router()
 
-    class ExampleController implements Controller {
-      public handle (_request: Request, response: Response): any {
+    class ExampleController implements v.Controller {
+      public handle (_request: v.Request, response: v.Response): any {
         response.status(200).end()
       }
     }
 
     router.post('/session',
       session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: 0 }),
-      controllerAdapter(new ExampleController())
+      v.controllerAdapter(new ExampleController())
     )
 
-    router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
+    router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
 
     app.use(router)
     const server = app.server()
@@ -286,17 +278,17 @@ describe('Session', () => {
   })
 
   it('return unauthorized when session is expired', async () => {
-    const app = vkrun()
+    const app = v.App()
     const secretKey = generateSecretKey()
-    const session = Session({ secretKey, sanitizationEvery: 1 })
-    const router = Router()
+    const session = v.Session({ secretKey, sanitizationEvery: 1 })
+    const router = v.Router()
 
     router.post('/session',
       session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: 1 }),
-      controllerAdapter(new ExampleController())
+      v.controllerAdapter(new ExampleController())
     )
 
-    router.post('/protect', session.protect(), controllerAdapter(new ExampleController()))
+    router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
 
     app.use(router)
     const server = app.server()
@@ -322,16 +314,16 @@ describe('Session', () => {
   })
 
   it('should be able to update session when passed session id', async () => {
-    const sessionId = util.randomUUID()
+    const sessionId = v.randomUUID()
 
-    const app = vkrun()
+    const app = v.App()
     const secretKey = generateSecretKey()
-    const session = Session({ secretKey, sanitizationEvery: '5m' })
-    const router = Router()
+    const session = v.Session({ secretKey, sanitizationEvery: '5m' })
+    const router = v.Router()
 
     router.post('/session',
       session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: '15m', sessionId }),
-      controllerAdapter(new ExampleController())
+      v.controllerAdapter(new ExampleController())
     )
 
     app.use(router)
@@ -365,7 +357,7 @@ describe('Session', () => {
   })
 
   it('Should be able to update the session when it has the session ID and session token in the cookie', async () => {
-    const app = vkrun()
+    const app = v.App()
     app.use(router)
     const server = app.server()
     server.listen(3780)

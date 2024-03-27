@@ -1,5 +1,5 @@
 import axios from 'axios'
-import vkrun, { Router, parseData, validateRouteData, schema } from '../../../index'
+import v from '../../../index'
 import * as type from '../../types'
 
 describe('Validate Route Data - end to end testing using axios and app server', () => {
@@ -12,31 +12,31 @@ describe('Validate Route Data - end to end testing using axios and app server', 
     }
   })
 
-  const schemaData = schema().object({
-    params: schema().object({
-      string: schema().string().email(),
-      integer: schema().number().integer()
+  const schemaData = v.schema().object({
+    params: v.schema().object({
+      string: v.schema().string().email(),
+      integer: v.schema().number().integer()
     }),
-    query: schema().object({
-      float: schema().number().float(),
-      boolean: schema().boolean(),
-      date: schema().date()
+    query: v.schema().object({
+      float: v.schema().number().float(),
+      boolean: v.schema().boolean(),
+      date: v.schema().date()
     }),
-    files: schema().array().notRequired(),
-    body: schema().object({
-      string: schema().string().email(),
-      integer: schema().number().integer(),
-      float: schema().number().float(),
-      boolean: schema().boolean(),
-      date: schema().date()
+    files: v.schema().array().notRequired(),
+    body: v.schema().object({
+      string: v.schema().string().email(),
+      integer: v.schema().number().integer(),
+      float: v.schema().number().float(),
+      boolean: v.schema().boolean(),
+      date: v.schema().date()
     })
   })
 
   it('Should validate and successfully pass through the middleware', async () => {
-    const app = vkrun()
-    app.use(parseData())
-    app.use(validateRouteData(schemaData))
-    const router = Router()
+    const app = v.App()
+    app.use(v.parseData())
+    app.use(v.validateRouteData(schemaData))
+    const router = v.Router()
 
     router.post('/params/:string/:integer/query', (request: type.Request, response: type.Response) => {
       const requestData = {
@@ -89,10 +89,10 @@ describe('Validate Route Data - end to end testing using axios and app server', 
   })
 
   it('Should validate and return bad request when it has any invalid data', async () => {
-    const app = vkrun()
-    app.use(parseData())
-    app.use(validateRouteData(schemaData))
-    const router = Router()
+    const app = v.App()
+    app.use(v.parseData())
+    app.use(v.validateRouteData(schemaData))
+    const router = v.Router()
 
     router.post('/params/:string/:integer/query', (request: type.Request, response: type.Response) => {
       response.status(200).json({
