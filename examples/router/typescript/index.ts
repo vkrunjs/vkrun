@@ -1,4 +1,4 @@
-import * as v from 'vkrun'
+import v from 'vkrun'
 
 const app = v.App()
 const router = v.Router()

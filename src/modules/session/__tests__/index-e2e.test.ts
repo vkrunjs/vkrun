@@ -1,4 +1,4 @@
-import * as v from '../../../index'
+import v from '../../../index'
 import axios from 'axios'
 import { generateSecretKey } from '../helpers'
 

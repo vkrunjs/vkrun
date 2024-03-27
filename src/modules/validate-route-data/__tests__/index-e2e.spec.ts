@@ -1,4 +1,4 @@
-import * as v from '../../../index'
+import v from '../../../index'
 
 describe('Validate Route Data - end to end testing using super request', () => {
   let server: any

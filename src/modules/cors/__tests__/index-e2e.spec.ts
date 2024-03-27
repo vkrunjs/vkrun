@@ -1,4 +1,4 @@
-import * as v from '../../../index'
+import v from '../../../index'
 import * as util from '../../utils'
 import * as type from '../../types'
 

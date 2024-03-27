@@ -1,4 +1,4 @@
-import * as v from '../../../index'
+import v from '../../../index'
 
 describe('Router', () => {
   it('Should be able to call the route in the GET method', async () => {

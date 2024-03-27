@@ -1,4 +1,4 @@
-import * as v from '../../../index'
+import v from '../../../index'
 import { createLogger } from '..'
 import { getLog } from '../helpers/get-log'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import * as v from '../../../index'
+import v from '../../../index'
 
 class RateLimitController implements v.Controller {
   public handle (_request: v.Request, response: v.Response): any {
