@@ -53,7 +53,7 @@ app.server().listen(3000, () => {
 - Rate Limit
 - Parse Data
 - Logger
-- JWT
+- [JWT](./src/modules/jwt/Readme.md)
 - Cors
 - [Example projects](#example-projects)
 - [Security Issues](#security-issues)

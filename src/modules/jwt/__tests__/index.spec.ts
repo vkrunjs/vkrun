@@ -10,9 +10,8 @@ describe('JWT', () => {
     const data = { id: 123, name: 'John' }
     const config = {
       secretKey: generateKey(),
-      expiresIn: 60 // 60 minutes
+      expiresIn: 60 // 60 seconds
     }
-
     const token = jwt.encrypt(data, config)
     const decryptedToken = jwt.decrypt(token, config.secretKey)
 
@@ -24,7 +23,7 @@ describe('JWT', () => {
     const data = { id: 456, name: 'Alice' }
     const config = {
       secretKey: [generateKey(), generateKey(), generateKey()],
-      expiresIn: 60 // 60 minutes
+      expiresIn: 60 // 60 seconds
     }
 
     const token = jwt.encrypt(data, config)
@@ -55,7 +54,7 @@ describe('JWT', () => {
     const data = { id: 987, name: 'Eve' }
     const config = {
       secretKey: generateKey(),
-      expiresIn: 60 // 60 minutes
+      expiresIn: 60 // 60 seconds
     }
     const wrongSecretKey = generateKey()
     const token = jwt.encrypt(data, config)
