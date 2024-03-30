@@ -15,7 +15,7 @@
 </p>
 
 ### Content
-- [Vkrun](../../../Readme.md)
+- [Vkrun](https://github.com/vkrunjs/vkrun)
 - [Introduction](#introduction)
 - [Quick Start](#quick-start)
 - [Configuration Logger](#configuration-logger)

@@ -66,7 +66,7 @@ console.log(validateB) // false
 ```
 
 ### Content
-- [Vkrun](../../../Readme.md)
+- [Vkrun](https://github.com/vkrunjs/vkrun)
 - [Introduction](#introduction)
 - schema
   - Types of Validations

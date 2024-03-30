@@ -15,7 +15,7 @@
 </p>
 
 ### Content
-- [Vkrun](../../../Readme.md)
+- [Vkrun](https://github.com/vkrunjs/vkrun)
 - [Introduction](#introduction)
 - [Router methods](#router-methods)
 - [Router paths](#router-paths)
