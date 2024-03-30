@@ -24,7 +24,7 @@
 - [Response methods](#response-methods)
 - [Example projects](#example-projects)
 
-<h2 align="center">Introduction</h2>
+<h2 id="introduction">Introduction</h2>
 
 Router is a Vkrun module for creating endpoints (URIs) of an application that respond to client requests.
 
@@ -51,7 +51,7 @@ app.server().listen(3000, () => {
 })
 ```
 
-<h2 align="router-methods">Router methods</h2>
+<h2 id="router-methods">Router methods</h2>
 
 Um método do Router é derivado a partir de um dos métodos HTTP, e é anexado a uma instância da classe express.
 
@@ -96,7 +96,7 @@ app.server().listen(3000, () => {
 })
 ```
 
-<h2 align="router-paths">Router paths</h2>
+<h2 id="router-paths">Router paths</h2>
 
 Route paths, in combination with a request method, define the endpoints at which requests can be made. Route paths can be strings or string patterns.
 
@@ -116,7 +116,7 @@ router.get('/users', (req: v.Request, res: v.Response) => {
 })
 ```
 
-<h2 align="req-params-query-body">Request parameters, query and body</h2>
+<h2 id="req-params-query-body">Request parameters, query and body</h2>
 
 Router does not parse parameters, query url and request body.
 
@@ -215,7 +215,7 @@ app.use(router)
 
 See the [parseData documentation](../parse-data/Readme.md).
 
-<h2 align="router-handlers">Route handlers</h2>
+<h2 id="router-handlers">Route handlers</h2>
 
 You can provide multiple callback functions that behave like middleware to handle a request. The only exception is that these callbacks might invoke next('route') to bypass the remaining route callbacks. You can use this mechanism to impose pre-conditions on a route, then pass control to subsequent routes if there’s no reason to proceed with the current route.
 
@@ -256,7 +256,7 @@ const controller = (req: v.Request, res: v.Response, next: v.NextFunction) => {
 app.get('/example-c', middleware, controller)
 ```
 
-<h2 align="response-methods">Response methods</h2>
+<h2 id="response-methods">Response methods</h2>
 
 Vkrun adds methods to [httpserverresponse](https://nodejs.org/api/http.html#class-httpserverresponse)
 
@@ -267,7 +267,7 @@ Vkrun adds methods to [httpserverresponse](https://nodejs.org/api/http.html#clas
 | response.json()       | Send a JSON response.             |
 | response.send()       | Send a response of various types. |
 
-<h2 align="response-methods">response.status(status: number)</h2>
+<h2 id="response-methods">response.status(status: number)</h2>
 
 Sets the status code of the response.
 
@@ -277,7 +277,7 @@ Example:
 response.status(200)
 ```
 
-<h2 align="response-methods">response.setCookie(name: string, value: string, options?: CookieOptions)</h2>
+<h2 id="response-methods">response.setCookie(name: string, value: string, options?: CookieOptions)</h2>
 
 Sets a cookie in the response header.
 
@@ -315,7 +315,7 @@ response.setCookie('cookie-name', cookieValue, {
 })
 ```
 
-<h2 align="response-methods">res.json(data: object)</h2>
+<h2 id="response-methods">res.json(data: object)</h2>
 
 Used to send data in the response.
 
@@ -323,7 +323,7 @@ Used to send data in the response.
 response.json({ message: 'Hello, world!' })
 ```
 
-<h2 align="response-methods">res.send(data: any)</h2>
+<h2 id="response-methods">res.send(data: any)</h2>
 
 Used to send data in the response.
 

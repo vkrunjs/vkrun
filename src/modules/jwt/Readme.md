@@ -20,13 +20,13 @@
 - [Encrypt](#encrypt)
 - [Decrypt](#decrypt)
 
-<h2 align="center">Introduction</h2>
+<h2 id="introduction">Introduction</h2>
 
 The JWT is a Vkrun module developed to facilitate the encryption and decryption of JSON Web Tokens (JWT). These tokens are widely used for authentication and authorization in web applications and APIs.
 
 By using the JWT, you can protect your sensitive data, ensuring that only authorized parties can access it. This document provides an overview of the available methods for encrypting and decrypting tokens.
 
-<h2 align="encrypt">Encrypt</h2>
+<h2 id="encrypt">Encrypt</h2>
 
 To encrypt an object and generate a JWT token, use the `encrypt` method provided by Vkrun. This method requires two parameters:
 
@@ -53,7 +53,7 @@ const token = v.jwt.encrypt(data, config)
 // example token: '538d55e53071f7f9bd3fb0c13d0607fa:67f675cda25e0489fa6ffad50f10addd87ddb5268f9d1f42a013d38aa891291491d8bf81ba6a667153ea0d94fe75bc20a472fde43f083220f911fa7faa1c82476b633b81d27a205e9d85120470cfe2734ba58e137a3295aff39d159827201c66'
 ```
 
-<h2 align="decrypt">Decrypt</h2>
+<h2 id="decrypt">Decrypt</h2>
 
 To decrypt a JWT token and obtain the original data, use the `decrypt` method provided by Vkrun. This method requires two parameters:
 
