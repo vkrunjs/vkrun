@@ -52,7 +52,7 @@ app.server().listen(3000, () => {
 - Session
 - Rate Limit
 - Parse Data
-- Logger
+- [Logger](./src/modules/logger/Readme.md)
 - [JWT](./src/modules/jwt/Readme.md)
 - Cors
 - [Example projects](#example-projects)
