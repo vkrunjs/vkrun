@@ -39,10 +39,24 @@ export const createLog = (log: Log): void => {
       return dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
     }
 
+    const logMessage = (): string | object => {
+      if (log.message instanceof Error) {
+        const error: Record<string, any> = {}
+
+        if (log.message.name) error.name = log.message.name
+        if (log.message.message) error.message = log.message.message
+        if (log.message?.stack) error.stack = log.message.stack
+
+        return { error }
+      }
+
+      return log.message
+    }
+
     const logData = {
       level: log.level,
       date: getDateToString(currentDate),
-      message: log.message
+      message: logMessage() // log.message
     }
 
     const logLevel = log.config.levels[log.level]

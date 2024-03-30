@@ -12,8 +12,8 @@ describe('Create log', () => {
 
     try {
       throw new Error('Any Error')
-    } catch (error: any) {
-      logger.error({ error: error.message })
+    } catch (error) {
+      logger.error(error)
     }
 
     const logFolderPath = 'logs'
@@ -79,7 +79,7 @@ describe('Create log', () => {
 
     expect(log.content[0]).toEqual(logEntry)
   })
-
+  //
   it('Should create a log level info', async () => {
     const logger = createLogger({ level: 'info', daysToStoreLogs: 0 })
 
