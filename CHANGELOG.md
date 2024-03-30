@@ -1,4 +1,37 @@
-# vkrun
+# VkrunJS Releases
+
+## 0.34.3
+
+### Minor Changes
+
+- change Vkrun link in module documentation.
+
+## 0.34.2
+
+### Minor Changes
+
+- fix build package from latest version v0.34.0 and v0.34.1.
+
+## 0.34.1
+
+### Minor Changes
+
+- add Logger module documentation link to Vkrun Readme.
+
+## 0.34.0
+
+### Minor Changes
+
+- add documentation for Logger module.
+- change createLogger function name to Logger.
+- add support for creating error log directly with the error in the Logger module.
+- fix summary links.
+
+## 0.29.0
+
+### Minor Changes
+
+- change export of modules.
 
 ## 0.28.0
 
