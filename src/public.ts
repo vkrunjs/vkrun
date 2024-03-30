@@ -1,6 +1,6 @@
 import { App } from './modules/app'
 import { schema, setLocation } from './modules/schema'
-import { createLogger } from './modules/logger'
+import { Logger } from './modules/logger'
 import { Router } from './modules/router'
 import { parseData } from './modules/parse-data'
 import { cors } from './modules/cors'
@@ -18,7 +18,7 @@ export {
   cors,
   schema,
   setLocation,
-  createLogger,
+  Logger,
   Router,
   parseData,
   rateLimit,

@@ -1,5 +1,5 @@
 import v from '../../../index'
-import { createLogger } from '..'
+import { Logger } from '..'
 import { getLog } from '../helpers/get-log'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'
 
@@ -9,7 +9,7 @@ describe('Logger Middleware - end to end testing using super request', () => {
 
   it('Should create a log with middleware', async () => {
     const app = v.App()
-    const logger = createLogger({ level: 'http' })
+    const logger = Logger({ level: 'http' })
     const router = v.Router()
     app.use(v.parseData())
     app.use(logger.middleware())

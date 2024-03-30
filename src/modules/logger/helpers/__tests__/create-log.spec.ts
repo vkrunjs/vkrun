@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { createLogger, loggerSanitizeInterval } from '../..'
+import { Logger, loggerSanitizeInterval } from '../..'
 import { getLog } from '../get-log'
 import { removeLogsFolder } from '../remove-logs-folder'
 
@@ -8,7 +8,7 @@ describe('Create log', () => {
   afterEach(async () => { await removeLogsFolder() })
 
   it('Should create a logs folder', async () => {
-    const logger = createLogger({ level: 'error', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'error', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -24,7 +24,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log file', async () => {
-    const logger = createLogger({ level: 'error', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'error', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -49,7 +49,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log level error', async () => {
-    const logger = createLogger({ level: 'error', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'error', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -65,7 +65,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log level warn', async () => {
-    const logger = createLogger({ level: 'warn', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'warn', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -81,7 +81,7 @@ describe('Create log', () => {
   })
   //
   it('Should create a log level info', async () => {
-    const logger = createLogger({ level: 'info', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'info', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -97,7 +97,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log level http', async () => {
-    const logger = createLogger({ level: 'http', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'http', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -113,7 +113,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log level verbose', async () => {
-    const logger = createLogger({ level: 'verbose', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'verbose', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -129,7 +129,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log level debug', async () => {
-    const logger = createLogger({ level: 'debug', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'debug', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -145,7 +145,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log level silly', async () => {
-    const logger = createLogger({ level: 'silly', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'silly', daysToStoreLogs: 0 })
 
     try {
       throw new Error('Any Error')
@@ -161,7 +161,7 @@ describe('Create log', () => {
   })
 
   it('Should only create level error logs', async () => {
-    const logger = createLogger({ level: 'error', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'error', daysToStoreLogs: 0 })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -179,7 +179,7 @@ describe('Create log', () => {
   })
 
   it('Should create logs only for level errors and warn', async () => {
-    const logger = createLogger({ level: 'warn', daysToStoreLogs: 0, print: { enabled: true } })
+    const logger = Logger({ level: 'warn', daysToStoreLogs: 0, print: { enabled: true } })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -204,7 +204,7 @@ describe('Create log', () => {
   })
 
   it('Should create logs only for level errors, warn and info', async () => {
-    const logger = createLogger({ level: 'info', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'info', daysToStoreLogs: 0 })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -230,7 +230,7 @@ describe('Create log', () => {
   })
 
   it('Should create logs only for level errors, warn, info and http', async () => {
-    const logger = createLogger({ level: 'http', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'http', daysToStoreLogs: 0 })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -257,7 +257,7 @@ describe('Create log', () => {
   })
 
   it('Should create logs only for level errors, warn, info, http and verbose', async () => {
-    const logger = createLogger({ level: 'verbose', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'verbose', daysToStoreLogs: 0 })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -285,7 +285,7 @@ describe('Create log', () => {
   })
 
   it('Should create logs only for level errors, warn, info, http, verbose and debug', async () => {
-    const logger = createLogger({ level: 'debug', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'debug', daysToStoreLogs: 0 })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -314,7 +314,7 @@ describe('Create log', () => {
   })
 
   it('Should create all types of logs', async () => {
-    const logger = createLogger({ level: 'silly', daysToStoreLogs: 0 })
+    const logger = Logger({ level: 'silly', daysToStoreLogs: 0 })
 
     logger.error({ error: 'Any Error' })
     logger.warn({ error: 'Any Error' })
@@ -344,7 +344,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log with a DD-MM-YYYY folder format', async () => {
-    const logger = createLogger({
+    const logger = Logger({
       level: 'error',
       daysToStoreLogs: 0,
       dateType: 'DD-MM-YYYY'
@@ -369,7 +369,7 @@ describe('Create log', () => {
   })
 
   it('Should create a JSON log file', async () => {
-    const logger = createLogger({
+    const logger = Logger({
       level: 'silly',
       daysToStoreLogs: 0,
       extension: 'json'
@@ -395,7 +395,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log with indented JSON', async () => {
-    const logger = createLogger({
+    const logger = Logger({
       level: 'silly',
       daysToStoreLogs: 0,
       extension: 'json',
@@ -423,7 +423,7 @@ describe('Create log', () => {
   })
 
   it('Should create a log with indented log', async () => {
-    const logger = createLogger({
+    const logger = Logger({
       level: 'silly',
       daysToStoreLogs: 0,
       extension: 'log',

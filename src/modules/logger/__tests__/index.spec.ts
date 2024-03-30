@@ -1,8 +1,8 @@
-import { createLogger } from '..'
+import { Logger } from '..'
 
-describe('CreateLogger', () => {
+describe('Logger', () => {
   it('Should create a logger with correct configuration', async () => {
-    const logger = createLogger({
+    const logger = Logger({
       level: 'error',
       format: 'indented',
       dateType: 'MM-DD-YYYY',

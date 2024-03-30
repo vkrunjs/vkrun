@@ -5,7 +5,7 @@ import * as type from '../types'
 
 export let loggerSanitizeInterval: NodeJS.Timeout
 
-export const createLogger = (configParams: type.SetConfigLogger): type.CreateLogger => {
+export const Logger = (configParams: type.SetConfigLogger): type.Logger => {
   const config = configLogger()
 
   /* eslint-disable */
