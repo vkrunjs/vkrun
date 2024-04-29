@@ -2,6 +2,7 @@
 
 ## Next version
 
+- fix export types jwt module
 - create mapping from http status code
 
 ## 0.34.3
