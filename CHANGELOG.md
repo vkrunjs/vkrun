@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## Next version
+
+- create mapping from http status code
+
 ## 0.34.3
 
 ### Minor Changes
