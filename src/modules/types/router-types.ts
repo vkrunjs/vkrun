@@ -64,3 +64,8 @@ export interface Route {
   method: RouteMethods
   handlers: RouteHandler[]
 }
+
+export interface ResponseHttpStatus {
+  statusCode: number
+  body: any
+}
