@@ -4,29 +4,31 @@ import { generateSecretKey } from '../helpers'
 
 const secretKey = generateSecretKey()
 const session = v.Session({ secretKey, sanitizationEvery: '5m' })
-const router = v.Router()
 
 class ExampleController implements v.Controller {
   public handle (request: v.Request, response: v.Response): any {
+    const userData = { userId: 123, email: 'any@mail.com' }
+    const config = { expiresIn: '15m' }
+    session.create(request, response, userData, config)
     response.status(200).json({ session: request.session })
   }
 }
 
-router.post('/session',
-  session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: '15m' }),
-  v.controllerAdapter(new ExampleController())
-)
-
+const router = v.Router()
+router.post('/session', v.controllerAdapter(new ExampleController()))
 router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
 
 describe('Session', () => {
   let server: any
-  let cookie: string
-  let sessionId: string
-  let sessionToken: string
 
-  const getCookies = (response: any): void => {
+  const getCookies = (response: any): {
+    cookie: string
+    sessionId: string
+    sessionToken: string
+  } => {
     const setCookie = response.headers['set-cookie']
+    let sessionId = ''
+    let sessionToken = ''
 
     setCookie.forEach((cookie: string) => {
       if (cookie.startsWith('session-id=')) {
@@ -35,7 +37,10 @@ describe('Session', () => {
         sessionToken = cookie.split('=')[1].split(';')[0]
       }
     })
-    cookie = `session-id=${sessionId};session-token=${sessionToken}`
+
+    const cookie: string = `session-id=${sessionId};session-token=${sessionToken}`
+
+    return { cookie, sessionId, sessionToken }
   }
 
   afterEach(() => {
@@ -45,7 +50,11 @@ describe('Session', () => {
     }
   })
 
-  const validateSessionSuccess = (response: any): void => {
+  const validateSessionSuccess = (
+    response: any,
+    sessionId: string,
+    sessionToken: string
+  ): void => {
     expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(10)
     expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
@@ -90,9 +99,16 @@ describe('Session', () => {
 
   const validateProtectSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
-    expect(Object.keys(response.headers).length).toEqual(5)
+    expect(Object.keys(response.headers).length).toEqual(10)
     expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.headers['content-type']).toEqual('application/json')
+    expect(response.headers['content-security-policy']).toEqual("default-src 'self'; script-src 'self' 'unsafe-inline'")
+    expect(response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate')
+    expect(response.headers['x-xss-protection']).toEqual('1; mode=block')
+    const arrCookies = response.headers['set-cookie'] as string[]
+    expect(arrCookies.length).toEqual(2)
+    expect(arrCookies[0].startsWith('session-id=')).toBeTruthy()
+    expect(arrCookies[1].startsWith('session-token=')).toBeTruthy()
     expect(v.isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('49')
@@ -108,8 +124,8 @@ describe('Session', () => {
     server.listen(3799)
 
     await axios.post('http://localhost:3799/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
     })
 
     app.close()
@@ -117,11 +133,19 @@ describe('Session', () => {
 
   it('throw new Error when secret key is invalid', async () => {
     try {
-      const router = v.Router()
       const session = v.Session({ secretKey: '123' })
-      router.post('/session',
-        session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: '15m' })
-      )
+
+      class ExampleController implements v.Controller {
+        public handle (request: v.Request, response: v.Response): any {
+          const userData = { userId: 123, email: 'any@mail.com' }
+          const config = { expiresIn: '15m' }
+          session.create(request, response, userData, config)
+          response.status(200).json({ session: request.session })
+        }
+      }
+
+      const router = v.Router()
+      router.post('/session', v.controllerAdapter(new ExampleController()))
     } catch (error: any) {
       expect(error.message).toEqual('vkrun-session: the secret keys must be strings of 64 characters representing 32 bytes.')
     }
@@ -132,10 +156,12 @@ describe('Session', () => {
     app.use(router)
     server = app.server()
     server.listen(3798)
+    let cookie = ''
 
     await axios.post('http://localhost:3798/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
+      cookie = _cookie
     })
 
     await axios.post('http://localhost:3798/protect', {}, {
@@ -152,10 +178,12 @@ describe('Session', () => {
     app.use(router)
     server = app.server()
     server.listen(3797)
+    let sessionId = ''
 
     await axios.post('http://localhost:3797/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId: _sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, _sessionId, sessionToken)
+      sessionId = _sessionId
     })
 
     await axios.post('http://localhost:3797/protect', {}, {
@@ -172,10 +200,12 @@ describe('Session', () => {
     app.use(router)
     server = app.server()
     server.listen(3796)
+    let sessionToken = ''
 
     await axios.post('http://localhost:3796/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId, sessionToken: _sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, _sessionToken)
+      sessionToken = _sessionToken
     })
 
     await axios.post('http://localhost:3796/protect', {}, {
@@ -192,10 +222,12 @@ describe('Session', () => {
     app.use(router)
     server = app.server()
     server.listen(3795)
+    let sessionToken = ''
 
     await axios.post('http://localhost:3795/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId, sessionToken: _sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, _sessionToken)
+      sessionToken = _sessionToken
     })
 
     await axios.post('http://localhost:3795/protect', {}, {
@@ -225,10 +257,12 @@ describe('Session', () => {
     app.use(router)
     server = app.server()
     server.listen(3794)
+    let sessionId = ''
 
     await axios.post('http://localhost:3794/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId: _sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, _sessionId, sessionToken)
+      sessionId = _sessionId
     })
 
     await axios.post('http://localhost:3794/protect', {}, {
@@ -242,30 +276,15 @@ describe('Session', () => {
 
   it('return unauthorized when session token is expired', async () => {
     const app = v.App()
-    const secretKey = generateSecretKey()
-    const session = v.Session({ secretKey, sanitizationEvery: '5m' })
-    const router = v.Router()
-
-    class ExampleController implements v.Controller {
-      public handle (_request: v.Request, response: v.Response): any {
-        response.status(200).end()
-      }
-    }
-
-    router.post('/session',
-      session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: 0 }),
-      v.controllerAdapter(new ExampleController())
-    )
-
-    router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
-
     app.use(router)
-    const server = app.server()
+    let cookie = ''
 
+    const server = app.server()
     server.listen(3793)
 
     await axios.post('http://localhost:3793/session').then((response) => {
-      getCookies(response)
+      const { cookie: _cookie } = getCookies(response)
+      cookie = _cookie
     })
 
     await axios.post('http://localhost:3793/protect', {}, {
@@ -283,21 +302,27 @@ describe('Session', () => {
     const session = v.Session({ secretKey, sanitizationEvery: 1 })
     const router = v.Router()
 
-    router.post('/session',
-      session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: 1 }),
-      v.controllerAdapter(new ExampleController())
-    )
+    class ExampleBController implements v.Controller {
+      public handle (request: v.Request, response: v.Response): any {
+        const userData = { userId: 123, email: 'any@mail.com' }
+        const config = { expiresIn: 1 }
+        session.create(request, response, userData, config)
+        response.status(200).json({ session: request.session })
+      }
+    }
 
+    router.post('/session', v.controllerAdapter(new ExampleBController()))
     router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
 
     app.use(router)
     const server = app.server()
-
     server.listen(3792)
+    let cookie = ''
 
     await axios.post('http://localhost:3792/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
+      cookie = _cookie
+      validateSessionSuccess(response, sessionId, sessionToken)
     })
 
     const delay = async (ms: number): Promise<void> => await new Promise<void>((resolve) => setTimeout(resolve, ms))
@@ -314,26 +339,15 @@ describe('Session', () => {
   })
 
   it('should be able to update session when passed session id', async () => {
-    const sessionId = v.randomUUID()
-
     const app = v.App()
-    const secretKey = generateSecretKey()
-    const session = v.Session({ secretKey, sanitizationEvery: '5m' })
-    const router = v.Router()
-
-    router.post('/session',
-      session.create({ userId: 123, email: 'any@mail.com' }, { expiresIn: '15m', sessionId }),
-      v.controllerAdapter(new ExampleController())
-    )
-
     app.use(router)
     const server = app.server()
-
     server.listen(3781)
 
     await axios.post('http://localhost:3781/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
+
       const cookies: any = response.headers['set-cookie']
       cookies.forEach((cookie: string) => {
         if (cookie.startsWith('session-id=')) {
@@ -343,8 +357,9 @@ describe('Session', () => {
     })
 
     await axios.post('http://localhost:3781/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
+
       const cookies: any = response.headers['set-cookie']
       cookies.forEach((cookie: string) => {
         if (cookie.startsWith('session-id=')) {
@@ -361,17 +376,19 @@ describe('Session', () => {
     app.use(router)
     const server = app.server()
     server.listen(3780)
+    let cookie = ''
 
     await axios.post('http://localhost:3780/session').then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
+      cookie = _cookie
     })
 
     await axios.post('http://localhost:3780/session', {}, {
       headers: { cookie }
     }).then((response) => {
-      getCookies(response)
-      validateSessionSuccess(response)
+      const { sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
     })
 
     app.close()

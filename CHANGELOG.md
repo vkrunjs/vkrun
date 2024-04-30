@@ -1,7 +1,8 @@
 # VkrunJS Releases
 
-## Next version
+## 0.35.0
 
+- change create session from middleware to function
 - fix export types jwt module
 - create mapping from http status code
 

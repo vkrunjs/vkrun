@@ -19,24 +19,26 @@ export class VkrunSession {
     }
   }
 
-  public create (data: any, options: type.SessionCreateOptions) {
-    return (request: type.Request, response: type.Response, next: type.NextFunction) => {
-      util.validateTimeFormat(options.expiresIn, 'session')
-      const { sessionId } = helper.getSessionCookies(request)
+  public create (
+    request: type.Request,
+    response: type.Response,
+    data: any,
+    options: type.SessionCreateOptions
+  ): void {
+    util.validateTimeFormat(options.expiresIn, 'session')
+    const { sessionId } = helper.getSessionCookies(request)
 
-      if (this.sessions.has(sessionId)) {
-        this.sessions.delete(sessionId)
-      }
-
-      let createdSessionId = util.randomUUID()
-      if (options.sessionId) createdSessionId = options.sessionId
-
-      const session = helper.createSession({ request, response, sessionId: createdSessionId, data, options, secretKey: this.secretKey })
-      this.sessions.set(createdSessionId, session)
-
-      if (!this.sanitizationActive) helper.startSanitization({ ...this, request })
-      next()
+    if (this.sessions.has(sessionId)) {
+      this.sessions.delete(sessionId)
     }
+
+    let createdSessionId = util.randomUUID()
+    if (options.sessionId) createdSessionId = options.sessionId
+
+    const session = helper.createSession({ request, response, sessionId: createdSessionId, data, options, secretKey: this.secretKey })
+    this.sessions.set(createdSessionId, session)
+
+    if (!this.sanitizationActive) helper.startSanitization({ ...this, request })
   }
 
   public protect () {
