@@ -1,5 +1,14 @@
 import { IncomingMessage, ServerResponse } from 'http'
 
+export interface VkrunRouter {
+  get: (path: string, ...handlers: any) => void
+  post: (path: string, ...handlers: any) => void
+  put: (path: string, ...handlers: any) => void
+  patch: (path: string, ...handlers: any) => void
+  delete: (path: string, ...handlers: any) => void
+  options: (path: string, ...handlers: any) => void
+}
+
 export interface Request extends IncomingMessage {
   requestId?: string
   route?: Route
