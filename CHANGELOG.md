@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.36.0
+
+- adjust the router to work with multiple router instances and create a route directly in the app
+
 ## 0.35.0
 
 - change create session from middleware to function
