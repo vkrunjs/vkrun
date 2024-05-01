@@ -492,4 +492,104 @@ describe('Router', () => {
 
     app.close()
   })
+
+  it('Should be able to use multiple Router instances', async () => {
+    const app = v.App()
+    const routerA = v.Router()
+    const routerB = v.Router()
+
+    routerA.get('/get', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    routerB.post('/post', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    app.use(routerA)
+    app.use(routerB)
+
+    await v.superRequest(app).get('/get').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('GET ok')
+    })
+
+    await v.superRequest(app).post('/post').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('POST ok')
+    })
+
+    app.close()
+  })
+
+  it('Should be able to create routes directly from the App instance', async () => {
+    const app = v.App()
+
+    app.get('/get', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    app.post('/post', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    await v.superRequest(app).get('/get').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('GET ok')
+    })
+
+    await v.superRequest(app).post('/post').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('POST ok')
+    })
+
+    app.close()
+  })
+
+  it('Should be able to work with multiple router instances and routes created directly in the App', async () => {
+    const app = v.App()
+    const routerA = v.Router()
+    const routerB = v.Router()
+
+    routerA.get('/example-a', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    routerB.post('/example-b', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    app.use(routerA)
+    app.use(routerB)
+
+    app.get('/example-c', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    app.post('/example-d', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    await v.superRequest(app).get('/example-a').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('GET ok')
+    })
+
+    await v.superRequest(app).post('/example-b').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('POST ok')
+    })
+
+    await v.superRequest(app).get('/example-c').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('GET ok')
+    })
+
+    await v.superRequest(app).post('/example-d').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('POST ok')
+    })
+
+    app.close()
+  })
 })
