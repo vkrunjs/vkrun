@@ -21,7 +21,9 @@ export class RouterHandler {
       })
 
       routeGroups.forEach((_methods, path) => {
-        const optionsRouteExists = helper.routeExists(path, 'OPTIONS', this.routes)
+        const optionsRouteExists = !!this.routes.find(route =>
+          route.path === path && route.method === 'OPTIONS'
+        )
 
         if (!optionsRouteExists) {
           const handlers: any[] = [() => null]

@@ -9,6 +9,7 @@ export interface VkrunApp {
   clearTimers: () => void
   close: () => void
   get: (path: string, ...handlers: any) => void
+  head: (path: string, ...handlers: any) => void
   post: (path: string, ...handlers: any) => void
   put: (path: string, ...handlers: any) => void
   patch: (path: string, ...handlers: any) => void

@@ -1,5 +1,6 @@
 import * as http from 'http'
-import { VkrunRouter, Router } from '../router'
+import { VkrunRouter } from '../router'
+import * as routerHelper from '../router/helpers'
 import { customResponse } from '../router/helpers/custom-response'
 import * as type from '../types'
 import { loggerSanitizeInterval } from '../logger'
@@ -7,7 +8,6 @@ import { RouterHandler } from '../router/helpers/router-handler'
 
 class VkrunApp implements type.VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
-  private readonly router: type.VkrunRouter
   private routes: type.Route[] = []
   private readonly routerHandler: RouterHandler
   private readonly middlewares: any[]
@@ -16,7 +16,6 @@ class VkrunApp implements type.VkrunApp {
 
   constructor () {
     this.instance = undefined
-    this.router = Router()
     this.routerHandler = new RouterHandler()
     this.middlewares = []
     this.timers = []
@@ -94,27 +93,38 @@ class VkrunApp implements type.VkrunApp {
   // Routing
 
   public get (path: string, ...handlers: any): void {
-    this.router.get(path, ...handlers)
+    routerHelper.routeExists(path, 'GET', this.routes)
+    this.routes.push({ path, method: 'GET', handlers })
+  }
+
+  public head (path: string, ...handlers: any): void {
+    routerHelper.routeExists(path, 'HEAD', this.routes)
+    this.routes.push({ path, method: 'HEAD', handlers })
   }
 
   public post (path: string, ...handlers: any): void {
-    this.router.post(path, ...handlers)
+    routerHelper.routeExists(path, 'POST', this.routes)
+    this.routes.push({ path, method: 'POST', handlers })
   }
 
   public put (path: string, ...handlers: any): void {
-    this.router.put(path, ...handlers)
+    routerHelper.routeExists(path, 'PUT', this.routes)
+    this.routes.push({ path, method: 'PUT', handlers })
   }
 
   public patch (path: string, ...handlers: any): void {
-    this.router.patch(path, ...handlers)
+    routerHelper.routeExists(path, 'PATCH', this.routes)
+    this.routes.push({ path, method: 'PATCH', handlers })
   }
 
   public delete (path: string, ...handlers: any): void {
-    this.router.delete(path, ...handlers)
+    routerHelper.routeExists(path, 'DELETE', this.routes)
+    this.routes.push({ path, method: 'DELETE', handlers })
   }
 
   public options (path: string, ...handlers: any): void {
-    this.router.options(path, ...handlers)
+    routerHelper.routeExists(path, 'OPTIONS', this.routes)
+    this.routes.push({ path, method: 'OPTIONS', handlers })
   }
 }
 
