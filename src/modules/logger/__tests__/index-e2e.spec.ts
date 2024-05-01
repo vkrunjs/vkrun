@@ -11,6 +11,10 @@ describe('Logger Middleware - end to end testing using super request', () => {
     const app = v.App()
     const logger = Logger({ level: 'http' })
     const router = v.Router()
+    router.post('/:string/:integer/query', (_request: v.Request, response: v.Response) => {
+      response.status(200).json({ result: 'ok' })
+    })
+
     app.use(v.parseData())
     app.use(logger.middleware())
     app.use(router)
@@ -21,10 +25,6 @@ describe('Logger Middleware - end to end testing using super request', () => {
         key: 'string'
       }
     }
-
-    router.post('/:string/:integer/query', (_request: v.Request, response: v.Response) => {
-      response.status(200).json({ result: 'ok' })
-    })
 
     const path = '/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
 

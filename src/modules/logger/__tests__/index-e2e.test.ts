@@ -22,6 +22,11 @@ describe('Logger Middleware - end to end testing using axios and app server', ()
     const app = v.App()
     const logger = Logger({ level: 'http' })
     const router = v.Router()
+
+    router.post('/:string/:integer/query', (_request: v.Request, response: v.Response) => {
+      response.status(200).json({ result: 'ok' })
+    })
+
     app.use(v.parseData())
     app.use(logger.middleware())
     app.use(router)
@@ -34,10 +39,6 @@ describe('Logger Middleware - end to end testing using axios and app server', ()
         key: 'string'
       }
     }
-
-    router.post('/:string/:integer/query', (_request: v.Request, response: v.Response) => {
-      response.status(200).json({ result: 'ok' })
-    })
 
     server.listen(3699)
 

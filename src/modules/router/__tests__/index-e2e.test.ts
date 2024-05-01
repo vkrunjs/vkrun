@@ -536,4 +536,113 @@ describe('Router', () => {
 
     app.close()
   })
+
+  it('Should be able to use multiple Router instances', async () => {
+    const app = v.App()
+    const routerA = v.Router()
+    const routerB = v.Router()
+
+    routerA.get('/get', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    routerB.post('/post', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    app.use(routerA)
+    app.use(routerB)
+
+    server = app.server()
+    server.listen(3685)
+
+    await axios.get('http://localhost:3685/get').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('GET ok')
+    })
+
+    await axios.post('http://localhost:3685/post').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('POST ok')
+    })
+
+    app.close()
+  })
+
+  it('Should be able to create routes directly from the App instance', async () => {
+    const app = v.App()
+
+    app.get('/get', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    app.post('/post', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    server = app.server()
+    server.listen(3684)
+
+    await axios.get('http://localhost:3684/get').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('GET ok')
+    })
+
+    await axios.post('http://localhost:3684/post').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('POST ok')
+    })
+
+    app.close()
+  })
+
+  it('Should be able to work with multiple router instances and routes created directly in the App', async () => {
+    const app = v.App()
+    const routerA = v.Router()
+    const routerB = v.Router()
+
+    routerA.get('/example-a', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    routerB.post('/example-b', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    app.use(routerA)
+    app.use(routerB)
+
+    app.get('/example-c', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('GET ok')
+    })
+
+    app.post('/example-d', (_request: v.Request, response: v.Response) => {
+      response.status(200).send('POST ok')
+    })
+
+    server = app.server()
+    server.listen(3683)
+
+    await axios.get('http://localhost:3683/example-a').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('GET ok')
+    })
+
+    await axios.post('http://localhost:3683/example-b').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('POST ok')
+    })
+
+    await axios.get('http://localhost:3683/example-c').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('GET ok')
+    })
+
+    await axios.post('http://localhost:3683/example-d').catch((error) => {
+      expect(error.response.status).toEqual(200)
+      expect(error.response.data).toEqual('POST ok')
+    })
+
+    app.close()
+  })
 })
