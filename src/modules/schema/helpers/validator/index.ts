@@ -17,7 +17,8 @@ import {
   validateNotRequired,
   validateEqual,
   validateObject,
-  validateArray
+  validateArray,
+  validateNullable
 } from './validate'
 import { hasMethod } from '../has-method'
 import * as type from '../../../types'
@@ -26,7 +27,7 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
   params.resetTests()
   const validateMethodParams: any = params
 
-  const validateMethod = (rule: any, value: any, indexArray?: number): void => {
+  const validateOtherMethods = (rule: any, value: any, indexArray?: number): void => {
     validateMethodParams.value = value
     if (rule.method === 'object') {
       validateObject({ ...validateMethodParams, indexArray, schema: rule.schema })
@@ -72,7 +73,10 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
     if (method) validateMethodParams.valueName = method.alias
   }
 
-  if (hasMethod(validateMethodParams.methods, 'notRequired')) {
+  if (hasMethod(validateMethodParams.methods, 'nullable')) {
+    validateNullable(validateMethodParams)
+    if (validateMethodParams.value === null) return
+  } else if (hasMethod(validateMethodParams.methods, 'notRequired')) {
     validateNotRequired(validateMethodParams)
     if (validateMethodParams.value === undefined) return
   } else {
@@ -80,8 +84,8 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
   }
 
   if (hasMethod(validateMethodParams.methods, 'array')) {
-    validateArray({ ...validateMethodParams, validateMethod })
+    validateArray({ ...validateMethodParams, validateOtherMethods })
   } else {
-    validateMethodParams.methods.forEach((rule: any) => { validateMethod(rule, validateMethodParams.value) })
+    validateMethodParams.methods.forEach((rule: any) => { validateOtherMethods(rule, validateMethodParams.value) })
   }
 }

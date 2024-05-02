@@ -21,6 +21,8 @@ export const locationConfig: Array<{ keys: string[] }> = [
 
   { keys: ['object'] },
 
+  { keys: ['nullable'] },
+
   { keys: ['array'] },
 
   { keys: ['equal'] },

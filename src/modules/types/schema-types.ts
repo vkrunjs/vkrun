@@ -21,6 +21,7 @@ export interface ISchema {
 
 export interface DefaultReturn {
   notRequired: () => NotRequiredMethod
+  nullable: () => NullableMethod
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
   validate: (value: any) => boolean
@@ -30,6 +31,23 @@ export interface DefaultReturn {
 }
 
 export interface NotRequiredMethod {
+  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+  validate: (value: any) => boolean
+  validateAsync: (value: any) => Promise<boolean>
+  test: (value: any, valueName: string) => Tests
+  testAsync: (value: any, valueName: string) => Promise<Tests>
+}
+
+export interface NullableMethod {
+  notRequired: () => NotRequiredMethod
+  string: () => StringMethod
+  number: () => NumberMethod
+  boolean: () => DefaultReturn
+  date: (type?: DateTypes) => DateMethod
+  array: () => ArrayMethod
+  equal: (valueToCompare: any) => DefaultReturn
+  object: (schema: ObjectType) => DefaultReturn
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
   validate: (value: any) => boolean
@@ -57,6 +75,7 @@ export interface MinLengthMethod extends DefaultReturn {
   maxLength: (limit: number) => {
     minWord: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
+    nullable: () => NullableMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
     validate: (value: any) => boolean
@@ -67,6 +86,7 @@ export interface MinLengthMethod extends DefaultReturn {
   minWord: (limit: number) => {
     maxLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
+    nullable: () => NullableMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
     validate: (value: any) => boolean
@@ -80,6 +100,7 @@ export interface MaxLengthMethod extends DefaultReturn {
   minLength: (limit: number) => {
     minWord: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
+    nullable: () => NullableMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
     validate: (value: any) => boolean
@@ -90,6 +111,7 @@ export interface MaxLengthMethod extends DefaultReturn {
   minWord: (limit: number) => {
     minLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
+    nullable: () => NullableMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
     validate: (value: any) => boolean
@@ -103,6 +125,7 @@ export interface MinWordMethod extends DefaultReturn {
   minLength: (limit: number) => {
     maxLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
+    nullable: () => NullableMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
     validate: (value: any) => boolean
@@ -113,6 +136,7 @@ export interface MinWordMethod extends DefaultReturn {
   maxLength: (limit: number) => {
     minLength: (limit: number) => DefaultReturn
     notRequired: () => NotRequiredMethod
+    nullable: () => NullableMethod
     throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
     throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
     validate: (value: any) => boolean
@@ -168,7 +192,7 @@ export type ErrorClass<T extends Error> = new (message?: string) => T
 
 export type ErrorTypes = any // ErrorClass
 
-export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'min' | 'max' | 'time' | 'alias'
+export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'min' | 'max' | 'time' | 'alias' | 'nullable'
 
 export interface Method {
   method: MethodTypes
@@ -260,6 +284,7 @@ export interface SetLocation {
   }
   object?: string
   array?: string
+  nullable?: string
   equal?: string
   notToEqual?: {
     invalidValue?: string
@@ -298,6 +323,7 @@ export interface InformativeMessage {
   }
   object: string
   array: string
+  nullable: string
   equal: string
   notEqual: {
     invalidValue: string

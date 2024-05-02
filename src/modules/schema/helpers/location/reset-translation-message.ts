@@ -28,6 +28,7 @@ export const resetTranslationMessage = (): void => {
     },
     object: '[valueName] value must be an object!',
     array: '[valueName] value must be an array!',
+    nullable: '[valueName] value can be null, but other than undefined!',
     equal: 'value does not match!',
     notEqual: {
       invalidValue: ''

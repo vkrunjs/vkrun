@@ -34,6 +34,7 @@ describe('Set translation message', () => {
       },
       object: 'o valor de [valueName] deve ser um objeto!',
       array: 'o valor de [valueName] deve ser um array!',
+      nullable: 'o valor [valueName] pode ser nulo, mas não pode ser undefined!',
       equal: 'o valor não corresponde!',
       notEqual: {
         invalidValue: ''
@@ -86,6 +87,7 @@ describe('Set translation message', () => {
       },
       object: '[valueName] value must be an object!',
       array: '[valueName] value must be an array!',
+      nullable: '[valueName] value can be null, but other than undefined!',
       equal: 'value does not match!',
       notEqual: {
         invalidValue: ''

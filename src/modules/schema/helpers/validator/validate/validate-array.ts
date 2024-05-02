@@ -6,14 +6,14 @@ export const validateArray = ({
   value,
   valueName,
   methods,
-  validateMethod,
+  validateOtherMethods,
   callbackAddPassed,
   callbackAddFailed
 }: {
   value: any
   valueName: string
   methods: Methods
-  validateMethod: (rule: any, value: any, index: number) => void
+  validateOtherMethods: (rule: any, value: any, index: number) => void
   callbackAddPassed: (success: SuccessTest) => void
   callbackAddFailed: (error: ErrorTest) => void
 }): void => {
@@ -35,7 +35,7 @@ export const validateArray = ({
     )
 
     value.forEach((indexValue: any, index: number) => {
-      methodsWithoutArray.forEach(rule => { validateMethod(rule, indexValue, index) })
+      methodsWithoutArray.forEach(rule => { validateOtherMethods(rule, indexValue, index) })
     })
   } else {
     callbackAddFailed({
