@@ -51,7 +51,7 @@ describe('Validator Nullable Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the nullable and passAll method as equal to true when it is nullable and value is object', () => {
+  it('Should be able to validate the nullable and return true when value is string', () => {
     const objectSchema = schema().string().nullable()
 
     const sut = objectSchema.validate('any value')
