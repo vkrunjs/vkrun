@@ -96,5 +96,18 @@ export const customResponse = (_response: ServerResponse): type.Response => {
     this.setHeader('Set-Cookie', cookies)
   }
 
+  response.clearCookie = function (name: string): void {
+    const existingCookies = this.getHeader('Set-Cookie') as string[] | undefined
+    let cookies: string[] = []
+
+    if (existingCookies) {
+      cookies = existingCookies.slice()
+    }
+
+    const removedCookie = `${name}=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
+    cookies.push(removedCookie)
+    this.setHeader('Set-Cookie', cookies)
+  }
+
   return response
 }
