@@ -1,5 +1,10 @@
 # VkrunJS Releases
 
+## 0.37.0
+
+- add signOut method to session module
+- add clearCookie method to response
+
 ## 0.36.0
 
 - adjust the router to work with multiple router instances and create a route directly in the app
