@@ -19,7 +19,7 @@ export class VkrunSession {
     }
   }
 
-  public create (
+  public signIn (
     request: type.Request,
     response: type.Response,
     data: any,
@@ -41,9 +41,32 @@ export class VkrunSession {
     if (!this.sanitizationActive) helper.startSanitization({ ...this, request })
   }
 
-  public protect () {
+  public signOut (request: type.Request, response: type.Response): void {
+    const { sessionId } = helper.getSessionCookies(request)
+
+    if (this.sessions.has(sessionId)) {
+      this.sessions.delete(sessionId)
+      helper.setDeleteSessionHeaders(response)
+    }
+  }
+
+  public protectRouteMiddleware () {
     return (request: type.Request, response: type.Response, next: type.NextFunction) => {
       this.handle(request, response, next)
+    }
+  }
+
+  public signOutMiddleware () {
+    return (request: type.Request, response: type.Response, next: type.NextFunction) => {
+      const { sessionId } = helper.getSessionCookies(request)
+
+      if (this.sessions.has(sessionId)) {
+        this.sessions.delete(sessionId)
+        helper.setDeleteSessionHeaders(response)
+      }
+
+      if (next) next()
+      response.status(200).end()
     }
   }
 

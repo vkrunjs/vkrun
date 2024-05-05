@@ -8,14 +8,14 @@ class ExampleController implements v.Controller {
   public handle (request: v.Request, response: v.Response): any {
     const userData = { userId: 123, email: 'any@mail.com' }
     const config = { expiresIn: '15m' }
-    session.create(request, response, userData, config)
+    session.signIn(request, response, userData, config)
     response.status(200).json({ session: request.session })
   }
 }
 
 const router = v.Router()
-router.post('/session', v.controllerAdapter(new ExampleController()))
-router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
+router.post('/signin', v.controllerAdapter(new ExampleController()))
+router.post('/protect', session.protectRouteMiddleware(), v.controllerAdapter(new ExampleController()))
 
 describe('Session', () => {
   const getCookies = (response: any): {
@@ -114,7 +114,7 @@ describe('Session', () => {
     const app = v.App()
     app.use(router)
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, sessionToken)
     })
@@ -130,13 +130,13 @@ describe('Session', () => {
         public handle (request: v.Request, response: v.Response): any {
           const userData = { userId: 123, email: 'any@mail.com' }
           const config = { expiresIn: '15m' }
-          session.create(request, response, userData, config)
+          session.signIn(request, response, userData, config)
           response.status(200).json({ session: request.session })
         }
       }
 
       const router = v.Router()
-      router.post('/session', v.controllerAdapter(new ExampleController()))
+      router.post('/signin', v.controllerAdapter(new ExampleController()))
     } catch (error: any) {
       expect(error.message).toEqual('vkrun-session: the secret keys must be strings of 64 characters representing 32 bytes.')
     }
@@ -148,7 +148,7 @@ describe('Session', () => {
 
     let cookie = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, sessionToken)
       cookie = _cookie
@@ -169,7 +169,7 @@ describe('Session', () => {
 
     let sessionId = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId: _sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, _sessionId, sessionToken)
       sessionId = _sessionId
@@ -190,7 +190,7 @@ describe('Session', () => {
 
     let sessionToken = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId, sessionToken: _sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, _sessionToken)
       sessionToken = _sessionToken
@@ -211,7 +211,7 @@ describe('Session', () => {
 
     let sessionToken = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId, sessionToken: _sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, _sessionToken)
       sessionToken = _sessionToken
@@ -245,7 +245,7 @@ describe('Session', () => {
 
     let sessionId = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId: _sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, _sessionId, sessionToken)
       sessionId = _sessionId
@@ -265,7 +265,7 @@ describe('Session', () => {
     app.use(router)
 
     let cookie = ''
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { cookie: _cookie } = getCookies(response)
       cookie = _cookie
     })
@@ -289,19 +289,19 @@ describe('Session', () => {
       public handle (request: v.Request, response: v.Response): any {
         const userData = { userId: 123, email: 'any@mail.com' }
         const config = { expiresIn: 1 }
-        session.create(request, response, userData, config)
+        session.signIn(request, response, userData, config)
         response.status(200).json({ session: request.session })
       }
     }
 
-    router.post('/session', v.controllerAdapter(new ExampleBController()))
-    router.post('/protect', session.protect(), v.controllerAdapter(new ExampleController()))
+    router.post('/signin', v.controllerAdapter(new ExampleBController()))
+    router.post('/protect', session.protectRouteMiddleware(), v.controllerAdapter(new ExampleController()))
 
     app.use(router)
 
     let cookie = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
       cookie = _cookie
       validateSessionSuccess(response, sessionId, sessionToken)
@@ -324,7 +324,7 @@ describe('Session', () => {
     const app = v.App()
     app.use(router)
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, sessionToken)
 
@@ -336,7 +336,7 @@ describe('Session', () => {
       })
     })
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, sessionToken)
 
@@ -356,17 +356,88 @@ describe('Session', () => {
     app.use(router)
     let cookie = ''
 
-    await v.superRequest(app).post('/session').then((response) => {
+    await v.superRequest(app).post('/signin').then((response) => {
       const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, sessionToken)
       cookie = _cookie
     })
 
-    await v.superRequest(app).post('/session', {}, {
+    await v.superRequest(app).post('/signin', {}, {
       headers: { cookie }
     }).then((response) => {
       const { sessionId, sessionToken } = getCookies(response)
       validateSessionSuccess(response, sessionId, sessionToken)
+    })
+
+    app.close()
+  })
+
+  it('Should be able to signOut the session with next handler', async () => {
+    class SignOutController implements v.Controller {
+      public handle (_request: v.Request, response: v.Response): any {
+        response.status(200).send('SignOut OK')
+      }
+    }
+    router.get('/signout-with-next-handler', session.signOutMiddleware(), v.controllerAdapter(new SignOutController()))
+
+    const app = v.App()
+    app.use(router)
+    let cookie = ''
+
+    await v.superRequest(app).post('/signin').then((response) => {
+      const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
+      cookie = _cookie
+    })
+
+    await v.superRequest(app).post('/protect', {}, {
+      headers: { cookie }
+    }).then((response) => {
+      validateProtectSuccess(response)
+    })
+
+    await v.superRequest(app).get('/signout-with-next-handler').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('SignOut OK')
+    })
+
+    await v.superRequest(app).post('/protect', {}, {
+      headers: { cookie }
+    }).catch((error: v.SuperRequestError) => {
+      validateSessionUnauthorized(error)
+    })
+
+    app.close()
+  })
+
+  it('Should be able to signOut the session without next handler', async () => {
+    router.get('/signout-without-next-handler', session.signOutMiddleware())
+
+    const app = v.App()
+    app.use(router)
+    let cookie = ''
+
+    await v.superRequest(app).post('/signin').then((response) => {
+      const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
+      validateSessionSuccess(response, sessionId, sessionToken)
+      cookie = _cookie
+    })
+
+    await v.superRequest(app).post('/protect', {}, {
+      headers: { cookie }
+    }).then((response) => {
+      validateProtectSuccess(response)
+    })
+
+    await v.superRequest(app).get('/signout-without-next-handler').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual('')
+    })
+
+    await v.superRequest(app).post('/protect', {}, {
+      headers: { cookie }
+    }).catch((error: v.SuperRequestError) => {
+      validateSessionUnauthorized(error)
     })
 
     app.close()

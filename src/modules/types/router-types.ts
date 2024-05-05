@@ -27,6 +27,7 @@ export interface CustomResponseMethods {
   json: (data: object) => void
   send: (data: any) => void
   setCookie: (name: string, value: string, options?: CookieOptions) => void
+  clearCookie: (name: string) => void
   _body: any
 }
 
