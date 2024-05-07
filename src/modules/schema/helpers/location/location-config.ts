@@ -10,6 +10,10 @@ export const locationConfig: Array<{ keys: string[] }> = [
   { keys: ['number', 'invalidValue'] },
   { keys: ['number', 'float'] },
   { keys: ['number', 'integer'] },
+  { keys: ['number', 'min'] },
+  { keys: ['number', 'max'] },
+  { keys: ['number', 'positive'] },
+  { keys: ['number', 'negative'] },
 
   { keys: ['boolean', 'invalidValue'] },
 

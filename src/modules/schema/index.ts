@@ -1,5 +1,6 @@
 import * as helper from './helpers'
 import { setLocation } from './helpers'
+import { numberMethod } from './helpers/methods/number'
 import * as type from '../types'
 
 export class Schema implements type.ISchema {
@@ -102,19 +103,10 @@ export class Schema implements type.ISchema {
   }
 
   number (): type.NumberMethod {
-    this.methodBuild({ method: 'number' })
-
-    const float = (): type.DefaultReturn => {
-      this.methodBuild({ method: 'float' })
-      return this.defaultReturnMethods()
-    }
-
-    const integer = (): type.DefaultReturn => {
-      this.methodBuild({ method: 'integer' })
-      return this.defaultReturnMethods()
-    }
-
-    return { float, integer, ...this.defaultReturnMethods() }
+    return numberMethod({
+      callbackMethodBuild: (build: type.Method) => this.methodBuild(build),
+      callbackDefaultReturnMethods: () => this.defaultReturnMethods()
+    })
   }
 
   boolean (): type.DefaultReturn {
@@ -137,14 +129,12 @@ export class Schema implements type.ISchema {
   nullable (): type.NullableMethod {
     this.methodBuild({ method: 'nullable' })
     return {
-      string: () => this.string(),
-      number: () => this.number(),
-      boolean: () => this.boolean(),
-      date: (type?: type.DateTypes) => this.date(type),
-      array: () => this.array(),
-      equal: (valueToCompare: any) => this.equal(valueToCompare),
-      object: (schema: type.ObjectType) => this.object(schema),
-      ...this.defaultReturnMethods()
+      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => { this.throw(value, valueName, ClassError) },
+      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
+      validate: (value: any) => this.validate(value),
+      validateAsync: async (value: any) => await this.validateAsync(value),
+      test: (value: any, valueName: string) => this.test(value, valueName),
+      testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
     }
   }
 

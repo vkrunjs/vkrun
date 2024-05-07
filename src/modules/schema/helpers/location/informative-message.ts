@@ -13,7 +13,11 @@ export const informativeMessage: type.InformativeMessage = {
   number: {
     invalidValue: '[valueName] must be a number type!',
     float: '[valueName] must be a float!',
-    integer: '[valueName] must be a integer!'
+    integer: '[valueName] must be a integer!',
+    min: '',
+    max: '',
+    positive: '',
+    negative: ''
   },
   boolean: {
     invalidValue: '[valueName] must be a boolean type!'

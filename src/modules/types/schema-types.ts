@@ -2,7 +2,6 @@ import { Schema } from '../schema'
 import { UUIDVersion } from './utils-types'
 
 export interface ISchema {
-  notRequired: () => NotRequiredMethod
   string: () => StringMethod
   number: () => NumberMethod
   boolean: () => DefaultReturn
@@ -11,6 +10,8 @@ export interface ISchema {
   array: () => ArrayMethod
   equal: (valueToCompare: any) => DefaultReturn
   object: (schema: ObjectType) => DefaultReturn
+  nullable: () => NullableMethod
+  notRequired: () => NotRequiredMethod
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
   validate: (value: any) => boolean
@@ -39,15 +40,236 @@ export interface NotRequiredMethod {
   testAsync: (value: any, valueName: string) => Promise<Tests>
 }
 
+export interface NumberMethod extends DefaultReturn {
+  float: () => NumberFloatMethod
+  integer: () => NumberIntegerMethod
+  min: (value: number) => NumberMinMethod
+  max: (value: number) => NumberMaxMethod
+  positive: () => NumberPositiveMethod
+  negative: () => NumberNegativeMethod
+}
+
+export interface NumberFloatMethod extends DefaultReturn {
+  min: (value: number) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+  }
+  max: (value: number) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  positive: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  negative: () => DefaultReturn & {
+    min: (value: number) => {
+      max: (value: number) => DefaultReturn
+    }
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+}
+
+export type NumberIntegerMethod = NumberFloatMethod
+
+export interface NumberMinMethod extends DefaultReturn {
+  float: () => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+  }
+  integer: () => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+  }
+  max: (value: number) => DefaultReturn & {
+    float: () => {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+  }
+  positive: () => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+    float: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+  }
+  negative: () => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+    float: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+  }
+}
+
+export interface NumberMaxMethod extends DefaultReturn {
+  float: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  integer: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  min: (value: number) => DefaultReturn & {
+    float: () => {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      positive: () => DefaultReturn
+      negative: () => DefaultReturn
+    }
+    positive: () => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+    negative: () => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+  }
+  positive: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+    float: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  negative: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
+    float: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+}
+
+export interface NumberPositiveMethod extends DefaultReturn {
+  float: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  integer: () => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+  min: (value: number) => DefaultReturn & {
+    float: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      max: (value: number) => DefaultReturn
+    }
+  }
+  max: (value: number) => DefaultReturn & {
+    float: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+    integer: () => DefaultReturn & {
+      min: (value: number) => DefaultReturn
+    }
+  }
+}
+
+export type NumberNegativeMethod = NumberPositiveMethod
+
 export interface NullableMethod {
-  notRequired: () => NotRequiredMethod
-  string: () => StringMethod
-  number: () => NumberMethod
-  boolean: () => DefaultReturn
-  date: (type?: DateTypes) => DateMethod
-  array: () => ArrayMethod
-  equal: (valueToCompare: any) => DefaultReturn
-  object: (schema: ObjectType) => DefaultReturn
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
   validate: (value: any) => boolean
@@ -72,83 +294,30 @@ export interface UUIDMethod extends DefaultReturn {}
 export interface TimeMethod extends DefaultReturn {}
 
 export interface MinLengthMethod extends DefaultReturn {
-  maxLength: (limit: number) => {
+  maxLength: (limit: number) => DefaultReturn & {
     minWord: (limit: number) => DefaultReturn
-    notRequired: () => NotRequiredMethod
-    nullable: () => NullableMethod
-    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-    validate: (value: any) => boolean
-    validateAsync: (value: any) => Promise<boolean>
-    test: (value: any, valueName: string) => Tests
-    testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-  minWord: (limit: number) => {
+  minWord: (limit: number) => DefaultReturn & {
     maxLength: (limit: number) => DefaultReturn
-    notRequired: () => NotRequiredMethod
-    nullable: () => NullableMethod
-    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-    validate: (value: any) => boolean
-    validateAsync: (value: any) => Promise<boolean>
-    test: (value: any, valueName: string) => Tests
-    testAsync: (value: any, valueName: string) => Promise<Tests>
   }
 }
 
 export interface MaxLengthMethod extends DefaultReturn {
-  minLength: (limit: number) => {
+  minLength: (limit: number) => DefaultReturn & {
     minWord: (limit: number) => DefaultReturn
-    notRequired: () => NotRequiredMethod
-    nullable: () => NullableMethod
-    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-    validate: (value: any) => boolean
-    validateAsync: (value: any) => Promise<boolean>
-    test: (value: any, valueName: string) => Tests
-    testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-  minWord: (limit: number) => {
+  minWord: (limit: number) => DefaultReturn & {
     minLength: (limit: number) => DefaultReturn
-    notRequired: () => NotRequiredMethod
-    nullable: () => NullableMethod
-    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-    validate: (value: any) => boolean
-    validateAsync: (value: any) => Promise<boolean>
-    test: (value: any, valueName: string) => Tests
-    testAsync: (value: any, valueName: string) => Promise<Tests>
   }
 }
 
 export interface MinWordMethod extends DefaultReturn {
-  minLength: (limit: number) => {
+  minLength: (limit: number) => DefaultReturn & {
     maxLength: (limit: number) => DefaultReturn
-    notRequired: () => NotRequiredMethod
-    nullable: () => NullableMethod
-    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-    validate: (value: any) => boolean
-    validateAsync: (value: any) => Promise<boolean>
-    test: (value: any, valueName: string) => Tests
-    testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-  maxLength: (limit: number) => {
+  maxLength: (limit: number) => DefaultReturn & {
     minLength: (limit: number) => DefaultReturn
-    notRequired: () => NotRequiredMethod
-    nullable: () => NullableMethod
-    throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-    throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
-    validate: (value: any) => boolean
-    validateAsync: (value: any) => Promise<boolean>
-    test: (value: any, valueName: string) => Tests
-    testAsync: (value: any, valueName: string) => Promise<Tests>
   }
-}
-
-export interface NumberMethod extends DefaultReturn {
-  float: () => DefaultReturn
-  integer: () => DefaultReturn
 }
 
 export interface ObjectConfig {
@@ -192,13 +361,38 @@ export type ErrorClass<T extends Error> = new (message?: string) => T
 
 export type ErrorTypes = any // ErrorClass
 
-export type MethodTypes = 'equal' | 'object' | 'array' | 'string' | 'email' | 'UUID' | 'minWord' | 'maxLength' | 'minLength' | 'required' | 'notRequired' | 'number' | 'float' | 'integer' | 'boolean' | 'date' | 'min' | 'max' | 'time' | 'alias' | 'nullable'
+export type MethodTypes =
+  'equal' |
+  'object' |
+  'array' |
+  'string' |
+  'email' |
+  'UUID' |
+  'minWord' |
+  'maxLength' |
+  'minLength' |
+  'required' |
+  'notRequired' |
+  'number' |
+  'float' |
+  'integer' |
+  'boolean' |
+  'date' |
+  'min' |
+  'max' |
+  'positive' |
+  'negative' |
+  'time' |
+  'alias' |
+  'nullable'
 
 export interface Method {
   method: MethodTypes
   minWord?: number
   maxLength?: number
   minLength?: number
+  max?: number
+  min?: number
   dateType?: DateTypes
   dateToCompare?: Date
   timeType?: TimeTypes
@@ -272,6 +466,10 @@ export interface SetLocation {
     invalidValue?: string
     float?: string
     integer?: string
+    min?: string
+    max?: string
+    positive?: string
+    negative?: string
   }
   boolean?: {
     invalidValue?: string
@@ -311,6 +509,10 @@ export interface InformativeMessage {
     invalidValue: string
     float: string
     integer: string
+    min: string
+    max: string
+    positive: string
+    negative: string
   }
   boolean: {
     invalidValue: string
@@ -337,3 +539,8 @@ export interface InformativeMessage {
 }
 
 export type AnyInformativeMessage = InformativeMessage & Record<string, any>
+
+export interface ParamsMethod {
+  callbackMethodBuild: (build: Method) => void
+  callbackDefaultReturnMethods: () => DefaultReturn
+}
