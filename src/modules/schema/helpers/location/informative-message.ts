@@ -14,10 +14,10 @@ export const informativeMessage: type.InformativeMessage = {
     invalidValue: '[valueName] must be a number type!',
     float: '[valueName] must be a float!',
     integer: '[valueName] must be a integer!',
-    min: '',
-    max: '',
-    positive: '',
-    negative: ''
+    min: '[valueName] must be greater than or equal to [min]!',
+    max: '[valueName] must be less than or equal to [max]!',
+    positive: '[valueName] must be positive!',
+    negative: '[valueName] must be negative!'
   },
   boolean: {
     invalidValue: '[valueName] must be a boolean type!'
@@ -32,13 +32,7 @@ export const informativeMessage: type.InformativeMessage = {
   array: '[valueName] value must be an array!',
   nullable: '[valueName] value can be null, but other than undefined!',
   equal: 'value does not match!',
-  notEqual: {
-    invalidValue: ''
-  },
-  oneOf: {
-    invalidValue: ''
-  },
-  notOneOf: {
-    invalidValue: ''
-  }
+  notEqual: 'value may not match!',
+  oneOf: 'value does not have a match!',
+  notOneOf: 'value cannot have a matches!'
 }

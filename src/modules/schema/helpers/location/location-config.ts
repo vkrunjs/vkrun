@@ -30,7 +30,7 @@ export const locationConfig: Array<{ keys: string[] }> = [
   { keys: ['array'] },
 
   { keys: ['equal'] },
-  { keys: ['notEqual', 'invalidValue'] },
-  { keys: ['oneOf', 'invalidValue'] },
-  { keys: ['notOneOf', 'invalidValue'] }
+  { keys: ['notEqual'] },
+  { keys: ['oneOf'] },
+  { keys: ['notOneOf'] }
 ]

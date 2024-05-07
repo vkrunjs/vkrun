@@ -484,15 +484,9 @@ export interface SetLocation {
   array?: string
   nullable?: string
   equal?: string
-  notToEqual?: {
-    invalidValue?: string
-  }
-  oneOf?: {
-    invalidValue?: string
-  }
-  notOneOf?: {
-    invalidValue?: string
-  }
+  notToEqual?: string
+  oneOf?: string
+  notOneOf?: string
 }
 
 export interface InformativeMessage {
@@ -527,15 +521,9 @@ export interface InformativeMessage {
   array: string
   nullable: string
   equal: string
-  notEqual: {
-    invalidValue: string
-  }
-  oneOf: {
-    invalidValue: string
-  }
-  notOneOf: {
-    invalidValue: string
-  }
+  notEqual: string
+  oneOf: string
+  notOneOf: string
 }
 
 export type AnyInformativeMessage = InformativeMessage & Record<string, any>
