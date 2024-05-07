@@ -134,8 +134,32 @@ export class Schema implements type.ISchema {
     }
   }
 
+  nullable (): type.NullableMethod {
+    this.methodBuild({ method: 'nullable' })
+    return {
+      string: () => this.string(),
+      number: () => this.number(),
+      boolean: () => this.boolean(),
+      date: (type?: type.DateTypes) => this.date(type),
+      array: () => this.array(),
+      equal: (valueToCompare: any) => this.equal(valueToCompare),
+      object: (schema: type.ObjectType) => this.object(schema),
+      ...this.defaultReturnMethods()
+    }
+  }
+
   date (type?: type.DateTypes): type.DateMethod {
-    const dateTypes = ['ISO8601', 'DD/MM/YYYY', 'MM/DD/YYYY', 'DD-MM-YYYY', 'MM-DD-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'YYYY-MM-DD', 'YYYY-DD-MM']
+    const dateTypes = [
+      'ISO8601',
+      'DD/MM/YYYY',
+      'MM/DD/YYYY',
+      'DD-MM-YYYY',
+      'MM-DD-YYYY',
+      'YYYY/MM/DD',
+      'YYYY/DD/MM',
+      'YYYY-MM-DD',
+      'YYYY-DD-MM'
+    ]
     if (type !== undefined && !dateTypes.includes(type)) {
       console.error('vkrun-schema: date method received invalid parameter!')
       throw Error('vkrun-schema: date method received invalid parameter!')
@@ -279,6 +303,7 @@ export class Schema implements type.ISchema {
   private defaultReturnMethods (): type.DefaultReturn {
     return {
       notRequired: () => this.notRequired(),
+      nullable: () => this.nullable(),
       throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => {
         this.throw(value, valueName, ClassError)
       },
@@ -299,7 +324,11 @@ export class Schema implements type.ISchema {
     helper.throwError(this.tests, ClassError)
   }
 
-  async throwAsync (value: any, valueName: string, ClassError?: type.ErrorTypes): Promise<void> {
+  async throwAsync (
+    value: any,
+    valueName: string,
+    ClassError?: type.ErrorTypes
+  ): Promise<void> {
     this.value = await value
     this.valueName = valueName
     this.validateMethods()
