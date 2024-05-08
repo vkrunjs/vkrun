@@ -83,7 +83,7 @@ export interface NumberFloatMethod extends DefaultReturn {
     }
   }
   negative: () => DefaultReturn & {
-    min: (value: number) => {
+    min: (value: number) => DefaultReturn & {
       max: (value: number) => DefaultReturn
     }
     max: (value: number) => DefaultReturn & {
@@ -250,6 +250,10 @@ export interface NumberPositiveMethod extends DefaultReturn {
     }
   }
   min: (value: number) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
     float: () => DefaultReturn & {
       max: (value: number) => DefaultReturn
     }
@@ -258,6 +262,10 @@ export interface NumberPositiveMethod extends DefaultReturn {
     }
   }
   max: (value: number) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
+      float: () => DefaultReturn
+      integer: () => DefaultReturn
+    }
     float: () => DefaultReturn & {
       min: (value: number) => DefaultReturn
     }
@@ -531,4 +539,12 @@ export type AnyInformativeMessage = InformativeMessage & Record<string, any>
 export interface ParamsMethod {
   callbackMethodBuild: (build: Method) => void
   callbackDefaultReturnMethods: () => DefaultReturn
+}
+
+export interface ValidateMethod {
+  value: any
+  valueName: string
+  indexArray: number
+  callbackAddPassed: (success: SuccessTest) => void
+  callbackAddFailed: (error: ErrorTest) => void
 }

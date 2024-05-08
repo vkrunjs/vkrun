@@ -18,7 +18,8 @@ import {
   validateEqual,
   validateObject,
   validateArray,
-  validateNullable
+  validateNullable,
+  validateMaxNumber
 } from './validate'
 import { hasMethod } from '../has-method'
 import * as type from '../../../types'
@@ -60,6 +61,8 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
     } else if (rule.method === 'max') {
       if (hasMethod(validateMethodParams.methods, 'date')) {
         validateMaxDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
+      } else if (hasMethod(validateMethodParams.methods, 'number')) {
+        validateMaxNumber({ ...validateMethodParams, indexArray, max: rule.max })
       }
     } else if (rule.method === 'time') {
       validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
