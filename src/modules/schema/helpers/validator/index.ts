@@ -1,26 +1,4 @@
-import {
-  validateBoolean,
-  validateDate,
-  validateEmail,
-  validateFloat,
-  validateInteger,
-  validateMaxLength,
-  validateMinLength,
-  validateMinWord,
-  validateNumber,
-  validateRequired,
-  validateString,
-  validateUuid,
-  validateMinDate,
-  validateMaxDate,
-  validateTime,
-  validateNotRequired,
-  validateEqual,
-  validateObject,
-  validateArray,
-  validateNullable,
-  validateMaxNumber
-} from './validate'
+import * as validate from './validate'
 import { hasMethod } from '../has-method'
 import * as type from '../../../types'
 
@@ -31,43 +9,45 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
   const validateOtherMethods = (rule: any, value: any, indexArray?: number): void => {
     validateMethodParams.value = value
     if (rule.method === 'object') {
-      validateObject({ ...validateMethodParams, indexArray, schema: rule.schema })
+      validate.validateObject({ ...validateMethodParams, indexArray, schema: rule.schema })
     } else if (rule.method === 'string') {
-      validateString({ ...validateMethodParams, indexArray })
+      validate.validateString({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'minWord') {
-      validateMinWord({ ...validateMethodParams, indexArray, minWord: rule.minWord })
+      validate.validateMinWord({ ...validateMethodParams, indexArray, minWord: rule.minWord })
     } else if (rule.method === 'email') {
-      validateEmail({ ...validateMethodParams, indexArray })
+      validate.validateEmail({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'UUID') {
-      validateUuid({ ...validateMethodParams, indexArray, uuidVersion: rule.uuidVersion })
+      validate.validateUuid({ ...validateMethodParams, indexArray, uuidVersion: rule.uuidVersion })
     } else if (rule.method === 'maxLength') {
-      validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
+      validate.validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
     } else if (rule.method === 'minLength') {
-      validateMinLength({ ...validateMethodParams, indexArray, minLength: rule.minLength })
+      validate.validateMinLength({ ...validateMethodParams, indexArray, minLength: rule.minLength })
     } else if (rule.method === 'number') {
-      validateNumber({ ...validateMethodParams, indexArray })
+      validate.validateNumber({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'float') {
-      validateFloat({ ...validateMethodParams, indexArray })
+      validate.validateFloat({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'integer') {
-      validateInteger({ ...validateMethodParams, indexArray })
+      validate.validateInteger({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'boolean') {
-      validateBoolean({ ...validateMethodParams, indexArray })
+      validate.validateBoolean({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'date') {
-      validateDate({ ...validateMethodParams, indexArray, type: rule.dateType })
+      validate.validateDate({ ...validateMethodParams, indexArray, type: rule.dateType })
     } else if (rule.method === 'min') {
       if (hasMethod(validateMethodParams.methods, 'date')) {
-        validateMinDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
+        validate.validateMinDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
+      } else if (hasMethod(validateMethodParams.methods, 'number')) {
+        validate.validateMinNumber({ ...validateMethodParams, indexArray, min: rule.min })
       }
     } else if (rule.method === 'max') {
       if (hasMethod(validateMethodParams.methods, 'date')) {
-        validateMaxDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
+        validate.validateMaxDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
       } else if (hasMethod(validateMethodParams.methods, 'number')) {
-        validateMaxNumber({ ...validateMethodParams, indexArray, max: rule.max })
+        validate.validateMaxNumber({ ...validateMethodParams, indexArray, max: rule.max })
       }
     } else if (rule.method === 'time') {
-      validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
+      validate.validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
     } else if (rule.method === 'equal') {
-      validateEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
+      validate.validateEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
     }
   }
 
@@ -77,17 +57,17 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
   }
 
   if (hasMethod(validateMethodParams.methods, 'nullable')) {
-    validateNullable(validateMethodParams)
+    validate.validateNullable(validateMethodParams)
     if (validateMethodParams.value === null) return
   } else if (hasMethod(validateMethodParams.methods, 'notRequired')) {
-    validateNotRequired(validateMethodParams)
+    validate.validateNotRequired(validateMethodParams)
     if (validateMethodParams.value === undefined) return
   } else {
-    validateRequired(validateMethodParams)
+    validate.validateRequired(validateMethodParams)
   }
 
   if (hasMethod(validateMethodParams.methods, 'array')) {
-    validateArray({ ...validateMethodParams, validateOtherMethods })
+    validate.validateArray({ ...validateMethodParams, validateOtherMethods })
   } else {
     validateMethodParams.methods.forEach((rule: any) => { validateOtherMethods(rule, validateMethodParams.value) })
   }
