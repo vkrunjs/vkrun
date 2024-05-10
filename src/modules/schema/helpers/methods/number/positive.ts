@@ -9,22 +9,22 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
       callbackMethodBuild({ method: 'float' })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
-            max: (value: number) => {
+            max: (value: number | bigint) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
             ...callbackDefaultReturnMethods()
           }
         },
-        max: (value: number) => {
+        max: (value: number | bigint) => {
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -38,22 +38,22 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
       callbackMethodBuild({ method: 'integer' })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
-            max: (value: number) => {
+            max: (value: number | bigint) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
             ...callbackDefaultReturnMethods()
           }
         },
-        max: (value: number) => {
+        max: (value: number | bigint) => {
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -63,11 +63,11 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
         ...callbackDefaultReturnMethods()
       }
     },
-    min: (value: number) => {
+    min: (value: number | bigint) => {
       callbackMethodBuild({ method: 'min', min: value })
 
       return {
-        max: (value: number) => {
+        max: (value: number | bigint) => {
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
@@ -86,7 +86,7 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
           callbackMethodBuild({ method: 'float' })
 
           return {
-            max: (value: number) => {
+            max: (value: number | bigint) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
@@ -97,7 +97,7 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
           callbackMethodBuild({ method: 'integer' })
 
           return {
-            max: (value: number) => {
+            max: (value: number | bigint) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
@@ -107,11 +107,11 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
         ...callbackDefaultReturnMethods()
       }
     },
-    max: (value: number) => {
+    max: (value: number | bigint) => {
       callbackMethodBuild({ method: 'max', max: value })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
@@ -130,7 +130,7 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
           callbackMethodBuild({ method: 'float' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -141,7 +141,7 @@ export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMe
           callbackMethodBuild({ method: 'integer' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },

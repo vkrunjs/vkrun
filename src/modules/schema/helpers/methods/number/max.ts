@@ -1,6 +1,6 @@
 import * as type from '../../../../types'
 
-export const maxMethod = (value: number, params: type.ParamsMethod): type.NumberMaxMethod => {
+export const maxMethod = (value: number | bigint, params: type.ParamsMethod): type.NumberMaxMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'max', max: value })
 
@@ -9,7 +9,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
       callbackMethodBuild({ method: 'float' })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
@@ -28,7 +28,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'positive' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -39,7 +39,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'negative' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -53,7 +53,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
       callbackMethodBuild({ method: 'integer' })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
@@ -72,7 +72,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'positive' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -83,7 +83,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'negative' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -93,7 +93,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
         ...callbackDefaultReturnMethods()
       }
     },
-    min: (value: number) => {
+    min: (value: number | bigint) => {
       callbackMethodBuild({ method: 'min', min: value })
 
       return {
@@ -164,7 +164,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
       callbackMethodBuild({ method: 'positive' })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
@@ -183,7 +183,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'float' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -194,7 +194,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'integer' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -208,7 +208,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
       callbackMethodBuild({ method: 'negative' })
 
       return {
-        min: (value: number) => {
+        min: (value: number | bigint) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
@@ -227,7 +227,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'float' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -238,7 +238,7 @@ export const maxMethod = (value: number, params: type.ParamsMethod): type.Number
           callbackMethodBuild({ method: 'integer' })
 
           return {
-            min: (value: number) => {
+            min: (value: number | bigint) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },

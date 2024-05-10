@@ -2,7 +2,7 @@ import { informativeMessage } from '../../../location'
 import * as type from '../../../../../types'
 import * as util from '../../../../../utils'
 
-export const validatePositive = (params: type.ValidateMethod): void => {
+export const validateNegative = (params: type.ValidateMethod): void => {
   const {
     value,
     valueName,
@@ -13,15 +13,15 @@ export const validatePositive = (params: type.ValidateMethod): void => {
 
   const message = {
     expect: indexArray !== undefined
-      ? 'array index must contain a number positive'
-      : 'positive number',
-    error: informativeMessage.number.positive
+      ? 'array index must contain a number negative'
+      : 'negative number',
+    error: informativeMessage.number.negative
       .replace('[valueName]', valueName)
   }
 
-  if (util.isNumber(value) && value > 0) {
+  if (util.isNumber(value) && value < 0) {
     callbackAddPassed({
-      method: 'positive',
+      method: 'negative',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -29,7 +29,7 @@ export const validatePositive = (params: type.ValidateMethod): void => {
     })
   } else {
     callbackAddFailed({
-      method: 'positive',
+      method: 'negative',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
