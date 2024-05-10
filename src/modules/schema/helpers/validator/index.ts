@@ -28,6 +28,8 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
       validate.validateFloat({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'integer') {
       validate.validateInteger({ ...validateMethodParams, indexArray })
+    } else if (rule.method === 'positive') {
+      validate.validatePositive({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'boolean') {
       validate.validateBoolean({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'date') {
