@@ -4,7 +4,7 @@ import * as util from '../../../../../utils'
 
 export const validateMaxNumber = (
   params: type.ValidateMethod & {
-    max: number | bigint
+    max: number
   }
 ): void => {
   const {

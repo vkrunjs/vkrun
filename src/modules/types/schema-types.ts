@@ -43,51 +43,51 @@ export interface NotRequiredMethod {
 export interface NumberMethod extends DefaultReturn {
   float: () => NumberFloatMethod
   integer: () => NumberIntegerMethod
-  min: (value: number | bigint) => NumberMinMethod
-  max: (value: number | bigint) => NumberMaxMethod
+  min: (value: number) => NumberMinMethod
+  max: (value: number) => NumberMaxMethod
   positive: () => NumberPositiveMethod
   negative: () => NumberNegativeMethod
 }
 
 export interface NumberFloatMethod extends DefaultReturn {
-  min: (value: number | bigint) => DefaultReturn & {
-    max: (value: number | bigint) => DefaultReturn & {
+  min: (value: number) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
     positive: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
     negative: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
   }
-  max: (value: number | bigint) => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
+  max: (value: number) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
     positive: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
     negative: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
   }
   positive: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
     }
-    max: (value: number | bigint) => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
     }
   }
   negative: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
     }
-    max: (value: number | bigint) => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
     }
   }
 }
@@ -96,30 +96,30 @@ export type NumberIntegerMethod = NumberFloatMethod
 
 export interface NumberMinMethod extends DefaultReturn {
   float: () => DefaultReturn & {
-    max: (value: number | bigint) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
     positive: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
     negative: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
   }
   integer: () => DefaultReturn & {
-    max: (value: number | bigint) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
     positive: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
     negative: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
   }
-  max: (value: number | bigint) => DefaultReturn & {
+  max: (value: number) => DefaultReturn & {
     float: () => {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
@@ -138,57 +138,57 @@ export interface NumberMinMethod extends DefaultReturn {
     }
   }
   positive: () => DefaultReturn & {
-    max: (value: number | bigint) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
       float: () => DefaultReturn
       integer: () => DefaultReturn
     }
     float: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
     integer: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
   }
   negative: () => DefaultReturn & {
-    max: (value: number | bigint) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
       float: () => DefaultReturn
       integer: () => DefaultReturn
     }
     float: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
     integer: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
   }
 }
 
 export interface NumberMaxMethod extends DefaultReturn {
   float: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
     positive: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
     negative: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
   }
   integer: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
     positive: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
     negative: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
   }
-  min: (value: number | bigint) => DefaultReturn & {
+  min: (value: number) => DefaultReturn & {
     float: () => {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
@@ -207,70 +207,70 @@ export interface NumberMaxMethod extends DefaultReturn {
     }
   }
   positive: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
       float: () => DefaultReturn
       integer: () => DefaultReturn
     }
     float: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
     integer: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
   }
   negative: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
       float: () => DefaultReturn
       integer: () => DefaultReturn
     }
     float: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
     integer: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
   }
 }
 
 export interface NumberPositiveMethod extends DefaultReturn {
   float: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
     }
-    max: (value: number | bigint) => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
     }
   }
   integer: () => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+    min: (value: number) => DefaultReturn & {
+      max: (value: number) => DefaultReturn
     }
-    max: (value: number | bigint) => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+    max: (value: number) => DefaultReturn & {
+      min: (value: number) => DefaultReturn
     }
   }
-  min: (value: number | bigint) => DefaultReturn & {
-    max: (value: number | bigint) => DefaultReturn & {
+  min: (value: number) => DefaultReturn & {
+    max: (value: number) => DefaultReturn & {
       float: () => DefaultReturn
       integer: () => DefaultReturn
     }
     float: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
     integer: () => DefaultReturn & {
-      max: (value: number | bigint) => DefaultReturn
+      max: (value: number) => DefaultReturn
     }
   }
-  max: (value: number | bigint) => DefaultReturn & {
-    min: (value: number | bigint) => DefaultReturn & {
+  max: (value: number) => DefaultReturn & {
+    min: (value: number) => DefaultReturn & {
       float: () => DefaultReturn
       integer: () => DefaultReturn
     }
     float: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
     integer: () => DefaultReturn & {
-      min: (value: number | bigint) => DefaultReturn
+      min: (value: number) => DefaultReturn
     }
   }
 }
@@ -399,8 +399,8 @@ export interface Method {
   minWord?: number
   maxLength?: number
   minLength?: number
-  max?: number | bigint
-  min?: number | bigint
+  max?: number
+  min?: number
   dateType?: DateTypes
   dateToCompare?: Date
   timeType?: TimeTypes

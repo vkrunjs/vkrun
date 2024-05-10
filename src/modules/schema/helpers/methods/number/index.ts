@@ -13,8 +13,8 @@ export const numberMethod = (params: type.ParamsMethod): type.NumberMethod => {
   return {
     float: () => floatMethod(params),
     integer: () => integerMethod(params),
-    min: (value: number | bigint) => minMethod(value, params),
-    max: (value: number | bigint) => maxMethod(value, params),
+    min: (value: number) => minMethod(value, params),
+    max: (value: number) => maxMethod(value, params),
     positive: () => positiveMethod(params),
     negative: () => negativeMethod(params),
     ...callbackDefaultReturnMethods()

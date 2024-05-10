@@ -19,7 +19,7 @@ export const validatePositive = (params: type.ValidateMethod): void => {
       .replace('[valueName]', valueName)
   }
 
-  if (util.isNumber(value) && value > 0) {
+  if (util.isNumber(value) && value >= 0) {
     callbackAddPassed({
       method: 'positive',
       name: valueName,

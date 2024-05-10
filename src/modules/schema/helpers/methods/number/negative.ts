@@ -9,22 +9,22 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
       callbackMethodBuild({ method: 'float' })
 
       return {
-        min: (value: number | bigint) => {
+        min: (value: number) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
-            max: (value: number | bigint) => {
+            max: (value: number) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
             ...callbackDefaultReturnMethods()
           }
         },
-        max: (value: number | bigint) => {
+        max: (value: number) => {
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
-            min: (value: number | bigint) => {
+            min: (value: number) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -38,22 +38,22 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
       callbackMethodBuild({ method: 'integer' })
 
       return {
-        min: (value: number | bigint) => {
+        min: (value: number) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
-            max: (value: number | bigint) => {
+            max: (value: number) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
             ...callbackDefaultReturnMethods()
           }
         },
-        max: (value: number | bigint) => {
+        max: (value: number) => {
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
-            min: (value: number | bigint) => {
+            min: (value: number) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -63,11 +63,11 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
         ...callbackDefaultReturnMethods()
       }
     },
-    min: (value: number | bigint) => {
+    min: (value: number) => {
       callbackMethodBuild({ method: 'min', min: value })
 
       return {
-        max: (value: number | bigint) => {
+        max: (value: number) => {
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
@@ -86,7 +86,7 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
           callbackMethodBuild({ method: 'float' })
 
           return {
-            max: (value: number | bigint) => {
+            max: (value: number) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
@@ -97,7 +97,7 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
           callbackMethodBuild({ method: 'integer' })
 
           return {
-            max: (value: number | bigint) => {
+            max: (value: number) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
@@ -107,11 +107,11 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
         ...callbackDefaultReturnMethods()
       }
     },
-    max: (value: number | bigint) => {
+    max: (value: number) => {
       callbackMethodBuild({ method: 'max', max: value })
 
       return {
-        min: (value: number | bigint) => {
+        min: (value: number) => {
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
@@ -130,7 +130,7 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
           callbackMethodBuild({ method: 'float' })
 
           return {
-            min: (value: number | bigint) => {
+            min: (value: number) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
@@ -141,7 +141,7 @@ export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMe
           callbackMethodBuild({ method: 'integer' })
 
           return {
-            min: (value: number | bigint) => {
+            min: (value: number) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
