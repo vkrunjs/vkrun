@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.38.2
+
+- remove console logs
+
 ## 0.38.1
 
 - remove default parameters from setCookie method

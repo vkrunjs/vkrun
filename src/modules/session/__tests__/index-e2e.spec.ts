@@ -24,7 +24,6 @@ describe('Session', () => {
     sessionToken: string
   } => {
     const setCookie = response.headers['set-cookie']
-    console.log({ setCookie })
     let sessionId = ''
     let sessionToken = ''
 

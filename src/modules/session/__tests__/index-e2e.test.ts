@@ -423,7 +423,6 @@ describe('Session', () => {
     })
 
     await axios.get('http://localhost:3779/signout-with-next-handler').then((response) => {
-      console.log({ asd: response.data })
       expect(response.status).toEqual(200)
       expect(response.data).toEqual('SignOut OK')
     })
