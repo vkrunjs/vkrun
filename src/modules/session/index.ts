@@ -24,7 +24,6 @@ export class VkrunSession {
       domain: config.domain,
       priority: config.priority
     }
-    console.log({ cookieOptions: this.cookieOptions })
     if (config.sanitizationEvery) {
       util.validateTimeFormat(config.sanitizationEvery, 'session')
       this.sanitizationEvery = util.convertExpiresIn(config.sanitizationEvery)

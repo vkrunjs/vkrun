@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.38.3
+
+- remove console log
+
 ## 0.38.2
 
 - remove console logs
