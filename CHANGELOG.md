@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.38.0
+
+- session instance receiving cookie attributes
+
 ## 0.37.0
 
 - add signOut method to session module

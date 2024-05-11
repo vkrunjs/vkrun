@@ -17,4 +17,12 @@ export interface SessionCreateOptions {
 export interface SessionConfig {
   secretKey: string | string[]
   sanitizationEvery?: number | string
+  httpOnly?: boolean
+  secure?: boolean
+  expires?: string
+  maxAge?: number
+  path?: string
+  sameSite?: 'Strict' | 'Lax' | 'None'
+  domain?: string
+  priority?: 'Low' | 'Medium' | 'High'
 }

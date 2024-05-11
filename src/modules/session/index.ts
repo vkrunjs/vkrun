@@ -6,6 +6,7 @@ import * as type from '../types'
 export class VkrunSession {
   private readonly secretKey: string | string[]
   private readonly sessions: type.Sessions = new Map()
+  private readonly cookieOptions: type.CookieOptions
   // eslint-disable-next-line @typescript-eslint/prefer-readonly
   private sanitizationActive: boolean = false
   private readonly sanitizationEvery: number = util.convertExpiresIn('5m') // used in the startSanitization function
@@ -13,6 +14,17 @@ export class VkrunSession {
   constructor (config: type.SessionConfig) {
     util.validateSecretKey(config.secretKey, 'session')
     this.secretKey = config.secretKey
+    this.cookieOptions = {
+      httpOnly: config.httpOnly,
+      secure: config.secure,
+      expires: config.expires,
+      maxAge: config.maxAge,
+      path: config.path,
+      sameSite: config.sameSite,
+      domain: config.domain,
+      priority: config.priority
+    }
+    console.log({ cookieOptions: this.cookieOptions })
     if (config.sanitizationEvery) {
       util.validateTimeFormat(config.sanitizationEvery, 'session')
       this.sanitizationEvery = util.convertExpiresIn(config.sanitizationEvery)
@@ -27,7 +39,10 @@ export class VkrunSession {
   ): void {
     util.validateTimeFormat(options.expiresIn, 'session')
     const { sessionId } = helper.getSessionCookies(request)
-
+    options = {
+      ...options,
+      ...this.cookieOptions
+    }
     if (this.sessions.has(sessionId)) {
       this.sessions.delete(sessionId)
     }
@@ -35,7 +50,14 @@ export class VkrunSession {
     let createdSessionId = util.randomUUID()
     if (options.sessionId) createdSessionId = options.sessionId
 
-    const session = helper.createSession({ request, response, sessionId: createdSessionId, data, options, secretKey: this.secretKey })
+    const session = helper.createSession({
+      request,
+      response,
+      sessionId: createdSessionId,
+      data,
+      options,
+      secretKey: this.secretKey
+    })
     this.sessions.set(createdSessionId, session)
 
     if (!this.sanitizationActive) helper.startSanitization({ ...this, request })
