@@ -1,5 +1,10 @@
 # VkrunJS Releases
 
+## 0.38.1
+
+- remove default parameters from setCookie method
+
+
 ## 0.38.0
 
 - session instance receiving cookie attributes

@@ -88,8 +88,8 @@ describe('Session', () => {
     expect(error.response.headers['x-xss-protection']).toEqual('1; mode=block')
     expect(error.response.headers['content-type']).toEqual('text/plain')
     expect(error.response.headers['set-cookie']).toEqual([
-      'session-id=; HttpOnly=true; Max-Age=0; Path=/; Secure=true; SameSite=Strict; Priority=High; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-      'session-token=; HttpOnly=true; Max-Age=0; Path=/; Secure=true; SameSite=Strict; Priority=High; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      'session-id=; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+      'session-token=; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
     ])
     expect(v.isString(error.response.headers.date)).toBeTruthy()
     expect(error.response.headers.connection).toEqual('close')
