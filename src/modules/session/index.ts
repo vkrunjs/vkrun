@@ -66,8 +66,8 @@ export class VkrunSession {
     const { sessionId } = helper.getSessionCookies(request)
 
     if (this.sessions.has(sessionId)) {
-      this.sessions.delete(sessionId)
       helper.setDeleteSessionHeaders(response)
+      this.sessions.delete(sessionId)
     }
   }
 
@@ -82,8 +82,8 @@ export class VkrunSession {
       const { sessionId } = helper.getSessionCookies(request)
 
       if (this.sessions.has(sessionId)) {
-        this.sessions.delete(sessionId)
         helper.setDeleteSessionHeaders(response)
+        this.sessions.delete(sessionId)
       }
 
       if (next) next()
@@ -118,6 +118,7 @@ export class VkrunSession {
 
       next()
     } else {
+      helper.setDeleteSessionHeaders(response)
       helper.responseUnauthorized(response)
     }
   }

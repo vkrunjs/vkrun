@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.38.4
+
+- session remove cookies only in correct scenarios
+
 ## 0.38.3
 
 - remove console log

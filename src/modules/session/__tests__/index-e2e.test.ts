@@ -88,9 +88,27 @@ describe('Session', () => {
     expect(error.response.headers['x-xss-protection']).toEqual('1; mode=block')
     expect(error.response.headers['content-type']).toEqual('text/plain')
     expect(error.response.headers['set-cookie']).toEqual([
-      'session-id=; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-      'session-token=; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      'session-id=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+      'session-token=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
     ])
+    expect(v.isString(error.response.headers.date)).toBeTruthy()
+    expect(error.response.headers.connection).toEqual('close')
+    expect(error.response.headers['content-length']).toEqual('12')
+    expect(error.response.data).toEqual('Unauthorized')
+  }
+
+  const validateSessionUnauthorizedAndClearCookies = (error: any): void => {
+    expect(error.response.status).toEqual(401)
+    expect(Object.keys(error.response.headers).length).toEqual(12)
+    expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
+    expect(error.response.headers['cache-control']).toEqual('no-store, no-cache, must-revalidate, private')
+    expect(error.response.headers.pragma).toEqual('no-cache')
+    expect(error.response.headers.expires).toEqual('0')
+    expect(error.response.headers['x-content-type-options']).toEqual('nosniff')
+    expect(error.response.headers['x-frame-options']).toEqual('DENY')
+    expect(error.response.headers['content-security-policy']).toEqual("default-src 'self'")
+    expect(error.response.headers['x-xss-protection']).toEqual('1; mode=block')
+    expect(error.response.headers['content-type']).toEqual('text/plain')
     expect(v.isString(error.response.headers.date)).toBeTruthy()
     expect(error.response.headers.connection).toEqual('close')
     expect(error.response.headers['content-length']).toEqual('12')
@@ -211,7 +229,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3796/protect', {}, {
       headers: { cookie: `session-id=123; session-token=${sessionToken}` }
     }).catch((error: any) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()
@@ -332,7 +350,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3792/protect', {}, {
       headers: { cookie }
     }).catch((error) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()
@@ -430,7 +448,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3779/protect', {}, {
       headers: { cookie }
     }).catch((error: v.SuperRequestError) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()
@@ -467,7 +485,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3778/protect', {}, {
       headers: { cookie }
     }).catch((error: v.SuperRequestError) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()
