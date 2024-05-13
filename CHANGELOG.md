@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.39.1
+
+- remove console log
+
 ## 0.39.0
 
 - add default attributes to session instance
