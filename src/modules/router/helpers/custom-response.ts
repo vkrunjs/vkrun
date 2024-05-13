@@ -34,12 +34,6 @@ export const customResponse = (_response: ServerResponse): type.Response => {
 
   response.setCookie = function (name: string, value: string, options?: type.CookieOptions): void {
     const existingCookies = this.getHeader('Set-Cookie') as string[] | undefined
-    const defaultOptions: type.CookieOptions = {
-      httpOnly: true,
-      maxAge: 3600,
-      path: '/',
-      secure: true
-    }
 
     let cookies: string[] = []
 
@@ -49,46 +43,29 @@ export const customResponse = (_response: ServerResponse): type.Response => {
 
     let cookie = `${name}=${value}`
 
-    if (options) {
-      if (options.httpOnly !== undefined) {
-        defaultOptions.httpOnly = options.httpOnly
-      }
-      if (options.maxAge !== undefined) {
-        defaultOptions.maxAge = options.maxAge
-      }
-      if (options.path !== undefined) {
-        defaultOptions.path = options.path
-      }
-      if (options.secure !== undefined) {
-        defaultOptions.secure = options.secure
-      }
-      if (options.sameSite !== undefined) {
-        defaultOptions.sameSite = options.sameSite
-      }
-      if (options.domain !== undefined) {
-        defaultOptions.domain = options.domain
-      }
-      if (options.priority !== undefined) {
-        defaultOptions.priority = options.priority
-      }
-      if (options.expires !== undefined) {
-        defaultOptions.expires = options.expires
-      }
+    if (options?.httpOnly) {
+      cookie += `; HttpOnly=${options.httpOnly}`
     }
-
-    cookie += `; HttpOnly=${defaultOptions.httpOnly}; Max-Age=${defaultOptions.maxAge}; Path=${defaultOptions.path}; Secure=${defaultOptions.secure}`
-
-    if (defaultOptions.sameSite) {
-      cookie += `; SameSite=${defaultOptions.sameSite}`
+    if (options?.maxAge) {
+      cookie += `; Max-Age=${options.maxAge}`
     }
-    if (defaultOptions.domain) {
-      cookie += `; Domain=${defaultOptions.domain}`
+    if (options?.path) {
+      cookie += `; Path=${options.path}`
     }
-    if (defaultOptions.priority) {
-      cookie += `; Priority=${defaultOptions.priority}`
+    if (options?.secure) {
+      cookie += `; Secure=${options.secure}`
     }
-    if (defaultOptions.expires) {
-      cookie += `; Expires=${defaultOptions.expires}`
+    if (options?.sameSite) {
+      cookie += `; SameSite=${options.sameSite}`
+    }
+    if (options?.domain) {
+      cookie += `; Domain=${options.domain}`
+    }
+    if (options?.priority) {
+      cookie += `; Priority=${options.priority}`
+    }
+    if (options?.expires) {
+      cookie += `; Expires=${options.expires}`
     }
 
     cookies.push(cookie)

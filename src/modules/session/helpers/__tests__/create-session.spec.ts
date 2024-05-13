@@ -22,15 +22,15 @@ describe('Session - Create Session', () => {
     const sessionId = '123'
     const secretKey = generateSecretKey()
     const data = { userId: 123, email: 'any@mail.com' }
-    const options = { expiresIn: '15m' }
 
     const sut = createSession({
       request: requestMock,
       response: responseMock,
       sessionId,
       data,
-      options,
-      secretKey
+      options: {},
+      secretKey,
+      expiresIn: '15m'
     })
 
     expect(util.isNumber(sut.createdAt)).toBeTruthy()
@@ -60,15 +60,15 @@ describe('Session - Create Session', () => {
     const sessionId = '123'
     const secretKey = generateSecretKey()
     const data = { userId: 123, email: 'any@mail.com' }
-    const options = { expiresIn: '15m' }
 
     const sut = createSession({
       request: requestMock,
       response: responseMock,
       sessionId,
       data,
-      options,
-      secretKey
+      options: {},
+      secretKey,
+      expiresIn: '15m'
     })
 
     expect(util.isNumber(sut.createdAt)).toBeTruthy()

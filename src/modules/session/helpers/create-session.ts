@@ -8,16 +8,26 @@ export const createSession = (params: {
   response: type.Response
   sessionId: string
   data: any
-  options: type.SessionCreateOptions
   secretKey: string | string[]
+  expiresIn: string
+  options: type.SessionCreateOptions & type.SessionCookieOptions
 }): type.SessionData => {
   const { request, response, sessionId, data, options, secretKey } = params
-  util.validateTimeFormat(options.expiresIn, 'session')
-  const token = jwt.encrypt(data, { secretKey, expiresIn: options.expiresIn })
-  setCreateSessionHeaders(response, sessionId, token)
+  const expiresIn = util.convertExpiresIn(params.expiresIn ?? '1h', 'S')
+  const token = jwt.encrypt(data, { secretKey, expiresIn })
+  const cookieOptions = {
+    httpOnly: options.httpOnly,
+    secure: options.secure,
+    maxAge: options.maxAge,
+    path: options.path,
+    sameSite: options.sameSite,
+    domain: options.domain,
+    priority: options.priority
+  }
+  setCreateSessionHeaders(response, sessionId, token, cookieOptions)
   return {
     createdAt: Date.now(),
-    expiresIn: util.convertExpiresIn(options.expiresIn),
+    expiresIn: util.convertExpiresIn(expiresIn),
     remoteAddress: request.socket.remoteAddress,
     remoteFamily: request.socket.remoteFamily,
     userAgent: request.headers['user-agent'],

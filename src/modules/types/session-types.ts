@@ -11,10 +11,30 @@ export interface SessionData {
 
 export interface SessionCreateOptions {
   sessionId?: string
-  expiresIn: number | string
 }
 
-export interface SessionConfig {
-  secretKey: string | string[]
+export interface SessionCookieOptions {
+  httpOnly?: boolean
+  secure?: boolean
+  maxAge?: number
+  path?: string
+  sameSite?: 'Strict' | 'Lax' | 'None'
+  domain?: string
+  priority?: 'Low' | 'Medium' | 'High'
+}
+
+export interface SetSessionCookieOptions {
+  httpOnly?: boolean
+  secure?: boolean
+  expiresIn?: string
+  path?: string
+  sameSite?: 'Strict' | 'Lax' | 'None'
+  domain?: string
+  priority?: 'Low' | 'Medium' | 'High'
+}
+
+export interface SessionConfig extends SetSessionCookieOptions {
+  secretKey?: string | string[]
   sanitizationEvery?: number | string
+  expiresIn?: string
 }

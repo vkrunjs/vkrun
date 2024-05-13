@@ -1,5 +1,34 @@
 # VkrunJS Releases
 
+## 0.39.1
+
+- remove console log
+
+## 0.39.0
+
+- add default attributes to session instance
+
+## 0.38.4
+
+- session remove cookies only in correct scenarios
+
+## 0.38.3
+
+- remove console log
+
+## 0.38.2
+
+- remove console logs
+
+## 0.38.1
+
+- remove default parameters from setCookie method
+
+
+## 0.38.0
+
+- session instance receiving cookie attributes
+
 ## 0.37.0
 
 - add signOut method to session module
