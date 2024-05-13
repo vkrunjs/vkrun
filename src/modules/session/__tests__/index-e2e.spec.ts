@@ -195,7 +195,7 @@ describe('Session', () => {
     await v.superRequest(app).post('/protect', {}, {
       headers: { cookie: `session-id=${sessionId}; session-token=123` }
     }).catch((error: v.SuperRequestError) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()
@@ -271,7 +271,7 @@ describe('Session', () => {
     await v.superRequest(app).post('/protect', {}, {
       headers: { cookie: `session-id=${sessionId}` }
     }).catch((error: v.SuperRequestError) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()

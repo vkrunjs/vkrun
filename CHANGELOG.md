@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.39.2
+
+- fix user session crashing when there is an attempt to use access credentials on another machine
+
 ## 0.39.1
 
 - remove console log
