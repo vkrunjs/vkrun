@@ -22,10 +22,10 @@ describe('Validator Max Number Method', () => {
       schema().number().integer().min(1).max(5).validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().negative().max(5).validate(5)
+      schema().number().negative().max(-1).validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().negative().min(1).max(5).validate(5)
+      schema().number().negative().min(-5).max(-1).validate(-5)
     ).toBeTruthy()
     expect(
       schema().number().positive().max(5).validate(5)
