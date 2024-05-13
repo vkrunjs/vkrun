@@ -3,13 +3,12 @@ import axios from 'axios'
 import { generateSecretKey } from '../helpers'
 
 const secretKey = generateSecretKey()
-const session = v.Session({ secretKey, sanitizationEvery: '5m' })
+const session = v.Session({ secretKey, sanitizationEvery: '5m', expiresIn: '15m' })
 
 class ExampleController implements v.Controller {
   public handle (request: v.Request, response: v.Response): any {
     const userData = { userId: 123, email: 'any@mail.com' }
-    const config = { expiresIn: '15m' }
-    session.signIn(request, response, userData, config)
+    session.signIn(request, response, userData)
     response.status(200).json({ session: request.session })
   }
 }
@@ -151,13 +150,12 @@ describe('Session', () => {
 
   it('throw new Error when secret key is invalid', async () => {
     try {
-      const session = v.Session({ secretKey: '123' })
+      const session = v.Session({ secretKey: '123', expiresIn: '15m' })
 
       class ExampleController implements v.Controller {
         public handle (request: v.Request, response: v.Response): any {
           const userData = { userId: 123, email: 'any@mail.com' }
-          const config = { expiresIn: '15m' }
-          session.signIn(request, response, userData, config)
+          session.signIn(request, response, userData)
           response.status(200).json({ session: request.session })
         }
       }
@@ -317,14 +315,13 @@ describe('Session', () => {
   it('return unauthorized when session is expired', async () => {
     const app = v.App()
     const secretKey = generateSecretKey()
-    const session = v.Session({ secretKey, sanitizationEvery: 1 })
+    const session = v.Session({ secretKey, sanitizationEvery: 1, expiresIn: '1s' })
     const router = v.Router()
 
     class ExampleBController implements v.Controller {
       public handle (request: v.Request, response: v.Response): any {
         const userData = { userId: 123, email: 'any@mail.com' }
-        const config = { expiresIn: 1 }
-        session.signIn(request, response, userData, config)
+        session.signIn(request, response, userData)
         response.status(200).json({ session: request.session })
       }
     }

@@ -2,13 +2,12 @@ import v from '../../../index'
 import { generateSecretKey } from '../helpers'
 
 const secretKey = generateSecretKey()
-const session = v.Session({ secretKey, sanitizationEvery: '5m' })
+const session = v.Session({ secretKey, sanitizationEvery: '5m', expiresIn: '15m' })
 
 class ExampleController implements v.Controller {
   public handle (request: v.Request, response: v.Response): any {
     const userData = { userId: 123, email: 'any@mail.com' }
-    const config = { expiresIn: '15m' }
-    session.signIn(request, response, userData, config)
+    session.signIn(request, response, userData)
     response.status(200).json({ session: request.session })
   }
 }
@@ -102,7 +101,6 @@ describe('Session', () => {
     expect(error.response.headers['content-security-policy']).toEqual("default-src 'self'")
     expect(error.response.headers['x-xss-protection']).toEqual('1; mode=block')
     expect(error.response.headers['content-type']).toEqual('text/plain')
-
     expect(v.isString(error.response.headers.date)).toBeTruthy()
     expect(error.response.headers.connection).toEqual('close')
     expect(error.response.headers['content-length']).toEqual('12')
@@ -144,13 +142,12 @@ describe('Session', () => {
 
   it('throw new Error when secret key is invalid', async () => {
     try {
-      const session = v.Session({ secretKey: '123' })
+      const session = v.Session({ secretKey: '123', expiresIn: '15m' })
 
       class ExampleController implements v.Controller {
         public handle (request: v.Request, response: v.Response): any {
           const userData = { userId: 123, email: 'any@mail.com' }
-          const config = { expiresIn: '15m' }
-          session.signIn(request, response, userData, config)
+          session.signIn(request, response, userData)
           response.status(200).json({ session: request.session })
         }
       }
@@ -302,14 +299,13 @@ describe('Session', () => {
   it('return unauthorized when session is expired', async () => {
     const app = v.App()
     const secretKey = generateSecretKey()
-    const session = v.Session({ secretKey, sanitizationEvery: 1 })
+    const session = v.Session({ secretKey, sanitizationEvery: 1, expiresIn: '1s' })
     const router = v.Router()
 
     class ExampleBController implements v.Controller {
       public handle (request: v.Request, response: v.Response): any {
         const userData = { userId: 123, email: 'any@mail.com' }
-        const config = { expiresIn: 1 }
-        session.signIn(request, response, userData, config)
+        session.signIn(request, response, userData)
         response.status(200).json({ session: request.session })
       }
     }
@@ -322,6 +318,8 @@ describe('Session', () => {
     let cookie = ''
 
     await v.superRequest(app).post('/signin').then((response) => {
+      console.log(JSON.stringify({ response }, null, 2))
+
       const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
       cookie = _cookie
       validateSessionSuccess(response, sessionId, sessionToken)
@@ -334,6 +332,7 @@ describe('Session', () => {
     await v.superRequest(app).post('/protect', {}, {
       headers: { cookie }
     }).catch((error: v.SuperRequestError) => {
+      console.log(JSON.stringify({ error }, null, 2))
       validateSessionUnauthorizedAndClearCookies(error)
     })
 

@@ -35,7 +35,7 @@ export interface CookieOptions {
   httpOnly?: boolean
   secure?: boolean
   expires?: string
-  maxAge?: number
+  maxAge?: string | number
   path?: string
   sameSite?: 'Strict' | 'Lax' | 'None'
   domain?: string

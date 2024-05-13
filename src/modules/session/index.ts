@@ -5,24 +5,26 @@ import * as type from '../types'
 
 export class VkrunSession {
   private readonly secretKey: string | string[]
+  private readonly expiresIn: string
   private readonly sessions: type.Sessions = new Map()
-  private readonly cookieOptions: type.CookieOptions
+  private readonly cookieOptions: type.SessionCookieOptions
   // eslint-disable-next-line @typescript-eslint/prefer-readonly
   private sanitizationActive: boolean = false
-  private readonly sanitizationEvery: number = util.convertExpiresIn('5m') // used in the startSanitization function
+  private readonly sanitizationEvery: number | string = util.convertExpiresIn('5m') // used in the startSanitization function
 
   constructor (config: type.SessionConfig) {
-    util.validateSecretKey(config.secretKey, 'session')
-    this.secretKey = config.secretKey
+    this.secretKey = config.secretKey ?? helper.generateSecretKey()
+    this.expiresIn = config.expiresIn ?? '1h'
+    util.validateSecretKey(this.secretKey, 'session')
+    util.validateTimeFormat(this.expiresIn, 'session')
     this.cookieOptions = {
-      httpOnly: config.httpOnly,
-      secure: config.secure,
-      expires: config.expires,
-      maxAge: config.maxAge,
-      path: config.path,
-      sameSite: config.sameSite,
-      domain: config.domain,
-      priority: config.priority
+      httpOnly: config?.httpOnly !== undefined ? config.httpOnly : true,
+      secure: config?.secure !== undefined ? config.httpOnly : true,
+      maxAge: config?.expiresIn !== undefined ? util.convertExpiresIn(config.expiresIn, 'S') : 3600,
+      path: config?.path ?? '/',
+      sameSite: config?.sameSite ?? 'None',
+      domain: config?.domain,
+      priority: config?.priority
     }
     if (config.sanitizationEvery) {
       util.validateTimeFormat(config.sanitizationEvery, 'session')
@@ -34,14 +36,11 @@ export class VkrunSession {
     request: type.Request,
     response: type.Response,
     data: any,
-    options: type.SessionCreateOptions
+    options?: type.SessionCreateOptions
   ): void {
-    util.validateTimeFormat(options.expiresIn, 'session')
     const { sessionId } = helper.getSessionCookies(request)
-    options = {
-      ...options,
-      ...this.cookieOptions
-    }
+    options = { ...options, ...this.cookieOptions }
+
     if (this.sessions.has(sessionId)) {
       this.sessions.delete(sessionId)
     }
@@ -55,10 +54,11 @@ export class VkrunSession {
       sessionId: createdSessionId,
       data,
       options,
-      secretKey: this.secretKey
+      secretKey: this.secretKey,
+      expiresIn: this.expiresIn
     })
     this.sessions.set(createdSessionId, session)
-
+    console.log({ sessions: this.sessions })
     if (!this.sanitizationActive) helper.startSanitization({ ...this, request })
   }
 
@@ -93,7 +93,7 @@ export class VkrunSession {
 
   private handle (request: type.Request, response: type.Response, next: type.NextFunction): void {
     const { sessionId, sessionToken } = helper.getSessionCookies(request)
-
+    console.log({ sessions: this.sessions })
     if (!sessionId) {
       helper.responseBadRequest(response)
       return
