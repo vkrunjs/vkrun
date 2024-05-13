@@ -58,7 +58,6 @@ export class VkrunSession {
       expiresIn: this.expiresIn
     })
     this.sessions.set(createdSessionId, session)
-    console.log({ sessions: this.sessions })
     if (!this.sanitizationActive) helper.startSanitization({ ...this, request })
   }
 
@@ -93,7 +92,7 @@ export class VkrunSession {
 
   private handle (request: type.Request, response: type.Response, next: type.NextFunction): void {
     const { sessionId, sessionToken } = helper.getSessionCookies(request)
-    console.log({ sessions: this.sessions })
+
     if (!sessionId) {
       helper.responseBadRequest(response)
       return
