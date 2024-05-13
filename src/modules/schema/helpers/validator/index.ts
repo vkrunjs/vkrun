@@ -30,6 +30,8 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
       validate.validateInteger({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'positive') {
       validate.validatePositive({ ...validateMethodParams, indexArray })
+    } else if (rule.method === 'negative') {
+      validate.validateNegative({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'boolean') {
       validate.validateBoolean({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'date') {
