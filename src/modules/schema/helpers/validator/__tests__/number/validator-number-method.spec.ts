@@ -12,6 +12,90 @@ describe('Validator Number Method', () => {
     expect(sut).toBeTruthy()
   })
 
+  it('Should be able to validate all sub methods of number method and return true if the value is valid', () => {
+    const sut = [
+      // number > float
+      schema().number().float().validate(1.5),
+
+      // number > float > min > ...
+      schema().number().float().min(1).validate(1.5),
+      schema().number().float().min(1).max(2).validate(1.5),
+      schema().number().float().min(1).max(2).positive().validate(1.5),
+      schema().number().float().min(-2).max(-1).negative().validate(-1.5),
+      schema().number().float().min(1).positive().validate(1.5),
+      schema().number().float().min(-2).positive().max(2).validate(1.5),
+      schema().number().float().min(-2).negative().validate(-1.5),
+      schema().number().float().min(-2).negative().max(-1).validate(-1.5),
+
+      // number > float > max > ...
+      schema().number().float().max(2).validate(1.5),
+      schema().number().float().max(2).min(1).validate(1.5),
+      schema().number().float().max(2).min(1).positive().validate(1.5),
+      schema().number().float().max(-1).min(-2).negative().validate(-1.5),
+      schema().number().float().min(1).positive().validate(1.5),
+      schema().number().float().max(2).positive().min(-2).validate(1.5),
+      schema().number().float().max(-1).negative().validate(-1.5),
+      schema().number().float().max(-1).negative().min(-2).validate(-1.5),
+
+      // number > float > positive > ...
+      schema().number().float().positive().validate(1.5),
+      schema().number().float().positive().min(1).validate(1.5),
+      schema().number().float().positive().min(1).max(2).validate(1.5),
+      schema().number().float().positive().max(2).min(1).validate(1.5),
+
+      // number > float > negative > ...
+      schema().number().float().negative().validate(-1.5),
+      schema().number().float().negative().min(-2).validate(-1.5),
+      schema().number().float().negative().min(-2).max(-1).validate(-1.5),
+      schema().number().float().negative().max(-1).min(-2).validate(-1.5),
+
+      // number > integer
+      schema().number().integer().validate(2),
+
+      // number > integer > min > ...
+      schema().number().integer().min(1).validate(2),
+      schema().number().integer().min(1).max(2).validate(1),
+      schema().number().integer().min(1).max(2).positive().validate(1),
+      schema().number().integer().min(-2).max(-1).negative().validate(-1),
+      schema().number().integer().min(1).positive().validate(1),
+      schema().number().integer().min(-2).positive().max(2).validate(1),
+      schema().number().integer().min(-2).negative().validate(-1),
+      schema().number().integer().min(-2).negative().max(-1).validate(-1),
+
+      // number > integer > max > ...
+      schema().number().integer().max(2).validate(1),
+      schema().number().integer().max(2).min(1).validate(1),
+      schema().number().integer().max(2).min(1).positive().validate(1),
+      schema().number().integer().max(-1).min(-2).negative().validate(-1),
+      schema().number().integer().min(1).positive().validate(1),
+      schema().number().integer().max(2).positive().min(-2).validate(1),
+      schema().number().integer().max(-1).negative().validate(-1),
+      schema().number().integer().max(-1).negative().min(-2).validate(-1),
+
+      // number > integer > positive > ...
+      schema().number().integer().positive().validate(1),
+      schema().number().integer().positive().min(1).validate(1),
+      schema().number().integer().positive().min(1).max(2).validate(1),
+      schema().number().integer().positive().max(2).min(1).validate(1),
+
+      // number > integer > negative > ...
+      schema().number().integer().negative().validate(-1),
+      schema().number().integer().negative().min(-2).validate(-1),
+      schema().number().integer().negative().min(-2).max(-1).validate(-1),
+      schema().number().integer().negative().max(-1).min(-2).validate(-1),
+
+      // number > min
+      schema().number().min(1).validate(1.5),
+
+      // number > min > float > ...
+      schema().number().min(1).float().validate(1.5),
+      schema().number().min(1).float().max(2).validate(1.5)
+
+    ]
+
+    expect(sut.every((value: boolean) => value)).toBeTruthy()
+  })
+
   it('Should be able to validate the number method and return false if list is invalid', () => {
     const invalidList = [
       'invalid-uuid-57b73598-8764-4ad0-a76a-679bb6640eb1',

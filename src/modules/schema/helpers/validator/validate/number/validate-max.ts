@@ -25,7 +25,9 @@ export const validateMaxNumber = (
       .replace('[value]', String(value))
       .replace('[max]', String(max))
   }
-
+  console.log({ value, max })
+  console.log('util.isNumber(value)', util.isNumber(value))
+  console.log('value <= max', value <= max)
   if (util.isNumber(value) && value <= max) {
     callbackAddPassed({
       method: 'max',

@@ -133,7 +133,7 @@ export const floatMethod = (params: type.ParamsMethod): type.NumberFloatMethod =
           callbackMethodBuild({ method: 'min', min: value })
 
           return {
-            max: () => {
+            max: (value: number) => {
               callbackMethodBuild({ method: 'max', max: value })
               return callbackDefaultReturnMethods()
             },
@@ -144,7 +144,7 @@ export const floatMethod = (params: type.ParamsMethod): type.NumberFloatMethod =
           callbackMethodBuild({ method: 'max', max: value })
 
           return {
-            min: () => {
+            min: (value: number) => {
               callbackMethodBuild({ method: 'min', min: value })
               return callbackDefaultReturnMethods()
             },
