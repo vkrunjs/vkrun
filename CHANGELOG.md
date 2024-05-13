@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.39.0
+
+- add default attributes to session instance
+
 ## 0.38.4
 
 - session remove cookies only in correct scenarios
