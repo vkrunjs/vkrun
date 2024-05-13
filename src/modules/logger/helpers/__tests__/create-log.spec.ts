@@ -40,7 +40,7 @@ describe('Create log', () => {
     const nextHour = (currentDate.getHours() + 1).toString().padStart(2, '0')
 
     const logFolderPath = `logs/${month}-${day}-${year}`
-    const logFileName = `${hour}:00-${nextHour}:00.log`
+    const logFileName = `${hour}00-${nextHour}00.log`
     const logFilePath = `${logFolderPath}/${logFileName}`
     const logFileExists = fs.existsSync(logFilePath)
     clearInterval(loggerSanitizeInterval)
@@ -360,7 +360,7 @@ describe('Create log', () => {
     const nextHour = (currentDate.getHours() + 1).toString().padStart(2, '0')
 
     const logFolderPath = `logs/${day}-${month}-${year}`
-    const logFileName = `${hour}:00-${nextHour}:00.log`
+    const logFileName = `${hour}00-${nextHour}00.log`
     const logFilePath = `${logFolderPath}/${logFileName}`
     const logFileExists = fs.existsSync(logFilePath)
     clearInterval(loggerSanitizeInterval)
@@ -386,7 +386,7 @@ describe('Create log', () => {
     const nextHour = (currentDate.getHours() + 1).toString().padStart(2, '0')
 
     const logFolderPath = `logs/${month}-${day}-${year}`
-    const logFileName = `${hour}:00-${nextHour}:00.json`
+    const logFileName = `${hour}00-${nextHour}00.json`
     const logFilePath = `${logFolderPath}/${logFileName}`
     const logFileExists = fs.existsSync(logFilePath)
     clearInterval(loggerSanitizeInterval)
