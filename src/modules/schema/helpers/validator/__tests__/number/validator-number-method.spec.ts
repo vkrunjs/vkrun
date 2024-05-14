@@ -89,8 +89,58 @@ describe('Validator Number Method', () => {
 
       // number > min > float > ...
       schema().number().min(1).float().validate(1.5),
-      schema().number().min(1).float().max(2).validate(1.5)
+      schema().number().min(1).float().max(2).validate(1.5),
+      schema().number().min(1).float().max(2).positive().validate(1.5),
+      schema().number().min(-2).float().max(-1).negative().validate(-1.5),
+      schema().number().min(1).float().positive().validate(1.5),
+      schema().number().min(1).float().positive().max(2).validate(1.5),
+      schema().number().min(-2).float().negative().validate(-1.5),
+      schema().number().min(-2).float().negative().max(-1).validate(-1.5),
 
+      // number > min > integer > ...
+      schema().number().min(1).integer().validate(1),
+      schema().number().min(1).integer().max(2).validate(1),
+      schema().number().min(1).integer().max(2).positive().validate(1),
+      schema().number().min(-2).integer().max(-1).negative().validate(-1),
+      schema().number().min(1).integer().positive().validate(1),
+      schema().number().min(1).integer().positive().max(2).validate(1),
+      schema().number().min(-2).integer().negative().validate(-1),
+      schema().number().min(-2).integer().negative().max(-1).validate(-1),
+
+      // number > min > max > ...
+      schema().number().min(1).max(2).validate(1),
+      schema().number().min(1).max(2).float().validate(1.5),
+      schema().number().min(1).max(2).float().positive().validate(1.5),
+      schema().number().min(-2).max(-1).float().negative().validate(-1.5),
+      schema().number().min(1).max(2).integer().validate(1),
+      schema().number().min(1).max(2).integer().positive().validate(1),
+      schema().number().min(-2).max(-1).integer().negative().validate(-1),
+      schema().number().min(1).max(2).positive().validate(1),
+      schema().number().min(1).max(2).positive().float().validate(1.5),
+      schema().number().min(1).max(2).positive().integer().validate(1),
+      schema().number().min(-2).max(-1).negative().validate(-1),
+      schema().number().min(-2).max(-1).negative().float().validate(-1.5),
+      schema().number().min(-2).max(-1).negative().integer().validate(-1),
+
+      // number > min > positive > ...
+      schema().number().min(1).positive().validate(1),
+      schema().number().min(1).positive().max(2).validate(1),
+      schema().number().min(1).positive().max(2).float().validate(1.5),
+      schema().number().min(1).positive().max(2).integer().validate(1),
+      schema().number().min(1).positive().float().validate(1.5),
+      schema().number().min(1).positive().float().max(2).validate(1.5),
+      schema().number().min(1).positive().integer().validate(1),
+      schema().number().min(1).positive().integer().max(2).validate(1),
+
+      // number > min > negative > ...
+      schema().number().min(-2).negative().validate(-1),
+      schema().number().min(-2).negative().max(-1).validate(-1),
+      schema().number().min(-2).negative().max(-1).float().validate(-1.5),
+      schema().number().min(-2).negative().max(-1).integer().validate(-1),
+      schema().number().min(-2).negative().float().validate(-1.5),
+      schema().number().min(-2).negative().float().max(-1).validate(-1.5),
+      schema().number().min(-2).negative().integer().validate(-1),
+      schema().number().min(-2).negative().integer().max(-1).validate(-1)
     ]
 
     expect(sut.every((value: boolean) => value)).toBeTruthy()
