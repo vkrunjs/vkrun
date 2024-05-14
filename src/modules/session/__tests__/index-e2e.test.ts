@@ -205,7 +205,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3797/protect', {}, {
       headers: { cookie: `session-id=${sessionId}; session-token=123` }
     }).catch((error: any) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()
@@ -284,7 +284,7 @@ describe('Session', () => {
     await axios.post('http://localhost:3794/protect', {}, {
       headers: { cookie: `session-id=${sessionId}` }
     }).catch((error: any) => {
-      validateSessionUnauthorized(error)
+      validateSessionUnauthorizedAndClearCookies(error)
     })
 
     app.close()

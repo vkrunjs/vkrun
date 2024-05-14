@@ -105,12 +105,18 @@ export class VkrunSession {
       return
     }
 
-    const isValidToken = sessionToken === session.token
+    const isInvalidToken = sessionToken !== session.token
+
+    if (isInvalidToken) {
+      helper.responseUnauthorized(response)
+      return
+    }
+
     const isValidRemoteAddress = request.socket.remoteAddress === session.remoteAddress
     const isValidRemoteFamily = request.socket.remoteFamily === session.remoteFamily
     const isValidUserAgent = request.headers['user-agent'] === session.userAgent
 
-    if (isValidRemoteAddress && isValidRemoteFamily && isValidUserAgent && isValidToken) {
+    if (isValidRemoteAddress && isValidRemoteFamily && isValidUserAgent) {
       if (session.token) {
         request.session = jwt.decrypt(session.token, this.secretKey)
       }
