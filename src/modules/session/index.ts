@@ -123,7 +123,6 @@ export class VkrunSession {
 
       next()
     } else {
-      helper.setDeleteSessionHeaders(response)
       helper.responseUnauthorized(response)
     }
   }
