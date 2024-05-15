@@ -195,6 +195,21 @@ export class Schema implements type.ISchema {
     return this.defaultReturnMethods()
   }
 
+  notEqual (valueToCompare: any): type.DefaultReturn {
+    this.methodBuild({ method: 'notEqual', valueToCompare })
+    return this.defaultReturnMethods()
+  }
+
+  oneOf (comparisonItems: any[]): type.DefaultReturn {
+    this.methodBuild({ method: 'oneOf', comparisonItems })
+    return this.defaultReturnMethods()
+  }
+
+  notOneOf (comparisonItems: any[]): type.DefaultReturn {
+    this.methodBuild({ method: 'notOneOf', comparisonItems })
+    return this.defaultReturnMethods()
+  }
+
   alias (valueName: string): type.AliasMethod {
     if (typeof valueName !== 'string') {
       console.error('vkrun-schema: alias method received invalid parameter!')
