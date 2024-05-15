@@ -9,6 +9,9 @@ export interface ISchema {
   alias: (valueName: string) => AliasMethod
   array: () => ArrayMethod
   equal: (valueToCompare: any) => DefaultReturn
+  notEqual: (valueToCompare: any) => DefaultReturn
+  oneOf: (comparisonItems: any[]) => DefaultReturn
+  notOneOf: (comparisonItems: any[]) => DefaultReturn
   object: (schema: ObjectType) => DefaultReturn
   nullable: () => NullableMethod
   notRequired: () => NotRequiredMethod
@@ -371,6 +374,9 @@ export type ErrorTypes = any // ErrorClass
 
 export type MethodTypes =
   'equal' |
+  'notEqual' |
+  'oneOf' |
+  'notOneOf' |
   'object' |
   'array' |
   'string' |
@@ -410,6 +416,7 @@ export interface Method {
   alias?: string
   schema?: ObjectType
   uuidVersion?: UUIDVersion
+  comparisonItems?: any[]
 }
 
 export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Schema[]>

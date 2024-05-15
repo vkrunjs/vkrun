@@ -52,6 +52,12 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
       validate.validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
     } else if (rule.method === 'equal') {
       validate.validateEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
+    } else if (rule.method === 'notEqual') {
+      validate.validateNotEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
+    } else if (rule.method === 'oneOf') {
+      validate.validateOneOf({ ...validateMethodParams, indexArray, comparisonItems: rule.comparisonItems })
+    } else if (rule.method === 'notOneOf') {
+      validate.validateNotOneOf({ ...validateMethodParams, indexArray, comparisonItems: rule.comparisonItems })
     }
   }
 

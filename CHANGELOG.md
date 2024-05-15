@@ -1,5 +1,12 @@
 # VkrunJS Releases
 
+## 0.41.0
+
+- add documentation for the methods min, max, positive, negative, notEqual, oneOf, and notOneOf of the schema module
+- add test for submethods min, max, positive and positive from the number method to the array method
+- add notEqual, ofOne and notOneOf methods to the schema module
+- add utils regexMatch, isNotEqual, ofOne and notOneOf
+
 ## 0.40.0
 
 - add validate negative number

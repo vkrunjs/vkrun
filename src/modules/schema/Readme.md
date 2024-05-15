@@ -86,6 +86,10 @@ console.log(validateB) // false
   - [.number](#number)
     - [.float](#float)
     - [.integer](#integer)
+    - [.min](#number-min)
+    - [.max](#number-max)
+    - [.positive](#positive)
+    - [.negative](#negative)
   - [.boolean](#boolean)
   - [.date](#date)
     - [.min](#min-date)
@@ -93,6 +97,9 @@ console.log(validateB) // false
   - [.notRequired](#notRequired)
   - [.nullable](#nullable)
   - [.equal](#equal)
+  - [.notEqual](#notEqual)
+  - [.oneOf](#oneOf)
+  - [.notOneOf](#notOneOf)
   - [.object](#object)
   - [.alias](#alias)
   - [.array](#array)
@@ -106,6 +113,10 @@ console.log(validateB) // false
     - [.number](#number-array)
       - [.float](#float-array)
       - [.integer](#integer-array)
+      - [.min](#number-min-array)
+      - [.max](#number-max-array)
+      - [.positive](#positive-array)
+      - [.negative](#negative-array)
     - [.boolean](#boolean-array)
     - [.date](#date-array)
       - [.min](#min-date-array)
@@ -304,11 +315,11 @@ console.log(validateB) // true
 console.log(validateC) // false
 ```
 
-<h2 id="notRequired">
-  .<span style="color:#66B2FF">notRequired</span>()
+<h2 id="nullable">
+  .<span style="color:#66B2FF">nullable</span>()
 </h2>
 
-<p>Quando um  valor pode ser nulo usamos o metodo nullable. A diferente do metodo notRequired e nullable é:</p>
+<p>When a value can be null, we use the nullable method. The difference between the notRequired and nullable methods is:</p>
   
 - **nullable**: It can be null or any other type, **except undefined**.
 - **notRequired**: It can be undefined or any other type.
@@ -348,6 +359,10 @@ console.log(validateD) // true
     - invalidValue: [value] and [valueName]
     - float: [value] and [valueName]
     - integer: [value] and [valueName]
+    - min: [valueName] and [min]
+    - max: [valueName] and [max]
+    - positive: [valueName]
+    - mnegativex: [valueName]
   - boolean:
     - invalidValue: [value] and [valueName]
   - required: [value] and [valueName]
@@ -382,7 +397,11 @@ setLocation({
   number: {
     invalidValue: '[valueName] must be a number type!',
     float: '[valueName] must be a float!',
-    integer: '[valueName] must be a integer!'
+    integer: '[valueName] must be a integer!',
+    min: '[valueName] must be greater than or equal to [min]!',
+    max: '[valueName] must be less than or equal to [max]!',
+    positive: '[valueName] must be positive!',
+    negative: '[valueName] must be negative!'
   },
   boolean: {
     invalidValue: '[valueName] must be a boolean type!'
@@ -395,7 +414,11 @@ setLocation({
   },
   object: '[valueName] value must be an object!',
   array: '[valueName] value must be an array!',
-  equal: 'value does not match!'
+  nullable: '[valueName] value can be null, but other than undefined!',
+  equal: 'value does not match!',
+  notEqual: 'value may not match!',
+  oneOf: 'value does not have a match!',
+  notOneOf: 'value cannot have a matches!'
 })
 ```
 
@@ -559,6 +582,74 @@ console.log(validateA) // true
 console.log(validateB) // false
 ```
 
+<h2 id="number-min">
+  .<span style="color:#66B2FF">number</span>().<span style="color:#FFFFC0">min</span>(<span style="color:#66B2FF">min</span>: <span style="color:#99CC99">number</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().number().min(1)
+
+const validateA = schema.validate(1)
+const validateB = schema.validate(0)
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="number-max">
+  .<span style="color:#66B2FF">number</span>().<span style="color:#FFFFC0">max</span>(<span style="color:#66B2FF">max</span>: <span style="color:#99CC99">number</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().number().max(1)
+
+const validateA = schema.validate(1)
+const validateB = schema.validate(2)
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="positive">
+  .<span style="color:#66B2FF">number</span>().<span style="color:#FFFFC0">positive</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().number().positive() // > 0
+
+const validateA = schema.validate(1)
+const validateB = schema.validate(0)
+const validateC = schema.validate(-1)
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
+<h2 id="negative">
+  .<span style="color:#66B2FF">number</span>().<span style="color:#FFFFC0">negative</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().number().negative() // < 0
+
+const validateA = schema.validate(-1)
+const validateB = schema.validate(0)
+const validateC = schema.validate(1)
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
 <h2 id="boolean">
   .<span style="color:#66B2FF">boolean</span>()
 </h2>
@@ -627,6 +718,8 @@ console.log(validateB) // false
   .<span style="color:#66B2FF">equal</span>(<span style="color:#66B2FF">valueToCompare</span>: <span style="color:#99CC99">any</span>)
 </h2>
 
+> The equal method accepts any type of data structure to be compared.
+
 ```ts
 import { schema } from "vkrun"
 
@@ -647,6 +740,75 @@ const validateB = schema.validate({
   keyB: false,
   keyC: [1, 2, 4] // invalid array
 })
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="notEqual">
+  .<span style="color:#66B2FF">notEqual</span>(<span style="color:#66B2FF">valueToCompare</span>: <span style="color:#99CC99">any</span>)
+</h2>
+
+> The notEqual method accepts any type of data structure to be compared.
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().notEqual({
+  keyA: "any value",
+  keyB: false,
+  keyC: [1, 2, 3]
+})
+
+const validateA = schema.validate({
+  keyA: "any value",
+  keyB: false,
+  keyC: [1, 2, 4] // different array
+})
+
+const validateB = schema.validate({
+  keyA: "any value",
+  keyB: false,
+  keyC: [1, 2, 3]
+})
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="oneOf">
+  .<span style="color:#66B2FF">oneOf</span>(<span style="color:#66B2FF">comparisonItems</span>: <span style="color:#99CC99">any[]</span>)
+</h2>
+
+> The oneOf method accepts any type of data structure to be compared.
+
+```ts
+import { schema } from "vkrun"
+
+const comparisonItems = ['hello', 'world']
+const schema = schema().oneOf(comparisonItems)
+
+const validateA = schema.validate('hello')
+const validateB = schema.validate('hi')
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="notOneOf">
+  .<span style="color:#66B2FF">notOneOf</span>(<span style="color:#66B2FF">comparisonItems</span>: <span style="color:#99CC99">any[]</span>)
+</h2>
+
+> The notOneOf method accepts any type of data structure to be compared.
+
+```ts
+import { schema } from "vkrun"
+
+const comparisonItems = ['hello', 'world']
+const schema = schema().notOneOf(comparisonItems)
+
+const validateA = schema.validate('hi')
+const validateB = schema.validate('hello')
 
 console.log(validateA) // true
 console.log(validateB) // false
@@ -965,6 +1127,80 @@ const validateB = schema.validate([12, 123.5])
 
 console.log(validateA) // true
 console.log(validateB) // false
+```
+
+
+
+
+
+
+
+<h2 id="number-min-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">number</span>().<span style="color:#FFFFC0">min</span>(<span style="color:#66B2FF">min</span>: <span style="color:#99CC99">number</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().number().min(1)
+
+const validateA = schema.validate([1])
+const validateB = schema.validate([0])
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="number-max-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">number</span>().<span style="color:#FFFFC0">max</span>(<span style="color:#66B2FF">max</span>: <span style="color:#99CC99">number</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().number().max(1)
+
+const validateA = schema.validate([1])
+const validateB = schema.validate([2])
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="positive-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">number</span>().<span style="color:#FFFFC0">positive</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().number().positive()
+
+const validateA = schema.validate([1])
+const validateB = schema.validate([0])
+const validateC = schema.validate([-1])
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
+<h2 id="negative-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">number</span>().<span style="color:#FFFFC0">negative</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().number().negative()
+
+const validateA = schema.validate([-1])
+const validateB = schema.validate([0])
+const validateC = schema.validate([1])
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
 ```
 
 <h2 id="boolean-array">
