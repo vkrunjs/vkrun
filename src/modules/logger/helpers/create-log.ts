@@ -19,7 +19,7 @@ export const createLog = (log: Log): void => {
       folderName = `${day}-${month}-${year}`
     }
 
-    const fileName = `${hour}:00-${nexHour}:00.${log.config.extension}`
+    const fileName = `${hour}00-${nexHour}00.${log.config.extension}`
 
     if (!fs.existsSync(log.config.path)) {
       fs.mkdirSync(log.config.path, { recursive: true })
@@ -56,7 +56,7 @@ export const createLog = (log: Log): void => {
     const logData = {
       level: log.level,
       date: getDateToString(currentDate),
-      message: logMessage() // log.message
+      message: logMessage()
     }
 
     const logLevel = log.config.levels[log.level]

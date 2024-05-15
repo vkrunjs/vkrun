@@ -1,5 +1,6 @@
 import * as helper from './helpers'
 import { setLocation } from './helpers'
+import { numberMethod } from './helpers/methods/number'
 import * as type from '../types'
 
 export class Schema implements type.ISchema {
@@ -102,19 +103,10 @@ export class Schema implements type.ISchema {
   }
 
   number (): type.NumberMethod {
-    this.methodBuild({ method: 'number' })
-
-    const float = (): type.DefaultReturn => {
-      this.methodBuild({ method: 'float' })
-      return this.defaultReturnMethods()
-    }
-
-    const integer = (): type.DefaultReturn => {
-      this.methodBuild({ method: 'integer' })
-      return this.defaultReturnMethods()
-    }
-
-    return { float, integer, ...this.defaultReturnMethods() }
+    return numberMethod({
+      callbackMethodBuild: (build: type.Method) => this.methodBuild(build),
+      callbackDefaultReturnMethods: () => this.defaultReturnMethods()
+    })
   }
 
   boolean (): type.DefaultReturn {
@@ -134,8 +126,30 @@ export class Schema implements type.ISchema {
     }
   }
 
+  nullable (): type.NullableMethod {
+    this.methodBuild({ method: 'nullable' })
+    return {
+      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => { this.throw(value, valueName, ClassError) },
+      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
+      validate: (value: any) => this.validate(value),
+      validateAsync: async (value: any) => await this.validateAsync(value),
+      test: (value: any, valueName: string) => this.test(value, valueName),
+      testAsync: async (value: any, valueName: string) => await this.testAsync(value, valueName)
+    }
+  }
+
   date (type?: type.DateTypes): type.DateMethod {
-    const dateTypes = ['ISO8601', 'DD/MM/YYYY', 'MM/DD/YYYY', 'DD-MM-YYYY', 'MM-DD-YYYY', 'YYYY/MM/DD', 'YYYY/DD/MM', 'YYYY-MM-DD', 'YYYY-DD-MM']
+    const dateTypes = [
+      'ISO8601',
+      'DD/MM/YYYY',
+      'MM/DD/YYYY',
+      'DD-MM-YYYY',
+      'MM-DD-YYYY',
+      'YYYY/MM/DD',
+      'YYYY/DD/MM',
+      'YYYY-MM-DD',
+      'YYYY-DD-MM'
+    ]
     if (type !== undefined && !dateTypes.includes(type)) {
       console.error('vkrun-schema: date method received invalid parameter!')
       throw Error('vkrun-schema: date method received invalid parameter!')
@@ -279,6 +293,7 @@ export class Schema implements type.ISchema {
   private defaultReturnMethods (): type.DefaultReturn {
     return {
       notRequired: () => this.notRequired(),
+      nullable: () => this.nullable(),
       throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => {
         this.throw(value, valueName, ClassError)
       },
@@ -299,7 +314,11 @@ export class Schema implements type.ISchema {
     helper.throwError(this.tests, ClassError)
   }
 
-  async throwAsync (value: any, valueName: string, ClassError?: type.ErrorTypes): Promise<void> {
+  async throwAsync (
+    value: any,
+    valueName: string,
+    ClassError?: type.ErrorTypes
+  ): Promise<void> {
     this.value = await value
     this.valueName = valueName
     this.validateMethods()

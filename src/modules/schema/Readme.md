@@ -91,6 +91,7 @@ console.log(validateB) // false
     - [.min](#min-date)
     - [.max](#max-date)
   - [.notRequired](#notRequired)
+  - [.nullable](#nullable)
   - [.equal](#equal)
   - [.object](#object)
   - [.alias](#alias)
@@ -301,6 +302,31 @@ const validateC = schema.validate("123")
 console.log(validateA) // true
 console.log(validateB) // true
 console.log(validateC) // false
+```
+
+<h2 id="notRequired">
+  .<span style="color:#66B2FF">notRequired</span>()
+</h2>
+
+<p>Quando um  valor pode ser nulo usamos o metodo nullable. A diferente do metodo notRequired e nullable é:</p>
+  
+- **nullable**: It can be null or any other type, **except undefined**.
+- **notRequired**: It can be undefined or any other type.
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().number().nullable()
+
+const validateA = schema.validate(null)
+const validateB = schema.validate(undefined)
+const validateC = schema.validate("123")
+const validateD = schema.validate(123)
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+console.log(validateD) // true
 ```
 
 <h2 id="setLocation">

@@ -21,7 +21,11 @@ describe('Set translation message', () => {
       number: {
         invalidValue: '[valueName] deve ser do tipo numérico!',
         float: '[valueName] deve ser um número decimal!',
-        integer: '[valueName] deve ser um número inteiro!'
+        integer: '[valueName] deve ser um número inteiro!',
+        min: '[valueName] deve ser maior ou igual a [min]!',
+        max: '[valueName] deve ser menor ou igual a [max]!',
+        positive: '[valueName] deve ser positivo!',
+        negative: '[valueName] deve ser negativo!'
       },
       boolean: {
         invalidValue: '[valueName] deve ser do tipo booleano!'
@@ -34,16 +38,11 @@ describe('Set translation message', () => {
       },
       object: 'o valor de [valueName] deve ser um objeto!',
       array: 'o valor de [valueName] deve ser um array!',
+      nullable: 'o valor [valueName] pode ser nulo, mas não pode ser undefined!',
       equal: 'o valor não corresponde!',
-      notEqual: {
-        invalidValue: ''
-      },
-      oneOf: {
-        invalidValue: ''
-      },
-      notOneOf: {
-        invalidValue: ''
-      }
+      notEqual: 'o valor pode não corresponder!',
+      oneOf: 'o valor não corresponde!',
+      notOneOf: 'o valor não pode ter corresponder!'
     }
 
     setLocation(newInformativeMessage)
@@ -73,7 +72,11 @@ describe('Set translation message', () => {
       number: {
         invalidValue: '[valueName] must be a number type!',
         float: '[valueName] must be a float!',
-        integer: '[valueName] must be a integer!'
+        integer: '[valueName] must be a integer!',
+        min: '[valueName] must be greater than or equal to [min]!',
+        max: '[valueName] must be less than or equal to [max]!',
+        positive: '[valueName] must be positive!',
+        negative: '[valueName] must be negative!'
       },
       boolean: {
         invalidValue: '[valueName] must be a boolean type!'
@@ -86,16 +89,11 @@ describe('Set translation message', () => {
       },
       object: '[valueName] value must be an object!',
       array: '[valueName] value must be an array!',
+      nullable: '[valueName] value can be null, but other than undefined!',
       equal: 'value does not match!',
-      notEqual: {
-        invalidValue: ''
-      },
-      oneOf: {
-        invalidValue: ''
-      },
-      notOneOf: {
-        invalidValue: ''
-      }
+      notEqual: 'value may not match!',
+      oneOf: 'value does not have a match!',
+      notOneOf: 'value cannot have a matches!'
     })
   })
 

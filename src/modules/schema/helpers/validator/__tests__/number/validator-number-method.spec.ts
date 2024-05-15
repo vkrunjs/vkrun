@@ -12,6 +12,268 @@ describe('Validator Number Method', () => {
     expect(sut).toBeTruthy()
   })
 
+  it('Should be able to validate all sub methods of number method and return true if the value is valid', () => {
+    // number > float
+    expect(schema().number().float().validate(1.5)).toBeTruthy()
+
+    // number > float > min > ...
+    expect(schema().number().float().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().min(1).max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().min(1).max(2).positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().float().min(-2).max(-1).negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().min(1).positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().float().min(-2).positive().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().min(-2).negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().min(-2).negative().max(-1).validate(-1.5)).toBeTruthy()
+
+    // number > float > max > ...
+    expect(schema().number().float().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().max(2).min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().max(2).min(1).positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().float().max(-1).min(-2).negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().min(1).positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().float().max(2).positive().min(-2).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().max(-1).negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().max(-1).negative().min(-2).validate(-1.5)).toBeTruthy()
+
+    // number > float > positive > ...
+    expect(schema().number().float().positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().float().positive().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().positive().min(1).max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().float().positive().max(2).min(1).validate(1.5)).toBeTruthy()
+
+    // number > float > negative > ...
+    expect(schema().number().float().negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().negative().min(-2).validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().negative().min(-2).max(-1).validate(-1.5)).toBeTruthy()
+    expect(schema().number().float().negative().max(-1).min(-2).validate(-1.5)).toBeTruthy()
+
+    // number > integer
+    expect(schema().number().integer().validate(2)).toBeTruthy()
+
+    // number > integer > min > ...
+    expect(schema().number().integer().min(1).validate(2)).toBeTruthy()
+    expect(schema().number().integer().min(1).max(2).validate(1)).toBeTruthy()
+    expect(schema().number().integer().min(1).max(2).positive().validate(1)).toBeTruthy()
+    expect(schema().number().integer().min(-2).max(-1).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().integer().min(1).positive().validate(1)).toBeTruthy()
+    expect(schema().number().integer().min(-2).positive().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().integer().min(-2).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().integer().min(-2).negative().max(-1).validate(-1)).toBeTruthy()
+
+    // number > integer > max > ...
+    expect(schema().number().integer().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().integer().max(2).min(1).validate(1)).toBeTruthy()
+    expect(schema().number().integer().max(2).min(1).positive().validate(1)).toBeTruthy()
+    expect(schema().number().integer().max(-1).min(-2).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().integer().min(1).positive().validate(1)).toBeTruthy()
+    expect(schema().number().integer().max(2).positive().min(-2).validate(1)).toBeTruthy()
+    expect(schema().number().integer().max(-1).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().integer().max(-1).negative().min(-2).validate(-1)).toBeTruthy()
+
+    // number > integer > positive > ...
+    expect(schema().number().integer().positive().validate(1)).toBeTruthy()
+    expect(schema().number().integer().positive().min(1).validate(1)).toBeTruthy()
+    expect(schema().number().integer().positive().min(1).max(2).validate(1)).toBeTruthy()
+    expect(schema().number().integer().positive().max(2).min(1).validate(1)).toBeTruthy()
+
+    // number > integer > negative > ...
+    expect(schema().number().integer().negative().validate(-1)).toBeTruthy()
+    expect(schema().number().integer().negative().min(-2).validate(-1)).toBeTruthy()
+    expect(schema().number().integer().negative().min(-2).max(-1).validate(-1)).toBeTruthy()
+    expect(schema().number().integer().negative().max(-1).min(-2).validate(-1)).toBeTruthy()
+
+    // number > min
+    expect(schema().number().min(1).validate(1.5)).toBeTruthy()
+
+    // number > min > float > ...
+    expect(schema().number().min(1).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).float().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).float().max(2).positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(-2).float().max(-1).negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(1).float().positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).float().positive().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().min(-2).float().negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(-2).float().negative().max(-1).validate(-1.5)).toBeTruthy()
+
+    // number > min > integer > ...
+    expect(schema().number().min(1).integer().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).integer().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().min(1).integer().max(2).positive().validate(1)).toBeTruthy()
+    expect(schema().number().min(-2).integer().max(-1).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().min(1).integer().positive().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).integer().positive().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().min(-2).integer().negative().validate(-1)).toBeTruthy()
+    expect(schema().number().min(-2).integer().negative().max(-1).validate(-1)).toBeTruthy()
+
+    // number > min > max > ...
+    expect(schema().number().min(1).max(2).validate(1)).toBeTruthy()
+    expect(schema().number().min(1).max(2).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).max(2).float().positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(-2).max(-1).float().negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(1).max(2).integer().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).max(2).integer().positive().validate(1)).toBeTruthy()
+    expect(schema().number().min(-2).max(-1).integer().negative().validate(-1)).toBeTruthy()
+    expect(schema().number().min(1).max(2).positive().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).max(2).positive().float().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).max(2).positive().integer().validate(1)).toBeTruthy()
+    expect(schema().number().min(-2).max(-1).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().min(-2).max(-1).negative().float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(-2).max(-1).negative().integer().validate(-1)).toBeTruthy()
+
+    // number > min > positive > ...
+    expect(schema().number().min(1).positive().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).positive().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().min(1).positive().max(2).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).positive().max(2).integer().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).positive().float().validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).positive().float().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().min(1).positive().integer().validate(1)).toBeTruthy()
+    expect(schema().number().min(1).positive().integer().max(2).validate(1)).toBeTruthy()
+
+    // number > min > negative > ...
+    expect(schema().number().min(-2).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().min(-2).negative().max(-1).validate(-1)).toBeTruthy()
+    expect(schema().number().min(-2).negative().max(-1).float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(-2).negative().max(-1).integer().validate(-1)).toBeTruthy()
+    expect(schema().number().min(-2).negative().float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(-2).negative().float().max(-1).validate(-1.5)).toBeTruthy()
+    expect(schema().number().min(-2).negative().integer().validate(-1)).toBeTruthy()
+    expect(schema().number().min(-2).negative().integer().max(-1).validate(-1)).toBeTruthy()
+
+    // number > max
+    expect(schema().number().max(2).validate(1)).toBeTruthy()
+
+    // number > max > float > ...
+    expect(schema().number().max(2).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).float().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).float().min(1).positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(-1).float().min(-2).negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(2).float().positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).float().positive().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().max(-1).float().negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(-1).float().negative().min(-2).validate(-1.5)).toBeTruthy()
+
+    // number > max > integer > ...
+    expect(schema().number().max(2).integer().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).integer().min(1).validate(1)).toBeTruthy()
+    expect(schema().number().max(2).integer().min(1).positive().validate(1)).toBeTruthy()
+    expect(schema().number().max(-1).integer().min(-2).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().max(2).integer().positive().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).integer().positive().min(1).validate(1)).toBeTruthy()
+    expect(schema().number().max(-1).integer().negative().validate(-1)).toBeTruthy()
+    expect(schema().number().max(-1).integer().negative().min(-2).validate(-1)).toBeTruthy()
+
+    // number > max > max > ...
+    expect(schema().number().max(2).min(1).validate(1)).toBeTruthy()
+    expect(schema().number().max(2).min(1).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).min(1).float().positive().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(-1).min(-2).float().negative().validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(2).min(1).integer().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).min(1).integer().positive().validate(1)).toBeTruthy()
+    expect(schema().number().max(-1).min(-2).integer().negative().validate(-1)).toBeTruthy()
+    expect(schema().number().max(2).min(1).positive().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).min(1).positive().float().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).min(1).positive().integer().validate(1)).toBeTruthy()
+    expect(schema().number().max(-1).min(-2).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().max(-1).min(-2).negative().float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(-1).min(-2).negative().integer().validate(-1)).toBeTruthy()
+
+    // number > max > positive > ...
+    expect(schema().number().max(2).positive().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).positive().min(1).validate(1)).toBeTruthy()
+    expect(schema().number().max(2).positive().min(1).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).positive().min(1).integer().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).positive().float().validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).positive().float().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().max(2).positive().integer().validate(1)).toBeTruthy()
+    expect(schema().number().max(2).positive().integer().min(1).validate(1)).toBeTruthy()
+
+    // number > max > negative > ...
+    expect(schema().number().max(-1).negative().validate(-1)).toBeTruthy()
+    expect(schema().number().max(-1).negative().min(-2).validate(-1)).toBeTruthy()
+    expect(schema().number().max(-1).negative().min(-2).float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(-1).negative().min(-2).integer().validate(-1)).toBeTruthy()
+    expect(schema().number().max(-1).negative().float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(-1).negative().float().min(-2).validate(-1.5)).toBeTruthy()
+    expect(schema().number().max(-1).negative().integer().validate(-1)).toBeTruthy()
+    expect(schema().number().max(-1).negative().integer().min(-2).validate(-1)).toBeTruthy()
+
+    // number > positive
+    expect(schema().number().positive().validate(1)).toBeTruthy()
+
+    // number > positive > float > ...
+    expect(schema().number().positive().float().validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().float().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().float().min(1).max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().float().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().float().max(2).min(1).validate(1.5)).toBeTruthy()
+
+    // number > positive > integer > ...
+    expect(schema().number().positive().integer().validate(1)).toBeTruthy()
+    expect(schema().number().positive().integer().min(1).validate(1)).toBeTruthy()
+    expect(schema().number().positive().integer().min(1).max(2).validate(1)).toBeTruthy()
+    expect(schema().number().positive().integer().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().positive().integer().max(2).min(1).validate(1)).toBeTruthy()
+
+    // number > positive > min > ...
+    expect(schema().number().positive().min(1).validate(1)).toBeTruthy()
+    expect(schema().number().positive().min(1).max(2).validate(1)).toBeTruthy()
+    expect(schema().number().positive().min(1).max(2).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().min(1).max(2).integer().validate(1)).toBeTruthy()
+    expect(schema().number().positive().min(1).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().min(1).float().max(2).validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().min(1).integer().validate(1)).toBeTruthy()
+    expect(schema().number().positive().min(1).integer().max(2).validate(1)).toBeTruthy()
+
+    // number > positive > max > ...
+    expect(schema().number().positive().max(2).validate(1)).toBeTruthy()
+    expect(schema().number().positive().max(2).min(1).validate(1)).toBeTruthy()
+    expect(schema().number().positive().max(2).min(1).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().max(2).min(1).integer().validate(1)).toBeTruthy()
+    expect(schema().number().positive().max(2).float().validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().max(2).float().min(1).validate(1.5)).toBeTruthy()
+    expect(schema().number().positive().max(2).integer().validate(1)).toBeTruthy()
+    expect(schema().number().positive().max(2).integer().min(1).validate(1)).toBeTruthy()
+
+    // number > negative
+    expect(schema().number().negative().validate(-1)).toBeTruthy()
+
+    // number > negative > float > ...
+    expect(schema().number().negative().float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().float().min(-2).validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().float().min(-2).max(-1).validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().float().max(-1).validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().float().max(-1).min(-2).validate(-1.5)).toBeTruthy()
+
+    // number > negative > integer > ...
+    expect(schema().number().negative().integer().validate(-1)).toBeTruthy()
+    expect(schema().number().negative().integer().min(-2).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().integer().min(-2).max(-1).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().integer().max(-1).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().integer().max(-1).min(-2).validate(-1)).toBeTruthy()
+
+    // number > negative > min > ...
+    expect(schema().number().negative().min(-2).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().min(-2).max(-1).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().min(-2).max(-1).float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().min(-2).max(-1).integer().validate(-1)).toBeTruthy()
+    expect(schema().number().negative().min(-2).float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().min(-2).float().max(-1).validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().min(-2).integer().validate(-1)).toBeTruthy()
+    expect(schema().number().negative().min(-2).integer().max(-1).validate(-1)).toBeTruthy()
+
+    // number > negative > max > ...
+    expect(schema().number().negative().max(-1).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().max(-1).min(-2).validate(-1)).toBeTruthy()
+    expect(schema().number().negative().max(-1).min(-2).float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().max(-1).min(-2).integer().validate(-1)).toBeTruthy()
+    expect(schema().number().negative().max(-1).float().validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().max(-1).float().min(-2).validate(-1.5)).toBeTruthy()
+    expect(schema().number().negative().max(-1).integer().validate(-1)).toBeTruthy()
+    expect(schema().number().negative().max(-1).integer().min(-2).validate(-1)).toBeTruthy()
+  })
+
   it('Should be able to validate the number method and return false if list is invalid', () => {
     const invalidList = [
       'invalid-uuid-57b73598-8764-4ad0-a76a-679bb6640eb1',

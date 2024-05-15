@@ -318,8 +318,6 @@ describe('Session', () => {
     let cookie = ''
 
     await v.superRequest(app).post('/signin').then((response) => {
-      console.log(JSON.stringify({ response }, null, 2))
-
       const { cookie: _cookie, sessionId, sessionToken } = getCookies(response)
       cookie = _cookie
       validateSessionSuccess(response, sessionId, sessionToken)
@@ -332,7 +330,6 @@ describe('Session', () => {
     await v.superRequest(app).post('/protect', {}, {
       headers: { cookie }
     }).catch((error: v.SuperRequestError) => {
-      console.log(JSON.stringify({ error }, null, 2))
       validateSessionUnauthorizedAndClearCookies(error)
     })
 

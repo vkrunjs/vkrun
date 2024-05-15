@@ -1,5 +1,15 @@
 # VkrunJS Releases
 
+## 0.40.0
+
+- add validate negative number
+- add validate positive number
+- add validate min number
+- add validate max number
+- add validate nullable
+- fix user session crashing when there is an attempt to use access credentials on another machine
+- fix log file name format in Logger module is invalid on Windows
+
 ## 0.39.2
 
 - fix user session crashing when there is an attempt to use access credentials on another machine

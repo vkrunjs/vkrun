@@ -21,7 +21,7 @@ export const getLog = (format: 'default' | 'indented', extension: LogExtension):
   const nextHour = (currentDate.getHours() + 1).toString().padStart(2, '0')
 
   const logFolderPath = `logs/${month}-${day}-${year}`
-  const logFileName = `${hour}:00-${nextHour}:00.${extension}`
+  const logFileName = `${hour}00-${nextHour}00.${extension}`
   const logFilePath = `${logFolderPath}/${logFileName}`
 
   let content = fs.readFileSync(logFilePath, 'utf-8').split(/\r?\n/).slice(0, -1)
