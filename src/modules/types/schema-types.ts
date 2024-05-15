@@ -189,7 +189,7 @@ export interface NumberMaxMethod extends DefaultReturn {
     }
   }
   min: (value: number) => DefaultReturn & {
-    float: () => {
+    float: () => DefaultReturn & {
       positive: () => DefaultReturn
       negative: () => DefaultReturn
     }
