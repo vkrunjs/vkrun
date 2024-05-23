@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.41.1
+
+- previous package did not include all new features
+
 ## 0.41.0
 
 - add documentation for the methods min, max, positive, negative, notEqual, oneOf, and notOneOf of the schema module
