@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { colorizeJSON } from './colorize-json'
 import { sanitizeLogs } from './sanitize-logs'
-import { dateToString } from '../../utils'
+import * as util from '../../utils'
 import { Log } from '../../types'
 
 export const createLog = (log: Log): void => {
@@ -34,18 +34,25 @@ export const createLog = (log: Log): void => {
 
     const getDateToString = (date: Date): string => {
       if (log.config.dateType === 'DD-MM-YYYY') {
-        return dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
+        return util.dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
       }
-      return dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
+      return util.dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
     }
 
     const logMessage = (): string | object => {
       if (log.message instanceof Error) {
-        const error: Record<string, any> = {}
+        const error: Record<string, string> = {}
 
-        if (log.message.name) error.name = log.message.name
-        if (log.message.message) error.message = log.message.message
-        if (log.message?.stack) error.stack = log.message.stack
+        Object.getOwnPropertyNames(log.message).forEach(prop => {
+          if (prop !== 'constructor' && prop !== 'toString') {
+            const value = log.message[prop]
+            if (util.isObject(value) || util.isArray(value)) {
+              error[prop] = JSON.stringify(value)
+            } else {
+              error[prop] = String(value)
+            }
+          }
+        })
 
         return { error }
       }

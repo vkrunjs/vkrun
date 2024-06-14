@@ -79,7 +79,7 @@ describe('Create log', () => {
 
     expect(log.content[0]).toEqual(logEntry)
   })
-  //
+
   it('Should create a log level info', async () => {
     const logger = Logger({ level: 'info', daysToStoreLogs: 0 })
 
