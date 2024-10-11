@@ -17,13 +17,16 @@ describe('sanitizeLogs', () => {
 
   it('should remove log folders older than expiration date and use default date format', () => {
     const today = new Date()
-    const validFolderName = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`
+    const validFolderName = `${today.getDate()}-${today.getMonth() - 2}-${today.getFullYear()}`
 
     fs.mkdirSync(path.join(testDir, validFolderName), { recursive: true })
 
-    expect(fs.existsSync(path.join(testDir, validFolderName))).toBeTruthy()
+    const fileExistsBefore = fs.existsSync(path.join(testDir, validFolderName))
     sanitizeLogs({ ...config, path: testDir })
-    expect(fs.existsSync(path.join(testDir, validFolderName))).toBeFalsy()
+    const fileExistsAfter = fs.existsSync(path.join(testDir, validFolderName))
+
+    expect(fileExistsBefore).toBeTruthy()
+    expect(fileExistsAfter).toBeFalsy()
   })
 
   it('should remove log files and folders with invalid date format', () => {
