@@ -19,6 +19,19 @@ describe('JWT', () => {
     expect(decryptedToken).toEqual(data)
   })
 
+  it('encrypts and decrypts data of any type', () => {
+    const data = 'John'
+    const config = {
+      secretKey: generateKey(),
+      expiresIn: 60 // 60 seconds
+    }
+    const token = jwt.encrypt(data, config)
+    const decryptedToken = jwt.decrypt(token, config.secretKey)
+
+    expect(typeof token === 'string').toBeTruthy()
+    expect(decryptedToken).toEqual(data)
+  })
+
   it('encrypts and decrypts data with an array of secret keys', () => {
     const data = { id: 456, name: 'Alice' }
     const config = {
