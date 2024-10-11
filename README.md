@@ -49,6 +49,7 @@ app.server().listen(3000, () => {
 - Session
 - Rate Limit
 - Parse Data
+- [Upload](./src/modules/upload/Readme.md)
 - [Logger](./src/modules/logger/Readme.md)
 - [JWT](./src/modules/jwt/Readme.md)
 - Cors
