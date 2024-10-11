@@ -9,6 +9,7 @@ import { Session } from './modules/session'
 import { validateRouteData } from './modules/validate-route-data'
 import { jwt } from './modules/jwt'
 import { superRequest } from './modules/super-request'
+import { upload } from './modules/upload'
 export * from './modules/router/helpers/adapters'
 export * from './modules/utils'
 export * from './modules/types'
@@ -25,5 +26,6 @@ export {
   jwt,
   Session,
   validateRouteData,
-  superRequest
+  superRequest,
+  upload
 }
