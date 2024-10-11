@@ -1,9 +1,9 @@
 import v from '../../../index'
 import * as http from 'http'
-import { readFileSync, unlinkSync, writeFileSync } from 'fs'
+import path from 'path'
+import fs from 'fs'
 import FormData from 'form-data'
 import axios from 'axios'
-import path from 'path'
 
 describe('Parse Data - end to end testing using axios and app server', () => {
   let server: any
@@ -297,7 +297,8 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   })
 
   it('Should be able to parse the form data body in the POST method', async () => {
-    let requestBody
+    let requestBody: any
+    let requestFiles: any
 
     const app = v.App()
     app.use(v.parseData())
@@ -305,6 +306,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     router.post('/body-post', (request: v.Request, response: v.Response) => {
       requestBody = request.body
+      requestFiles = request.files
       response.status(200).end()
     })
 
@@ -316,7 +318,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     const fileName = 'filename.txt'
     const filePath = path.join(__dirname, fileName)
 
-    writeFileSync(filePath, fileContent)
+    fs.writeFileSync(filePath, fileContent)
 
     const data = new FormData()
     data.append('string', 'any@mail.com')
@@ -325,7 +327,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    const fileBuffer = readFileSync(filePath)
+    const fileBuffer = fs.readFileSync(filePath)
 
     data.append('file', fileBuffer, fileName)
 
@@ -334,11 +336,18 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     }).then((response) => {
       validateHeaderSuccess(response)
     }).finally(() => {
-      unlinkSync(filePath)
+      fs.unlinkSync(filePath)
     })
+
+    fs.writeFileSync(filePath, requestFiles[0].buffer)
+    const fileExists = fs.existsSync(filePath)
+    const savedFileContent = fs.readFileSync(filePath, 'utf-8')
+    fs.unlinkSync(filePath)
 
     app.close()
 
+    expect(savedFileContent).toEqual(fileContent)
+    expect(fileExists).toBeTruthy()
     expect(requestBody).toEqual({
       string: 'any@mail.com',
       integer: 123,
@@ -346,6 +355,9 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+    expect(requestFiles[0].filename).toEqual('filename.txt')
+    expect(requestFiles[0].mimetype).toEqual('text/plain')
+    expect(requestFiles[0].extension).toEqual('txt')
   })
 
   it('Should be able to parse the form data body in the PUT method', async () => {
@@ -674,8 +686,9 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     await axios.post('http://localhost:3982/body-post', '', {
       headers: { 'Content-Type': 'multipart/form-data' }
-    }).then((response) => {
-      validateHeaderSuccess(response)
+    }).catch((error) => {
+      expect(error.response.status).toEqual(400)
+      expect(error.response.data).toEqual('Invalid Request Data')
     })
 
     app.close()
