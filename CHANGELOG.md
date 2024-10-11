@@ -1,5 +1,11 @@
 # VkrunJS Releases
 
+## 0.42.0 - Soon
+
+- parse data convert files in memory when content-type is multipart/form-data
+- add upload middleware to save files
+- add the parseData module as a method in app
+
 ## 0.41.1
 
 - previous package did not include all new features
