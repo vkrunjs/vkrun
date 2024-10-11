@@ -5,6 +5,7 @@ import { customResponse } from '../router/helpers/custom-response'
 import * as type from '../types'
 import { loggerSanitizeInterval } from '../logger'
 import { RouterHandler } from '../router/helpers/router-handler'
+import { VkrunParseData } from '../parse-data'
 
 class VkrunApp implements type.VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
@@ -13,6 +14,7 @@ class VkrunApp implements type.VkrunApp {
   private readonly middlewares: any[]
   private createdServer: any
   private timers: any[]
+  private _parseData?: VkrunParseData
 
   constructor () {
     this.instance = undefined
@@ -87,6 +89,15 @@ class VkrunApp implements type.VkrunApp {
       this.routes = [...this.routes, ...middleware._routes()]
     } else {
       this.middlewares.push(middleware)
+    }
+  }
+
+  // Parse data
+
+  public parseData (config?: type.ParseDataConfig): void {
+    if (!this._parseData) {
+      this._parseData = new VkrunParseData(config)
+      this.middlewares.unshift(this._parseData)
     }
   }
 
