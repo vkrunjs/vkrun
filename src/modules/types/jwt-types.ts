@@ -1,3 +1,8 @@
+export interface Jwt {
+  encrypt: (data: any, config: EncryptConfig) => Token
+  decrypt: (token: Token, secretKey: string | string[]) => any | null
+}
+
 export interface EncryptConfig {
   secretKey: string | string[]
   expiresIn: number | string
