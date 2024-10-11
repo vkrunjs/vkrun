@@ -39,8 +39,13 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
   }
 
   const generateBufferData = (): Buffer => {
-    if (headerContentType?.includes('multipart/form-data')) {
-      if (data && !headerContentType?.includes('boundary=')) {
+    if (
+      headerContentType?.includes('multipart/form-data') ||
+      (data?._boundary && data?._streams)
+    ) {
+      if (!headerContentType) {
+        request.headers['content-type'] = `multipart/form-data; boundary=${data._boundary}`
+      } else if (data && !headerContentType.includes('boundary=')) {
         request.headers['content-type'] = `${headerContentType}; boundary=${data._boundary}`
       }
 
