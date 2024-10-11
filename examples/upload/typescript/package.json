@@ -1,0 +1,15 @@
+{
+  "name": "vkrun-upload-with-typescript",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "ts-node index.ts"
+  },
+  "dependencies": {
+    "vkrun": "*"
+  },
+  "devDependencies": {
+    "typescript": "*",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.10.4"
+  }
+}
