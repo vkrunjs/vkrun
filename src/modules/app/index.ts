@@ -11,7 +11,7 @@ class VkrunApp implements type.VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
   private routes: type.Route[] = []
   private readonly routerHandler: RouterHandler
-  private readonly middlewares: any[]
+  private readonly globalMiddlewares: any[]
   private createdServer: any
   private timers: any[]
   private _parseData?: VkrunParseData
@@ -19,7 +19,7 @@ class VkrunApp implements type.VkrunApp {
   constructor () {
     this.instance = undefined
     this.routerHandler = new RouterHandler()
-    this.middlewares = []
+    this.globalMiddlewares = []
     this.timers = []
   }
 
@@ -50,7 +50,7 @@ class VkrunApp implements type.VkrunApp {
         _request,
         _response,
         this.routes,
-        this.middlewares
+        this.globalMiddlewares
       )
     })
 
@@ -77,7 +77,7 @@ class VkrunApp implements type.VkrunApp {
       _request,
       this.createdServer,
       this.routes,
-      this.middlewares
+      this.globalMiddlewares
     )
     return this.createdServer
   }
@@ -88,7 +88,7 @@ class VkrunApp implements type.VkrunApp {
     if (middleware instanceof VkrunRouter) {
       this.routes = [...this.routes, ...middleware._routes()]
     } else {
-      this.middlewares.push(middleware)
+      this.globalMiddlewares.push(middleware)
     }
   }
 
@@ -97,7 +97,7 @@ class VkrunApp implements type.VkrunApp {
   public parseData (config?: type.ParseDataConfig): void {
     if (!this._parseData) {
       this._parseData = new VkrunParseData(config)
-      this.middlewares.unshift(this._parseData)
+      this.globalMiddlewares.unshift(this._parseData)
     }
   }
 

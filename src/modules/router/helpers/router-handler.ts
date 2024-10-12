@@ -6,8 +6,8 @@ import * as helper from './../helpers'
 export class RouterHandler {
   private routes: type.Route[] = []
 
-  private addRoutesOptionsWithCors (middlewares: any[]): void {
-    const corsMiddleware = middlewares.find(middleware => middleware instanceof VkrunCors)
+  private addRoutesOptionsWithCors (globalMiddlewares: any[]): void {
+    const corsMiddleware = globalMiddlewares.find(middleware => middleware instanceof VkrunCors)
 
     if (corsMiddleware) {
       const routeGroups = new Map<string, string[]>()
@@ -37,13 +37,13 @@ export class RouterHandler {
     request: type.Request,
     response: type.Response,
     routes: type.Route[],
-    middlewares: any[]
+    globalMiddlewares: any[]
   ): Promise<void> {
     this.routes = routes
     const requestId = util.randomUUID()
     request.requestId = requestId
     response.setHeader('Request-Id', requestId)
-    this.addRoutesOptionsWithCors(middlewares)
+    this.addRoutesOptionsWithCors(globalMiddlewares)
 
     const { url, method } = request
     const [path] = String(url).split('?')
@@ -62,7 +62,7 @@ export class RouterHandler {
           response.setHeader('Access-Control-Allow-Origin', '*')
           response.statusCode = 204
           response.end()
-        } else if (route.handlers.length === 1 && middlewares.length === 0) {
+        } else if (route.handlers.length === 1 && globalMiddlewares.length === 0) {
           route.handlers[handlerIndex](request, response)
         } else {
           const next = (): void => {
@@ -72,16 +72,16 @@ export class RouterHandler {
           }
 
           const handleMiddleware = async (index: number): Promise<void> => {
-            const middleware = middlewares[index]
+            const middleware = globalMiddlewares[index]
             let nextMiddleware: type.NextFunction
-            if (index < middlewares.length - 1) {
+            if (index < globalMiddlewares.length - 1) {
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               nextMiddleware = async () => { await handleMiddleware(index + 1) }
             } else {
               nextMiddleware = next
             }
 
-            const latestMiddleware = middlewares[middlewares.length - 1]
+            const latestMiddleware = globalMiddlewares[globalMiddlewares.length - 1]
             const hasErrorHandler = typeof latestMiddleware === 'function' && latestMiddleware.length === 4
 
             if (hasErrorHandler) {
@@ -95,7 +95,7 @@ export class RouterHandler {
             }
           }
 
-          if (middlewares.length > 0) await handleMiddleware(0)
+          if (globalMiddlewares.length > 0) await handleMiddleware(0)
           else next()
         }
       }
