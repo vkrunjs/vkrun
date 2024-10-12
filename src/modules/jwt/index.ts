@@ -2,7 +2,7 @@ import * as crypto from 'crypto'
 import * as util from '../utils'
 import * as type from '../types'
 
-class Jwt implements type.Jwt {
+class VkrunJwt implements type.VkrunJwt {
   encrypt (data: any, config: type.EncryptConfig): type.Token {
     const { secretKey, expiresIn } = config
     util.validateSecretKey(secretKey, 'jwt')
@@ -69,4 +69,4 @@ class Jwt implements type.Jwt {
   }
 }
 
-export const jwt = new Jwt()
+export const jwt = new VkrunJwt()

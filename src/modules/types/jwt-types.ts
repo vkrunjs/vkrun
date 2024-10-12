@@ -1,4 +1,4 @@
-export interface Jwt {
+export interface VkrunJwt {
   encrypt: (data: any, config: EncryptConfig) => Token
   decrypt: (token: Token, secretKey: string | string[]) => any | null
 }
