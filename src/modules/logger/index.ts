@@ -5,7 +5,7 @@ import * as type from '../types'
 
 export let loggerSanitizeInterval: NodeJS.Timeout
 
-export const Logger = (configParams: type.SetConfigLogger): type.Logger => {
+export const VkrunLogger = (configParams: type.SetConfigLogger): type.VkrunLogger => {
   const config = configLogger()
 
   /* eslint-disable */
@@ -78,4 +78,8 @@ export const Logger = (configParams: type.SetConfigLogger): type.Logger => {
     silly: (message: any): void => { createLog({ level: 'silly', config, message }) },
     middleware
   }
+}
+
+export const Logger = (configParams: type.SetConfigLogger): type.VkrunLogger => {
+  return VkrunLogger(configParams)
 }
