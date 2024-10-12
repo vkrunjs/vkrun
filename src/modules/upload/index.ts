@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as type from '../types'
 
-export const upload = {
+export const upload: type.VkrunUpload = {
   diskStorage: (
     options: {
       destination: string
