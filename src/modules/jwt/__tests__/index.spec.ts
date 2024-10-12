@@ -12,8 +12,8 @@ describe('JWT', () => {
       secretKey: generateKey(),
       expiresIn: 60 // 60 seconds
     }
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, config.secretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, config.secretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toEqual(data)
@@ -25,8 +25,8 @@ describe('JWT', () => {
       secretKey: generateKey(),
       expiresIn: 60 // 60 seconds
     }
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, config.secretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, config.secretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toEqual(data)
@@ -39,8 +39,8 @@ describe('JWT', () => {
       expiresIn: 60 // 60 seconds
     }
 
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, config.secretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, config.secretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toEqual(data)
@@ -52,10 +52,10 @@ describe('JWT', () => {
       secretKey: generateKey(),
       expiresIn: 1 // 1 second
     }
-    const token = jwt.encrypt(data, config)
+    const token = jwt().encrypt(data, config)
 
     setTimeout(() => {
-      const decryptedToken = jwt.decrypt(token, config.secretKey)
+      const decryptedToken = jwt().decrypt(token, config.secretKey)
 
       expect(typeof token === 'string').toBeTruthy()
       expect(decryptedToken).toBeNull()
@@ -70,8 +70,8 @@ describe('JWT', () => {
       expiresIn: 60 // 60 seconds
     }
     const wrongSecretKey = generateKey()
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, wrongSecretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, wrongSecretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toBeNull()
@@ -81,7 +81,7 @@ describe('JWT', () => {
     const data = { id: 456, name: 'Alice' }
     const config = { secretKey: true as any, expiresIn: 60 }
 
-    const token = (): string => jwt.encrypt(data, config)
+    const token = (): string => jwt().encrypt(data, config)
 
     expect(token).toThrow('vkrun-jwt: the secret key must be a string or a string array.')
   })
@@ -90,8 +90,8 @@ describe('JWT', () => {
     const data = { id: 456, name: 'Alice' }
     const config = { secretKey: generateKey(), expiresIn: 60 }
 
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = (): void => jwt.decrypt(token, 'invalid_secret_key')
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = (): void => jwt().decrypt(token, 'invalid_secret_key')
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toThrow('vkrun-jwt: the secret keys must be strings of 64 characters representing 32 bytes.')
@@ -101,8 +101,8 @@ describe('JWT', () => {
     const data = { id: 456, name: 'Alice' }
     const config = { secretKey: [generateKey()], expiresIn: 60 }
 
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = (): void => jwt.decrypt(token, ['invalid_secret_key'])
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = (): void => jwt().decrypt(token, ['invalid_secret_key'])
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toThrow('vkrun-jwt: all secret keys must be strings of 64 characters representing 32 bytes.')
@@ -115,8 +115,8 @@ describe('JWT', () => {
       expiresIn: '5m' // 5 minutes
     }
 
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, config.secretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, config.secretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toEqual(data)
@@ -129,8 +129,8 @@ describe('JWT', () => {
       expiresIn: '2h' // 2 hours
     }
 
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, config.secretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, config.secretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toEqual(data)
@@ -143,8 +143,8 @@ describe('JWT', () => {
       expiresIn: '3d' // 3 days
     }
 
-    const token = jwt.encrypt(data, config)
-    const decryptedToken = jwt.decrypt(token, config.secretKey)
+    const token = jwt().encrypt(data, config)
+    const decryptedToken = jwt().decrypt(token, config.secretKey)
 
     expect(typeof token === 'string').toBeTruthy()
     expect(decryptedToken).toEqual(data)
@@ -156,7 +156,7 @@ describe('JWT', () => {
       secretKey: generateKey(),
       expiresIn: '3y' // invalid format
     }
-    const token = (): string => jwt.encrypt(data, config)
+    const token = (): string => jwt().encrypt(data, config)
 
     expect(token).toThrow('vkrun-jwt: invalid time format. Use a number or string in the example format: "5s", "5m", "3h", or "2d".')
   })
