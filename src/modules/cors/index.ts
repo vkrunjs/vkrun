@@ -2,7 +2,7 @@ import * as helper from './helpers'
 import * as util from '../utils'
 import * as type from '../types'
 
-export class VkrunCors {
+export class VkrunCors implements type.VkrunCors {
   private readonly options: type.CorsOptions
 
   constructor (options: type.CorsOptions) {
@@ -32,7 +32,7 @@ export class VkrunCors {
   }
 }
 
-export const cors = (options?: type.SetCorsOptions): VkrunCors => {
+export const cors = (options?: type.SetCorsOptions): type.VkrunCors => {
   const defaultOptions: type.CorsOptions = {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
