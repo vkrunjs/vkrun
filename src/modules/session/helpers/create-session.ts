@@ -14,7 +14,7 @@ export const createSession = (params: {
 }): type.SessionData => {
   const { request, response, sessionId, data, options, secretKey } = params
   const expiresIn = util.convertExpiresIn(params.expiresIn ?? '1h', 'S')
-  const token = jwt.encrypt(data, { secretKey, expiresIn })
+  const token = jwt().encrypt(data, { secretKey, expiresIn })
   const cookieOptions = {
     httpOnly: options.httpOnly,
     secure: options.secure,
