@@ -69,4 +69,4 @@ class VkrunJwt implements type.VkrunJwt {
   }
 }
 
-export const jwt = new VkrunJwt()
+export const jwt = (): type.VkrunJwt => new VkrunJwt()

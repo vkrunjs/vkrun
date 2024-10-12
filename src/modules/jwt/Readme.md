@@ -49,7 +49,7 @@ const config = {
   expiresIn: '15m' // 15 minutes
 }
 
-const token = v.jwt.encrypt(data, config)
+const token = v.jwt().encrypt(data, config)
 // example token: '538d55e53071f7f9bd3fb0c13d0607fa:67f675cda25e0489fa6ffad50f10addd87ddb5268f9d1f42a013d38aa891291491d8bf81ba6a667153ea0d94fe75bc20a472fde43f083220f911fa7faa1c82476b633b81d27a205e9d85120470cfe2734ba58e137a3295aff39d159827201c66'
 ```
 
@@ -74,9 +74,9 @@ const config = {
   expiresIn: 60 // 60 seconds
 }
 
-const token = v.jwt.encrypt(data, config)
+const token = v.jwt().encrypt(data, config)
 // example token: '538d55e53071f7f9bd3fb0c13d0607fa:67f675cda25e0489fa6ffad50f10addd87ddb5268f9d1f42a013d38aa891291491d8bf81ba6a667153ea0d94fe75bc20a472fde43f083220f911fa7faa1c82476b633b81d27a205e9d85120470cfe2734ba58e137a3295aff39d159827201c66'
 
-const decryptedToken = jwt.decrypt(token, config.secretKey)
+const decryptedToken = jwt().decrypt(token, config.secretKey)
 // decryptedToken equals { id: 456, name: 'Alice' }
 ```
