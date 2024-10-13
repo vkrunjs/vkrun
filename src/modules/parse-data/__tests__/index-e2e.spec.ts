@@ -683,4 +683,36 @@ describe('Parse Data - end to end testing using super request', () => {
 
     app.close()
   })
+
+  it('Should be able to parse params and query url', async () => {
+    let requestParams
+    let requestQuery
+
+    const app = v.App()
+    app.use(v.parseData())
+    const router = v.Router()
+
+    router.get('/parse/:param1/:param2', (request: v.Request, response: v.Response) => {
+      requestQuery = request.query
+      requestParams = request.params
+      response.status(200).end()
+    })
+
+    app.use(router)
+
+    const path = '/parse/value1/value2?query1=example@mail.com&query2=123'
+    const response = await v.superRequest(app).get(path)
+
+    validateSuccess(response)
+    expect(requestParams).toEqual({
+      param1: 'value1',
+      param2: 'value2'
+    })
+    expect(requestQuery).toEqual({
+      query1: 'example@mail.com',
+      query2: 123
+    })
+
+    app.close()
+  })
 })
