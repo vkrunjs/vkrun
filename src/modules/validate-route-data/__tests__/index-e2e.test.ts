@@ -34,40 +34,41 @@ describe('Validate Route Data - end to end testing using axios and app server', 
 
   it('Should validate and successfully pass through the middleware', async () => {
     const app = v.App()
-    app.use(v.parseData())
-    app.use(v.validateRouteData(schemaData))
-    const router = v.Router()
+    app.parseData()
 
-    router.post('/params/:string/:integer/query', (request: type.Request, response: type.Response) => {
-      const requestData = {
-        query: request.query,
-        params: request.params,
-        files: request?.files,
-        body: request.body
-      }
-
-      expect(requestData).toEqual({
-        params: {
-          string: 'any@mail.com',
-          integer: 123
-        },
-        query: {
-          float: 1.56,
-          boolean: true,
-          date: new Date('2000-02-03T02:00:00.000Z')
-        },
-        body: {
-          string: 'any@mail.com',
-          integer: 123,
-          float: 1.56,
-          boolean: true,
-          date: new Date('2000-02-03T02:00:00.000Z')
+    app.post(
+      '/params/:string/:integer/query',
+      v.validateRouteData(schemaData),
+      (request: type.Request, response: type.Response) => {
+        const requestData = {
+          query: request.query,
+          params: request.params,
+          files: request?.files,
+          body: request.body
         }
-      })
-      response.status(200).end('Success!')
-    })
 
-    app.use(router)
+        expect(requestData).toEqual({
+          params: {
+            string: 'any@mail.com',
+            integer: 123
+          },
+          query: {
+            float: 1.56,
+            boolean: true,
+            date: new Date('2000-02-03T02:00:00.000Z')
+          },
+          body: {
+            string: 'any@mail.com',
+            integer: 123,
+            float: 1.56,
+            boolean: true,
+            date: new Date('2000-02-03T02:00:00.000Z')
+          }
+        })
+        response.status(200).end('Success!')
+      }
+    )
+
     server = app.server()
     server.listen(3499)
 
@@ -90,20 +91,21 @@ describe('Validate Route Data - end to end testing using axios and app server', 
 
   it('Should validate and return bad request when it has any invalid data', async () => {
     const app = v.App()
-    app.use(v.parseData())
-    app.use(v.validateRouteData(schemaData))
-    const router = v.Router()
+    app.parseData()
 
-    router.post('/params/:string/:integer/query', (request: type.Request, response: type.Response) => {
-      response.status(200).json({
-        query: request.query,
-        params: request.params,
-        files: request?.files,
-        body: request.body
-      })
-    })
+    app.post(
+      '/params/:string/:integer/query',
+      v.validateRouteData(schemaData),
+      (request: type.Request, response: type.Response) => {
+        response.status(200).json({
+          query: request.query,
+          params: request.params,
+          files: request?.files,
+          body: request.body
+        })
+      }
+    )
 
-    app.use(router)
     server = app.server()
     server.listen(3498)
 
