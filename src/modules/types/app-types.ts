@@ -11,6 +11,7 @@ export interface VkrunApp {
   close: () => void
   parseData: (config?: type.ParseDataConfig) => void
   cors: (options?: type.SetCorsOptions) => void
+  rateLimit: (config?: type.RateLimitConfig) => void
   get: (path: string, ...handlers: any) => void
   head: (path: string, ...handlers: any) => void
   post: (path: string, ...handlers: any) => void

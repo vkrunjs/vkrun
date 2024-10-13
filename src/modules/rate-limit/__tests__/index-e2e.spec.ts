@@ -113,7 +113,7 @@ describe('Rate Limit - end to end testing using super request', () => {
   it('Return to many requests if limit is reached', async () => {
     const app = v.App()
     const rateLimitConfig = { windowMs: 15 * 60 * 1000, limit: 1 }
-    app.use(v.rateLimit(rateLimitConfig))
+    app.rateLimit(rateLimitConfig)
     const router = v.Router()
     router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
     app.use(router)

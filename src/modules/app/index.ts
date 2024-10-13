@@ -7,6 +7,7 @@ import { loggerSanitizeInterval } from '../logger'
 import { RouterHandler } from '../router/helpers/router-handler'
 import { VkrunParseData } from '../parse-data'
 import { cors } from '../cors'
+import { rateLimit } from '../rate-limit'
 
 class VkrunApp implements type.VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
@@ -102,10 +103,16 @@ class VkrunApp implements type.VkrunApp {
     }
   }
 
-  // Parse data
+  // Cors
 
   public cors (options?: type.SetCorsOptions): void {
     this.globalMiddlewares.unshift(cors(options))
+  }
+
+  // Rate limit
+
+  public rateLimit (config?: type.RateLimitConfig): void {
+    this.globalMiddlewares.push(rateLimit(config))
   }
 
   // Routing
