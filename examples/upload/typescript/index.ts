@@ -1,5 +1,4 @@
 import v from 'vkrun'
-import path from 'path'
 import fs from 'fs'
 
 const app = v.App()
@@ -7,7 +6,7 @@ app.parseData() // equivalent app.parseData({ formData: true })
 
 // Middleware for uploading files
 const middlewareUploads = v.upload.diskStorage({
-  destination: path.join(__dirname, 'files') // path where the files will be saved
+  destination: 'files' // path where the files will be saved
 })
 
 const controller = (req: v.Request, res: v.Response) => {
@@ -20,18 +19,21 @@ app.post(
   controller // generic controller
 )
 
-app.server().listen(3000, () => {
+app.server().listen(3000, async () => {
   console.log('Vkrun started on port 3000')
+  await sendFile()
 })
 
-const filename = 'filename.txt'
-const filePath = path.join(__dirname, filename)
+const sendFile = async () => {
+  const data = new FormData()
+  const fileBuffer = fs.readFileSync('filename.txt')
+  const fileBlob = new Blob([fileBuffer], { type: 'text/plain' }) // Blob nativo do Node.js v18+
+  data.append('file', fileBlob, 'filename.txt')
 
-const data = new FormData()
-const fileBuffer = fs.readFileSync(filePath)
-data.append('file', fileBuffer, filename)
-
-fetch('http://localhost:3000/upload', {
-  method: 'POST',
-  body: data
-})
+  await fetch('http://localhost:3000/upload', {
+    method: 'POST',
+    body: data
+  }).then(() => {
+    console.log("file sent and saved in the directory")
+  })
+}
