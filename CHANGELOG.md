@@ -1,6 +1,6 @@
 # VkrunJS Releases
 
-## 0.42.0 - Soon
+## 0.42.0
 
 - parse data convert files in memory when content-type is multipart/form-data
 - add the parseData module as a method in app
@@ -8,6 +8,10 @@
 - add upload documentation
 - add super request documentation
 - super request accepts FormData without declaring the content-type
+- add cors documentation
+- add parse data documentation
+- add rate limit documentation
+- add validate route data documentation
 
 ## 0.41.1
 
