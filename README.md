@@ -48,7 +48,7 @@ app.server().listen(3000, () => {
 - [Super Request](./src/modules/super-request/Readme.md)
 - Session
 - Rate Limit
-- Parse Data
+- [Parse Data](./src/modules/parse-data/Readme.md)
 - [Upload](./src/modules/upload/Readme.md)
 - [Logger](./src/modules/logger/Readme.md)
 - [JWT](./src/modules/jwt/Readme.md)
