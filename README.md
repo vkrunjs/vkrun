@@ -46,7 +46,6 @@ app.server().listen(3000, () => {
 - [Schema](./src/modules/schema/Readme.md)
 - Validate Route Data
 - [Super Request](./src/modules/super-request/Readme.md)
-- Session
 - [Rate Limit](./src/modules/rate-limit/Readme.md)
 - [Parse Data](./src/modules/parse-data/Readme.md)
 - [Upload](./src/modules/upload/Readme.md)
