@@ -5,19 +5,23 @@ import { customResponse } from '../router/helpers/custom-response'
 import * as type from '../types'
 import { loggerSanitizeInterval } from '../logger'
 import { RouterHandler } from '../router/helpers/router-handler'
+import { VkrunParseData } from '../parse-data'
+import { cors } from '../cors'
+import { rateLimit } from '../rate-limit'
 
 class VkrunApp implements type.VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
   private routes: type.Route[] = []
   private readonly routerHandler: RouterHandler
-  private readonly middlewares: any[]
+  private readonly globalMiddlewares: any[]
   private createdServer: any
   private timers: any[]
+  private _parseData?: VkrunParseData
 
   constructor () {
     this.instance = undefined
     this.routerHandler = new RouterHandler()
-    this.middlewares = []
+    this.globalMiddlewares = []
     this.timers = []
   }
 
@@ -48,7 +52,7 @@ class VkrunApp implements type.VkrunApp {
         _request,
         _response,
         this.routes,
-        this.middlewares
+        this.globalMiddlewares
       )
     })
 
@@ -75,7 +79,7 @@ class VkrunApp implements type.VkrunApp {
       _request,
       this.createdServer,
       this.routes,
-      this.middlewares
+      this.globalMiddlewares
     )
     return this.createdServer
   }
@@ -86,8 +90,29 @@ class VkrunApp implements type.VkrunApp {
     if (middleware instanceof VkrunRouter) {
       this.routes = [...this.routes, ...middleware._routes()]
     } else {
-      this.middlewares.push(middleware)
+      this.globalMiddlewares.push(middleware)
     }
+  }
+
+  // Parse data
+
+  public parseData (config?: type.ParseDataConfig): void {
+    if (!this._parseData) {
+      this._parseData = new VkrunParseData(config)
+      this.globalMiddlewares.unshift(this._parseData)
+    }
+  }
+
+  // Cors
+
+  public cors (options?: type.SetCorsOptions): void {
+    this.globalMiddlewares.unshift(cors(options))
+  }
+
+  // Rate limit
+
+  public rateLimit (config?: type.RateLimitConfig): void {
+    this.globalMiddlewares.push(rateLimit(config))
   }
 
   // Routing

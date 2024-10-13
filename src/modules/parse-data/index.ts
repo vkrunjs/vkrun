@@ -41,8 +41,11 @@ export class VkrunParseData {
           } else if (this.urlencoded && headerContentType && headerContentType?.includes('application/x-www-form-urlencoded')) {
             request.body = parseFormUrlEncoded(request, this.escapeSQL)
           } else if (this.formData && headerContentType && headerContentType?.includes('multipart/form-data')) {
-            request.body = parseMultipartFormData(request, this.escapeSQL)
+            const parsedData = parseMultipartFormData(request, this.escapeSQL)
+            request.body = parsedData.body
+            request.files = parsedData.files
           } else {
+            request.body = request.body.toString()
             if (this.escapeSQL && util.isString(request.body)) {
               request.body = util.parseEscapeSQL(request.body)
             }

@@ -1,3 +1,9 @@
+import * as type from '.'
+
+export interface VkrunCors {
+  handle: (request: type.Request, response: type.Response, next: type.NextFunction) => void
+}
+
 export interface CorsOptions {
   origin: string | string[]
   methods: string | string[]

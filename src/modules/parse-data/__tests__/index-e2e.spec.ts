@@ -1,7 +1,7 @@
-import v from '../../../index'
-import { readFileSync, unlinkSync, writeFileSync } from 'fs'
-import FormData from 'form-data'
 import path from 'path'
+import fs from 'fs'
+import v from '../../../index'
+import FormData from 'form-data'
 
 describe('Parse Data - end to end testing using super request', () => {
   const validateSuccess = (response: any): void => {
@@ -269,7 +269,8 @@ describe('Parse Data - end to end testing using super request', () => {
   })
 
   it('Should be able to parse the form data body in the POST method', async () => {
-    let requestBody
+    let requestBody: any
+    let requestFiles: any
 
     const app = v.App()
     app.use(v.parseData())
@@ -277,6 +278,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     router.post('/body-post', (request: v.Request, response: v.Response) => {
       requestBody = request.body
+      requestFiles = request.files
       response.status(200).end()
     })
 
@@ -286,7 +288,7 @@ describe('Parse Data - end to end testing using super request', () => {
     const fileName = 'filename.txt'
     const filePath = path.join(__dirname, fileName)
 
-    writeFileSync(filePath, fileContent)
+    fs.writeFileSync(filePath, fileContent)
 
     const data = new FormData()
     data.append('string', 'any@mail.com')
@@ -295,14 +297,21 @@ describe('Parse Data - end to end testing using super request', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    const fileBuffer = readFileSync(filePath)
+    const fileBuffer = fs.readFileSync(filePath)
     data.append('file', fileBuffer, fileName)
 
     const response = await v.superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
-    unlinkSync(filePath)
+    fs.unlinkSync(filePath)
+
+    fs.writeFileSync(filePath, requestFiles[0].buffer)
+    const fileExists = fs.existsSync(filePath)
+    expect(fileExists).toBeTruthy()
+    const savedFileContent = fs.readFileSync(filePath, 'utf-8')
+    expect(savedFileContent).toEqual(fileContent)
+    fs.unlinkSync(filePath)
 
     validateSuccess(response)
     expect(requestBody).toEqual({
@@ -312,6 +321,9 @@ describe('Parse Data - end to end testing using super request', () => {
       boolean: true,
       date: new Date('2000-02-03T02:00:00.000Z')
     })
+    expect(requestFiles[0].filename).toEqual('filename.txt')
+    expect(requestFiles[0].mimetype).toEqual('text/plain')
+    expect(requestFiles[0].extension).toEqual('txt')
 
     app.close()
   })
@@ -618,11 +630,12 @@ describe('Parse Data - end to end testing using super request', () => {
 
     app.use(router)
 
-    const response = await v.superRequest(app).post('/body-post', '', {
+    await v.superRequest(app).post('/body-post', '', {
       headers: { 'Content-Type': 'multipart/form-data' }
+    }).catch((error) => {
+      expect(error.response.statusCode).toEqual(400)
+      expect(error.response.data).toEqual('Invalid Request Data')
     })
-
-    validateSuccess(response)
     expect(requestBody).toEqual(undefined)
 
     app.close()

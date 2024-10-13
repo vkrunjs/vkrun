@@ -9,14 +9,19 @@ export interface VkrunRouter {
   options: (path: string, ...handlers: any) => void
 }
 
-export interface Request extends IncomingMessage {
+export interface Request<
+  Body = Record<string, string | number | boolean | Date> | JSON | string | undefined | any,
+  Params = Record<string, string | number | boolean | Date> | undefined,
+  Query = Record<string, string | number | boolean | Date> | undefined,
+  Files = File[] | undefined
+> extends IncomingMessage {
   requestId?: string
   route?: Route
-  body?: Record<string, string | number | boolean | Date> | JSON | string | undefined | any
-  params?: Record<string, string | number | boolean | Date>
-  query?: Record<string, string | number | boolean | Date>
+  body: Body
+  params: Params
+  query: Query
   session?: any
-  files?: any[]
+  files: Files
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
@@ -42,12 +47,23 @@ export interface CookieOptions {
   priority?: 'Low' | 'Medium' | 'High'
 }
 
-export interface File {
+export interface MemoryFile {
   filename: string
   extension: string
-  mime: string
+  mimetype: string
   buffer: Buffer
 }
+
+export interface StorageFile {
+  filename: string
+  extension: string
+  mimetype: string
+  size: number
+  destination: string
+  path: string
+}
+
+export type File = MemoryFile | StorageFile
 
 export interface ErrorHandlerMiddleware {
   handle: (error: any, request: Request, response: Response, next: NextFunction) => any

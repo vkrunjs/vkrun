@@ -3,7 +3,7 @@ import { formatValue } from '../format'
 import * as type from '../../../types'
 
 export const parseFormUrlEncoded = (request: type.Request, escapeSQL: boolean): object => {
-  const parsedBody = querystring.parse(request.body)
+  const parsedBody = querystring.parse(request.body.toString())
   const formattedBody: Record<string, string | number | boolean | Date> = {}
 
   for (const key in parsedBody) {

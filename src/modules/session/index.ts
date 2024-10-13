@@ -118,7 +118,7 @@ export class VkrunSession {
 
     if (isValidRemoteAddress && isValidRemoteFamily && isValidUserAgent) {
       if (session.token) {
-        request.session = jwt.decrypt(session.token, this.secretKey)
+        request.session = jwt().decrypt(session.token, this.secretKey)
       }
 
       next()

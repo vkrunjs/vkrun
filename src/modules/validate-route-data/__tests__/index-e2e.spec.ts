@@ -32,40 +32,39 @@ describe('Validate Route Data - end to end testing using super request', () => {
 
   it('Should validate and successfully pass through the middleware', async () => {
     const app = v.App()
-    app.use(v.parseData())
-    app.use(v.validateRouteData(schemaData))
-    const router = v.Router()
+    app.parseData()
 
-    router.post('/params/:string/:integer/query', (request: v.Request, response: v.Response) => {
-      const requestData = {
-        query: request.query,
-        params: request.params,
-        files: request?.files,
-        body: request.body
-      }
-
-      expect(requestData).toEqual({
-        params: {
-          string: 'any@mail.com',
-          integer: 123
-        },
-        query: {
-          float: 1.56,
-          boolean: true,
-          date: new Date('2000-02-03T02:00:00.000Z')
-        },
-        body: {
-          string: 'any@mail.com',
-          integer: 123,
-          float: 1.56,
-          boolean: true,
-          date: new Date('2000-02-03T02:00:00.000Z')
+    app.post(
+      '/params/:string/:integer/query',
+      v.validateRouteData(schemaData),
+      (request: v.Request, response: v.Response) => {
+        const requestData = {
+          query: request.query,
+          params: request.params,
+          files: request?.files,
+          body: request.body
         }
-      })
-      response.status(200).end('Success!')
-    })
 
-    app.use(router)
+        expect(requestData).toEqual({
+          params: {
+            string: 'any@mail.com',
+            integer: 123
+          },
+          query: {
+            float: 1.56,
+            boolean: true,
+            date: new Date('2000-02-03T02:00:00.000Z')
+          },
+          body: {
+            string: 'any@mail.com',
+            integer: 123,
+            float: 1.56,
+            boolean: true,
+            date: new Date('2000-02-03T02:00:00.000Z')
+          }
+        })
+        response.status(200).end('Success!')
+      })
 
     const path = 'params/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
     const data = {
@@ -86,20 +85,20 @@ describe('Validate Route Data - end to end testing using super request', () => {
 
   it('Should validate and return bad request when it has any invalid data', async () => {
     const app = v.App()
-    app.use(v.parseData())
-    app.use(v.validateRouteData(schemaData))
-    const router = v.Router()
+    app.parseData()
 
-    router.post('/params/:string/:integer/query', (request: v.Request, response: v.Response) => {
-      response.status(200).json({
-        query: request.query,
-        params: request.params,
-        files: request?.files,
-        body: request.body
-      })
-    })
-
-    app.use(router)
+    app.post(
+      '/params/:string/:integer/query',
+      v.validateRouteData(schemaData),
+      (request: v.Request, response: v.Response) => {
+        response.status(200).json({
+          query: request.query,
+          params: request.params,
+          files: request?.files,
+          body: request.body
+        })
+      }
+    )
 
     const path = 'params/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
     const data = {

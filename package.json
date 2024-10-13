@@ -33,7 +33,13 @@
   "files": [
     "LICENSE",
     "Readme.md",
-    "lib"
+    "lib",
+    "Publishing-Guide.md",
+    "Installation-Guide.md",
+    "Code-Of-Conduct.md",
+    "Contributing.md",
+    "CHANGELOG.md",
+    "Security.md"
   ],
   "homepage": "https://github.com/vkrunjs/vkrunjs#readme",
   "repository": {

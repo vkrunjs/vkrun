@@ -38,28 +38,36 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
     request.headers['content-type'] = 'text/plain'
   }
 
-  const generateBufferData = (): any => {
-    if (headerContentType?.includes('multipart/form-data')) {
-      if (!headerContentType?.includes('boundary=')) {
+  const generateBufferData = (): Buffer => {
+    if (
+      headerContentType?.includes('multipart/form-data') ||
+      (data?._boundary && data?._streams)
+    ) {
+      if (!headerContentType) {
+        request.headers['content-type'] = `multipart/form-data; boundary=${data._boundary}`
+      } else if (data && !headerContentType.includes('boundary=')) {
         request.headers['content-type'] = `${headerContentType}; boundary=${data._boundary}`
       }
 
-      if (!data) return data
+      if (!data) return Buffer.alloc(0)
 
       const filteredData = data._streams.filter((element: any) => typeof element !== 'function')
-      let result = ''
+      const parts: Buffer[] = []
 
       for (let i = 0; i < filteredData.length; i += 2) {
-        const header = filteredData[i]
-        const value = filteredData[i + 1]
-        result += header + value + '\r\n'
+        const header = Buffer.from(filteredData[i], 'utf-8')
+        const value = typeof filteredData[i + 1] === 'string'
+          ? Buffer.from(filteredData[i + 1], 'utf-8')
+          : filteredData[i + 1] // assume Buffer if not string
+
+        parts.push(header, value, Buffer.from('\r\n', 'utf-8'))
       }
 
-      return result
+      return Buffer.concat(parts)
     } else if (util.isObject(data)) {
-      return JSON.stringify(data)
+      return Buffer.from(JSON.stringify(data), 'utf-8')
     } else {
-      return data ? data.toString() : ''
+      return data ? Buffer.from(data.toString(), 'utf-8') : Buffer.alloc(0)
     }
   }
   const bufferData = generateBufferData()

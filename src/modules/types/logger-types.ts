@@ -4,7 +4,7 @@ export type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' 
 
 export type LogExtension = 'log' | 'txt' | 'json'
 
-export interface Logger {
+export interface VkrunLogger {
   error: (message: any) => void
   warn: (message: any) => void
   info: (message: any) => void
