@@ -6,6 +6,7 @@ import * as type from '../types'
 import { loggerSanitizeInterval } from '../logger'
 import { RouterHandler } from '../router/helpers/router-handler'
 import { VkrunParseData } from '../parse-data'
+import { cors } from '../cors'
 
 class VkrunApp implements type.VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
@@ -99,6 +100,12 @@ class VkrunApp implements type.VkrunApp {
       this._parseData = new VkrunParseData(config)
       this.globalMiddlewares.unshift(this._parseData)
     }
+  }
+
+  // Parse data
+
+  public cors (options?: type.SetCorsOptions): void {
+    this.globalMiddlewares.unshift(cors(options))
   }
 
   // Routing

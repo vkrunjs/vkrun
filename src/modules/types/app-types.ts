@@ -10,6 +10,7 @@ export interface VkrunApp {
   clearTimers: () => void
   close: () => void
   parseData: (config?: type.ParseDataConfig) => void
+  cors: (options?: type.SetCorsOptions) => void
   get: (path: string, ...handlers: any) => void
   head: (path: string, ...handlers: any) => void
   post: (path: string, ...handlers: any) => void

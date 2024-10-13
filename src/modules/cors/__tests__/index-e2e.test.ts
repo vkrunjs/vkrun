@@ -53,15 +53,13 @@ describe('Cors - end to end testing using axios and app server', () => {
       credentials: true,
       maxAge: 3600
     }
-    app.use(v.cors(options))
-    const router = v.Router()
+    app.cors(options)
 
-    router.get('/', (_request: v.Request, response: v.Response) => {
+    app.get('/', (_request: v.Request, response: v.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('GET ok')
     })
 
-    app.use(router)
     server = app.server()
     server.listen(3598)
 

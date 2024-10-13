@@ -80,15 +80,13 @@ describe('Cors - end to end testing using super request', () => {
       credentials: true,
       maxAge: 3600
     }
-    app.use(v.cors(options))
-    const router = v.Router()
 
-    router.get('/', (_request: type.Request, response: type.Response) => {
+    app.cors(options)
+
+    app.get('/', (_request: type.Request, response: type.Response) => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(200).end('GET ok')
     })
-
-    app.use(router)
 
     await v.superRequest(app).get('/').catch((error: any) => {
       expect(error.response.statusCode).toEqual(403)
