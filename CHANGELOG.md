@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.42.1
+
+- update to generate release 0.42.0
+
 ## 0.42.0
 
 - parse data convert files in memory when content-type is multipart/form-data
