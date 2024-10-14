@@ -157,7 +157,7 @@ describe('JWT', () => {
       expiresIn: '3y' // invalid format
     }
     const token = (): string => jwt().encrypt(data, config)
-
+    console.log({ generateKey: generateKey() })
     expect(token).toThrow('vkrun-jwt: invalid time format. Use a number or string in the example format: "5s", "5m", "3h", or "2d".')
   })
 })
