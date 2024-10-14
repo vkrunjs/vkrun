@@ -21,6 +21,7 @@
 - [CORS Configuration](#cors-configuration)
   - [Origin Options](#origin-options)
 - [CORS Middleware Usage](#cors-middleware-usage)
+- [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
 
@@ -155,3 +156,10 @@ app.server().listen(3000, () => {
 })
 ```
 
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/cors)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.

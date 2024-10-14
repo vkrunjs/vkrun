@@ -22,6 +22,7 @@
   - [Default setting](#default-setting)
   - [Log Levels](#log-levels)
 - [Logger Middleware Usage](#logger-middleware-usage)
+- [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
 
@@ -195,3 +196,11 @@ await fetch('http://domain/', {
 ```
 
 This example demonstrates how to use the logger middleware as a global middleware in a Vkrun application. The middleware logs information about each HTTP request, including details such as the request URL, method, headers, request body, parameters, query, and response status code. This can be helpful for monitoring and debugging purposes, allowing you to track the flow of requests through your application and diagnose any issues that may arise.
+
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/logger)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.

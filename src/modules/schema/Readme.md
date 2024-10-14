@@ -123,6 +123,7 @@ console.log(validateB) // false
       - [.max](#max-date-array)
     - [.object](#object-array)
   - [.setLocation](#setLocation)
+- [Example projects](#example-projects)
 
 <h2 align="center">Types of Validations</h2>
   
@@ -1307,3 +1308,11 @@ const validateB = schema.validate([
 console.log(validateA) // true
 console.log(validateB) // false
 ```
+
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/schema)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.
