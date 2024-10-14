@@ -27,7 +27,8 @@
   - [Parsing JSON Body](#parsing-json-body)
   - [Parsing URL-encoded Form Data](#parsing-url-encoded-form-data)
   - [Parsing Multipart Form Data with Files](#parsing-multipart-form-data-with-files)
-  - [SQL Injection Prevention with escapeSQL](#sql-injection-prevention`)
+  - [SQL Injection Prevention with escapeSQL](#sql-injection-prevention)
+- [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
 
@@ -263,3 +264,11 @@ app.post('/data', (request: v.Request, response: v.Response) => {
 ```
 
 By configuring the Parse Data middleware with the right options, you can easily handle and process different types of request data, improving the flexibility and security of your application.
+
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/parse-data)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.
