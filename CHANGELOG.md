@@ -1,5 +1,15 @@
 # VkrunJS Releases
 
+## 0.42.4
+
+- add sample projects to cors with javascript and typescript
+- add sample projects to jwt with javascript and typescript
+- add sample projects to logger with javascript and typescript
+- add sample projects to validate route data with javascript and typescript
+- add sample projects to rate limit with javascript and typescript
+- add sample projects to schema with javascript and typescript
+- add sample projects to super request with javascript and typescript
+
 ## 0.42.3
 
 - link example projects to readme
