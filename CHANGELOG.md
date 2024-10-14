@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 0.42.3
+
+- link example projects to readme
+
 ## 0.42.2
 
 - add sample projects to parse data with javascript and typescript
