@@ -50,6 +50,8 @@ export class VkrunParseData {
               request.body = util.parseEscapeSQL(request.body)
             }
           }
+        } else {
+          request.body = {}
         }
       } else {
         request.body = undefined

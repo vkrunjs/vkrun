@@ -741,4 +741,38 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     expect(requestBody).toEqual('{"string":"any@mail.com","integer":123,"float":1.56,"boolean":true,"date":"2000-02-03T02:00:00.000Z","array":["string",true,false,123,1.56,"2000-02-03T02:00:00.000Z"],"object":{"key":"string"}}')
   })
+
+  it('Should be able to parse params and query url', async () => {
+    let requestParams
+    let requestQuery
+
+    const app = v.App()
+    app.use(v.parseData())
+    const router = v.Router()
+
+    router.get('/parse/:param1/:param2', (request: v.Request, response: v.Response) => {
+      requestQuery = request.query
+      requestParams = request.params
+      response.status(200).end()
+    })
+
+    app.use(router)
+    server = app.server()
+    server.listen(3980)
+
+    const path = 'parse/value1/value2?query1=example@mail.com&query2=123'
+    const response = await axios.get(`http://localhost:3980/${path}`)
+
+    validateHeaderSuccess(response)
+    expect(requestParams).toEqual({
+      param1: 'value1',
+      param2: 'value2'
+    })
+    expect(requestQuery).toEqual({
+      query1: 'example@mail.com',
+      query2: 123
+    })
+
+    app.close()
+  })
 })

@@ -19,11 +19,11 @@ yarn install
 ##### NPM
 
 ```bash
-npm run dev
+npm run start
 ```
 
 ##### YARN
 
 ```bash
-yarn dev
+yarn start
 ```

@@ -1,5 +1,5 @@
 {
-  "name": "vkrun-router-with-typescript",
+  "name": "vkrun-parse-data-with-typescript",
   "main": "index.ts",
   "scripts": {
     "start": "node dist/index.js",

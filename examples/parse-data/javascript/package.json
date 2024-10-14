@@ -1,5 +1,5 @@
 {
-  "name": "vkrun-upload-with-javascript",
+  "name": "vkrun-parse-data-with-javascript",
   "main": "index.js",
   "type": "module",
   "scripts": {

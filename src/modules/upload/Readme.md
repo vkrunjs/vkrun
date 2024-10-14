@@ -17,6 +17,7 @@
 ### Content
 - [Vkrun](https://github.com/vkrunjs/vkrun)
 - [Introduction](#introduction)
+- [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
 
