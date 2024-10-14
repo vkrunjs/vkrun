@@ -28,4 +28,8 @@ describe('isNumber', () => {
   it('Should return false for undefined', () => {
     expect(isNumber(undefined)).toBeFalsy()
   })
+
+  it('Should return false for NaN', () => {
+    expect(isNumber(NaN)).toBeFalsy()
+  })
 })
