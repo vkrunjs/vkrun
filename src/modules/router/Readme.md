@@ -22,6 +22,7 @@
 - [Request parameters, query and body](#req-params-query-body)
 - [Router handlers](#router-handlers)
 - [Response methods](#response-methods)
+- [Error Handling](#error-handling)
 - [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
@@ -255,6 +256,45 @@ const controller = (req: v.Request, res: v.Response, next: v.NextFunction) => {
 
 app.get('/example-c', middleware, controller)
 ```
+
+<h2 id="error-handling">Error Handling</h2>
+
+Vkrun allows adding an error-handling middleware to ensure that if any exception occurs in a route, the application does not crash, and a standard error response is provided.
+
+To implement error handling, add an error middleware using `app.use()`. This error middleware takes four parameters: `error`, `req`, `res`, and `next`. Vkrun automatically forwards captured errors to this middleware, allowing you to define a custom response for clients when an error occurs.
+
+```ts
+import v from 'vkrun'
+
+// Define the error-handling middleware
+const errorHandler = (error: v.ErrorHandler, req: v.Request, res: v.Response, next: v.NextFunction) => {
+  res.status(500).send('Internal Server Error') // Returns a standard error message
+}
+
+const app = v.App()
+
+// Add the error middleware to the application
+app.use(errorHandler)
+
+// Example route
+app.get('/', (req: v.Request, res: v.Response) => {
+  res.status(200).send('GET method route')
+})
+
+app.server().listen(3000, () => {
+  console.log('Vkrun started on port 3000')
+})
+```
+
+In this example:
+
+- We define the `errorHandler` to set a `Content-Type` header as `text/plain` and return a status response of `500` with an error message.
+- If any error occurs in the routes or other middleware, it is automatically redirected to the `errorHandler`.
+- This keeps the application stable and provides a standardized way to handle errors and send feedback to clients.
+
+Remember that the error-handling middleware should be the last one added with app.use() so that it can capture all errors from routes and other middleware.
+
+
 
 <h2 id="response-methods">Response methods</h2>
 

@@ -1,0 +1,11 @@
+{
+  "name": "vkrun-validate-route-data-with-javascript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "vkrun": "*"
+  }
+}

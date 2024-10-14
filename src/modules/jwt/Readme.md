@@ -19,6 +19,7 @@
 - [Introduction](#introduction)
 - [Encrypt](#encrypt)
 - [Decrypt](#decrypt)
+- [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
 
@@ -80,3 +81,11 @@ const token = v.jwt().encrypt(data, config)
 const decryptedToken = jwt().decrypt(token, config.secretKey)
 // decryptedToken equals { id: 456, name: 'Alice' }
 ```
+
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/jwt)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.

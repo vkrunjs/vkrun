@@ -1,4 +1,4 @@
-# Vkrun - Hello world example with TypeScript
+# Vkrun Upload with JavaScript
 
 ## Installation
 
