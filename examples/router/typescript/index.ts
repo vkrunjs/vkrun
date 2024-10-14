@@ -1,6 +1,21 @@
 import v from 'vkrun'
 
+// Define the error-handling middleware
+const errorHandler = (
+  error: v.ErrorHandlerMiddleware,
+  req: v.Request,
+  res: v.Response,
+  next: v.NextFunction
+) => {
+  res.setHeader('Content-Type', 'text/plain')
+  res.status(500).end('Internal Server Error')
+}
+
 const app = v.App()
+
+// Add the error middleware to the application
+app.use(errorHandler)
+
 const router = v.Router()
 
 // ----- Example 1: Defining routes with 'Router' -----
