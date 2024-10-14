@@ -1,4 +1,4 @@
-# Vkrun Parse Data with JavaScript
+# Vkrun JWT with JavaScript
 
 ## Installation
 

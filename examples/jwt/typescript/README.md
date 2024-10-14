@@ -1,4 +1,4 @@
-# Vkrun Router with TypeScript
+# Vkrun JWT with TypeScript
 
 ## Installation
 
