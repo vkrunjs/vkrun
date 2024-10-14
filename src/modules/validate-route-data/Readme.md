@@ -21,6 +21,7 @@
 - [Validation Schema Configuration](#validation-schema-configuration)
   - [Validation Options](#validation-options)
 - [Validate Route Data Middleware Usage](#validate-route-data-middleware-usage)
+- [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
 
@@ -259,3 +260,11 @@ app.post(
 ```
 
 By leveraging the Validate Route Data middleware on specific routes, you can ensure data integrity and enforce validation where needed, enhancing the security and reliability of your API.
+
+<h2 id="example-projects">Example projects</h2>
+
+If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
+
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/validate-route-data)
+
+Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.
