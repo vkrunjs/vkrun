@@ -1,5 +1,11 @@
 # VkrunJS Releases
 
+## 0.42.2
+
+- add sample projects to parse data with javascript and typescript
+- fix when not post, put and patch protocol return empty body object
+- fix parameter followed by query is not parsed
+
 ## 0.42.1
 
 - update to generate release 0.42.0
