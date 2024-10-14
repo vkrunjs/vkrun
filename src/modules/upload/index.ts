@@ -14,10 +14,6 @@ export const upload: type.VkrunUpload = {
     }
   ) => {
     return async (request: type.Request, _response: type.Response, next: type.NextFunction) => {
-      request.on('data', (chunk) => {
-        console.log({ chunk })
-      })
-
       fs.mkdirSync(options.destination, { recursive: true })
 
       const saveFileToDisk = (file: any): type.StorageFile => {
