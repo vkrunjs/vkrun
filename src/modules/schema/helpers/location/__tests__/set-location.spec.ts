@@ -27,6 +27,13 @@ describe('Set translation message', () => {
         positive: '[valueName] deve ser positivo!',
         negative: '[valueName] deve ser negativo!'
       },
+      bigInt: {
+        invalidValue: '[valueName] deve ser do tipo grande inteiro!',
+        min: '[valueName] deve ser maior ou igual a [min]!',
+        max: '[valueName] deve ser menor ou igual a [max]!',
+        positive: '[valueName] deve ser positivo!',
+        negative: '[valueName] deve ser negativo!'
+      },
       boolean: {
         invalidValue: '[valueName] deve ser do tipo booleano!'
       },
@@ -73,6 +80,13 @@ describe('Set translation message', () => {
         invalidValue: '[valueName] must be a number type!',
         float: '[valueName] must be a float!',
         integer: '[valueName] must be a integer!',
+        min: '[valueName] must be greater than or equal to [min]!',
+        max: '[valueName] must be less than or equal to [max]!',
+        positive: '[valueName] must be positive!',
+        negative: '[valueName] must be negative!'
+      },
+      bigInt: {
+        invalidValue: '[valueName] must be a bigint type!',
         min: '[valueName] must be greater than or equal to [min]!',
         max: '[valueName] must be less than or equal to [max]!',
         positive: '[valueName] must be positive!',

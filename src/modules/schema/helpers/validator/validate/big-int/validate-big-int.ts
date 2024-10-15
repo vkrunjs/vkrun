@@ -2,7 +2,7 @@ import { informativeMessage } from '../../../location'
 import * as type from '../../../../../types'
 import * as util from '../../../../../utils'
 
-export const validateFloatNumber = ({
+export const validateBigInt = ({
   value,
   valueName,
   indexArray,
@@ -16,15 +16,15 @@ export const validateFloatNumber = ({
   callbackAddFailed: (error: type.ErrorTest) => void
 }): void => {
   const message = {
-    expect: indexArray !== undefined ? 'array index in float type' : 'float type',
-    error: informativeMessage.number.float
-      .replace('[value]', String(value))
+    expect: indexArray !== undefined ? 'array index in bigint type' : 'bigint type',
+    error: informativeMessage.bigInt.invalidValue
+      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
       .replace('[valueName]', valueName)
   }
 
-  if (util.isFloat(value)) {
+  if (util.isBigInt(value)) {
     callbackAddPassed({
-      method: 'float',
+      method: 'bigInt',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -32,7 +32,7 @@ export const validateFloatNumber = ({
     })
   } else {
     callbackAddFailed({
-      method: 'float',
+      method: 'bigInt',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

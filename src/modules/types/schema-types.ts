@@ -4,6 +4,7 @@ import { UUIDVersion } from './utils-types'
 export interface ISchema {
   string: () => StringMethod
   number: () => NumberMethod
+  bigInt: () => BigIntMethod
   boolean: () => DefaultReturn
   date: (type?: DateTypes) => DateMethod
   alias: (valueName: string) => AliasMethod
@@ -280,6 +281,50 @@ export interface NumberPositiveMethod extends DefaultReturn {
 
 export type NumberNegativeMethod = NumberPositiveMethod
 
+export interface BigIntMethod extends DefaultReturn {
+  min: (value: bigint) => BigIntMinMethod
+  max: (value: bigint) => BigIntMaxMethod
+  positive: () => BigIntPositiveMethod
+  negative: () => BigIntNegativeMethod
+}
+
+export interface BigIntMinMethod extends DefaultReturn {
+  max: (value: bigint) => DefaultReturn & {
+    positive: () => DefaultReturn
+    negative: () => DefaultReturn
+  }
+  positive: () => DefaultReturn & {
+    max: (value: bigint) => DefaultReturn
+  }
+  negative: () => DefaultReturn & {
+    max: (value: bigint) => DefaultReturn
+  }
+}
+
+export interface BigIntMaxMethod extends DefaultReturn {
+  min: (value: bigint) => DefaultReturn & {
+    positive: () => DefaultReturn
+    negative: () => DefaultReturn
+  }
+  positive: () => DefaultReturn & {
+    min: (value: bigint) => DefaultReturn
+  }
+  negative: () => DefaultReturn & {
+    min: (value: bigint) => DefaultReturn
+  }
+}
+
+export interface BigIntPositiveMethod extends DefaultReturn {
+  min: (value: bigint) => DefaultReturn & {
+    max: (value: bigint) => DefaultReturn
+  }
+  max: (value: bigint) => DefaultReturn & {
+    min: (value: bigint) => DefaultReturn
+  }
+}
+
+export type BigIntNegativeMethod = BigIntPositiveMethod
+
 export interface NullableMethod {
   throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
   throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
@@ -362,6 +407,7 @@ export interface ArrayMethod extends DefaultReturn {
   string: () => StringMethod
   boolean: () => DefaultReturn
   number: () => NumberMethod
+  bigInt: () => BigIntMethod
   date: (type?: DateTypes) => DateMethod
   object: (schema: ObjectType) => DefaultReturn
 }
@@ -388,6 +434,7 @@ export type MethodTypes =
   'required' |
   'notRequired' |
   'number' |
+  'bigInt' |
   'float' |
   'integer' |
   'boolean' |
@@ -405,8 +452,8 @@ export interface Method {
   minWord?: number
   maxLength?: number
   minLength?: number
-  max?: number
-  min?: number
+  max?: number | bigint
+  min?: number | bigint
   dateType?: DateTypes
   dateToCompare?: Date
   timeType?: TimeTypes
@@ -419,7 +466,7 @@ export interface Method {
   comparisonItems?: any[]
 }
 
-export type ArrayTypes = 'string' | 'number' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Schema[]>
+export type ArrayTypes = 'string' | 'number' | 'bigInt' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Schema[]>
 
 export type Methods = Method[]
 
@@ -486,6 +533,13 @@ export interface SetLocation {
     positive?: string
     negative?: string
   }
+  bigInt?: {
+    invalidValue?: string
+    min?: string
+    max?: string
+    positive?: string
+    negative?: string
+  }
   boolean?: {
     invalidValue?: string
   }
@@ -518,6 +572,13 @@ export interface InformativeMessage {
     invalidValue: string
     float: string
     integer: string
+    min: string
+    max: string
+    positive: string
+    negative: string
+  }
+  bigInt: {
+    invalidValue: string
     min: string
     max: string
     positive: string

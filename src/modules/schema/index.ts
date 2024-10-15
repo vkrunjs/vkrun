@@ -1,6 +1,7 @@
 import * as helper from './helpers'
 import { setLocation } from './helpers'
 import { numberMethod } from './helpers/methods/number'
+import { bigIntMethod } from './helpers/methods/big-int'
 import * as type from '../types'
 
 export class Schema implements type.ISchema {
@@ -104,6 +105,13 @@ export class Schema implements type.ISchema {
 
   number (): type.NumberMethod {
     return numberMethod({
+      callbackMethodBuild: (build: type.Method) => this.methodBuild(build),
+      callbackDefaultReturnMethods: () => this.defaultReturnMethods()
+    })
+  }
+
+  bigInt (): type.BigIntMethod {
+    return bigIntMethod({
       callbackMethodBuild: (build: type.Method) => this.methodBuild(build),
       callbackDefaultReturnMethods: () => this.defaultReturnMethods()
     })
@@ -249,6 +257,7 @@ export class Schema implements type.ISchema {
       string: () => this.string(),
       boolean: () => this.boolean(),
       number: () => this.number(),
+      bigInt: () => this.bigInt(),
       date: (type?: type.DateTypes) => this.date(type),
       object: (schema: type.ObjectType) => this.object(schema),
       ...this.defaultReturnMethods()

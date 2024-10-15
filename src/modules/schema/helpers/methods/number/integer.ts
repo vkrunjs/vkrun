@@ -1,6 +1,6 @@
 import * as type from '../../../../types'
 
-export const integerMethod = (params: type.ParamsMethod): type.NumberIntegerMethod => {
+export const numberIntegerMethod = (params: type.ParamsMethod): type.NumberIntegerMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'integer' })
 

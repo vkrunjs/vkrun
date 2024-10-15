@@ -1,6 +1,7 @@
 export * from './date-to-string'
 export * from './is-string'
 export * from './is-number'
+export * from './is-big-int'
 export * from './is-float'
 export * from './is-integer'
 export * from './is-boolean'

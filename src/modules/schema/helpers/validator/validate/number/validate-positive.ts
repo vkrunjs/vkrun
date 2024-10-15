@@ -2,7 +2,7 @@ import { informativeMessage } from '../../../location'
 import * as type from '../../../../../types'
 import * as util from '../../../../../utils'
 
-export const validatePositive = (params: type.ValidateMethod): void => {
+export const validatePositiveNumber = (params: type.ValidateMethod): void => {
   const {
     value,
     valueName,

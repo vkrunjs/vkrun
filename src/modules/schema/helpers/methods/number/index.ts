@@ -1,22 +1,22 @@
 import * as type from '../../../../types'
-import { floatMethod } from './float'
-import { integerMethod } from './integer'
-import { maxMethod } from './max'
-import { minMethod } from './min'
-import { negativeMethod } from './negative'
-import { positiveMethod } from './positive'
+import { numberFloatMethod } from './float'
+import { numberIntegerMethod } from './integer'
+import { numberMaxMethod } from './max'
+import { numberMinMethod } from './min'
+import { numberNegativeMethod } from './negative'
+import { numberPositiveMethod } from './positive'
 
 export const numberMethod = (params: type.ParamsMethod): type.NumberMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'number' })
 
   return {
-    float: () => floatMethod(params),
-    integer: () => integerMethod(params),
-    min: (value: number) => minMethod(value, params),
-    max: (value: number) => maxMethod(value, params),
-    positive: () => positiveMethod(params),
-    negative: () => negativeMethod(params),
+    float: () => numberFloatMethod(params),
+    integer: () => numberIntegerMethod(params),
+    min: (value: number) => numberMinMethod(value, params),
+    max: (value: number) => numberMaxMethod(value, params),
+    positive: () => numberPositiveMethod(params),
+    negative: () => numberNegativeMethod(params),
     ...callbackDefaultReturnMethods()
   }
 }

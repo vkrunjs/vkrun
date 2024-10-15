@@ -15,6 +15,12 @@ export const locationConfig: Array<{ keys: string[] }> = [
   { keys: ['number', 'positive'] },
   { keys: ['number', 'negative'] },
 
+  { keys: ['bigInt', 'invalidValue'] },
+  { keys: ['bigInt', 'min'] },
+  { keys: ['bigInt', 'max'] },
+  { keys: ['bigInt', 'positive'] },
+  { keys: ['bigInt', 'negative'] },
+
   { keys: ['boolean', 'invalidValue'] },
 
   { keys: ['required'] },

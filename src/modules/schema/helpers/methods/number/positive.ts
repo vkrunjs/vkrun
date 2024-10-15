@@ -1,6 +1,6 @@
 import * as type from '../../../../types'
 
-export const positiveMethod = (params: type.ParamsMethod): type.NumberPositiveMethod => {
+export const numberPositiveMethod = (params: type.ParamsMethod): type.NumberPositiveMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'positive' })
 

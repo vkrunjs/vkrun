@@ -2,10 +2,15 @@ import { informativeMessage } from '../../../location'
 import * as type from '../../../../../types'
 import * as util from '../../../../../utils'
 
-export const validateNegativeNumber = (params: type.ValidateMethod): void => {
+export const validateMinBigInt = (
+  params: type.ValidateMethod & {
+    min: bigint
+  }
+): void => {
   const {
     value,
     valueName,
+    min,
     indexArray,
     callbackAddPassed,
     callbackAddFailed
@@ -13,15 +18,17 @@ export const validateNegativeNumber = (params: type.ValidateMethod): void => {
 
   const message = {
     expect: indexArray !== undefined
-      ? 'array index must contain a number negative'
-      : 'negative number',
-    error: informativeMessage.number.negative
+      ? 'array index must contain a bigint greater than or equal to the reference'
+      : 'value greater than or equal to the reference',
+    error: informativeMessage.bigInt.min
       .replace('[valueName]', valueName)
+      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
+      .replace('[min]', util.isBigInt(min) ? `${min}n` : String(min))
   }
 
-  if (util.isNumber(value) && value < 0) {
+  if (util.isBigInt(value) && value >= min) {
     callbackAddPassed({
-      method: 'negative',
+      method: 'min',
       name: valueName,
       expect: message.expect,
       index: indexArray,
@@ -29,7 +36,7 @@ export const validateNegativeNumber = (params: type.ValidateMethod): void => {
     })
   } else {
     callbackAddFailed({
-      method: 'negative',
+      method: 'min',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,

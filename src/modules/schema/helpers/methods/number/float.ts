@@ -1,6 +1,6 @@
 import * as type from '../../../../types'
 
-export const floatMethod = (params: type.ParamsMethod): type.NumberFloatMethod => {
+export const numberFloatMethod = (params: type.ParamsMethod): type.NumberFloatMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'float' })
 

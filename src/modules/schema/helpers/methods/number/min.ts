@@ -1,6 +1,6 @@
 import * as type from '../../../../types'
 
-export const minMethod = (value: number, params: type.ParamsMethod): type.NumberMinMethod => {
+export const numberMinMethod = (value: number, params: type.ParamsMethod): type.NumberMinMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'min', min: value })
 

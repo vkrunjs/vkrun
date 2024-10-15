@@ -2,7 +2,7 @@ import { informativeMessage } from '../../../location'
 import * as type from '../../../../../types'
 import * as util from '../../../../../utils'
 
-export const validateNegativeNumber = (params: type.ValidateMethod): void => {
+export const validateNegativeBigInt = (params: type.ValidateMethod): void => {
   const {
     value,
     valueName,
@@ -13,13 +13,13 @@ export const validateNegativeNumber = (params: type.ValidateMethod): void => {
 
   const message = {
     expect: indexArray !== undefined
-      ? 'array index must contain a number negative'
-      : 'negative number',
-    error: informativeMessage.number.negative
+      ? 'array index must contain a bigint negative'
+      : 'negative bigint',
+    error: informativeMessage.bigInt.negative
       .replace('[valueName]', valueName)
   }
 
-  if (util.isNumber(value) && value < 0) {
+  if (util.isBigInt(value) && value < 0) {
     callbackAddPassed({
       method: 'negative',
       name: valueName,

@@ -1,6 +1,6 @@
 import * as type from '../../../../types'
 
-export const negativeMethod = (params: type.ParamsMethod): type.NumberNegativeMethod => {
+export const numberNegativeMethod = (params: type.ParamsMethod): type.NumberNegativeMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'negative' })
 

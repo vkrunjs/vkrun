@@ -19,6 +19,13 @@ export const informativeMessage: type.InformativeMessage = {
     positive: '[valueName] must be positive!',
     negative: '[valueName] must be negative!'
   },
+  bigInt: {
+    invalidValue: '[valueName] must be a bigint type!',
+    min: '[valueName] must be greater than or equal to [min]!',
+    max: '[valueName] must be less than or equal to [max]!',
+    positive: '[valueName] must be positive!',
+    negative: '[valueName] must be negative!'
+  },
   boolean: {
     invalidValue: '[valueName] must be a boolean type!'
   },

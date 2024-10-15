@@ -1,8 +1,8 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../../../types'
-import { isInteger, received } from '../../../../../utils'
+import * as type from '../../../../../types'
+import * as util from '../../../../../utils'
 
-export const validateInteger = ({
+export const validateIntegerNumber = ({
   value,
   valueName,
   indexArray,
@@ -12,8 +12,8 @@ export const validateInteger = ({
   value: any
   valueName: string
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: type.SuccessTest) => void
+  callbackAddFailed: (error: type.ErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in integer type' : 'integer type',
@@ -22,7 +22,7 @@ export const validateInteger = ({
       .replace('[valueName]', valueName)
   }
 
-  if (isInteger(value)) {
+  if (util.isInteger(value)) {
     callbackAddPassed({
       method: 'integer',
       name: valueName,
@@ -37,7 +37,7 @@ export const validateInteger = ({
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: received(value),
+      received: util.received(value),
       message: message.error
     })
   }

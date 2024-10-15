@@ -24,14 +24,24 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
       validate.validateMinLength({ ...validateMethodParams, indexArray, minLength: rule.minLength })
     } else if (rule.method === 'number') {
       validate.validateNumber({ ...validateMethodParams, indexArray })
+    } else if (rule.method === 'bigInt') {
+      validate.validateBigInt({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'float') {
-      validate.validateFloat({ ...validateMethodParams, indexArray })
+      validate.validateFloatNumber({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'integer') {
-      validate.validateInteger({ ...validateMethodParams, indexArray })
+      validate.validateIntegerNumber({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'positive') {
-      validate.validatePositive({ ...validateMethodParams, indexArray })
+      if (hasMethod(validateMethodParams.methods, 'number')) {
+        validate.validatePositiveNumber({ ...validateMethodParams, indexArray })
+      } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
+        validate.validatePositiveBigInt({ ...validateMethodParams, indexArray })
+      }
     } else if (rule.method === 'negative') {
-      validate.validateNegative({ ...validateMethodParams, indexArray })
+      if (hasMethod(validateMethodParams.methods, 'number')) {
+        validate.validateNegativeNumber({ ...validateMethodParams, indexArray })
+      } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
+        validate.validateNegativeBigInt({ ...validateMethodParams, indexArray })
+      }
     } else if (rule.method === 'boolean') {
       validate.validateBoolean({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'date') {
@@ -41,12 +51,16 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
         validate.validateMinDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
       } else if (hasMethod(validateMethodParams.methods, 'number')) {
         validate.validateMinNumber({ ...validateMethodParams, indexArray, min: rule.min })
+      } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
+        validate.validateMinBigInt({ ...validateMethodParams, indexArray, min: rule.min })
       }
     } else if (rule.method === 'max') {
       if (hasMethod(validateMethodParams.methods, 'date')) {
         validate.validateMaxDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
       } else if (hasMethod(validateMethodParams.methods, 'number')) {
         validate.validateMaxNumber({ ...validateMethodParams, indexArray, max: rule.max })
+      } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
+        validate.validateMaxBigInt({ ...validateMethodParams, indexArray, max: rule.max })
       }
     } else if (rule.method === 'time') {
       validate.validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
