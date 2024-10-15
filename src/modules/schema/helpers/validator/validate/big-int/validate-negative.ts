@@ -19,7 +19,7 @@ export const validateNegativeBigInt = (params: type.ValidateMethod): void => {
       .replace('[valueName]', valueName)
   }
 
-  if (util.isBigInt(value) && value < 0) {
+  if (util.isBigInt(value) && value < 0n) {
     callbackAddPassed({
       method: 'negative',
       name: valueName,
