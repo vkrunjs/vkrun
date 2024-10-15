@@ -90,6 +90,11 @@ console.log(validateB) // false
     - [.max](#number-max)
     - [.positive](#positive)
     - [.negative](#negative)
+  - [.bigInt](#big-int)
+    - [.min](#big-int-min)
+    - [.max](#big-int-max)
+    - [.positive](#big-int-positive)
+    - [.negative](#big-int-negative)
   - [.boolean](#boolean)
   - [.date](#date)
     - [.min](#min-date)
@@ -117,6 +122,11 @@ console.log(validateB) // false
       - [.max](#number-max-array)
       - [.positive](#positive-array)
       - [.negative](#negative-array)
+    - [.bigInt](#big-int-array)
+      - [.min](#big-int-min-array)
+      - [.max](#big-int-max-array)
+      - [.positive](#big-int-positive-array)
+      - [.negative](#big-int-negative-array)
     - [.boolean](#boolean-array)
     - [.date](#date-array)
       - [.min](#min-date-array)
@@ -363,7 +373,13 @@ console.log(validateD) // true
     - min: [valueName] and [min]
     - max: [valueName] and [max]
     - positive: [valueName]
-    - mnegativex: [valueName]
+    - negative: [valueName]
+  - bigInt:
+    - invalidValue: [value] and [valueName]
+    - min: [valueName] and [min]
+    - max: [valueName] and [max]
+    - positive: [valueName]
+    - negative: [valueName]
   - boolean:
     - invalidValue: [value] and [valueName]
   - required: [value] and [valueName]
@@ -399,6 +415,13 @@ setLocation({
     invalidValue: '[valueName] must be a number type!',
     float: '[valueName] must be a float!',
     integer: '[valueName] must be a integer!',
+    min: '[valueName] must be greater than or equal to [min]!',
+    max: '[valueName] must be less than or equal to [max]!',
+    positive: '[valueName] must be positive!',
+    negative: '[valueName] must be negative!'
+  },
+  bigInt: {
+    invalidValue: '[valueName] must be a bigint type!',
     min: '[valueName] must be greater than or equal to [min]!',
     max: '[valueName] must be less than or equal to [max]!',
     positive: '[valueName] must be positive!',
@@ -645,6 +668,90 @@ const schema = schema().number().negative() // < 0
 const validateA = schema.validate(-1)
 const validateB = schema.validate(0)
 const validateC = schema.validate(1)
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
+<h2 id="big-int">
+  .<span style="color:#66B2FF">bigInt</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().bigInt()
+
+const validateA = schema.validate(123n)
+const validateB = schema.validate("123n")
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="big-int-min">
+  .<span style="color:#66B2FF">bigInt</span>().<span style="color:#FFFFC0">min</span>(<span style="color:#66B2FF">min</span>: <span style="color:#99CC99">bigint</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().bigInt().min(2n)
+
+const validateA = schema.validate(2n)
+const validateB = schema.validate(1n)
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="big-int-max">
+  .<span style="color:#66B2FF">bigInt</span>().<span style="color:#FFFFC0">max</span>(<span style="color:#66B2FF">max</span>: <span style="color:#99CC99">bigint</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().bigInt().max(1n)
+
+const validateA = schema.validate(1n)
+const validateB = schema.validate(2n)
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="big-int-positive">
+  .<span style="color:#66B2FF">bigInt</span>().<span style="color:#FFFFC0">positive</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().bigInt().positive() // > 0n
+
+const validateA = schema.validate(1n)
+const validateB = schema.validate(0n)
+const validateC = schema.validate(-1n)
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
+<h2 id="big-int-negative">
+  .<span style="color:#66B2FF">bigInt</span>().<span style="color:#FFFFC0">negative</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().bigInt().negative() // < 0n
+
+const validateA = schema.validate(-1n)
+const validateB = schema.validate(0n)
+const validateC = schema.validate(1n)
 
 console.log(validateA) // true
 console.log(validateB) // false
@@ -1130,12 +1237,6 @@ console.log(validateA) // true
 console.log(validateB) // false
 ```
 
-
-
-
-
-
-
 <h2 id="number-min-array">
 .<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">number</span>().<span style="color:#FFFFC0">min</span>(<span style="color:#66B2FF">min</span>: <span style="color:#99CC99">number</span>)
 </h2>
@@ -1203,6 +1304,119 @@ console.log(validateA) // true
 console.log(validateB) // false
 console.log(validateC) // false
 ```
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="big-int-array">
+  .<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">bigInt</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().bigInt()
+
+const validateA = schema.validate([123n, 123n])
+const validateB = schema.validate([123n, "123n"])
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="big-int-min-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">bigInt</span>().<span style="color:#FFFFC0">min</span>(<span style="color:#66B2FF">min</span>: <span style="color:#99CC99">bigint</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().bigInt().min(1n)
+
+const validateA = schema.validate([1n])
+const validateB = schema.validate([0n])
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="big-int-max-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">bigInt</span>().<span style="color:#FFFFC0">max</span>(<span style="color:#66B2FF">max</span>: <span style="color:#99CC99">bigint</span>)
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().bigInt().max(1n)
+
+const validateA = schema.validate([1n])
+const validateB = schema.validate([2n])
+
+console.log(validateA) // true
+console.log(validateB) // false
+```
+
+<h2 id="big-int-positive-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">bigInt</span>().<span style="color:#FFFFC0">positive</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().bigInt().positive()
+
+const validateA = schema.validate([1n])
+const validateB = schema.validate([0n])
+const validateC = schema.validate([-1n])
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
+<h2 id="big-int-negative-array">
+.<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">bigInt</span>().<span style="color:#FFFFC0">negative</span>()
+</h2>
+
+```ts
+import { schema } from "vkrun"
+
+const schema = schema().array().bigInt().negative()
+
+const validateA = schema.validate([-1n])
+const validateB = schema.validate([0n])
+const validateC = schema.validate([1n])
+
+console.log(validateA) // true
+console.log(validateB) // false
+console.log(validateC) // false
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <h2 id="boolean-array">
   .<span style="color:#66B2FF">array</span>().<span style="color:#FFFFC0">boolean</span>()
