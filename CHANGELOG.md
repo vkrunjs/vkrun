@@ -1,5 +1,12 @@
 # VkrunJS Releases
 
+## 0.43.0 - soon
+
+- fix ensure isNumber returns false for NaN values
+- add support BigInt parsing for large integers
+- add util isBigInt
+- add bigInt method to schema with sub methods min, max, positive and negative
+
 ## 0.42.4
 
 - add sample projects to cors with javascript and typescript
