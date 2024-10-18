@@ -10,6 +10,7 @@ import { validateRouteData } from './modules/validate-route-data'
 import { jwt } from './modules/jwt'
 import { superRequest } from './modules/super-request'
 import { upload } from './modules/upload'
+import { swaggerBuilder } from './modules/swagger-builder'
 export * from './modules/router/helpers/adapters'
 export * from './modules/utils'
 export * from './modules/types'
@@ -27,5 +28,6 @@ export {
   Session,
   validateRouteData,
   superRequest,
-  upload
+  upload,
+  swaggerBuilder
 }
