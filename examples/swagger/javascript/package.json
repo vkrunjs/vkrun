@@ -1,0 +1,12 @@
+{
+  "name": "vkrun-swagger-builder-with-javascript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "swagger-ui-dist": "^5.17.14",
+    "vkrun": "*"
+  }
+}

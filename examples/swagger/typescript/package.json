@@ -1,0 +1,19 @@
+{
+  "name": "vkrun-swagger-builder-with-typescript",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "swagger-ui-dist": "^5.17.14",
+    "vkrun": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "@types/swagger-ui-dist": "^3.30.5",
+    "ts-node": "^10.9.2",
+    "typescript": "*"
+  }
+}
