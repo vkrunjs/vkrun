@@ -1,6 +1,13 @@
 # VkrunJS Releases
 
-## 0.43.0 - soon
+## 0.44.0
+
+- add support for wildcard routes
+- add SwaggerBuilder to dynamically work with Swagger OpenAPI documentation with flexible route visibility and multi-server support
+- add SwaggerBuilder documentation
+- add sample projects to SwaggerBuilder with javascript and typescript
+
+## 0.43.0
 
 - fix ensure isNumber returns false for NaN values
 - add support BigInt parsing for large integers
