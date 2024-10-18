@@ -48,7 +48,11 @@ export class RouterHandler {
     const { url, method } = request
     const [path] = String(url).split('?')
     const route = this.routes.find((route) => {
-      const regex = new RegExp('^' + route.path.replace(/\/:([^/]+)/g, '/([^/]+)') + '$')
+      const routePattern = route.path
+        .replace(/\/\*/g, '/.*') // Support `*` after `/` by matching any characters
+        .replace(/\/:([^/]+)/g, '/([^/]+)') // Dynamic parameters matching `/:param`
+
+      const regex = new RegExp('^' + routePattern + '$')
       return regex.test(path) && route.method === method
     })
 
