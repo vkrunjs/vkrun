@@ -592,4 +592,112 @@ describe('Router', () => {
 
     app.close()
   })
+
+  it('Should handle route with * in GET method', async () => {
+    const app = v.App()
+    const router = v.Router()
+
+    // Define a route with a wildcard
+    router.get('/wildcard/*', (_request: v.Request, response: v.Response) => {
+      response.setHeader('Content-Type', 'text/plain')
+      response.status(200).end('GET wildcard ok')
+    })
+
+    app.use(router)
+
+    await v.superRequest(app).get('/wildcard/test').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('GET wildcard ok')
+    })
+
+    await v.superRequest(app).get('/wildcard/another/test').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('GET wildcard ok')
+    })
+
+    app.close()
+  })
+
+  it('Should handle route with * in POST method', async () => {
+    const app = v.App()
+    const router = v.Router()
+
+    // Define a route with a wildcard for POST requests
+    router.post('/api/v1/*', (_request: v.Request, response: v.Response) => {
+      response.setHeader('Content-Type', 'text/plain')
+      response.status(200).end('POST wildcard ok')
+    })
+
+    app.use(router)
+
+    await v.superRequest(app).post('/api/v1/test').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('POST wildcard ok')
+    })
+
+    await v.superRequest(app).post('/api/v1/another/route').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('POST wildcard ok')
+    })
+
+    app.close()
+  })
+
+  it('Should handle multiple levels of * in route', async () => {
+    const app = v.App()
+    const router = v.Router()
+
+    // Define a route with multiple wildcard levels
+    router.get('/products/*/details/*', (_request: v.Request, response: v.Response) => {
+      response.setHeader('Content-Type', 'text/plain')
+      response.status(200).end('GET multi-wildcard ok')
+    })
+
+    app.use(router)
+
+    await v.superRequest(app).get('/products/123/details/456').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('GET multi-wildcard ok')
+    })
+
+    await v.superRequest(app).get('/products/abc/details/def').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('GET multi-wildcard ok')
+    })
+
+    app.close()
+  })
+
+  it('Should handle route with * in DELETE method', async () => {
+    const app = v.App()
+    const router = v.Router()
+
+    // Define a route with a wildcard for DELETE requests
+    router.delete('/remove/*', (_request: v.Request, response: v.Response) => {
+      response.setHeader('Content-Type', 'text/plain')
+      response.status(200).end('DELETE wildcard ok')
+    })
+
+    app.use(router)
+
+    await v.superRequest(app).delete('/remove/123').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('DELETE wildcard ok')
+    })
+
+    await v.superRequest(app).delete('/remove/some/path').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/plain')
+      expect(response.data).toEqual('DELETE wildcard ok')
+    })
+
+    app.close()
+  })
 })
