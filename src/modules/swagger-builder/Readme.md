@@ -309,6 +309,6 @@ In this example, the Swagger UI will only show routes tagged with the visibility
 
 If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
 
-[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/rate-limit)
+[Example Projects](https://github.com/vkrunjs/vkrun/tree/main/examples/swagger-builder)
 
 Feel free to browse the different designs and try out what best suits your needs. If you have any questions or suggestions about the examples, do not hesitate to contact us by opening a new Issue.
