@@ -51,6 +51,7 @@ app.server().listen(3000, () => {
 - [Upload](./src/modules/upload/Readme.md)
 - [Logger](./src/modules/logger/Readme.md)
 - [JWT](./src/modules/jwt/Readme.md)
+- [SwaggerBuilder](./src/modules/swagger-builder/Readme.md)
 - [Cors](./src/modules/cors/Readme.md)
 - [Example projects](#example-projects)
 - [Security Issues](#security-issues)
