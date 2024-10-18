@@ -99,7 +99,9 @@ app.server().listen(3000, () => {
 
 <h2 id="router-paths">Router paths</h2>
 
-Route paths, in combination with a request method, define the endpoints at which requests can be made. Route paths can be strings or string patterns.
+Route paths, in combination with a request method, define the endpoints at which requests can be made. Route paths can be strings, string patterns, or wildcards (*).
+
+#### String paths
 
 This route path will match requests to the root route, /.
 
@@ -116,6 +118,37 @@ router.get('/users', (req: v.Request, res: v.Response) => {
   res.send('users')
 })
 ```
+
+#### Wildcard `*` paths
+
+You can use the wildcard `*` in route paths to match any portion of the URL that follows the defined path. This is useful for handling dynamic routes where the exact path segments may vary.
+
+For example, this route path will match requests to `/wildcard/` followed by any string.
+
+```ts
+router.get('/wildcard/*', (req: v.Request, res: v.Response) => {
+  res.send('wildcard route')
+})
+```
+
+In this case:
+
+- `/wildcard/test` and `/wildcard/anything` will both match this route.
+
+You can also use wildcards in combination with other path segments. For example:
+
+```ts
+router.get('/products/*/details/*', (req: v.Request, res: v.Response) => {
+  res.send('Product details with wildcard')
+})
+```
+
+This route will match requests like:
+
+- `/products/123/details/456`
+- `/products/abc/details/xyz`
+
+In both cases, the path after `/products/` and `/details/` can vary dynamically.
 
 <h2 id="req-params-query-body">Request parameters, query and body</h2>
 
