@@ -39,7 +39,6 @@ describe('Super Request - end to end testing', () => {
 
     const fileBuffer = fs.readFileSync(filePath)
     data.append('file', fileBuffer, fileName)
-    console.log('data instanceof FormData ', data instanceof FormData)
 
     const response = await v.superRequest(app).post('/body-post', data)
 
@@ -219,7 +218,7 @@ describe('Super Request - end to end testing', () => {
     })
 
     const response = await v.superRequest(app).options('/options')
-    console.log(JSON.stringify(response, null, 2))
+
     expect(response.statusCode).toEqual(204)
     expect(response.headers.allow).toEqual('GET,POST,OPTIONS')
 
