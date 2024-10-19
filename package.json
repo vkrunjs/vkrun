@@ -27,6 +27,11 @@
     "logger",
     "session",
     "super request",
+    "mime",
+    "serve static file",
+    "swagger builder",
+    "upload",
+    "validate route data",
     "backend",
     "back-end"
   ],
