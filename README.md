@@ -49,6 +49,8 @@ app.server().listen(3000, () => {
 - [Rate Limit](./src/modules/rate-limit/Readme.md)
 - [Parse Data](./src/modules/parse-data/Readme.md)
 - [Upload](./src/modules/upload/Readme.md)
+- [Mime](./src/modules/mime/Readme.md)
+- [ServerStaticFile](./src/modules/serve-static-file/Readme.md)
 - [Logger](./src/modules/logger/Readme.md)
 - [JWT](./src/modules/jwt/Readme.md)
 - [SwaggerBuilder](./src/modules/swagger-builder/Readme.md)
