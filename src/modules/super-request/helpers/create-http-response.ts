@@ -13,6 +13,8 @@ export const createHttpResponse = (request: any): any => {
     if (data !== undefined) {
       if (util.isObject(data)) {
         response.data = JSON.stringify(data)
+      } else if (Buffer.isBuffer(data)) {
+        response.data = data.toString()
       } else {
         response.data = data.toString().trim()
       }
