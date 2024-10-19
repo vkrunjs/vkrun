@@ -73,8 +73,6 @@ class VkrunApp implements type.VkrunApp {
     const _request = request
     _request.setTimer = this.setTimer.bind(this)
     this.createdServer = customResponse(response)
-    // await this.router.handleRequest(
-    //   request, this.createdServer, this.middlewares)
     await this.routerHandler.handleRequest(
       _request,
       this.createdServer,
