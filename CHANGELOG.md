@@ -1,5 +1,15 @@
 # VkrunJS Releases
 
+## 0.45.0
+
+- add mime function to return mime type from file extension
+- add Mime documentation
+- add sample projects to Mime with javascript and typescript
+- super request return buffer string
+- add serve static file middleware to serve files from a path
+- add serve static file documentation
+- add sample projects to serve static file with javascript and typescript
+
 ## 0.44.0
 
 - add support for wildcard routes
