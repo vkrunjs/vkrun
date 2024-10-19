@@ -1,0 +1,11 @@
+{
+  "name": "vkrun-mime-with-javascript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "vkrun": "*"
+  }
+}
