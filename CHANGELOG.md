@@ -1,6 +1,6 @@
 # VkrunJS Releases
 
-## 0.45.1
+## 0.45.2
 - updating incomplete package
 
 ## 0.45.0

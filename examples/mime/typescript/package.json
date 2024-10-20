@@ -7,7 +7,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "vkrun": "*"
+    "vkrun": "0.45.2"
   },
   "devDependencies": {
     "@types/node": "^22.7.5",
