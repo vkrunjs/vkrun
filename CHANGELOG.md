@@ -1,5 +1,8 @@
 # VkrunJS Releases
 
+## 0.45.1
+- updating incomplete package
+
 ## 0.45.0
 
 - add mime function to return mime type from file extension
