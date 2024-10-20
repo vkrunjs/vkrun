@@ -1,5 +1,8 @@
 # VkrunJS Releases
 
+## 1.0.0
+- official release
+
 ## 0.45.2
 - updating incomplete package
 
