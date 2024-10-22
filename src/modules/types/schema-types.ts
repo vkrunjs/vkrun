@@ -553,7 +553,7 @@ export interface SetLocation {
   array?: string
   nullable?: string
   equal?: string
-  notToEqual?: string
+  notEqual?: string
   oneOf?: string
   notOneOf?: string
 }
