@@ -1,6 +1,5 @@
 import { configLogger } from './helpers/config-logger'
 import { createLog } from './helpers/create-log'
-import { sanitizeLogs } from './helpers/sanitize-logs'
 import * as type from '../types'
 
 export let loggerSanitizeInterval: NodeJS.Timeout
@@ -12,18 +11,21 @@ export const VkrunLogger = (configParams: type.SetConfigLogger): type.VkrunLogge
   for (const key in configParams) {
     if (key === 'size' && configParams?.size) {
       config.size = (1024 * 1024) * configParams.size
-    } else {
-      if (config.hasOwnProperty(key)) {
+    } else if (config.hasOwnProperty(key)) {
+      // @ts-ignore
+      const value = configParams[key]
+      
+      // Se o valor for um objeto, aplicamos a atualização recursivamente
+      if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
         // @ts-ignore
-        config[key] = configParams[key]
+        config[key] = { ...config[key], ...value }
+      } else {
+        // @ts-ignore
+        config[key] = value
       }
     }
   }
   /* eslint-enable */
-
-  if (config.daysToStoreLogs > 0) {
-    loggerSanitizeInterval = setInterval(() => { sanitizeLogs(config) }, config.daysToStoreLogs * 24 * 60 * 60 * 1000)
-  }
 
   const middleware = (): (_request: type.Request, response: type.Response, next: type.NextFunction) => void => {
     return (_request: type.Request, response: type.Response, next: type.NextFunction) => {
