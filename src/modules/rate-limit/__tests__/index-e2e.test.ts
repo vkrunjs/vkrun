@@ -271,7 +271,7 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
 
     expect(accessData.remoteAddress).toEqual('::1')
     expect(accessData.remoteFamily).toEqual('IPv6')
-    expect(accessData.userAgent).toEqual('axios/1.6.7')
+    expect(accessData.userAgent).toEqual('axios/1.7.7')
     expect(accessData.exceeded.count).toEqual(1)
 
     const requests = accessData.exceeded.requests

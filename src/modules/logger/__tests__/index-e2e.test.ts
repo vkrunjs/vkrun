@@ -68,7 +68,7 @@ describe('Logger Middleware - end to end testing using axios and app server', ()
     const header = request.header
     expect(header.accept).toEqual('application/json, text/plain, */*')
     expect(header['content-type']).toEqual('application/json')
-    expect(header['user-agent']).toEqual('axios/1.6.7')
+    expect(header['user-agent']).toEqual('axios/1.7.7')
     expect(header['content-length']).toEqual('93')
     expect(header['accept-encoding']).toEqual('gzip, compress, deflate, br')
     expect(header.host).toEqual('localhost:3699')

@@ -5,8 +5,6 @@ import { Router } from './modules/router'
 import { parseData } from './modules/parse-data'
 import { cors } from './modules/cors'
 import { rateLimit } from './modules/rate-limit'
-import { Session } from './modules/session'
-import { validateRouteData } from './modules/validate-route-data'
 import { jwt } from './modules/jwt'
 import { superRequest } from './modules/super-request'
 import { upload } from './modules/upload'
@@ -27,8 +25,6 @@ export {
   parseData,
   rateLimit,
   jwt,
-  Session,
-  validateRouteData,
   superRequest,
   upload,
   swaggerBuilder,

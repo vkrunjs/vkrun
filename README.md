@@ -44,7 +44,6 @@ app.server().listen(3000, () => {
 - [Installation](#installation)
 - [Router](./src/modules/router/Readme.md)
 - [Schema](./src/modules/schema/Readme.md)
-- [Validate Route Data](./src/modules/validate-route-data/Readme.md)
 - [Super Request](./src/modules/super-request/Readme.md)
 - [Rate Limit](./src/modules/rate-limit/Readme.md)
 - [Parse Data](./src/modules/parse-data/Readme.md)
