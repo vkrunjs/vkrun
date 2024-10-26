@@ -2,6 +2,7 @@ import { App } from './modules/app'
 import { schema, setLocation } from './modules/schema'
 import { Logger } from './modules/logger'
 import { Router } from './modules/router'
+import { httpStatus } from './modules/router/helpers/http-status-handlers'
 import { parseData } from './modules/parse-data'
 import { cors } from './modules/cors'
 import { rateLimit } from './modules/rate-limit'
@@ -22,6 +23,7 @@ export {
   setLocation,
   Logger,
   Router,
+  httpStatus,
   parseData,
   rateLimit,
   jwt,

@@ -2,332 +2,332 @@ import * as type from '../../types'
 
 export const httpStatus = {
   // 100 - CONTINUE
-  continue: (body: any): type.ResponseHttpStatus => ({
+  continue: (content: any): type.ResponseHttpStatus => ({
     statusCode: 100,
-    body
+    content
   }),
 
   // 101 - SWITCHING_PROTOCOLS
-  switchingProtocols: (body: any): type.ResponseHttpStatus => ({
+  switchingProtocols: (content: any): type.ResponseHttpStatus => ({
     statusCode: 101,
-    body
+    content
   }),
 
   // 200 - OK
-  ok: (body: any): type.ResponseHttpStatus => ({
+  ok: (content: any): type.ResponseHttpStatus => ({
     statusCode: 200,
-    body
+    content
   }),
 
   // 201 - CREATED
-  created: (body: any): type.ResponseHttpStatus => ({
+  created: (content: any): type.ResponseHttpStatus => ({
     statusCode: 201,
-    body
+    content
   }),
 
   // 202 - ACCEPTED
-  accepted: (body: any): type.ResponseHttpStatus => ({
+  accepted: (content: any): type.ResponseHttpStatus => ({
     statusCode: 202,
-    body
+    content
   }),
 
   // 203 - NON_AUTHORITATIVE_INFORMATION
-  nonAuthoritativeInformation: (body: any): type.ResponseHttpStatus => ({
+  nonAuthoritativeInformation: (content: any): type.ResponseHttpStatus => ({
     statusCode: 203,
-    body
+    content
   }),
 
   // 204 - NO_CONTENT
-  noContent: (body: any): type.ResponseHttpStatus => ({
+  noContent: (content: any): type.ResponseHttpStatus => ({
     statusCode: 204,
-    body
+    content
   }),
 
   // 205 - RESET_CONTENT
-  resetContent: (body: any): type.ResponseHttpStatus => ({
+  resetContent: (content: any): type.ResponseHttpStatus => ({
     statusCode: 205,
-    body
+    content
   }),
 
   // 206 - PARTIAL_CONTENT
-  partialContent: (body: any): type.ResponseHttpStatus => ({
+  partialContent: (content: any): type.ResponseHttpStatus => ({
     statusCode: 206,
-    body
+    content
   }),
 
   // 300 - MULTIPLE_CHOICES
-  multipleChoices: (body: any): type.ResponseHttpStatus => ({
+  multipleChoices: (content: any): type.ResponseHttpStatus => ({
     statusCode: 300,
-    body
+    content
   }),
 
   // 301 - MOVED_PERMANENTLY
-  movedPermanently: (body: any): type.ResponseHttpStatus => ({
+  movedPermanently: (content: any): type.ResponseHttpStatus => ({
     statusCode: 301,
-    body
+    content
   }),
 
   // 302 - MOVED_TEMPORARILY
-  movedTemporarily: (body: any): type.ResponseHttpStatus => ({
+  movedTemporarily: (content: any): type.ResponseHttpStatus => ({
     statusCode: 302,
-    body
+    content
   }),
 
   // 303 - SEE_OTHER
-  seeOther: (body: any): type.ResponseHttpStatus => ({
+  seeOther: (content: any): type.ResponseHttpStatus => ({
     statusCode: 303,
-    body
+    content
   }),
 
   // 304 - NOT_MODIFIED
-  notModified: (body: any): type.ResponseHttpStatus => ({
+  notModified: (content: any): type.ResponseHttpStatus => ({
     statusCode: 304,
-    body
+    content
   }),
 
   // 305 - USE_PROXY
-  useProxy: (body: any): type.ResponseHttpStatus => ({
+  useProxy: (content: any): type.ResponseHttpStatus => ({
     statusCode: 305,
-    body
+    content
   }),
 
   // 307 - TEMPORARY_REDIRECT
-  temporaryRedirect: (body: any): type.ResponseHttpStatus => ({
+  temporaryRedirect: (content: any): type.ResponseHttpStatus => ({
     statusCode: 307,
-    body
+    content
   }),
 
   // 308 - PERMANENT_REDIRECT
-  permanentRedirect: (body: any): type.ResponseHttpStatus => ({
+  permanentRedirect: (content: any): type.ResponseHttpStatus => ({
     statusCode: 308,
-    body
+    content
   }),
 
   // 400 - BAD_REQUEST
-  badRequest: (body: any): type.ResponseHttpStatus => ({
+  badRequest: (content: any): type.ResponseHttpStatus => ({
     statusCode: 400,
-    body
+    content
   }),
 
   // 401 - UNAUTHORIZED
-  unauthorized: (body: any): type.ResponseHttpStatus => ({
+  unauthorized: (content: any): type.ResponseHttpStatus => ({
     statusCode: 401,
-    body
+    content
   }),
 
   // 402 - PAYMENT_REQUIRED
-  paymentRequired: (body: any): type.ResponseHttpStatus => ({
+  paymentRequired: (content: any): type.ResponseHttpStatus => ({
     statusCode: 402,
-    body
+    content
   }),
 
   // 403 - FORBIDDEN
-  forbidden: (body: any): type.ResponseHttpStatus => ({
+  forbidden: (content: any): type.ResponseHttpStatus => ({
     statusCode: 403,
-    body
+    content
   }),
 
   // 404 - NOT_FOUND
-  notFound: (body: any): type.ResponseHttpStatus => ({
+  notFound: (content: any): type.ResponseHttpStatus => ({
     statusCode: 404,
-    body
+    content
   }),
 
   // 405 - METHOD_NOT_ALLOWED
-  methodNotAllowed: (body: any): type.ResponseHttpStatus => ({
+  methodNotAllowed: (content: any): type.ResponseHttpStatus => ({
     statusCode: 405,
-    body
+    content
   }),
 
   // 406 - NOT_ACCEPTABLE
-  notAcceptable: (body: any): type.ResponseHttpStatus => ({
+  notAcceptable: (content: any): type.ResponseHttpStatus => ({
     statusCode: 406,
-    body
+    content
   }),
 
   // 407 - PROXY_AUTHENTICATION_REQUIRED
-  proxyAuthenticationRequired: (body: any): type.ResponseHttpStatus => ({
+  proxyAuthenticationRequired: (content: any): type.ResponseHttpStatus => ({
     statusCode: 407,
-    body
+    content
   }),
 
   // 408 - REQUEST_TIMEOUT
-  requestTimeout: (body: any): type.ResponseHttpStatus => ({
+  requestTimeout: (content: any): type.ResponseHttpStatus => ({
     statusCode: 408,
-    body
+    content
   }),
 
   // 409 - CONFLICT
-  conflict: (body: any): type.ResponseHttpStatus => ({
+  conflict: (content: any): type.ResponseHttpStatus => ({
     statusCode: 409,
-    body
+    content
   }),
 
   // 410 - GONE
-  gone: (body: any): type.ResponseHttpStatus => ({
+  gone: (content: any): type.ResponseHttpStatus => ({
     statusCode: 410,
-    body
+    content
   }),
 
   // 411 - LENGTH_REQUIRED
-  lengthRequired: (body: any): type.ResponseHttpStatus => ({
+  lengthRequired: (content: any): type.ResponseHttpStatus => ({
     statusCode: 411,
-    body
+    content
   }),
 
   // 412 - PRECONDITION_FAILED
-  preconditionFailed: (body: any): type.ResponseHttpStatus => ({
+  preconditionFailed: (content: any): type.ResponseHttpStatus => ({
     statusCode: 412,
-    body
+    content
   }),
 
   // 413 - REQUEST_TOO_LONG
-  requestTooLong: (body: any): type.ResponseHttpStatus => ({
+  requestTooLong: (content: any): type.ResponseHttpStatus => ({
     statusCode: 413,
-    body
+    content
   }),
 
   // 414 - REQUEST_URI_TOO_LONG
-  requestURITooLong: (body: any): type.ResponseHttpStatus => ({
+  requestURITooLong: (content: any): type.ResponseHttpStatus => ({
     statusCode: 414,
-    body
+    content
   }),
 
   // 415 - UNSUPPORTED_MEDIA_TYPE
-  unsupportedMediaType: (body: any): type.ResponseHttpStatus => ({
+  unsupportedMediaType: (content: any): type.ResponseHttpStatus => ({
     statusCode: 415,
-    body
+    content
   }),
 
   // 416 - REQUESTED_RANGE_NOT_SATISFIABLE
-  requestedRangeNotSatisfiable: (body: any): type.ResponseHttpStatus => ({
+  requestedRangeNotSatisfiable: (content: any): type.ResponseHttpStatus => ({
     statusCode: 416,
-    body
+    content
   }),
 
   // 417 - EXPECTATION_FAILED
-  expectationFailed: (body: any): type.ResponseHttpStatus => ({
+  expectationFailed: (content: any): type.ResponseHttpStatus => ({
     statusCode: 417,
-    body
+    content
   }),
 
   // 418 - IM_A_TEAPOT
-  imATeapot: (body: any): type.ResponseHttpStatus => ({
+  imATeapot: (content: any): type.ResponseHttpStatus => ({
     statusCode: 418,
-    body
+    content
   }),
 
   // 419 - INSUFFICIENT_SPACE_ON_RESOURCE
-  insufficientSpaceOnResource: (body: any): type.ResponseHttpStatus => ({
+  insufficientSpaceOnResource: (content: any): type.ResponseHttpStatus => ({
     statusCode: 419,
-    body
+    content
   }),
 
   // 420 - METHOD_FAILURE
-  methodFailure: (body: any): type.ResponseHttpStatus => ({
+  methodFailure: (content: any): type.ResponseHttpStatus => ({
     statusCode: 420,
-    body
+    content
   }),
 
   // 421 - MISDIRECTED_REQUEST
-  misdirectedRequest: (body: any): type.ResponseHttpStatus => ({
+  misdirectedRequest: (content: any): type.ResponseHttpStatus => ({
     statusCode: 421,
-    body
+    content
   }),
 
   // 422 - UNPROCESSABLE_ENTITY
-  unprocessableEntity: (body: any): type.ResponseHttpStatus => ({
+  unprocessableEntity: (content: any): type.ResponseHttpStatus => ({
     statusCode: 422,
-    body
+    content
   }),
 
   // 423 - LOCKED
-  locked: (body: any): type.ResponseHttpStatus => ({
+  locked: (content: any): type.ResponseHttpStatus => ({
     statusCode: 423,
-    body
+    content
   }),
 
   // 424 - FAILED_DEPENDENCY
-  failedDependency: (body: any): type.ResponseHttpStatus => ({
+  failedDependency: (content: any): type.ResponseHttpStatus => ({
     statusCode: 424,
-    body
+    content
   }),
 
   // 426 - UPGRADE_REQUIRED
-  upgradeRequired: (body: any): type.ResponseHttpStatus => ({
+  upgradeRequired: (content: any): type.ResponseHttpStatus => ({
     statusCode: 426,
-    body
+    content
   }),
 
   // 428 - PRECONDITION_REQUIRED
-  preconditionRequired: (body: any): type.ResponseHttpStatus => ({
+  preconditionRequired: (content: any): type.ResponseHttpStatus => ({
     statusCode: 428,
-    body
+    content
   }),
 
   // 429 - TOO_MANY_REQUESTS
-  tooManyRequests: (body: any): type.ResponseHttpStatus => ({
+  tooManyRequests: (content: any): type.ResponseHttpStatus => ({
     statusCode: 429,
-    body
+    content
   }),
 
   // 431 - REQUEST_HEADER_FIELDS_TOO_LARGE
-  requestHeaderFieldsTooLarge: (body: any): type.ResponseHttpStatus => ({
+  requestHeaderFieldsTooLarge: (content: any): type.ResponseHttpStatus => ({
     statusCode: 431,
-    body
+    content
   }),
 
   // 451 - UNAVAILABLE_FOR_LEGAL_REASONS
-  unavailableForLegalReasons: (body: any): type.ResponseHttpStatus => ({
+  unavailableForLegalReasons: (content: any): type.ResponseHttpStatus => ({
     statusCode: 451,
-    body
+    content
   }),
 
   // 500 - INTERNAL_SERVER_ERROR
-  internalServerError: (body: any): type.ResponseHttpStatus => ({
+  internalServerError: (content: any): type.ResponseHttpStatus => ({
     statusCode: 500,
-    body
+    content
   }),
 
   // 501 - NOT_IMPLEMENTED
-  notImplemented: (body: any): type.ResponseHttpStatus => ({
+  notImplemented: (content: any): type.ResponseHttpStatus => ({
     statusCode: 501,
-    body
+    content
   }),
 
   // 502 - BAD_GATEWAY
-  badGateway: (body: any): type.ResponseHttpStatus => ({
+  badGateway: (content: any): type.ResponseHttpStatus => ({
     statusCode: 502,
-    body
+    content
   }),
 
   // 503 - SERVICE_UNAVAILABLE
-  serviceUnavailable: (body: any): type.ResponseHttpStatus => ({
+  serviceUnavailable: (content: any): type.ResponseHttpStatus => ({
     statusCode: 503,
-    body
+    content
   }),
 
   // 504 - GATEWAY_TIMEOUT
-  gatewayTimeout: (body: any): type.ResponseHttpStatus => ({
+  gatewayTimeout: (content: any): type.ResponseHttpStatus => ({
     statusCode: 504,
-    body
+    content
   }),
 
   // 505 - HTTP_VERSION_NOT_SUPPORTED
-  httpVersionNotSupported: (body: any): type.ResponseHttpStatus => ({
+  httpVersionNotSupported: (content: any): type.ResponseHttpStatus => ({
     statusCode: 505,
-    body
+    content
   }),
 
   // 507 - INSUFFICIENT_STORAGE
-  insufficientStorage: (body: any): type.ResponseHttpStatus => ({
+  insufficientStorage: (content: any): type.ResponseHttpStatus => ({
     statusCode: 507,
-    body
+    content
   }),
 
   // 511 - NETWORK_AUTHENTICATION_REQUIRED
-  networkAuthenticationRequired: (body: any): type.ResponseHttpStatus => ({
+  networkAuthenticationRequired: (content: any): type.ResponseHttpStatus => ({
     statusCode: 511,
-    body
+    content
   })
 }

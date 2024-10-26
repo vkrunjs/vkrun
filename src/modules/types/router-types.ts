@@ -95,5 +95,5 @@ export interface Route {
 
 export interface ResponseHttpStatus {
   statusCode: number
-  body: any
+  content: any
 }
