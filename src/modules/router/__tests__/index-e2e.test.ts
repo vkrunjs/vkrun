@@ -430,11 +430,11 @@ describe('Router', () => {
     app.close()
   })
 
-  it('throw new Error when using invalid middleware with error handler with method handle', async () => {
+  it('throw new Error when using invalid global middleware with error handler with method handle', async () => {
     const invalidMiddleware = (): any => {}
 
     class ErrorMiddleware implements v.ErrorHandlerMiddleware {
-      public handle (error: any, _request: v.Request, response: v.Response, _next: v.NextFunction): void {
+      public handle (error: any, _request: v.Request, response: v.Response): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(500).end(error.message)
       }
@@ -449,7 +449,7 @@ describe('Router', () => {
 
     const app = v.App()
     app.use(invalidMiddleware)
-    app.use(v.errorHandleAdapter(new ErrorMiddleware()))
+    app.error(v.errorHandleAdapter(new ErrorMiddleware()))
     const router = v.Router()
     router.get('/', v.controllerAdapter(new ExampleController()))
     app.use(router)
@@ -469,7 +469,7 @@ describe('Router', () => {
   it('throw new Error when using invalid middleware with error handler function', async () => {
     const invalidMiddleware = (): any => {}
 
-    const errorMiddleware = (error: any, _request: v.Request, response: v.Response, _next: v.NextFunction): void => {
+    const errorMiddleware = (error: any, _request: v.Request, response: v.Response): void => {
       response.setHeader('Content-Type', 'text/plain')
       response.status(500).end(error.message)
     }
@@ -481,7 +481,7 @@ describe('Router', () => {
 
     const app = v.App()
     app.use(invalidMiddleware)
-    app.use(errorMiddleware)
+    app.error(errorMiddleware)
     const router = v.Router()
     router.get('/', exampleController)
     app.use(router)
@@ -505,7 +505,7 @@ describe('Router', () => {
     }
 
     class ErrorMiddleware implements v.ErrorHandlerMiddleware {
-      public handle (error: Error, _request: v.Request, response: v.Response, _next: v.NextFunction): void {
+      public handle (error: Error, _request: v.Request, response: v.Response): void {
         response.setHeader('Content-Type', 'text/plain')
         response.status(500).end(error.message)
       }
@@ -520,7 +520,7 @@ describe('Router', () => {
 
     const app = v.App()
     app.use(invalidMiddleware)
-    app.use(v.errorHandleAdapter(new ErrorMiddleware()))
+    app.error(v.errorHandleAdapter(new ErrorMiddleware()))
     const router = v.Router()
     router.get('/', v.controllerAdapter(new ExampleController()))
     app.use(router)

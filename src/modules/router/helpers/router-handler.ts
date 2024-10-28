@@ -85,18 +85,7 @@ export class RouterHandler {
               nextMiddleware = next
             }
 
-            const latestMiddleware = globalMiddlewares[globalMiddlewares.length - 1]
-            const hasErrorHandler = typeof latestMiddleware === 'function' && latestMiddleware.length === 4
-
-            if (hasErrorHandler) {
-              try {
-                await helper.executeMiddleware(middleware, request, response, nextMiddleware)
-              } catch (error: any) {
-                await latestMiddleware(error, request, response, nextMiddleware)
-              }
-            } else {
-              await helper.executeMiddleware(middleware, request, response, nextMiddleware)
-            }
+            await helper.executeMiddleware(middleware, request, response, nextMiddleware)
           }
 
           if (globalMiddlewares.length > 0) await handleMiddleware(0)

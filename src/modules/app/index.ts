@@ -17,12 +17,18 @@ class VkrunApp implements type.VkrunApp {
   private createdServer: any
   private timers: any[]
   private _parseData?: VkrunParseData
+  private errorHandler: ((
+    error: any,
+    request: type.Request,
+    response: type.Response
+  ) => void) | null
 
   constructor () {
     this.instance = undefined
     this.routerHandler = new RouterHandler()
     this.globalMiddlewares = []
     this.timers = []
+    this.errorHandler = null
   }
 
   // Timeout management
@@ -48,12 +54,25 @@ class VkrunApp implements type.VkrunApp {
       const _request = request as type.Request
       _request.setTimer = this.setTimer.bind(this)
       const _response = customResponse(response)
-      await this.routerHandler.handleRequest(
-        _request,
-        _response,
-        this.routes,
-        this.globalMiddlewares
-      )
+      if (this.errorHandler) {
+        try {
+          await this.routerHandler.handleRequest(
+            _request,
+            _response,
+            this.routes,
+            this.globalMiddlewares
+          )
+        } catch (error: any) {
+          this.errorHandler(error, _request, _response)
+        }
+      } else {
+        await this.routerHandler.handleRequest(
+          _request,
+          _response,
+          this.routes,
+          this.globalMiddlewares
+        )
+      }
     })
 
     return this.createdServer
@@ -73,12 +92,26 @@ class VkrunApp implements type.VkrunApp {
     const _request = request
     _request.setTimer = this.setTimer.bind(this)
     this.createdServer = customResponse(response)
-    await this.routerHandler.handleRequest(
-      _request,
-      this.createdServer,
-      this.routes,
-      this.globalMiddlewares
-    )
+    if (this.errorHandler) {
+      try {
+        await this.routerHandler.handleRequest(
+          _request,
+          this.createdServer,
+          this.routes,
+          this.globalMiddlewares
+        )
+      } catch (error: any) {
+        this.errorHandler(error, _request, this.createdServer)
+      }
+    } else {
+      await this.routerHandler.handleRequest(
+        _request,
+        this.createdServer,
+        this.routes,
+        this.globalMiddlewares
+      )
+    }
+
     return this.createdServer
   }
 
@@ -90,6 +123,14 @@ class VkrunApp implements type.VkrunApp {
     } else {
       this.globalMiddlewares.push(middleware)
     }
+  }
+
+  // Error Handler
+
+  public error (
+    errorHandler: (error: any, request: type.Request, response: type.Response) => void
+  ): void {
+    this.errorHandler = errorHandler
   }
 
   // Parse data

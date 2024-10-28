@@ -65,10 +65,8 @@ export interface StorageFile {
 
 export type File = MemoryFile | StorageFile
 
-export type ErrorHandler = Error
-
 export interface ErrorHandlerMiddleware {
-  handle: (error: ErrorHandler, request: Request, response: Response, next: NextFunction) => any
+  handle: (error: any, request: Request, response: Response) => any
 }
 
 export interface Middleware {

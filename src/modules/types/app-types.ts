@@ -9,6 +9,9 @@ export interface VkrunApp {
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
   clearTimers: () => void
   close: () => void
+  error: (
+    errorHandler: (error: any, request: type.Request, response: type.Response) => void
+  ) => void
   parseData: (config?: type.ParseDataConfig) => void
   cors: (options?: type.SetCorsOptions) => void
   rateLimit: (config?: type.RateLimitConfig) => void

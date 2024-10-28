@@ -42,7 +42,7 @@ app.server().listen(3000, () => {
 
 ### Content
 - [Installation](#installation)
-- [Router](./src/modules/router/Readme.md)
+- [Router](https://vkrunjs.com/router/introduction)
 - [Schema](./src/modules/schema/Readme.md)
 - [Super Request](./src/modules/super-request/Readme.md)
 - [Rate Limit](./src/modules/rate-limit/Readme.md)
