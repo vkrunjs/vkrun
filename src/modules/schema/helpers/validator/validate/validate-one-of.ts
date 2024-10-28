@@ -30,6 +30,8 @@ export const validateOneOf = (
       expect: 'value matches',
       received: util.received(value),
       message: informativeMessage.oneOf
+        .replace('[valueName]', valueName)
+        .replace('[value]', value)
     })
   }
 }

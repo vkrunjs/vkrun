@@ -17,6 +17,7 @@ export const validatePositiveBigInt = (params: type.ValidateMethod): void => {
       : 'positive bigint',
     error: informativeMessage.bigInt.positive
       .replace('[valueName]', valueName)
+      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
   }
 
   if (util.isBigInt(value) && value > 0n) {

@@ -22,7 +22,9 @@ export const validateRequired = ({
     })
   } else {
     const message = informativeMessage.required
-    const messageError = message.replace('[valueName]', valueName)
+    const messageError = message
+      .replace('[valueName]', valueName)
+      .replace('[value]', value)
 
     callbackAddFailed({
       method: 'required',

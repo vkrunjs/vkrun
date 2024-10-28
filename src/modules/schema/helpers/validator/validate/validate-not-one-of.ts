@@ -30,6 +30,8 @@ export const validateNotOneOf = (
       expect: 'value does not match',
       received: util.received(value),
       message: informativeMessage.notOneOf
+        .replace('[valueName]', valueName)
+        .replace('[value]', value)
     })
   }
 }

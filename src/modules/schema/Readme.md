@@ -383,12 +383,17 @@ console.log(validateD) // true
   - boolean:
     - invalidValue: [value] and [valueName]
   - required: [value] and [valueName]
+  - nullable: [valueName] and [value]
   - date:
     - invalidValue: [value], [valueName] and [type]
     - min: [value], [valueName] and [refDate]
     - max: [value], [valueName]  and [refDate]
-  - object: [valueName]
-  - array: [valueName]
+  - object: [valueName] and [value]
+  - array: [valueName] and [value]
+  - equal: [valueName] and [value]
+  - notEqual: [valueName] and [value]
+  - oneOf: [valueName] and [value]
+  - notOneOf: [valueName] and [value]
 
 ```ts
 import { setLocation } from "vkrun"

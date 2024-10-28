@@ -30,6 +30,8 @@ export const validateNotEqual = (
       expect: valueToCompare,
       received: util.received(value),
       message: informativeMessage.notEqual
+        .replace('[valueName]', valueName)
+        .replace('[value]', value)
     })
   }
 }

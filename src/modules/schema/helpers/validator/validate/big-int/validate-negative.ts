@@ -17,6 +17,7 @@ export const validateNegativeBigInt = (params: type.ValidateMethod): void => {
       : 'negative bigint',
     error: informativeMessage.bigInt.negative
       .replace('[valueName]', valueName)
+      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
   }
 
   if (util.isBigInt(value) && value < 0n) {

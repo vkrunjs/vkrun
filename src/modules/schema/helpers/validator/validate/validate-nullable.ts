@@ -16,7 +16,9 @@ export const validateNullable = ({
   if (value === undefined) {
     const message = {
       expect: 'the value can be null, but other than undefined',
-      error: informativeMessage.nullable.replace('[valueName]', valueName)
+      error: informativeMessage.nullable
+        .replace('[valueName]', valueName)
+        .replace('[value]', value)
     }
 
     callbackAddFailed({

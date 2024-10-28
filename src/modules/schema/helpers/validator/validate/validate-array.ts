@@ -19,7 +19,9 @@ export const validateArray = ({
 }): void => {
   const message = {
     expect: 'array type',
-    error: informativeMessage.array.replace('[valueName]', valueName)
+    error: informativeMessage.array
+      .replace('[valueName]', valueName)
+      .replace('[value]', value)
   }
 
   if (isArray(value)) {

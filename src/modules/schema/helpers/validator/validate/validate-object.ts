@@ -21,7 +21,9 @@ export const validateObject = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in object type' : 'object type',
-    error: informativeMessage.object.replace('[valueName]', valueName)
+    error: informativeMessage.object
+      .replace('[valueName]', valueName)
+      .replace('[value]', value)
   }
 
   if (isObject(value)) {

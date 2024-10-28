@@ -31,6 +31,8 @@ export const validateEqual = ({
       expect: valueToCompare,
       received: received(value),
       message: informativeMessage.equal
+        .replace('[valueName]', valueName)
+        .replace('[value]', value)
     })
   }
 }

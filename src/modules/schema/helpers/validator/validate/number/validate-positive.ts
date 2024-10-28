@@ -17,6 +17,7 @@ export const validatePositiveNumber = (params: type.ValidateMethod): void => {
       : 'positive number',
     error: informativeMessage.number.positive
       .replace('[valueName]', valueName)
+      .replace('[value]', value)
   }
 
   if (util.isNumber(value) && value > 0) {
