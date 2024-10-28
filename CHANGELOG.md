@@ -1,5 +1,11 @@
 # VkrunJS Releases
 
+## 1.1.0
+- swagger builder should accept default path change api-docs
+- change the way to inject error handling into the app
+- change variable name and export httpStatus
+- ensure that all methods in the schema module replace valueName and value in the error message
+
 ## 1.0.0
 - official release
 
