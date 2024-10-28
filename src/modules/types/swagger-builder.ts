@@ -271,6 +271,13 @@ export interface SwaggerOpenAPIDocument extends Omit<SwaggerOpenAPIConfig, 'path
   paths: Record<string, Record<string, SwaggerOperation>>
 }
 
+export interface SwaggerListenConfig {
+  port: number
+  path?: string
+  visibilityKeys: string[]
+  callback?: () => Promise<void> | void
+}
+
 export interface SwaggerRouteBuilder {
   post: (options: SwaggerOperation) => SwaggerRouteBuilder
   put: (options: SwaggerOperation) => SwaggerRouteBuilder
@@ -285,5 +292,5 @@ export interface VkrunSwaggerBuilder {
   route: (path: string) => SwaggerRouteBuilder
   getConfig: () => SwaggerOpenAPIConfig & SwaggerOpenAPIDocument
   getDocument: () => string
-  listen: (port: number, visibilityKeys: string[], callback?: () => Promise<void> | void) => void
+  listen: (config: SwaggerListenConfig) => void
 }

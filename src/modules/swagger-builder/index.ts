@@ -287,17 +287,14 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     return html
   }
 
-  public listen (
-    port: number,
-    visibilityKeys: string[],
-    callback?: () => Promise<void> | void
-  ): void {
+  public listen (config: type.SwaggerListenConfig): void {
     const app = App()
     app.cors()
     app.parseData()
+    const path = config?.path ?? '/api-docs'
 
-    app.get('/api-docs', (request: type.Request, response: type.Response) => {
-      this.serve(request, response, visibilityKeys)
+    app.get(path, (request: type.Request, response: type.Response) => {
+      this.serve(request, response, config.visibilityKeys)
     })
 
     app.get('/*', (request: type.Request, response: type.Response) => {
@@ -329,7 +326,7 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
                       .toLowerCase())
                 )
 
-              const matchesVisibility = specTyped.visibilityKeys && visibilityKeys.some(
+              const matchesVisibility = specTyped.visibilityKeys && config.visibilityKeys.some(
                 key => specTyped.visibilityKeys?.includes(key)
               )
 
@@ -377,7 +374,7 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
       }))
     })
 
-    app.server().listen(port, callback)
+    app.server().listen(config.port, config?.callback)
   }
 }
 

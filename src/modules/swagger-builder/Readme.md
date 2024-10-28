@@ -79,8 +79,13 @@ swagger.route('/public').get({
 })
 
 // Start serving the public Swagger documentation
-swagger.listen(3001, ['public'], () => {
-  console.log('Public Swagger UI running on port 3001')
+swagger.listen({
+  port: 3001,
+  path: '/api-docs'
+  visibilityKeys: ['public'],
+  callback: () => {
+    console.log('Public Swagger UI running on port 3001')
+  }
 })
 ```
 
