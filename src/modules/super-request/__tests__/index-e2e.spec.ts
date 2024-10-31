@@ -235,4 +235,24 @@ describe('Super Request - end to end testing', () => {
 
     app.close()
   })
+
+  /// ///
+  /// //
+
+  it('Should handle asynchronous response with delay', async () => {
+    const app = v.App()
+
+    app.get('/', (req: v.Request, res: v.Response) => {
+      setTimeout(() => {
+        res.status(200).send('waited 100ms')
+      }, 100)
+    })
+
+    await v.superRequest(app).get('/').then((response) => {
+      validateSuccess(response)
+      expect(response.data).toEqual('waited 100ms')
+    })
+
+    app.close()
+  })
 })
