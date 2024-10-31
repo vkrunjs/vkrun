@@ -29,7 +29,6 @@ export const superRequest = (app: any): type.SuperRequest => {
         serverResponse.headers['content-length'] = value
       }
       contentLength()
-      httpRequest.abort()
 
       const response: type.SuperRequestSuccess = {
         statusCode: serverResponse.statusCode,

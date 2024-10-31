@@ -92,6 +92,7 @@ class VkrunApp implements type.VkrunApp {
     const _request = request
     _request.setTimer = this.setTimer.bind(this)
     this.createdServer = customResponse(response)
+
     if (this.errorHandler) {
       try {
         await this.routerHandler.handleRequest(
@@ -112,7 +113,14 @@ class VkrunApp implements type.VkrunApp {
       )
     }
 
-    return this.createdServer
+    return await new Promise<type.Response>((resolve) => {
+      const monitor = setInterval(() => {
+        if (this.createdServer._ended) {
+          clearInterval(monitor)
+          resolve(this.createdServer)
+        }
+      }, 5)
+    })
   }
 
   // Middleware management

@@ -80,5 +80,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
     }
   }
 
+  request.abort()
+
   return request
 }

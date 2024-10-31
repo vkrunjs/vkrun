@@ -27,9 +27,7 @@ export const createHttpResponse = (request: any): any => {
     }
 
     response._ended = true
-
     delete response._body
-    response.req.end()
   }
 
   response.on = (event: string, listener: any) => {
