@@ -4,35 +4,48 @@ import * as type from '../../types'
 
 export const customResponse = (_response: ServerResponse): type.Response => {
   const response = _response as type.Response
+  /* eslint-disable */
+  // @ts-ignore
+  response._setHeader = response.setHeader
+
+  response.setHeader = function (
+    name: string,
+    value: number | string | readonly string[]
+  ): type.Response {
+    // @ts-ignore
+    response._setHeader(name, value)
+    return this
+  }
+  /* eslint-enable */
 
   response.status = function (status: number): type.Response {
     this.statusCode = status
     return this
   }
 
-  response.json = function (body: object): void {
+  response.json = function (body: object): type.Response {
     this.setHeader('Content-Type', 'application/json')
     if (util.isObject(body)) {
       response._body = body
-      this.end(JSON.stringify(body))
+      return this.end(JSON.stringify(body))
     } else {
       response._body = {}
-      this.end(JSON.stringify({}))
+      return this.end(JSON.stringify({}))
     }
   }
 
-  response.send = function (body: any): void {
+  response.send = function (body: any): type.Response {
     const hasHeadersContentType = response.hasHeader('content-type')
     response._body = body
 
-    if (hasHeadersContentType) this.end(body)
+    if (hasHeadersContentType) return this.end(body)
     else {
       response.setHeader('Content-Type', 'text/plain')
-      this.end(body.toString())
+      return this.end(body.toString())
     }
   }
 
-  response.setCookie = function (name: string, value: string, options?: type.CookieOptions): void {
+  response.setCookie = function (name: string, value: string, options?: type.CookieOptions): type.Response {
     const existingCookies = this.getHeader('Set-Cookie') as string[] | undefined
 
     let cookies: string[] = []
@@ -71,9 +84,10 @@ export const customResponse = (_response: ServerResponse): type.Response => {
     cookies.push(cookie)
 
     this.setHeader('Set-Cookie', cookies)
+    return this
   }
 
-  response.clearCookie = function (name: string): void {
+  response.clearCookie = function (name: string): type.Response {
     const existingCookies = this.getHeader('Set-Cookie') as string[] | undefined
     let cookies: string[] = []
 
@@ -84,6 +98,7 @@ export const customResponse = (_response: ServerResponse): type.Response => {
     const removedCookie = `${name}=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT`
     cookies.push(removedCookie)
     this.setHeader('Set-Cookie', cookies)
+    return this
   }
 
   return response

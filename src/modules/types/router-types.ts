@@ -29,10 +29,10 @@ export type Response = ServerResponse & CustomResponseMethods
 
 export interface CustomResponseMethods {
   status: (status: number) => Response
-  json: (data: object) => void
-  send: (data: any) => void
-  setCookie: (name: string, value: string, options?: CookieOptions) => void
-  clearCookie: (name: string) => void
+  json: (data: object) => Response
+  send: (data: any) => Response
+  setCookie: (name: string, value: string, options?: CookieOptions) => Response
+  clearCookie: (name: string) => Response
   _body: any
 }
 
