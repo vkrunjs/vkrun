@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 1.2.0
+- fix superRequest does not work with async handlers
+- adjust setHeader to return vkrun custom response and all additional vkrun methods should return this
+
 ## 1.1.0
 - swagger builder should accept default path change api-docs
 - change the way to inject error handling into the app
