@@ -18,7 +18,7 @@ yarn install
 
 ### Development Mode
 
-Use o modo de desenvolvimento para rodar o projeto diretamente com ts-node e ver alterações em tempo real.
+Use development mode to run the project directly with ts-node and see real-time changes.
 
 ##### NPM
 
