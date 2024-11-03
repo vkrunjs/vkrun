@@ -5,3 +5,6 @@ yarn.lock
 lib
 logs
 .DS_Store
+benchmark/node_modules
+benchmark/package-lock.json
+benchmark/yarn.lock
