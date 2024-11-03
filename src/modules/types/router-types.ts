@@ -9,19 +9,15 @@ export interface VkrunRouter {
   options: (path: string, ...handlers: any) => void
 }
 
-export interface Request<
-  Body = Record<string, string | number | boolean | Date> | JSON | string | undefined | any,
-  Params = Record<string, string | number | boolean | Date> | undefined,
-  Query = Record<string, string | number | boolean | Date> | undefined,
-  Files = File[] | undefined
-> extends IncomingMessage {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export interface Request<T = {}> extends IncomingMessage {
   requestId?: string
   route?: Route
-  body: Body
-  params: Params
-  query: Query
+  body: T extends { body: infer B } ? B : Record<string, string | number | boolean | Date> | JSON | string | undefined | any
+  params: T extends { params: infer P } ? P : Record<string, string | number | boolean | Date> | undefined
+  query: T extends { query: infer Q } ? Q : Record<string, string | number | boolean | Date> | undefined
   session?: any
-  files: Files
+  files: T extends { files: infer F } ? F : File[] | undefined
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
