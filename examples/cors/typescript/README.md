@@ -34,7 +34,7 @@ yarn dev
 
 ### Production Mode
 
-No modo de produção, você precisa primeiro buildar o projeto para gerar o código JavaScript compilado na pasta dist e, em seguida, rodar o projeto a partir desses arquivos compilados.
+In production mode, you must first build the project to generate compiled JavaScript code in the dist folder and then run the project from these compiled files.
 
 #### Build the Project
 
