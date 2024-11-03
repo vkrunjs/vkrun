@@ -1,0 +1,11 @@
+{
+  "name": "benchmark-vkrun",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "autocannon": "^8.0.0",
+    "vkrun": "*"
+  }
+}
