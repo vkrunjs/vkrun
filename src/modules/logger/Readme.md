@@ -43,10 +43,8 @@ logger.error('An unexpected error has occurred.');
 
 The logger configuration allows customizing the logger's behavior according to your needs. All parameters are optional, and the logger has a default configuration when no parameters are provided.
 
-Interface `SetConfigLogger`
-
 ```ts
-interface SetConfigLogger {
+{
   level?: 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
   format?: 'default' | 'indented'
   dateType?: 'DD-MM-YYYY' | 'MM-DD-YYYY'
