@@ -1,5 +1,12 @@
 # VkrunJS Releases
 
+## 1.3.0
+- replace wildcard imports with explicit imports for modularization and change type names to avoid duplication between modules
+- add singleFile and multipleFiles methods to the upload module with configuration options
+- add to parseData return fieldName when content type is form data
+- fix translation of sentences from Portuguese to English in the readme of the sample projects
+- add benchmark example
+
 ## 1.2.0
 - fix superRequest does not work with async handlers
 - adjust setHeader to return vkrun custom response and all additional vkrun methods should return this
