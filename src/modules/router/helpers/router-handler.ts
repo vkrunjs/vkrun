@@ -1,13 +1,18 @@
-import { VkrunCors } from '../../cors'
-import * as type from '../../types'
-import * as util from '../../utils'
-import * as helper from './../helpers'
+import { CorsSetup } from '../../cors'
+import { randomUUID } from '../../utils'
+import { executeMiddleware } from './execute-middleware'
+import {
+  NextFunction,
+  Request,
+  Response,
+  Route
+} from '../../types'
 
 export class RouterHandler {
-  private routes: type.Route[] = []
+  private routes: Route[] = []
 
   private addRoutesOptionsWithCors (globalMiddlewares: any[]): void {
-    const corsMiddleware = globalMiddlewares.find(middleware => middleware instanceof VkrunCors)
+    const corsMiddleware = globalMiddlewares.find(middleware => middleware instanceof CorsSetup)
 
     if (corsMiddleware) {
       const routeGroups = new Map<string, string[]>()
@@ -34,13 +39,13 @@ export class RouterHandler {
   }
 
   public async handleRequest (
-    request: type.Request,
-    response: type.Response,
-    routes: type.Route[],
+    request: Request,
+    response: Response,
+    routes: Route[],
     globalMiddlewares: any[]
   ): Promise<void> {
     this.routes = routes
-    const requestId = util.randomUUID()
+    const requestId = randomUUID()
     request.requestId = requestId
     response.setHeader('Request-Id', requestId)
     this.addRoutesOptionsWithCors(globalMiddlewares)
@@ -77,7 +82,7 @@ export class RouterHandler {
 
           const handleMiddleware = async (index: number): Promise<void> => {
             const middleware = globalMiddlewares[index]
-            let nextMiddleware: type.NextFunction
+            let nextMiddleware: NextFunction
             if (index < globalMiddlewares.length - 1) {
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               nextMiddleware = async () => { await handleMiddleware(index + 1) }
@@ -85,7 +90,7 @@ export class RouterHandler {
               nextMiddleware = next
             }
 
-            await helper.executeMiddleware(middleware, request, response, nextMiddleware)
+            await executeMiddleware(middleware, request, response, nextMiddleware)
           }
 
           if (globalMiddlewares.length > 0) await handleMiddleware(0)

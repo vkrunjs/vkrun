@@ -1,4 +1,4 @@
-import * as type from '.'
+import { NextFunction, Request, Response } from './router-types'
 
 export interface VkrunUpload {
   diskStorage: (options: UploadDiskStorageOptions) => {
@@ -19,29 +19,29 @@ export interface UploadDiskStorageOptions {
 export interface UploadSingleFileConfig {
   fieldName: string
   required?: boolean
-  onError?: (response: type.Response) => type.Response | undefined
+  onError?: (response: Response) => Response | undefined
 }
 
 export type UploadSingleFile = (config: UploadSingleFileConfig) => (
-  request: type.Request,
-  response: type.Response,
-  next: type.NextFunction
-) => Promise<type.Response | undefined>
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => Promise<Response | undefined>
 
 export type UploadMultipleFilesFields = Array<{
   fieldName: string
   min?: {
     count: number
-    onError?: (response: type.Response) => type.Response | undefined
+    onError?: (response: Response) => Response | undefined
   }
   max?: {
     count: number
-    onError?: (response: type.Response) => type.Response | undefined
+    onError?: (response: Response) => Response | undefined
   }
 }>
 
 export type UploadMultipleFiles = (fields?: UploadMultipleFilesFields) => (
-  request: type.Request,
-  response: type.Response,
-  next: type.NextFunction
-) => Promise<type.Response | undefined>
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => Promise<Response | undefined>

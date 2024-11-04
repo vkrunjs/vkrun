@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from './router-types'
 
-export type LogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
+export type LoggerLogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
 
-export type LogExtension = 'log' | 'txt' | 'json'
+export type LoggerLogExtension = 'log' | 'txt' | 'json'
 
 export interface VkrunLogger {
   error: (message: any) => void
@@ -15,33 +15,33 @@ export interface VkrunLogger {
   middleware: () => (request: Request, response: Response, next: NextFunction) => void
 }
 
-export interface Log {
-  level: LogLevel
-  config: ConfigLogger
+export interface LoggerLog {
+  level: LoggerLogLevel
+  config: LoggerConfig
   message: any
 }
 
-export type PrintColor = 'red' | 'white' | 'blue' | 'yellow' | 'green' | 'purple' | 'reset'
-export interface PrintColors {
-  key: PrintColor
-  string: PrintColor
-  number: PrintColor
-  boolean: PrintColor
+export type LoggerPrintColor = 'red' | 'white' | 'blue' | 'yellow' | 'green' | 'purple' | 'reset'
+export interface LoggerPrintColors {
+  key: LoggerPrintColor
+  string: LoggerPrintColor
+  number: LoggerPrintColor
+  boolean: LoggerPrintColor
 }
 
-export interface ConfigLogger {
-  level: LogLevel
+export interface LoggerConfig {
+  level: LoggerLogLevel
   format: 'default' | 'indented'
   dateType: 'DD-MM-YYYY' | 'MM-DD-YYYY'
   print: {
     enabled: boolean
     format: 'default' | 'indented'
-    colors: PrintColors
+    colors: LoggerPrintColors
   }
   size: number
   daysToStoreLogs: number
   filename: string
-  extension: LogExtension
+  extension: LoggerLogExtension
   path: string
   levels: {
     error: 0
@@ -52,10 +52,10 @@ export interface ConfigLogger {
     debug: 5
     silly: 6
   }
-  colors: Colors
+  colors: LoggerColors
 }
 
-export interface Colors {
+export interface LoggerColors {
   red: '\x1b[31m'
   white: '\x1b[37m'
   blue: '\x1b[34m'
@@ -65,24 +65,24 @@ export interface Colors {
   reset: '\x1b[0m'
 }
 
-export type SetPrintColors = 'red' | 'white' | 'blue' | 'yellow' | 'green' | 'purple'
+export type LoggerSetPrintColors = 'red' | 'white' | 'blue' | 'yellow' | 'green' | 'purple'
 
-export interface SetConfigLogger {
-  level?: LogLevel
+export interface LoggerSetConfig {
+  level?: LoggerLogLevel
   format?: 'default' | 'indented'
   dateType?: 'DD-MM-YYYY' | 'MM-DD-YYYY'
   print?: {
     enabled?: boolean
     format?: 'default' | 'indented'
     colors?: {
-      key?: SetPrintColors
-      string?: SetPrintColors
-      number?: SetPrintColors
-      boolean?: SetPrintColors
+      key?: LoggerSetPrintColors
+      string?: LoggerSetPrintColors
+      number?: LoggerSetPrintColors
+      boolean?: LoggerSetPrintColors
     }
   }
   size?: number
   daysToStoreLogs?: number
-  extension?: LogExtension
+  extension?: LoggerLogExtension
   path?: string
 }

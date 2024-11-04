@@ -1,5 +1,5 @@
-import * as util from '../utils'
+import { isEqual } from './is-equal'
 
 export const isNotEqual = (value: any, valueToCompare: any): boolean => {
-  return !util.isEqual(value, valueToCompare)
+  return !isEqual(value, valueToCompare)
 }

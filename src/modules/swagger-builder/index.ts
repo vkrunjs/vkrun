@@ -1,10 +1,19 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { existsSync, readFileSync } from 'fs'
+import { join } from 'path'
 import { App } from '../app'
-import * as type from '../types'
+import {
+  Request,
+  Response,
+  SwaggerListenConfig,
+  SwaggerOpenAPIConfig,
+  SwaggerOpenAPIDocument,
+  SwaggerOperation,
+  SwaggerRouteBuilder,
+  VkrunSwaggerBuilder
+} from '../types'
 
-export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
-  private doc: type.SwaggerOpenAPIConfig & type.SwaggerOpenAPIDocument
+export class SwaggerBuilderSetup implements VkrunSwaggerBuilder {
+  private doc: SwaggerOpenAPIConfig & SwaggerOpenAPIDocument
   private currentPath: string
   private readonly swaggerUiDist: any
 
@@ -27,12 +36,12 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     this.swaggerUiDist = swaggerUiDist
   }
 
-  public create (config: type.SwaggerOpenAPIConfig): this {
+  public create (config: SwaggerOpenAPIConfig): this {
     this.doc = { ...this.doc, ...config }
     return this
   }
 
-  public route (path: string): type.SwaggerRouteBuilder {
+  public route (path: string): SwaggerRouteBuilder {
     const swaggerPath = path.replace(/:([a-zA-Z0-9_]+)/g, '{$1}')
 
     if (!this.doc.paths[swaggerPath]) {
@@ -40,28 +49,28 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     }
     this.currentPath = swaggerPath
 
-    const routeBuilder: type.SwaggerRouteBuilder = {
-      post: (options: type.SwaggerOperation) => {
+    const routeBuilder: SwaggerRouteBuilder = {
+      post: (options: SwaggerOperation) => {
         this.addMethod('post', options)
         return routeBuilder
       },
-      put: (options: type.SwaggerOperation) => {
+      put: (options: SwaggerOperation) => {
         this.addMethod('put', options)
         return routeBuilder
       },
-      patch: (options: type.SwaggerOperation) => {
+      patch: (options: SwaggerOperation) => {
         this.addMethod('patch', options)
         return routeBuilder
       },
-      get: (options: type.SwaggerOperation) => {
+      get: (options: SwaggerOperation) => {
         this.addMethod('get', options)
         return routeBuilder
       },
-      delete: (options: type.SwaggerOperation) => {
+      delete: (options: SwaggerOperation) => {
         this.addMethod('delete', options)
         return routeBuilder
       },
-      options: (options: type.SwaggerOperation) => {
+      options: (options: SwaggerOperation) => {
         this.addMethod('options', options)
         return routeBuilder
       }
@@ -70,7 +79,7 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     return routeBuilder
   }
 
-  private addMethod (method: string, options: type.SwaggerOperation): this {
+  private addMethod (method: string, options: SwaggerOperation): this {
     if (!this.doc.paths[this.currentPath]) {
       this.doc.paths[this.currentPath] = {}
     }
@@ -82,11 +91,11 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     const filteredDoc = JSON.parse(JSON.stringify(this.doc))
 
     filteredDoc.paths = Object.entries(filteredDoc.paths).reduce<Record<string, any>>((acc: Record<string, any>, [path, methods]) => {
-      const methodsTyped = methods as Record<string, type.SwaggerOperation>
+      const methodsTyped = methods as Record<string, SwaggerOperation>
 
       const filteredMethods = Object.entries(methodsTyped)
-        .reduce<Record<string, type.SwaggerOperation>>(
-        (methodAcc: Record<string, type.SwaggerOperation>, [method, spec]) => {
+        .reduce<Record<string, SwaggerOperation>>(
+        (methodAcc: Record<string, SwaggerOperation>, [method, spec]) => {
           const specTyped = spec
 
           if (specTyped.visibilityKeys && visibilityKeys.some(
@@ -113,22 +122,22 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     }
 
     const swaggerUiPath = this.swaggerUiDist.absolutePath()
-    const swaggerUiCssPath = path.join(swaggerUiPath, 'swagger-ui.css')
-    const indexCssPath = path.join(swaggerUiPath, 'index.css')
-    const jsBundlePath = path.join(swaggerUiPath, 'swagger-ui-bundle.js')
-    const jsStandalonePresetPath = path.join(swaggerUiPath, 'swagger-ui-standalone-preset.js')
+    const swaggerUiCssPath = join(swaggerUiPath, 'swagger-ui.css')
+    const indexCssPath = join(swaggerUiPath, 'index.css')
+    const jsBundlePath = join(swaggerUiPath, 'swagger-ui-bundle.js')
+    const jsStandalonePresetPath = join(swaggerUiPath, 'swagger-ui-standalone-preset.js')
 
-    const swaggerUiCss = fs.existsSync(swaggerUiCssPath)
-      ? fs.readFileSync(swaggerUiCssPath, 'utf-8')
+    const swaggerUiCss = existsSync(swaggerUiCssPath)
+      ? readFileSync(swaggerUiCssPath, 'utf-8')
       : ''
-    const indexCss = fs.existsSync(indexCssPath)
-      ? fs.readFileSync(indexCssPath, 'utf-8')
+    const indexCss = existsSync(indexCssPath)
+      ? readFileSync(indexCssPath, 'utf-8')
       : ''
-    const jsBundle = fs.existsSync(jsBundlePath)
-      ? fs.readFileSync(jsBundlePath, 'utf-8')
+    const jsBundle = existsSync(jsBundlePath)
+      ? readFileSync(jsBundlePath, 'utf-8')
       : ''
-    const jsStandalonePreset = fs.existsSync(jsStandalonePresetPath)
-      ? fs.readFileSync(jsStandalonePresetPath, 'utf-8')
+    const jsStandalonePreset = existsSync(jsStandalonePresetPath)
+      ? readFileSync(jsStandalonePresetPath, 'utf-8')
       : ''
 
     const html = `
@@ -137,8 +146,8 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
       <head>
         <meta charset="UTF-8">
         <title>Swagger UI</title>
-        <link rel="icon" type="image/png" href="data:image/png;base64,${fs.existsSync(path.join(swaggerUiPath, 'favicon-32x32.png')) ? fs.readFileSync(path.join(swaggerUiPath, 'favicon-32x32.png')).toString('base64') : ''}" sizes="32x32" />
-        <link rel="icon" type="image/png" href="data:image/png;base64,${fs.existsSync(path.join(swaggerUiPath, 'favicon-16x16.png')) ? fs.readFileSync(path.join(swaggerUiPath, 'favicon-16x16.png')).toString('base64') : ''}" sizes="16x16" />
+        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(swaggerUiPath, 'favicon-32x32.png')) ? readFileSync(join(swaggerUiPath, 'favicon-32x32.png')).toString('base64') : ''}" sizes="32x32" />
+        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(swaggerUiPath, 'favicon-16x16.png')) ? readFileSync(join(swaggerUiPath, 'favicon-16x16.png')).toString('base64') : ''}" sizes="16x16" />
         <style>${swaggerUiCss}</style>
         <style>${indexCss}</style>
       </head>
@@ -197,29 +206,29 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     response.status(200).send(html)
   }
 
-  public getConfig (): type.SwaggerOpenAPIConfig & type.SwaggerOpenAPIDocument {
+  public getConfig (): SwaggerOpenAPIConfig & SwaggerOpenAPIDocument {
     return this.doc
   }
 
   public getDocument (): string {
     const docJson = JSON.parse(JSON.stringify(this.doc))
     const swaggerUiPath = this.swaggerUiDist.absolutePath()
-    const swaggerUiCssPath = path.join(swaggerUiPath, 'swagger-ui.css')
-    const indexCssPath = path.join(swaggerUiPath, 'index.css')
-    const jsBundlePath = path.join(swaggerUiPath, 'swagger-ui-bundle.js')
-    const jsStandalonePresetPath = path.join(swaggerUiPath, 'swagger-ui-standalone-preset.js')
+    const swaggerUiCssPath = join(swaggerUiPath, 'swagger-ui.css')
+    const indexCssPath = join(swaggerUiPath, 'index.css')
+    const jsBundlePath = join(swaggerUiPath, 'swagger-ui-bundle.js')
+    const jsStandalonePresetPath = join(swaggerUiPath, 'swagger-ui-standalone-preset.js')
 
-    const swaggerUiCss = fs.existsSync(swaggerUiCssPath)
-      ? fs.readFileSync(swaggerUiCssPath, 'utf-8')
+    const swaggerUiCss = existsSync(swaggerUiCssPath)
+      ? readFileSync(swaggerUiCssPath, 'utf-8')
       : ''
-    const indexCss = fs.existsSync(indexCssPath)
-      ? fs.readFileSync(indexCssPath, 'utf-8')
+    const indexCss = existsSync(indexCssPath)
+      ? readFileSync(indexCssPath, 'utf-8')
       : ''
-    const jsBundle = fs.existsSync(jsBundlePath)
-      ? fs.readFileSync(jsBundlePath, 'utf-8')
+    const jsBundle = existsSync(jsBundlePath)
+      ? readFileSync(jsBundlePath, 'utf-8')
       : ''
-    const jsStandalonePreset = fs.existsSync(jsStandalonePresetPath)
-      ? fs.readFileSync(jsStandalonePresetPath, 'utf-8')
+    const jsStandalonePreset = existsSync(jsStandalonePresetPath)
+      ? readFileSync(jsStandalonePresetPath, 'utf-8')
       : ''
 
     const html = `
@@ -228,8 +237,8 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
       <head>
         <meta charset="UTF-8">
         <title>Swagger UI</title>
-        <link rel="icon" type="image/png" href="data:image/png;base64,${fs.existsSync(path.join(swaggerUiPath, 'favicon-32x32.png')) ? fs.readFileSync(path.join(swaggerUiPath, 'favicon-32x32.png')).toString('base64') : ''}" sizes="32x32" />
-        <link rel="icon" type="image/png" href="data:image/png;base64,${fs.existsSync(path.join(swaggerUiPath, 'favicon-16x16.png')) ? fs.readFileSync(path.join(swaggerUiPath, 'favicon-16x16.png')).toString('base64') : ''}" sizes="16x16" />
+        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(swaggerUiPath, 'favicon-32x32.png')) ? readFileSync(join(swaggerUiPath, 'favicon-32x32.png')).toString('base64') : ''}" sizes="32x32" />
+        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(swaggerUiPath, 'favicon-16x16.png')) ? readFileSync(join(swaggerUiPath, 'favicon-16x16.png')).toString('base64') : ''}" sizes="16x16" />
         <style>${swaggerUiCss}</style>
         <style>${indexCss}</style>
       </head>
@@ -287,17 +296,17 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
     return html
   }
 
-  public listen (config: type.SwaggerListenConfig): void {
+  public listen (config: SwaggerListenConfig): void {
     const app = App()
     app.cors()
     app.parseData()
     const path = config?.path ?? '/api-docs'
 
-    app.get(path, (request: type.Request, response: type.Response) => {
+    app.get(path, (request: Request, response: Response) => {
       this.serve(request, response, config.visibilityKeys)
     })
 
-    app.get('/*', (request: type.Request, response: type.Response) => {
+    app.get('/*', (request: Request, response: Response) => {
       const value = request.url ? decodeURIComponent(request.url) : ''
 
       const fullDoc = this.getConfig()
@@ -307,7 +316,7 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
           const methods = fullDoc.paths[path]
 
           const filteredMethods = Object.entries(methods)
-            .reduce<Record<string, type.SwaggerOperation>>(
+            .reduce<Record<string, SwaggerOperation>>(
             (methodAcc, [method, spec]) => {
               const specTyped = spec
 
@@ -366,7 +375,7 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
       }
     })
 
-    app.get('/', (_request: type.Request, response: type.Response) => {
+    app.get('/', (_request: Request, response: Response) => {
       response.setHeader('Content-Type', 'application/json')
       response.status(200).send(JSON.stringify({
         ...this.getConfig(),
@@ -378,6 +387,6 @@ export class VkrunSwaggerBuilder implements type.VkrunSwaggerBuilder {
   }
 }
 
-export const swaggerBuilder = (swaggerUiDist: any): type.VkrunSwaggerBuilder => {
-  return new VkrunSwaggerBuilder(swaggerUiDist)
+export const swaggerBuilder = (swaggerUiDist: any): VkrunSwaggerBuilder => {
+  return new SwaggerBuilderSetup(swaggerUiDist)
 }

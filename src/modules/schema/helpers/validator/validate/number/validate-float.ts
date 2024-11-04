@@ -1,6 +1,6 @@
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
+import { isFloat, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateFloatNumber = ({
   value,
@@ -12,8 +12,8 @@ export const validateFloatNumber = ({
   value: any
   valueName: string
   indexArray: number
-  callbackAddPassed: (success: type.SuccessTest) => void
-  callbackAddFailed: (error: type.ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in float type' : 'float type',
@@ -22,7 +22,7 @@ export const validateFloatNumber = ({
       .replace('[valueName]', valueName)
   }
 
-  if (util.isFloat(value)) {
+  if (isFloat(value)) {
     callbackAddPassed({
       method: 'float',
       name: valueName,
@@ -37,7 +37,7 @@ export const validateFloatNumber = ({
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

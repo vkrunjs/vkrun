@@ -1,17 +1,27 @@
 import * as http from 'http'
-import { VkrunRouter } from '../router'
+import { RouterSetup } from '../router'
 import * as routerHelper from '../router/helpers'
 import { customResponse } from '../router/helpers/custom-response'
-import * as type from '../types'
 import { loggerSanitizeInterval } from '../logger'
 import { RouterHandler } from '../router/helpers/router-handler'
-import { VkrunParseData } from '../parse-data'
+import { ParseDataSetup } from '../parse-data'
 import { cors } from '../cors'
 import { rateLimit } from '../rate-limit'
+import {
+  AppCreateServer,
+  ParseDataConfig,
+  RateLimitConfig,
+  Request,
+  Response,
+  Route,
+  CorsSetOptions,
+  VkrunApp,
+  VkrunParseData
+} from '../types'
 
-class VkrunApp implements type.VkrunApp {
+class AppSetup implements VkrunApp {
   private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
-  private routes: type.Route[] = []
+  private routes: Route[] = []
   private readonly routerHandler: RouterHandler
   private readonly globalMiddlewares: any[]
   private createdServer: any
@@ -19,8 +29,8 @@ class VkrunApp implements type.VkrunApp {
   private _parseData?: VkrunParseData
   private errorHandler: ((
     error: any,
-    request: type.Request,
-    response: type.Response
+    request: Request,
+    response: Response
   ) => void) | null
 
   constructor () {
@@ -47,11 +57,11 @@ class VkrunApp implements type.VkrunApp {
 
   // Server Nodejs
 
-  public server (): type.CreateServer {
+  public server (): AppCreateServer {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.createdServer = http.createServer(async (request, response) => {
       this.instance = 'server'
-      const _request = request as type.Request
+      const _request = request as Request
       _request.setTimer = this.setTimer.bind(this)
       const _response = customResponse(response)
       if (this.errorHandler) {
@@ -87,7 +97,7 @@ class VkrunApp implements type.VkrunApp {
 
   // Method to simulate a request with superRequest
 
-  public async _reqWithoutServer (request: type.Request, response: type.Response): Promise<type.Response> {
+  public async _reqWithoutServer (request: Request, response: Response): Promise<Response> {
     this.instance = '_reqWithoutServer'
     const _request = request
     _request.setTimer = this.setTimer.bind(this)
@@ -113,7 +123,7 @@ class VkrunApp implements type.VkrunApp {
       )
     }
 
-    return await new Promise<type.Response>((resolve) => {
+    return await new Promise<Response>((resolve) => {
       const monitor = setInterval(() => {
         if (this.createdServer._ended) {
           clearInterval(monitor)
@@ -126,7 +136,7 @@ class VkrunApp implements type.VkrunApp {
   // Middleware management
 
   public use (middleware: Record<string, any>): void {
-    if (middleware instanceof VkrunRouter) {
+    if (middleware instanceof RouterSetup) {
       this.routes = [...this.routes, ...middleware._routes()]
     } else {
       this.globalMiddlewares.push(middleware)
@@ -136,29 +146,29 @@ class VkrunApp implements type.VkrunApp {
   // Error Handler
 
   public error (
-    errorHandler: (error: any, request: type.Request, response: type.Response) => void
+    errorHandler: (error: any, request: Request, response: Response) => void
   ): void {
     this.errorHandler = errorHandler
   }
 
   // Parse data
 
-  public parseData (config?: type.ParseDataConfig): void {
+  public parseData (config?: ParseDataConfig): void {
     if (!this._parseData) {
-      this._parseData = new VkrunParseData(config)
+      this._parseData = new ParseDataSetup(config)
       this.globalMiddlewares.unshift(this._parseData)
     }
   }
 
   // Cors
 
-  public cors (options?: type.SetCorsOptions): void {
+  public cors (options?: CorsSetOptions): void {
     this.globalMiddlewares.unshift(cors(options))
   }
 
   // Rate limit
 
-  public rateLimit (config?: type.RateLimitConfig): void {
+  public rateLimit (config?: RateLimitConfig): void {
     this.globalMiddlewares.push(rateLimit(config))
   }
 
@@ -200,6 +210,6 @@ class VkrunApp implements type.VkrunApp {
   }
 }
 
-export const App = (): type.VkrunApp => {
-  return new VkrunApp()
+export const App = (): VkrunApp => {
+  return new AppSetup()
 }

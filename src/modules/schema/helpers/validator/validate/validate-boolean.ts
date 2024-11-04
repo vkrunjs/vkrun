@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { isBoolean, received } from '../../../../utils'
 
 export const validateBoolean = ({
@@ -12,8 +12,8 @@ export const validateBoolean = ({
   value: any
   valueName: string
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',

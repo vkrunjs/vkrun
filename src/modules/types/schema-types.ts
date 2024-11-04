@@ -1,424 +1,424 @@
-import { Schema } from '../schema'
+import { SchemaSetup } from '../schema'
 import { UUIDVersion } from './utils-types'
 
-export interface ISchema {
-  string: () => StringMethod
-  number: () => NumberMethod
-  bigInt: () => BigIntMethod
-  boolean: () => DefaultReturn
-  date: (type?: DateTypes) => DateMethod
-  alias: (valueName: string) => AliasMethod
-  array: () => ArrayMethod
-  equal: (valueToCompare: any) => DefaultReturn
-  notEqual: (valueToCompare: any) => DefaultReturn
-  oneOf: (comparisonItems: any[]) => DefaultReturn
-  notOneOf: (comparisonItems: any[]) => DefaultReturn
-  object: (schema: ObjectType) => DefaultReturn
-  nullable: () => NullableMethod
-  notRequired: () => NotRequiredMethod
-  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+export interface VkrunSchema {
+  string: () => SchemaStringMethod
+  number: () => SchemaNumberMethod
+  bigInt: () => SchemaBigIntMethod
+  boolean: () => SchemaReturn
+  date: (type?: SchemaDateTypes) => SchemaDateMethod
+  alias: (valueName: string) => SchemaAliasMethod
+  array: () => SchemaArrayMethod
+  equal: (valueToCompare: any) => SchemaReturn
+  notEqual: (valueToCompare: any) => SchemaReturn
+  oneOf: (comparisonItems: any[]) => SchemaReturn
+  notOneOf: (comparisonItems: any[]) => SchemaReturn
+  object: (schema: SchemaObjectType) => SchemaReturn
+  nullable: () => SchemaNullableMethod
+  notRequired: () => SchemaNotRequiredMethod
+  throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => Promise<void>
   validate: (value: any) => boolean
   validateAsync: (value: any) => Promise<boolean>
-  test: (value: any, valueName: string) => Tests
-  testAsync: (value: any, valueName: string) => Promise<Tests>
+  test: (value: any, valueName: string) => SchemaTests
+  testAsync: (value: any, valueName: string) => Promise<SchemaTests>
 }
 
-export interface DefaultReturn {
-  notRequired: () => NotRequiredMethod
-  nullable: () => NullableMethod
-  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+export interface SchemaReturn {
+  notRequired: () => SchemaNotRequiredMethod
+  nullable: () => SchemaNullableMethod
+  throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => Promise<void>
   validate: (value: any) => boolean
   validateAsync: (value: any) => Promise<boolean>
-  test: (value: any, valueName: string) => Tests
-  testAsync: (value: any, valueName: string) => Promise<Tests>
+  test: (value: any, valueName: string) => SchemaTests
+  testAsync: (value: any, valueName: string) => Promise<SchemaTests>
 }
 
-export interface NotRequiredMethod {
-  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+export interface SchemaNotRequiredMethod {
+  throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => Promise<void>
   validate: (value: any) => boolean
   validateAsync: (value: any) => Promise<boolean>
-  test: (value: any, valueName: string) => Tests
-  testAsync: (value: any, valueName: string) => Promise<Tests>
+  test: (value: any, valueName: string) => SchemaTests
+  testAsync: (value: any, valueName: string) => Promise<SchemaTests>
 }
 
-export interface NumberMethod extends DefaultReturn {
-  float: () => NumberFloatMethod
-  integer: () => NumberIntegerMethod
-  min: (value: number) => NumberMinMethod
-  max: (value: number) => NumberMaxMethod
-  positive: () => NumberPositiveMethod
-  negative: () => NumberNegativeMethod
+export interface SchemaNumberMethod extends SchemaReturn {
+  float: () => SchemaNumberFloatMethod
+  integer: () => SchemaNumberIntegerMethod
+  min: (value: number) => SchemaNumberMinMethod
+  max: (value: number) => SchemaNumberMaxMethod
+  positive: () => SchemaNumberPositiveMethod
+  negative: () => SchemaNumberNegativeMethod
 }
 
-export interface NumberFloatMethod extends DefaultReturn {
-  min: (value: number) => DefaultReturn & {
-    max: (value: number) => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
+export interface SchemaNumberFloatMethod extends SchemaReturn {
+  min: (value: number) => SchemaReturn & {
+    max: (value: number) => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    positive: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
-    negative: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-  }
-  max: (value: number) => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
-    }
-    positive: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
-    }
-    negative: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    negative: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
   }
-  positive: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+  max: (value: number) => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    max: (value: number) => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
-  }
-  negative: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-    max: (value: number) => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    negative: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
   }
-}
-
-export type NumberIntegerMethod = NumberFloatMethod
-
-export interface NumberMinMethod extends DefaultReturn {
-  float: () => DefaultReturn & {
-    max: (value: number) => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
+  positive: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
-    positive: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-    negative: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+    max: (value: number) => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
   }
-  integer: () => DefaultReturn & {
-    max: (value: number) => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
+  negative: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
-    positive: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-    negative: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-  }
-  max: (value: number) => DefaultReturn & {
-    float: () => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
-    }
-    integer: () => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
-    }
-    positive: () => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
-    }
-    negative: () => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
-    }
-  }
-  positive: () => DefaultReturn & {
-    max: (value: number) => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
-    }
-    float: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-    integer: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-  }
-  negative: () => DefaultReturn & {
-    max: (value: number) => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
-    }
-    float: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-    integer: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+    max: (value: number) => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
   }
 }
 
-export interface NumberMaxMethod extends DefaultReturn {
-  float: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
+export type SchemaNumberIntegerMethod = SchemaNumberFloatMethod
+
+export interface SchemaNumberMinMethod extends SchemaReturn {
+  float: () => SchemaReturn & {
+    max: (value: number) => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    positive: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
-    negative: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
-    }
-  }
-  integer: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
-    }
-    positive: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
-    }
-    negative: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    negative: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
   }
-  min: (value: number) => DefaultReturn & {
-    float: () => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
+  integer: () => SchemaReturn & {
+    max: (value: number) => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    integer: () => DefaultReturn & {
-      positive: () => DefaultReturn
-      negative: () => DefaultReturn
+    positive: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
-    positive: () => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
-    }
-    negative: () => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
+    negative: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
   }
-  positive: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
+  max: (value: number) => SchemaReturn & {
+    float: () => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    float: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    integer: () => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    integer: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    negative: () => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
     }
   }
-  negative: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
+  positive: () => SchemaReturn & {
+    max: (value: number) => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
     }
-    float: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    float: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
-    integer: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    integer: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
+    }
+  }
+  negative: () => SchemaReturn & {
+    max: (value: number) => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    float: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
+    }
+    integer: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
     }
   }
 }
 
-export interface NumberPositiveMethod extends DefaultReturn {
-  float: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+export interface SchemaNumberMaxMethod extends SchemaReturn {
+  float: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    max: (value: number) => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
-  }
-  integer: () => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      max: (value: number) => DefaultReturn
-    }
-    max: (value: number) => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    negative: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
   }
-  min: (value: number) => DefaultReturn & {
-    max: (value: number) => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
+  integer: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    float: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
-    integer: () => DefaultReturn & {
-      max: (value: number) => DefaultReturn
+    negative: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
   }
-  max: (value: number) => DefaultReturn & {
-    min: (value: number) => DefaultReturn & {
-      float: () => DefaultReturn
-      integer: () => DefaultReturn
+  min: (value: number) => SchemaReturn & {
+    float: () => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    float: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    integer: () => SchemaReturn & {
+      positive: () => SchemaReturn
+      negative: () => SchemaReturn
     }
-    integer: () => DefaultReturn & {
-      min: (value: number) => DefaultReturn
+    positive: () => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    negative: () => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+  }
+  positive: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    float: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+    integer: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+  }
+  negative: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    float: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+    integer: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
     }
   }
 }
 
-export type NumberNegativeMethod = NumberPositiveMethod
-
-export interface BigIntMethod extends DefaultReturn {
-  min: (value: bigint) => BigIntMinMethod
-  max: (value: bigint) => BigIntMaxMethod
-  positive: () => BigIntPositiveMethod
-  negative: () => BigIntNegativeMethod
+export interface SchemaNumberPositiveMethod extends SchemaReturn {
+  float: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      max: (value: number) => SchemaReturn
+    }
+    max: (value: number) => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+  }
+  integer: () => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      max: (value: number) => SchemaReturn
+    }
+    max: (value: number) => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+  }
+  min: (value: number) => SchemaReturn & {
+    max: (value: number) => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    float: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
+    }
+    integer: () => SchemaReturn & {
+      max: (value: number) => SchemaReturn
+    }
+  }
+  max: (value: number) => SchemaReturn & {
+    min: (value: number) => SchemaReturn & {
+      float: () => SchemaReturn
+      integer: () => SchemaReturn
+    }
+    float: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+    integer: () => SchemaReturn & {
+      min: (value: number) => SchemaReturn
+    }
+  }
 }
 
-export interface BigIntMinMethod extends DefaultReturn {
-  max: (value: bigint) => DefaultReturn & {
-    positive: () => DefaultReturn
-    negative: () => DefaultReturn
+export type SchemaNumberNegativeMethod = SchemaNumberPositiveMethod
+
+export interface SchemaBigIntMethod extends SchemaReturn {
+  min: (value: bigint) => SchemaBigIntMinMethod
+  max: (value: bigint) => SchemaBigIntMaxMethod
+  positive: () => SchemaBigIntPositiveMethod
+  negative: () => SchemaBigIntNegativeMethod
+}
+
+export interface SchemaBigIntMinMethod extends SchemaReturn {
+  max: (value: bigint) => SchemaReturn & {
+    positive: () => SchemaReturn
+    negative: () => SchemaReturn
   }
-  positive: () => DefaultReturn & {
-    max: (value: bigint) => DefaultReturn
+  positive: () => SchemaReturn & {
+    max: (value: bigint) => SchemaReturn
   }
-  negative: () => DefaultReturn & {
-    max: (value: bigint) => DefaultReturn
+  negative: () => SchemaReturn & {
+    max: (value: bigint) => SchemaReturn
   }
 }
 
-export interface BigIntMaxMethod extends DefaultReturn {
-  min: (value: bigint) => DefaultReturn & {
-    positive: () => DefaultReturn
-    negative: () => DefaultReturn
+export interface SchemaBigIntMaxMethod extends SchemaReturn {
+  min: (value: bigint) => SchemaReturn & {
+    positive: () => SchemaReturn
+    negative: () => SchemaReturn
   }
-  positive: () => DefaultReturn & {
-    min: (value: bigint) => DefaultReturn
+  positive: () => SchemaReturn & {
+    min: (value: bigint) => SchemaReturn
   }
-  negative: () => DefaultReturn & {
-    min: (value: bigint) => DefaultReturn
-  }
-}
-
-export interface BigIntPositiveMethod extends DefaultReturn {
-  min: (value: bigint) => DefaultReturn & {
-    max: (value: bigint) => DefaultReturn
-  }
-  max: (value: bigint) => DefaultReturn & {
-    min: (value: bigint) => DefaultReturn
+  negative: () => SchemaReturn & {
+    min: (value: bigint) => SchemaReturn
   }
 }
 
-export type BigIntNegativeMethod = BigIntPositiveMethod
+export interface SchemaBigIntPositiveMethod extends SchemaReturn {
+  min: (value: bigint) => SchemaReturn & {
+    max: (value: bigint) => SchemaReturn
+  }
+  max: (value: bigint) => SchemaReturn & {
+    min: (value: bigint) => SchemaReturn
+  }
+}
 
-export interface NullableMethod {
-  throw: (value: any, valueName: string, ClassError?: ErrorTypes) => void
-  throwAsync: (value: any, valueName: string, ClassError?: ErrorTypes) => Promise<void>
+export type SchemaBigIntNegativeMethod = SchemaBigIntPositiveMethod
+
+export interface SchemaNullableMethod {
+  throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => void
+  throwAsync: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => Promise<void>
   validate: (value: any) => boolean
   validateAsync: (value: any) => Promise<boolean>
-  test: (value: any, valueName: string) => Tests
-  testAsync: (value: any, valueName: string) => Promise<Tests>
+  test: (value: any, valueName: string) => SchemaTests
+  testAsync: (value: any, valueName: string) => Promise<SchemaTests>
 }
 
-export interface StringMethod extends DefaultReturn {
-  minLength: (limit: number) => MinLengthMethod
-  maxLength: (limit: number) => MaxLengthMethod
-  minWord: (limit: number) => MinWordMethod
-  email: () => EmailMethod
-  UUID: (version?: UUIDVersion) => UUIDMethod
-  time: (type: TimeTypes) => TimeMethod
+export interface SchemaStringMethod extends SchemaReturn {
+  minLength: (limit: number) => SchemaMinLengthMethod
+  maxLength: (limit: number) => SchemaMaxLengthMethod
+  minWord: (limit: number) => SchemaMinWordMethod
+  email: () => SchemaEmailMethod
+  UUID: (version?: UUIDVersion) => SchemaUUIDMethod
+  time: (type: SchemaTimeTypes) => SchemaTimeMethod
 }
 
-export interface EmailMethod extends DefaultReturn {}
+export interface SchemaEmailMethod extends SchemaReturn {}
 
-export interface UUIDMethod extends DefaultReturn {}
+export interface SchemaUUIDMethod extends SchemaReturn {}
 
-export interface TimeMethod extends DefaultReturn {}
+export interface SchemaTimeMethod extends SchemaReturn {}
 
-export interface MinLengthMethod extends DefaultReturn {
-  maxLength: (limit: number) => DefaultReturn & {
-    minWord: (limit: number) => DefaultReturn
+export interface SchemaMinLengthMethod extends SchemaReturn {
+  maxLength: (limit: number) => SchemaReturn & {
+    minWord: (limit: number) => SchemaReturn
   }
-  minWord: (limit: number) => DefaultReturn & {
-    maxLength: (limit: number) => DefaultReturn
-  }
-}
-
-export interface MaxLengthMethod extends DefaultReturn {
-  minLength: (limit: number) => DefaultReturn & {
-    minWord: (limit: number) => DefaultReturn
-  }
-  minWord: (limit: number) => DefaultReturn & {
-    minLength: (limit: number) => DefaultReturn
+  minWord: (limit: number) => SchemaReturn & {
+    maxLength: (limit: number) => SchemaReturn
   }
 }
 
-export interface MinWordMethod extends DefaultReturn {
-  minLength: (limit: number) => DefaultReturn & {
-    maxLength: (limit: number) => DefaultReturn
+export interface SchemaMaxLengthMethod extends SchemaReturn {
+  minLength: (limit: number) => SchemaReturn & {
+    minWord: (limit: number) => SchemaReturn
   }
-  maxLength: (limit: number) => DefaultReturn & {
-    minLength: (limit: number) => DefaultReturn
+  minWord: (limit: number) => SchemaReturn & {
+    minLength: (limit: number) => SchemaReturn
   }
 }
 
-export interface ObjectConfig {
-  error?: ErrorTypes
+export interface SchemaMinWordMethod extends SchemaReturn {
+  minLength: (limit: number) => SchemaReturn & {
+    maxLength: (limit: number) => SchemaReturn
+  }
+  maxLength: (limit: number) => SchemaReturn & {
+    minLength: (limit: number) => SchemaReturn
+  }
 }
 
-export interface DateMethod extends DefaultReturn {
-  min: (dateToCompare: Date) => MinDateMethod
-  max: (dateToCompare: Date) => MaxDateMethod
+export interface SchemaObjectConfig {
+  error?: SchemaErrorTypes
 }
 
-export interface MinDateMethod extends DefaultReturn {
-  max: (dateToCompare: Date) => DefaultReturn
+export interface SchemaDateMethod extends SchemaReturn {
+  min: (dateToCompare: Date) => SchemaMinDateMethod
+  max: (dateToCompare: Date) => SchemaMaxDateMethod
 }
 
-export interface MaxDateMethod extends DefaultReturn {
-  min: (dateToCompare: Date) => DefaultReturn
+export interface SchemaMinDateMethod extends SchemaReturn {
+  max: (dateToCompare: Date) => SchemaReturn
 }
 
-export interface AliasMethod extends DefaultReturn {
-  string: () => StringMethod
-  number: () => NumberMethod
-  boolean: () => DefaultReturn
-  date: (type?: DateTypes) => DateMethod
-  array: () => ArrayMethod
-  equal: (valueToCompare: any) => DefaultReturn
-  object: (schema: ObjectType) => DefaultReturn
+export interface SchemaMaxDateMethod extends SchemaReturn {
+  min: (dateToCompare: Date) => SchemaReturn
 }
 
-export interface ArrayMethod extends DefaultReturn {
-  string: () => StringMethod
-  boolean: () => DefaultReturn
-  number: () => NumberMethod
-  bigInt: () => BigIntMethod
-  date: (type?: DateTypes) => DateMethod
-  object: (schema: ObjectType) => DefaultReturn
+export interface SchemaAliasMethod extends SchemaReturn {
+  string: () => SchemaStringMethod
+  number: () => SchemaNumberMethod
+  boolean: () => SchemaReturn
+  date: (type?: SchemaDateTypes) => SchemaDateMethod
+  array: () => SchemaArrayMethod
+  equal: (valueToCompare: any) => SchemaReturn
+  object: (schema: SchemaObjectType) => SchemaReturn
 }
 
-export type DateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
+export interface SchemaArrayMethod extends SchemaReturn {
+  string: () => SchemaStringMethod
+  boolean: () => SchemaReturn
+  number: () => SchemaNumberMethod
+  bigInt: () => SchemaBigIntMethod
+  date: (type?: SchemaDateTypes) => SchemaDateMethod
+  object: (schema: SchemaObjectType) => SchemaReturn
+}
 
-export type ErrorClass<T extends Error> = new (message?: string) => T
+export type SchemaDateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
 
-export type ErrorTypes = any // ErrorClass
+export type SchemaErrorClass<T extends Error> = new (message?: string) => T
 
-export type MethodTypes =
+export type SchemaErrorTypes = any // ErrorClass
+
+export type SchemaMethodTypes =
   'equal' |
   'notEqual' |
   'oneOf' |
@@ -447,44 +447,44 @@ export type MethodTypes =
   'alias' |
   'nullable'
 
-export interface Method {
-  method: MethodTypes
+export interface SchemaMethod {
+  method: SchemaMethodTypes
   minWord?: number
   maxLength?: number
   minLength?: number
   max?: number | bigint
   min?: number | bigint
-  dateType?: DateTypes
+  dateType?: SchemaDateTypes
   dateToCompare?: Date
-  timeType?: TimeTypes
-  arrayType?: ArrayTypes
+  timeType?: SchemaTimeTypes
+  arrayType?: SchemaArrayTypes
   arrayRules?: any
   valueToCompare?: any
   alias?: string
-  schema?: ObjectType
+  schema?: SchemaObjectType
   uuidVersion?: UUIDVersion
   comparisonItems?: any[]
 }
 
-export type ArrayTypes = 'string' | 'number' | 'bigInt' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, Schema[]>
+export type SchemaArrayTypes = 'string' | 'number' | 'bigInt' | 'boolean' | 'any' | 'date' | 'strict' | 'object' | Record<string, SchemaSetup[]>
 
-export type Methods = Method[]
+export type SchemaMethods = SchemaMethod[]
 
-export type TimeTypes = 'HH:MM' | 'HH:MM:SS' | 'HH:MM:SS.MS'
+export type SchemaTimeTypes = 'HH:MM' | 'HH:MM:SS' | 'HH:MM:SS.MS'
 
-export type ObjectType = Record<string, any>
+export type SchemaObjectType = Record<string, any>
 
-export interface Tests {
+export interface SchemaTests {
   passedAll: boolean
   passed: number
   failed: number
   totalTests: number
-  successes: SuccessTest[]
-  errors: ErrorTest[]
+  successes: SchemaSuccessTest[]
+  errors: SchemaErrorTest[]
   time: string
 }
 
-export interface ErrorTest {
+export interface SchemaErrorTest {
   class?: string
   method?: string
   type: 'invalid param' | 'invalid value' | 'missing value' | 'missing key'
@@ -495,7 +495,7 @@ export interface ErrorTest {
   message: string
 }
 
-export interface SuccessTest {
+export interface SchemaSuccessTest {
   class?: string
   method?: string
   name: string
@@ -504,17 +504,17 @@ export interface SuccessTest {
   received: any
 }
 
-export interface ExecuteValidateMethods {
+export interface SchemaExecuteValidateMethods {
   value: any
   valueName: string
-  methods: Methods
+  methods: SchemaMethods
   resetTests: () => void
-  callbackUpdateTest: (test: Tests) => void
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackUpdateTest: (test: SchemaTests) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }
 
-export interface SetLocation {
+export interface SchemaSetLocation {
   string?: {
     invalidValue?: string
     minWord?: string
@@ -558,7 +558,7 @@ export interface SetLocation {
   notOneOf?: string
 }
 
-export interface InformativeMessage {
+export interface SchemaInformativeMessage {
   string: {
     invalidValue: string
     minWord: string
@@ -602,17 +602,17 @@ export interface InformativeMessage {
   notOneOf: string
 }
 
-export type AnyInformativeMessage = InformativeMessage & Record<string, any>
+export type SchemaAnyInformativeMessage = SchemaInformativeMessage & Record<string, any>
 
-export interface ParamsMethod {
-  callbackMethodBuild: (build: Method) => void
-  callbackDefaultReturnMethods: () => DefaultReturn
+export interface SchemaParamsMethod {
+  callbackMethodBuild: (build: SchemaMethod) => void
+  callbackDefaultReturnMethods: () => SchemaReturn
 }
 
-export interface ValidateMethod {
+export interface SchemaValidateMethod {
   value: any
   valueName: string
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }

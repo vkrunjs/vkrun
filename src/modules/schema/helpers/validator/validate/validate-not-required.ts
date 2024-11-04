@@ -1,4 +1,4 @@
-import { SuccessTest } from '../../../../types'
+import { SchemaSuccessTest } from '../../../../types'
 import { received } from '../../../../utils'
 
 export const validateNotRequired = ({
@@ -8,7 +8,7 @@ export const validateNotRequired = ({
 }: {
   value: any
   valueName: string
-  callbackAddPassed: (success: SuccessTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
 }): void => {
   callbackAddPassed({
     method: 'notRequired',

@@ -1,11 +1,11 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { join } from 'path'
 import { colorizeJSON } from './colorize-json'
 import { sanitizeLogs } from './sanitize-logs'
-import * as util from '../../utils'
-import { Log } from '../../types'
+import { LoggerLog } from '../../types'
+import { dateToString, isArray, isObject } from '../../utils'
 
-export const createLog = (log: Log): void => {
+export const createLog = (log: LoggerLog): void => {
   try {
     const currentDate = new Date()
     const year = currentDate.getFullYear()
@@ -21,22 +21,22 @@ export const createLog = (log: Log): void => {
 
     const fileName = `${hour}00-${nexHour}00.${log.config.extension}`
 
-    if (!fs.existsSync(log.config.path)) {
-      fs.mkdirSync(log.config.path, { recursive: true })
+    if (!existsSync(log.config.path)) {
+      mkdirSync(log.config.path, { recursive: true })
     }
 
-    const logFolderPath = path.join(log.config.path, folderName)
-    const logFilePath = path.join(logFolderPath, fileName)
+    const logFolderPath = join(log.config.path, folderName)
+    const logFilePath = join(logFolderPath, fileName)
 
-    if (!fs.existsSync(logFolderPath)) {
-      fs.mkdirSync(logFolderPath)
+    if (!existsSync(logFolderPath)) {
+      mkdirSync(logFolderPath)
     }
 
     const getDateToString = (date: Date): string => {
       if (log.config.dateType === 'DD-MM-YYYY') {
-        return util.dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
+        return dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
       }
-      return util.dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
+      return dateToString(currentDate, 'MM/DD/YYYY HH:MM:SS')
     }
 
     const logMessage = (): string | object => {
@@ -46,7 +46,7 @@ export const createLog = (log: Log): void => {
         Object.getOwnPropertyNames(log.message).forEach(prop => {
           if (prop !== 'constructor' && prop !== 'toString') {
             const value = log.message[prop]
-            if (util.isObject(value) || util.isArray(value)) {
+            if (isObject(value) || isArray(value)) {
               error[prop] = JSON.stringify(value)
             } else {
               error[prop] = String(value)
@@ -73,8 +73,8 @@ export const createLog = (log: Log): void => {
       if (log.config.extension === 'json') {
         let logs: any[] = []
 
-        if (fs.existsSync(logFilePath)) {
-          const fileContent = fs.readFileSync(logFilePath, 'utf-8')
+        if (existsSync(logFilePath)) {
+          const fileContent = readFileSync(logFilePath, 'utf-8')
           logs = JSON.parse(fileContent)
         }
 
@@ -85,10 +85,10 @@ export const createLog = (log: Log): void => {
         } else {
           formattedLogs = JSON.stringify(logs)
         }
-        fs.writeFileSync(logFilePath, formattedLogs)
+        writeFileSync(logFilePath, formattedLogs)
       } else {
-        if (!fs.existsSync(logFilePath)) {
-          fs.writeFileSync(logFilePath, '')
+        if (!existsSync(logFilePath)) {
+          writeFileSync(logFilePath, '')
         }
 
         let formattedLog
@@ -97,7 +97,7 @@ export const createLog = (log: Log): void => {
         } else {
           formattedLog = JSON.stringify(logData) + '\n'
         }
-        fs.appendFileSync(logFilePath, formattedLog)
+        appendFileSync(logFilePath, formattedLog)
       }
     }
 

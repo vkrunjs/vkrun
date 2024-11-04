@@ -1,6 +1,6 @@
 import { informativeMessage } from '../../location'
-import * as type from '../../../../types'
 import { received } from '../../../../utils'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 
 export const validateNullable = ({
   value,
@@ -10,8 +10,8 @@ export const validateNullable = ({
 }: {
   value: any
   valueName: string
-  callbackAddPassed: (success: type.SuccessTest) => void
-  callbackAddFailed: (error: type.ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   if (value === undefined) {
     const message = {

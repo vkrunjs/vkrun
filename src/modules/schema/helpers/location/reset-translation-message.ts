@@ -1,8 +1,8 @@
+import { SchemaInformativeMessage } from '../../../types'
 import { informativeMessage } from './informative-message'
-import * as type from '../../../types'
 
 export const resetTranslationMessage = (): void => {
-  const newInformativeMessage: type.InformativeMessage = {
+  const newInformativeMessage: SchemaInformativeMessage = {
     string: {
       invalidValue: '[valueName] must be a string type!',
       minWord: '[valueName] must have at least [minWord] words!',

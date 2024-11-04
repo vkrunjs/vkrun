@@ -1,5 +1,5 @@
+import { RouterFile } from '../../../../types'
 import { parseMultipartFormData } from '../parse-multipart-form-data'
-import * as type from '../../../../types'
 
 describe('Parse Data - Parse Multipart Form Data', () => {
   it('Should parse body and return an object with the data if the body is not empty', () => {
@@ -86,7 +86,7 @@ describe('Parse Data - Parse Multipart Form Data', () => {
 
     const sut = (): {
       body: object
-      files: type.File[]
+      files: RouterFile[]
     } => parseMultipartFormData(request, false)
 
     expect(sut).toThrow('Boundary not found')

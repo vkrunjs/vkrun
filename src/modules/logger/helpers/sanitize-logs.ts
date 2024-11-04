@@ -1,9 +1,9 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import { ConfigLogger } from '../../types'
+import { existsSync, readdirSync, rmSync, statSync, unlinkSync } from 'fs'
+import { join } from 'path'
+import { LoggerConfig } from '../../types'
 
-export const sanitizeLogs = (config: ConfigLogger): void => {
-  const logFolders = fs.readdirSync(config.path)
+export const sanitizeLogs = (config: LoggerConfig): void => {
+  const logFolders = readdirSync(config.path)
   const currentDate = new Date()
 
   logFolders.forEach(folderName => {
@@ -13,15 +13,15 @@ export const sanitizeLogs = (config: ConfigLogger): void => {
       expirationDate.setHours(0, 0, 0, 0)
 
       if (folderDate < expirationDate) {
-        fs.rmSync(path.join(config.path, folderName), { recursive: true })
+        rmSync(join(config.path, folderName), { recursive: true })
       }
     } else {
-      const filePath = path.join(config.path, folderName)
-      if (fs.existsSync(filePath)) {
-        if (fs.statSync(filePath).isFile()) {
-          fs.unlinkSync(filePath)
+      const filePath = join(config.path, folderName)
+      if (existsSync(filePath)) {
+        if (statSync(filePath).isFile()) {
+          unlinkSync(filePath)
         } else {
-          fs.rmSync(filePath, { recursive: true })
+          rmSync(filePath, { recursive: true })
         }
       }
     }
@@ -33,7 +33,7 @@ const isValidDateFolder = (folderName: string): boolean => {
   return dateRegex.test(folderName)
 }
 
-const getDateFromFolderName = (folderName: string, config: ConfigLogger): Date => {
+const getDateFromFolderName = (folderName: string, config: LoggerConfig): Date => {
   let [month, day, year] = folderName.split('-').map(Number)
   if (config.dateType === 'DD-MM-YYYY') {
     [day, month, year] = folderName.split('-').map(Number)

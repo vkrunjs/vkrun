@@ -1,8 +1,8 @@
 import * as validate from './validate'
 import { hasMethod } from '../has-method'
-import * as type from '../../../types'
+import { SchemaExecuteValidateMethods, SchemaMethod } from '../../../types'
 
-export const validator = (params: type.ExecuteValidateMethods): void => {
+export const validator = (params: SchemaExecuteValidateMethods): void => {
   params.resetTests()
   const validateMethodParams: any = params
 
@@ -76,7 +76,7 @@ export const validator = (params: type.ExecuteValidateMethods): void => {
   }
 
   if (hasMethod(validateMethodParams.methods, 'alias')) {
-    const method = params.methods.find((item: type.Method) => item.method === 'alias')
+    const method = params.methods.find((item: SchemaMethod) => item.method === 'alias')
     if (method) validateMethodParams.valueName = method.alias
   }
 

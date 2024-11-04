@@ -1,6 +1,6 @@
-import * as type from '../../../../types'
+import { SchemaNumberFloatMethod, SchemaParamsMethod } from '../../../../types'
 
-export const numberFloatMethod = (params: type.ParamsMethod): type.NumberFloatMethod => {
+export const numberFloatMethod = (params: SchemaParamsMethod): SchemaNumberFloatMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'float' })
 

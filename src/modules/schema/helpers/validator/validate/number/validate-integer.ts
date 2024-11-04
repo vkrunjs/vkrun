@@ -1,6 +1,6 @@
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
+import { isInteger, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateIntegerNumber = ({
   value,
@@ -12,8 +12,8 @@ export const validateIntegerNumber = ({
   value: any
   valueName: string
   indexArray: number
-  callbackAddPassed: (success: type.SuccessTest) => void
-  callbackAddFailed: (error: type.ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in integer type' : 'integer type',
@@ -22,7 +22,7 @@ export const validateIntegerNumber = ({
       .replace('[valueName]', valueName)
   }
 
-  if (util.isInteger(value)) {
+  if (isInteger(value)) {
     callbackAddPassed({
       method: 'integer',
       name: valueName,
@@ -37,7 +37,7 @@ export const validateIntegerNumber = ({
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

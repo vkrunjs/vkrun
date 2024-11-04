@@ -1,8 +1,12 @@
-import v from '../../../index'
 import axios from 'axios'
 import { Logger } from '..'
 import { getLog } from '../helpers/get-log'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'
+import { App } from '../../app'
+import { Router } from '../../router'
+import { Request, Response } from '../../types'
+import { parseData } from '../../parse-data'
+import { isNumber, isUUID } from '../../utils'
 
 describe('Logger Middleware - end to end testing using axios and app server', () => {
   let server: any
@@ -19,15 +23,15 @@ describe('Logger Middleware - end to end testing using axios and app server', ()
   })
 
   it('Should create a log with middleware', async () => {
-    const app = v.App()
+    const app = App()
     const logger = Logger({ level: 'http' })
-    const router = v.Router()
+    const router = Router()
 
-    router.post('/:string/:integer/query', (_request: v.Request, response: v.Response) => {
+    router.post('/:string/:integer/query', (_request: Request, response: Response) => {
       response.status(200).json({ result: 'ok' })
     })
 
-    app.use(v.parseData())
+    app.use(parseData())
     app.use(logger.middleware())
     app.use(router)
 
@@ -57,13 +61,13 @@ describe('Logger Middleware - end to end testing using axios and app server', ()
     expect(receivedLog.date).toEqual(`${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}`)
 
     const request = receivedLog.message.request
-    expect(v.isUUID(request.requestId)).toBeTruthy()
+    expect(isUUID(request.requestId)).toBeTruthy()
     expect(request.url).toEqual('/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z')
     expect(request.method).toEqual('POST')
 
     const socket = request.socket
     expect(socket.remoteAddress).toEqual('::1')
-    expect(v.isNumber(socket.remotePort)).toBeTruthy()
+    expect(isNumber(socket.remotePort)).toBeTruthy()
 
     const header = request.header
     expect(header.accept).toEqual('application/json, text/plain, */*')
@@ -96,7 +100,7 @@ describe('Logger Middleware - end to end testing using axios and app server', ()
     const response = receivedLog.message.response
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.body).toEqual({ result: 'ok' })
   })
 })

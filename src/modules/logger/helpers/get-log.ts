@@ -1,7 +1,7 @@
-import fs from 'fs'
-import { LogExtension } from '../../types'
+import { readFileSync } from 'fs'
+import { LoggerLogExtension } from '../../types'
 
-export const getLog = (format: 'default' | 'indented', extension: LogExtension): {
+export const getLog = (format: 'default' | 'indented', extension: LoggerLogExtension): {
   year: number
   month: string
   day: string
@@ -24,9 +24,9 @@ export const getLog = (format: 'default' | 'indented', extension: LogExtension):
   const logFileName = `${hour}00-${nextHour}00.${extension}`
   const logFilePath = `${logFolderPath}/${logFileName}`
 
-  let content = fs.readFileSync(logFilePath, 'utf-8').split(/\r?\n/).slice(0, -1)
+  let content = readFileSync(logFilePath, 'utf-8').split(/\r?\n/).slice(0, -1)
   if (format === 'indented') {
-    const contentJSON = JSON.parse(fs.readFileSync(logFilePath, 'utf-8'))
+    const contentJSON = JSON.parse(readFileSync(logFilePath, 'utf-8'))
     content = contentJSON
   }
 

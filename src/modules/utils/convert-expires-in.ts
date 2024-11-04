@@ -1,9 +1,11 @@
-import * as util from '../utils'
+import { isEmpty } from './is-empty'
+import { isNumber } from './is-number'
+import { isString } from './is-string'
 
 export const convertExpiresIn = (expiresIn: string | number, result: 'MS' | 'S' = 'MS'): number => {
-  if (util.isString(expiresIn) && util.isEmpty(expiresIn)) {
+  if (isString(expiresIn) && isEmpty(expiresIn)) {
     return 0
-  } else if (util.isNumber(expiresIn)) {
+  } else if (isNumber(expiresIn)) {
     return result === 'MS' ? expiresIn * 1000 : expiresIn
   }
 

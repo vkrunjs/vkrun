@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { received } from '../../../../../utils'
 
 export const validateMinWord = ({
@@ -14,8 +14,8 @@ export const validateMinWord = ({
   valueName: string
   minWord: number
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const trimmedValue = String(value).trim()
   const words = trimmedValue.split(/\s+/)

@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { existsSync } from 'fs'
 import { Logger, loggerSanitizeInterval } from '../..'
 import { getLog } from '../get-log'
 import { removeLogsFolder } from '../remove-logs-folder'
@@ -17,7 +17,7 @@ describe('Create log', () => {
     }
 
     const logFolderPath = 'logs'
-    const logFileExists = fs.existsSync(logFolderPath)
+    const logFileExists = existsSync(logFolderPath)
     clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
@@ -42,7 +42,7 @@ describe('Create log', () => {
     const logFolderPath = `logs/${month}-${day}-${year}`
     const logFileName = `${hour}00-${nextHour}00.log`
     const logFilePath = `${logFolderPath}/${logFileName}`
-    const logFileExists = fs.existsSync(logFilePath)
+    const logFileExists = existsSync(logFilePath)
     clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
@@ -362,7 +362,7 @@ describe('Create log', () => {
     const logFolderPath = `logs/${day}-${month}-${year}`
     const logFileName = `${hour}00-${nextHour}00.log`
     const logFilePath = `${logFolderPath}/${logFileName}`
-    const logFileExists = fs.existsSync(logFilePath)
+    const logFileExists = existsSync(logFilePath)
     clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)
@@ -388,7 +388,7 @@ describe('Create log', () => {
     const logFolderPath = `logs/${month}-${day}-${year}`
     const logFileName = `${hour}00-${nextHour}00.json`
     const logFilePath = `${logFolderPath}/${logFileName}`
-    const logFileExists = fs.existsSync(logFilePath)
+    const logFileExists = existsSync(logFilePath)
     clearInterval(loggerSanitizeInterval)
 
     expect(logFileExists).toEqual(true)

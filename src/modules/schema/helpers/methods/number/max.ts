@@ -1,6 +1,6 @@
-import * as type from '../../../../types'
+import { SchemaNumberMaxMethod, SchemaParamsMethod } from '../../../../types'
 
-export const numberMaxMethod = (value: number, params: type.ParamsMethod): type.NumberMaxMethod => {
+export const numberMaxMethod = (value: number, params: SchemaParamsMethod): SchemaNumberMaxMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'max', max: value })
 

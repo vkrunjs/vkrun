@@ -1,6 +1,6 @@
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
+import { isNumber, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateNumber = ({
   value,
@@ -12,8 +12,8 @@ export const validateNumber = ({
   value: any
   valueName: string
   indexArray: number
-  callbackAddPassed: (success: type.SuccessTest) => void
-  callbackAddFailed: (error: type.ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in number type' : 'number type',
@@ -22,7 +22,7 @@ export const validateNumber = ({
       .replace('[valueName]', valueName)
   }
 
-  if (util.isNumber(value)) {
+  if (isNumber(value)) {
     callbackAddPassed({
       method: 'number',
       name: valueName,
@@ -37,7 +37,7 @@ export const validateNumber = ({
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

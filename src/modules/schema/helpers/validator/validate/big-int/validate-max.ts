@@ -1,9 +1,9 @@
+import { SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateMaxBigInt = (
-  params: type.ValidateMethod & {
+  params: SchemaValidateMethod & {
     max: bigint
   }
 ): void => {
@@ -22,11 +22,11 @@ export const validateMaxBigInt = (
       : 'value less than or equal to the reference',
     error: informativeMessage.bigInt.max
       .replace('[valueName]', valueName)
-      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
-      .replace('[max]', util.isBigInt(max) ? `${max}n` : String(max))
+      .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
+      .replace('[max]', isBigInt(max) ? `${max}n` : String(max))
   }
 
-  if (util.isBigInt(value) && value <= max) {
+  if (isBigInt(value) && value <= max) {
     callbackAddPassed({
       method: 'max',
       name: valueName,
@@ -41,7 +41,7 @@ export const validateMaxBigInt = (
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

@@ -1,9 +1,13 @@
-import v from '../../../index'
 import * as http from 'http'
 import path from 'path'
 import fs from 'fs'
 import FormData from 'form-data'
 import axios from 'axios'
+import { isString, isUUID } from '../../utils'
+import { App } from '../../app'
+import { parseData } from '..'
+import { Router } from '../../router'
+import { Request, Response } from '../../types'
 
 describe('Parse Data - end to end testing using axios and app server', () => {
   let server: any
@@ -18,8 +22,8 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   const validateHeaderSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(4)
-    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(v.isString(response.headers.date)).toBeTruthy()
+    expect(isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual('')
@@ -28,11 +32,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse query url', async () => {
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.get('/query', (request: v.Request, response: v.Response) => {
+    router.get('/query', (request: Request, response: Response) => {
       requestQuery = request.query
       response.status(200).end()
     })
@@ -60,11 +64,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse params url', async () => {
     let requestParams
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.get('/params/:string/:integer/:float/:boolean/:date', (request: v.Request, response: v.Response) => {
+    router.get('/params/:string/:integer/:float/:boolean/:date', (request: Request, response: Response) => {
       requestParams = request.params
       response.status(200).end()
     })
@@ -91,11 +95,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the JSON body in the POST method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -128,11 +132,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the JSON body in the PUT method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.put('/body-put', (request: v.Request, response: v.Response) => {
+    router.put('/body-put', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -161,11 +165,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the JSON body in the PATCH method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.patch('/body-patch', (request: v.Request, response: v.Response) => {
+    router.patch('/body-patch', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -194,11 +198,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the urlencoded body in the POST method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -229,11 +233,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the urlencoded body in the PUT method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.put('/body-put', (request: v.Request, response: v.Response) => {
+    router.put('/body-put', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -264,11 +268,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the urlencoded body in the PATCH method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.patch('/body-patch', (request: v.Request, response: v.Response) => {
+    router.patch('/body-patch', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -300,11 +304,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     let requestBody: any
     let requestFiles: any
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       requestFiles = request.files
       response.status(200).end()
@@ -363,11 +367,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the form data body in the PUT method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.put('/body-put', (request: v.Request, response: v.Response) => {
+    router.put('/body-put', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -403,11 +407,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the form data body in the PATCH method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.patch('/body-patch', (request: v.Request, response: v.Response) => {
+    router.patch('/body-patch', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -443,11 +447,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to use a string body in the POST, PUT, or PATCH method when not providing a content type supported by the data analysis module', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -478,11 +482,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse a string and parse it if there is SQL when the content type is JSON', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -505,11 +509,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse a string and parse it if there is SQL when the content type is urlencoded', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -534,11 +538,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse a string and parse it if there is SQL when the content type is form data', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -564,11 +568,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse a string and parse it if there is SQL with others content types', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -593,11 +597,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the query if there is SQL', async () => {
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.get('/query', (request: v.Request, response: v.Response) => {
+    router.get('/query', (request: Request, response: Response) => {
       requestQuery = request.query
       response.status(200).end()
     })
@@ -619,11 +623,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to parse the params if there is SQL', async () => {
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.get('/:sql', (request: v.Request, response: v.Response) => {
+    router.get('/:sql', (request: Request, response: Response) => {
       requestQuery = request.params
       response.status(200).end()
     })
@@ -652,7 +656,7 @@ describe('Parse Data - end to end testing using axios and app server', () => {
 
     const server = http.createServer((_request: any, response: any) => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      v.parseData().handle(requestMock, response, () => {})
+      parseData().handle(requestMock, response, () => {})
     })
     server.listen(3983)
 
@@ -671,11 +675,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to return undefined body if request body is empty and content type is multipart/form-data', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -699,8 +703,8 @@ describe('Parse Data - end to end testing using axios and app server', () => {
   it('Should be able to return string json body if all config parse data is false', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({
+    const app = App()
+    app.use(parseData({
       urlencoded: false,
       params: false,
       query: false,
@@ -708,9 +712,9 @@ describe('Parse Data - end to end testing using axios and app server', () => {
       formData: false,
       escapeSQL: false
     }))
-    const router = v.Router()
+    const router = Router()
 
-    router.post('/', (request: v.Request, response: v.Response) => {
+    router.post('/', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -746,11 +750,11 @@ describe('Parse Data - end to end testing using axios and app server', () => {
     let requestParams
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.get('/parse/:param1/:param2', (request: v.Request, response: v.Response) => {
+    router.get('/parse/:param1/:param2', (request: Request, response: Response) => {
       requestQuery = request.query
       requestParams = request.params
       response.status(200).end()

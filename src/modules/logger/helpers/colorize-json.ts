@@ -1,6 +1,6 @@
-import { Colors, PrintColors } from '../../types'
+import { LoggerColors, LoggerPrintColors } from '../../types'
 
-export const colorizeJSON = (jsonString: string, colors: Colors, printColors: PrintColors): string => {
+export const colorizeJSON = (jsonString: string, colors: LoggerColors, printColors: LoggerPrintColors): string => {
   // change color json key
   jsonString = jsonString.replace(/"(\w+)"\s*:/g, `"${colors[printColors.key]}$1${colors.reset}":`)
 

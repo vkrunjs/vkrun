@@ -1,6 +1,6 @@
-import { ConfigLogger } from '../../types'
+import { LoggerConfig } from '../../types'
 
-export const configLogger = (): ConfigLogger => {
+export const configLogger = (): LoggerConfig => {
   return {
     level: 'silly',
     format: 'default',

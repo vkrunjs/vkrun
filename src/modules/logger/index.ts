@@ -1,10 +1,10 @@
+import { NextFunction, Request, Response, LoggerSetConfig, VkrunLogger } from '../types'
 import { configLogger } from './helpers/config-logger'
 import { createLog } from './helpers/create-log'
-import * as type from '../types'
 
 export let loggerSanitizeInterval: NodeJS.Timeout
 
-export const VkrunLogger = (configParams: type.SetConfigLogger): type.VkrunLogger => {
+export const LoggerSetup = (configParams: LoggerSetConfig): VkrunLogger => {
   const config = configLogger()
 
   /* eslint-disable */
@@ -27,8 +27,8 @@ export const VkrunLogger = (configParams: type.SetConfigLogger): type.VkrunLogge
   }
   /* eslint-enable */
 
-  const middleware = (): (_request: type.Request, response: type.Response, next: type.NextFunction) => void => {
-    return (_request: type.Request, response: type.Response, next: type.NextFunction) => {
+  const middleware = (): (_request: Request, response: Response, next: NextFunction) => void => {
+    return (_request: Request, response: Response, next: NextFunction) => {
       response.on('finish', () => {
         createLog({
           level: 'http',
@@ -82,6 +82,6 @@ export const VkrunLogger = (configParams: type.SetConfigLogger): type.VkrunLogge
   }
 }
 
-export const Logger = (configParams: type.SetConfigLogger): type.VkrunLogger => {
-  return VkrunLogger(configParams)
+export const Logger = (configParams: LoggerSetConfig): VkrunLogger => {
+  return LoggerSetup(configParams)
 }

@@ -1,23 +1,25 @@
 import axios from 'axios'
-import v from '../../../index'
-import path from 'path'
+import { join } from 'path'
+import { isString, isUUID } from '../../utils'
+import { App } from '../../app'
+import { serveStaticFile } from '..'
 
 describe('Serve Static File - end to end testing using axios and app server', () => {
   const validateSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(response.statusText).toEqual('OK')
     expect(Object.keys(response.headers).length).toEqual(5)
-    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(v.isString(response.headers.date)).toBeTruthy()
+    expect(isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('9')
     expect(response.data).toEqual('Text file')
   }
 
   it('Should be able to serve static file', async () => {
-    const app = v.App()
-    const basePath = path.join(__dirname, 'files')
-    app.get('/static/*', v.serveStaticFile(basePath))
+    const app = App()
+    const basePath = join(__dirname, 'files')
+    app.get('/static/*', serveStaticFile(basePath))
 
     app.server().listen(3199)
 
@@ -29,9 +31,9 @@ describe('Serve Static File - end to end testing using axios and app server', ()
   })
 
   it('Should return 404 for a non-existent file', async () => {
-    const app = v.App()
-    const basePath = path.join(__dirname, 'files')
-    app.get('/static/*', v.serveStaticFile(basePath))
+    const app = App()
+    const basePath = join(__dirname, 'files')
+    app.get('/static/*', serveStaticFile(basePath))
 
     app.server().listen(3198)
 
@@ -44,9 +46,9 @@ describe('Serve Static File - end to end testing using axios and app server', ()
   })
 
   it('Should return 404 for an error parsing the request URL', async () => {
-    const app = v.App()
-    const basePath = path.join(__dirname, 'files')
-    app.get('/static/*', v.serveStaticFile(basePath))
+    const app = App()
+    const basePath = join(__dirname, 'files')
+    app.get('/static/*', serveStaticFile(basePath))
 
     app.server().listen(3197)
 

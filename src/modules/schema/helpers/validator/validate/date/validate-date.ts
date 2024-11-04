@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../../location'
-import { DateTypes, ErrorTest, SuccessTest } from '../../../../../types'
+import { SchemaDateTypes, SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { received } from '../../../../../utils'
 
 export const validateDate = ({
@@ -12,10 +12,10 @@ export const validateDate = ({
 }: {
   value: any
   valueName: string
-  type?: DateTypes
+  type?: SchemaDateTypes
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   let year: number, month: number, day: number
   let formattedDate: Date

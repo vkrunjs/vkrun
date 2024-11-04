@@ -1,4 +1,4 @@
-import * as type from '../types'
+import { VkrunMime } from '../types'
 
 const mimeTypes: Record<string, string> = {
   ez: 'application/andrew-inset',
@@ -903,7 +903,7 @@ const mimeTypes: Record<string, string> = {
   ice: 'x-conference/x-cooltalk'
 }
 
-export const mime: type.VkrunMime = {
+export const mime: VkrunMime = {
   type: (extension: string): string | null => {
     const type = mimeTypes[extension]
     return type || null

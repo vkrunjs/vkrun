@@ -1,9 +1,9 @@
+import { SchemaValidateMethod } from '../../../../../types'
+import { isNumber, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateMaxNumber = (
-  params: type.ValidateMethod & {
+  params: SchemaValidateMethod & {
     max: number
   }
 ): void => {
@@ -26,7 +26,7 @@ export const validateMaxNumber = (
       .replace('[max]', String(max))
   }
 
-  if (util.isNumber(value) && value <= max) {
+  if (isNumber(value) && value <= max) {
     callbackAddPassed({
       method: 'max',
       name: valueName,
@@ -41,7 +41,7 @@ export const validateMaxNumber = (
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

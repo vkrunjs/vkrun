@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { dateToString, received } from '../../../../../utils'
 
 export const validateMinDate = ({
@@ -14,8 +14,8 @@ export const validateMinDate = ({
   valueName: string
   dateToCompare: Date
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const date = new Date(String(value))
   const isInvalidDate = isNaN(date.getTime())

@@ -1,8 +1,8 @@
 import { locationConfig } from './location-config'
 import { informativeMessage } from './informative-message'
-import * as type from '../../../types'
+import { SchemaAnyInformativeMessage, SchemaSetLocation } from '../../../types'
 
-export const setLocation = (newMessages: type.SetLocation): void => {
+export const setLocation = (newMessages: SchemaSetLocation): void => {
   const isString = (value: string | undefined, key: string): boolean => {
     if (typeof value === 'string') {
       return true
@@ -15,7 +15,7 @@ export const setLocation = (newMessages: type.SetLocation): void => {
 
   const setValue = (keys: string[], value: string | undefined): void => {
     const keyPath = keys.join('.')
-    let currentObject: type.AnyInformativeMessage = informativeMessage
+    let currentObject: SchemaAnyInformativeMessage = informativeMessage
 
     if (isString(value, keyPath)) {
       for (let i = 0; i < keys.length - 1; i++) {

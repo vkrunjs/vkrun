@@ -1,14 +1,42 @@
-import * as helper from './helpers'
-import { setLocation } from './helpers'
+import { hasMethod, setLocation, throwError, validator } from './helpers'
 import { numberMethod } from './helpers/methods/number'
 import { bigIntMethod } from './helpers/methods/big-int'
-import * as type from '../types'
+import {
+  VkrunSchema,
+  SchemaAliasMethod,
+  SchemaArrayMethod,
+  SchemaBigIntMethod,
+  SchemaDateMethod,
+  SchemaDateTypes,
+  SchemaReturn,
+  SchemaEmailMethod,
+  SchemaErrorTest,
+  SchemaErrorTypes,
+  SchemaMaxDateMethod,
+  SchemaMaxLengthMethod,
+  SchemaMethod,
+  SchemaMethods,
+  SchemaMinDateMethod,
+  SchemaMinLengthMethod,
+  SchemaMinWordMethod,
+  SchemaNotRequiredMethod,
+  SchemaNullableMethod,
+  SchemaNumberMethod,
+  SchemaObjectType,
+  SchemaStringMethod,
+  SchemaSuccessTest,
+  SchemaTests,
+  SchemaTimeMethod,
+  SchemaTimeTypes,
+  SchemaUUIDMethod,
+  UUIDVersion
+} from '../types'
 
-export class Schema implements type.ISchema {
+export class SchemaSetup implements VkrunSchema {
   private value: any
   private valueName: any
-  private readonly methods: type.Methods
-  private tests: type.Tests
+  private readonly methods: SchemaMethods
+  private tests: SchemaTests
 
   constructor () {
     this.valueName = undefined
@@ -24,20 +52,20 @@ export class Schema implements type.ISchema {
     }
   }
 
-  string (): type.StringMethod {
+  string (): SchemaStringMethod {
     this.methodBuild({ method: 'string' })
 
-    const email = (): type.EmailMethod => {
+    const email = (): SchemaEmailMethod => {
       this.methodBuild({ method: 'email' })
       return this.defaultReturnMethods()
     }
 
-    const UUID = (version?: type.UUIDVersion): type.UUIDMethod => {
+    const UUID = (version?: UUIDVersion): SchemaUUIDMethod => {
       this.methodBuild({ method: 'UUID', uuidVersion: version })
       return this.defaultReturnMethods()
     }
 
-    const time = (type: type.TimeTypes): type.TimeMethod => {
+    const time = (type: SchemaTimeTypes): SchemaTimeMethod => {
       if (!['HH:MM', 'HH:MM:SS', 'HH:MM:SS.MS'].includes(type)) {
         console.error('vkrun-schema: time method received invalid parameter!')
         throw Error('vkrun-schema: time method received invalid parameter!')
@@ -47,8 +75,8 @@ export class Schema implements type.ISchema {
       return this.defaultReturnMethods()
     }
 
-    const minLength = (limit: number): type.MinLengthMethod => {
-      if (helper.hasMethod(this.methods, 'minLength')) {
+    const minLength = (limit: number): SchemaMinLengthMethod => {
+      if (hasMethod(this.methods, 'minLength')) {
         console.error('vkrun-schema: minLength method has already been called!')
         throw Error('minLength method has already been called!')
       }
@@ -62,8 +90,8 @@ export class Schema implements type.ISchema {
       return { maxLength, minWord, ...this.defaultReturnMethods() }
     }
 
-    const maxLength = (limit: number): type.MaxLengthMethod => {
-      if (helper.hasMethod(this.methods, 'maxLength')) {
+    const maxLength = (limit: number): SchemaMaxLengthMethod => {
+      if (hasMethod(this.methods, 'maxLength')) {
         console.error('vkrun-schema: maxLength method has already been called!')
         throw Error('maxLength method has already been called!')
       }
@@ -77,8 +105,8 @@ export class Schema implements type.ISchema {
       return { minLength, minWord, ...this.defaultReturnMethods() }
     }
 
-    const minWord = (limit: number): type.MinWordMethod => {
-      if (helper.hasMethod(this.methods, 'minWord')) {
+    const minWord = (limit: number): SchemaMinWordMethod => {
+      if (hasMethod(this.methods, 'minWord')) {
         console.error('vkrun-schema: minWord method has already been called!')
         throw Error('vkrun-schema: minWord method has already been called!')
       }
@@ -103,30 +131,30 @@ export class Schema implements type.ISchema {
     }
   }
 
-  number (): type.NumberMethod {
+  number (): SchemaNumberMethod {
     return numberMethod({
-      callbackMethodBuild: (build: type.Method) => this.methodBuild(build),
+      callbackMethodBuild: (build: SchemaMethod) => this.methodBuild(build),
       callbackDefaultReturnMethods: () => this.defaultReturnMethods()
     })
   }
 
-  bigInt (): type.BigIntMethod {
+  bigInt (): SchemaBigIntMethod {
     return bigIntMethod({
-      callbackMethodBuild: (build: type.Method) => this.methodBuild(build),
+      callbackMethodBuild: (build: SchemaMethod) => this.methodBuild(build),
       callbackDefaultReturnMethods: () => this.defaultReturnMethods()
     })
   }
 
-  boolean (): type.DefaultReturn {
+  boolean (): SchemaReturn {
     this.methodBuild({ method: 'boolean' })
     return this.defaultReturnMethods()
   }
 
-  notRequired (): type.NotRequiredMethod {
+  notRequired (): SchemaNotRequiredMethod {
     this.methodBuild({ method: 'notRequired' })
     return {
-      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => { this.throw(value, valueName, ClassError) },
-      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
+      throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => { this.throw(value, valueName, ClassError) },
+      throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
       validate: (value: any) => this.validate(value),
       validateAsync: async (value: any) => await this.validateAsync(value),
       test: (value: any, valueName: string) => this.test(value, valueName),
@@ -134,11 +162,11 @@ export class Schema implements type.ISchema {
     }
   }
 
-  nullable (): type.NullableMethod {
+  nullable (): SchemaNullableMethod {
     this.methodBuild({ method: 'nullable' })
     return {
-      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => { this.throw(value, valueName, ClassError) },
-      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
+      throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => { this.throw(value, valueName, ClassError) },
+      throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
       validate: (value: any) => this.validate(value),
       validateAsync: async (value: any) => await this.validateAsync(value),
       test: (value: any, valueName: string) => this.test(value, valueName),
@@ -146,7 +174,7 @@ export class Schema implements type.ISchema {
     }
   }
 
-  date (type?: type.DateTypes): type.DateMethod {
+  date (type?: SchemaDateTypes): SchemaDateMethod {
     const dateTypes = [
       'ISO8601',
       'DD/MM/YYYY',
@@ -165,13 +193,13 @@ export class Schema implements type.ISchema {
 
     this.methodBuild({ method: 'date', dateType: type })
 
-    const min = (dateToCompare: Date): type.MinDateMethod => {
+    const min = (dateToCompare: Date): SchemaMinDateMethod => {
       if (!(dateToCompare instanceof Date)) {
         console.error('vkrun-schema: min method received invalid parameter!')
         throw Error('vkrun-schema: min method received invalid parameter!')
       }
 
-      if (helper.hasMethod(this.methods, 'min')) {
+      if (hasMethod(this.methods, 'min')) {
         console.error('vkrun-schema: min method has already been called!')
         throw Error('min method has already been called!')
       }
@@ -180,13 +208,13 @@ export class Schema implements type.ISchema {
       return { max, ...this.defaultReturnMethods() }
     }
 
-    const max = (dateToCompare: Date): type.MaxDateMethod => {
+    const max = (dateToCompare: Date): SchemaMaxDateMethod => {
       if (!(dateToCompare instanceof Date)) {
         console.error('vkrun-schema: max method received invalid parameter!')
         throw Error('vkrun-schema: max method received invalid parameter!')
       }
 
-      if (helper.hasMethod(this.methods, 'max')) {
+      if (hasMethod(this.methods, 'max')) {
         console.error('vkrun-schema: max method has already been called!')
         throw Error('max method has already been called!')
       }
@@ -198,27 +226,27 @@ export class Schema implements type.ISchema {
     return { min, max, ...this.defaultReturnMethods() }
   }
 
-  equal (valueToCompare: any): type.DefaultReturn {
+  equal (valueToCompare: any): SchemaReturn {
     this.methodBuild({ method: 'equal', valueToCompare })
     return this.defaultReturnMethods()
   }
 
-  notEqual (valueToCompare: any): type.DefaultReturn {
+  notEqual (valueToCompare: any): SchemaReturn {
     this.methodBuild({ method: 'notEqual', valueToCompare })
     return this.defaultReturnMethods()
   }
 
-  oneOf (comparisonItems: any[]): type.DefaultReturn {
+  oneOf (comparisonItems: any[]): SchemaReturn {
     this.methodBuild({ method: 'oneOf', comparisonItems })
     return this.defaultReturnMethods()
   }
 
-  notOneOf (comparisonItems: any[]): type.DefaultReturn {
+  notOneOf (comparisonItems: any[]): SchemaReturn {
     this.methodBuild({ method: 'notOneOf', comparisonItems })
     return this.defaultReturnMethods()
   }
 
-  alias (valueName: string): type.AliasMethod {
+  alias (valueName: string): SchemaAliasMethod {
     if (typeof valueName !== 'string') {
       console.error('vkrun-schema: alias method received invalid parameter!')
       throw Error('vkrun-schema: alias method received invalid parameter!')
@@ -229,15 +257,15 @@ export class Schema implements type.ISchema {
       string: () => this.string(),
       number: () => this.number(),
       boolean: () => this.boolean(),
-      date: (type?: type.DateTypes) => this.date(type),
+      date: (type?: SchemaDateTypes) => this.date(type),
       array: () => this.array(),
       equal: (valueToCompare: any) => this.equal(valueToCompare),
-      object: (schema: type.ObjectType) => this.object(schema),
+      object: (schema: SchemaObjectType) => this.object(schema),
       ...this.defaultReturnMethods()
     }
   }
 
-  object (schema: type.ObjectType): type.DefaultReturn {
+  object (schema: SchemaObjectType): SchemaReturn {
     try {
       for (const [key, rule] of Object.entries(schema) as [string, any]) {
         rule.validate(undefined, key)
@@ -251,50 +279,50 @@ export class Schema implements type.ISchema {
     return this.defaultReturnMethods()
   }
 
-  array (): type.ArrayMethod {
+  array (): SchemaArrayMethod {
     this.methodBuild({ method: 'array' })
     return {
       string: () => this.string(),
       boolean: () => this.boolean(),
       number: () => this.number(),
       bigInt: () => this.bigInt(),
-      date: (type?: type.DateTypes) => this.date(type),
-      object: (schema: type.ObjectType) => this.object(schema),
+      date: (type?: SchemaDateTypes) => this.date(type),
+      object: (schema: SchemaObjectType) => this.object(schema),
       ...this.defaultReturnMethods()
     }
   }
 
-  private methodBuild (build: type.Method): void {
+  private methodBuild (build: SchemaMethod): void {
     this.methods.push(build)
   }
 
   private validateMethods (): void {
-    helper.validator({
+    validator({
       value: this.value,
       valueName: this.valueName,
       methods: this.methods,
-      callbackUpdateTest: (test: type.Tests): void => {
+      callbackUpdateTest: (test: SchemaTests): void => {
         this.tests.passed += test.passed
         this.tests.failed += test.failed
         this.tests.totalTests += test.totalTests
 
-        test.successes.forEach((success: type.SuccessTest) => {
+        test.successes.forEach((success: SchemaSuccessTest) => {
           this.tests.successes.push(success)
         })
 
-        test.errors.forEach((error: type.ErrorTest) => {
+        test.errors.forEach((error: SchemaErrorTest) => {
           this.tests.errors.push(error)
         })
 
         this.tests.passedAll = this.tests.passed === this.tests.totalTests
       },
-      callbackAddPassed: (success: type.SuccessTest) => {
+      callbackAddPassed: (success: SchemaSuccessTest) => {
         ++this.tests.passed
         ++this.tests.totalTests
         this.tests.successes.push(success)
         this.tests.passedAll = this.tests.passed === this.tests.totalTests
       },
-      callbackAddFailed: (error: type.ErrorTest) => {
+      callbackAddFailed: (error: SchemaErrorTest) => {
         ++this.tests.failed
         ++this.tests.totalTests
         this.tests.errors.push(error)
@@ -314,14 +342,14 @@ export class Schema implements type.ISchema {
     })
   }
 
-  private defaultReturnMethods (): type.DefaultReturn {
+  private defaultReturnMethods (): SchemaReturn {
     return {
       notRequired: () => this.notRequired(),
       nullable: () => this.nullable(),
-      throw: (value: any, valueName: string, ClassError?: type.ErrorTypes) => {
+      throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
         this.throw(value, valueName, ClassError)
       },
-      throwAsync: async (value: any, valueName: string, ClassError?: type.ErrorTypes) => {
+      throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
         await this.throwAsync(value, valueName, ClassError)
       },
       validate: (value: any) => this.validate(value),
@@ -331,25 +359,25 @@ export class Schema implements type.ISchema {
     }
   }
 
-  throw (value: any, valueName: string, ClassError?: type.ErrorTypes): void {
+  throw (value: any, valueName: string, ClassError?: SchemaErrorTypes): void {
     this.value = value
     this.valueName = valueName
     this.validateMethods()
-    helper.throwError(this.tests, ClassError)
+    throwError(this.tests, ClassError)
   }
 
   async throwAsync (
     value: any,
     valueName: string,
-    ClassError?: type.ErrorTypes
+    ClassError?: SchemaErrorTypes
   ): Promise<void> {
     this.value = await value
     this.valueName = valueName
     this.validateMethods()
-    helper.throwError(this.tests, ClassError)
+    throwError(this.tests, ClassError)
   }
 
-  test (value: any, valueName: string): type.Tests {
+  test (value: any, valueName: string): SchemaTests {
     const startDate = new Date()
     this.value = value
     this.valueName = valueName
@@ -362,7 +390,7 @@ export class Schema implements type.ISchema {
     return this.tests
   }
 
-  async testAsync (value: any, valueName: string): Promise<type.Tests> {
+  async testAsync (value: any, valueName: string): Promise<SchemaTests> {
     const startDate = new Date()
     this.value = await value
     this.valueName = valueName
@@ -388,8 +416,8 @@ export class Schema implements type.ISchema {
   }
 }
 
-const schema = (): type.ISchema => {
-  return new Schema()
+const schema = (): VkrunSchema => {
+  return new SchemaSetup()
 }
 
 export { schema, setLocation }

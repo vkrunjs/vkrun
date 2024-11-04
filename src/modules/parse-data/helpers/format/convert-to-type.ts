@@ -1,4 +1,4 @@
-import * as util from '../../../utils'
+import { isISO8601 } from '../../../utils'
 
 export const convertToType = (value: string): string | number | boolean | Date | bigint => {
   const isNumberWithoutLeadingZero = /^-?\d+(\.\d+)?$/.test(value) && !/^0\d/.test(value)
@@ -21,7 +21,7 @@ export const convertToType = (value: string): string | number | boolean | Date |
     return value.toLowerCase() === 'true'
   }
 
-  if (util.isISO8601(value)) {
+  if (isISO8601(value)) {
     return new Date(value)
   }
 

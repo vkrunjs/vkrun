@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { received } from '../../../../utils'
 import { isEqual } from '../../../../utils/is-equal'
 
@@ -13,8 +13,8 @@ export const validateEqual = ({
   value: any
   valueToCompare: any
   valueName: string
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   if (isEqual(value, valueToCompare)) {
     callbackAddPassed({

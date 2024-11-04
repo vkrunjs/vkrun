@@ -1,8 +1,8 @@
+import { SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
-export const validatePositiveBigInt = (params: type.ValidateMethod): void => {
+export const validatePositiveBigInt = (params: SchemaValidateMethod): void => {
   const {
     value,
     valueName,
@@ -17,10 +17,10 @@ export const validatePositiveBigInt = (params: type.ValidateMethod): void => {
       : 'positive bigint',
     error: informativeMessage.bigInt.positive
       .replace('[valueName]', valueName)
-      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
+      .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
   }
 
-  if (util.isBigInt(value) && value > 0n) {
+  if (isBigInt(value) && value > 0n) {
     callbackAddPassed({
       method: 'positive',
       name: valueName,
@@ -35,7 +35,7 @@ export const validatePositiveBigInt = (params: type.ValidateMethod): void => {
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

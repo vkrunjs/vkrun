@@ -1,6 +1,6 @@
-import * as type from '../../../../types'
+import { SchemaBigIntMaxMethod, SchemaParamsMethod } from '../../../../types'
 
-export const bigIntMaxMethod = (value: bigint, params: type.ParamsMethod): type.BigIntMaxMethod => {
+export const bigIntMaxMethod = (value: bigint, params: SchemaParamsMethod): SchemaBigIntMaxMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'max', max: value })
 

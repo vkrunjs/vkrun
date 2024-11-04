@@ -1,15 +1,22 @@
-import * as type from '../types'
+import {
+  RateLimitAccessData,
+  NextFunction,
+  RateLimitConfig,
+  RateLimitRequests,
+  Request,
+  Response
+} from '../types'
 
-export class VkrunRateLimit {
+export class RateLimitSetup {
   private readonly windowMs: number
   private readonly limit: number
   private readonly standardHeaders: boolean
   private readonly legacyHeaders: boolean
-  private readonly notification?: (access: type.AccessData) => void
+  private readonly notification?: (access: RateLimitAccessData) => void
   private readonly minToNotification: number
-  private readonly requests: type.RateLimitRequests
+  private readonly requests: RateLimitRequests
 
-  constructor (config?: type.RateLimitConfig) {
+  constructor (config?: RateLimitConfig) {
     this.windowMs = config?.windowMs ?? 60 * 1000 // Default: 1 minute
     this.limit = config?.limit ?? 100
     this.standardHeaders = config?.standardHeaders ?? true
@@ -19,7 +26,7 @@ export class VkrunRateLimit {
     this.requests = new Map()
   }
 
-  handle (request: type.Request, response: type.Response, next: type.NextFunction): void {
+  handle (request: Request, response: Response, next: NextFunction): void {
     const remoteAddress = request.socket.remoteAddress ?? '127.0.0.1'
     const remoteFamily = request.socket.remoteFamily ?? ''
     const userAgent = request.headers['user-agent'] ?? ''
@@ -92,6 +99,6 @@ export class VkrunRateLimit {
   }
 }
 
-export const rateLimit = (config?: type.RateLimitConfig): VkrunRateLimit => {
-  return new VkrunRateLimit(config)
+export const rateLimit = (config?: RateLimitConfig): RateLimitSetup => {
+  return new RateLimitSetup(config)
 }

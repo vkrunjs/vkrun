@@ -1,8 +1,8 @@
-import * as util from '../utils'
+import { isEqual } from './is-equal'
 
 export const notOneOf = (value: any, comparisonItems: any[]): boolean => {
   for (const item of comparisonItems) {
-    if (util.isEqual(value, item)) {
+    if (isEqual(value, item)) {
       return false
     }
   }

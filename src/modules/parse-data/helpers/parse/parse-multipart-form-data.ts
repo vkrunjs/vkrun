@@ -1,12 +1,12 @@
+import { RouterFile, Request } from '../../../types'
 import { formatValue } from '../format'
-import * as type from '../../../types'
 
-export const parseMultipartFormData = (request: type.Request, escapeSQL: boolean): {
+export const parseMultipartFormData = (request: Request, escapeSQL: boolean): {
   body: object
-  files: type.File[]
+  files: RouterFile[]
 } => {
   const body: Record<string, string | number | boolean | Date> = {}
-  const files: type.File[] = []
+  const files: RouterFile[] = []
 
   // Custom function to split a buffer by a specified delimiter
   const bufferSplit = (buffer: any, delimiter: any): any[] => {

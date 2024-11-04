@@ -1,7 +1,7 @@
-import * as type from '.'
+import { NextFunction, Request, Response } from './router-types'
 
 export interface VkrunCors {
-  handle: (request: type.Request, response: type.Response, next: type.NextFunction) => void
+  handle: (request: Request, response: Response, next: NextFunction) => void
 }
 
 export interface CorsOptions {
@@ -15,7 +15,7 @@ export interface CorsOptions {
   maxAge?: number | undefined
 }
 
-export interface SetCorsOptions {
+export interface CorsSetOptions {
   origin?: string | string[] | undefined
   methods?: string | string[] | undefined
   preflightNext?: boolean | undefined

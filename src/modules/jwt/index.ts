@@ -1,18 +1,18 @@
 import * as crypto from 'crypto'
-import * as util from '../utils'
-import * as type from '../types'
+import { JwtEncryptConfig, JwtToken, JwtTokenData, VkrunJwt } from '../types'
+import { convertExpiresIn, validateSecretKey, validateTimeFormat } from '../utils'
 
-class VkrunJwt implements type.VkrunJwt {
-  encrypt (data: any, config: type.EncryptConfig): type.Token {
+class VkrunSetup implements VkrunJwt {
+  encrypt (data: any, config: JwtEncryptConfig): JwtToken {
     const { secretKey, expiresIn } = config
-    util.validateSecretKey(secretKey, 'jwt')
-    util.validateTimeFormat(expiresIn, 'jwt')
+    validateSecretKey(secretKey, 'jwt')
+    validateTimeFormat(expiresIn, 'jwt')
 
-    const convertedExpiresIn = util.convertExpiresIn(expiresIn)
+    const convertedExpiresIn = convertExpiresIn(expiresIn)
     const keys = Array.isArray(secretKey) ? secretKey : [secretKey]
     const selectedKey = keys[Math.floor(Math.random() * keys.length)]
 
-    const params: type.TokenData = {
+    const params: JwtTokenData = {
       data,
       config: {
         createdAt: Date.now(),
@@ -20,13 +20,13 @@ class VkrunJwt implements type.VkrunJwt {
       }
     }
 
-    const token: type.Token = this.encryptData(JSON.stringify(params), selectedKey)
+    const token: JwtToken = this.encryptData(JSON.stringify(params), selectedKey)
 
     return token
   }
 
-  decrypt (token: type.Token, secretKey: string | string[]): any | null {
-    util.validateSecretKey(secretKey, 'jwt')
+  decrypt (token: JwtToken, secretKey: string | string[]): any | null {
+    validateSecretKey(secretKey, 'jwt')
     const keys = Array.isArray(secretKey) ? secretKey : [secretKey]
 
     for (const key of keys) {
@@ -52,7 +52,7 @@ class VkrunJwt implements type.VkrunJwt {
     return `${iv.toString('hex')}:${encryptedData}`
   }
 
-  private decryptData (token: string, secretKey: string): type.TokenData {
+  private decryptData (token: string, secretKey: string): JwtTokenData {
     const [ivHex, encryptedDataHex] = token.split(':')
     const iv = Buffer.from(ivHex, 'hex')
     const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey, 'hex'), iv)
@@ -69,4 +69,4 @@ class VkrunJwt implements type.VkrunJwt {
   }
 }
 
-export const jwt = (): type.VkrunJwt => new VkrunJwt()
+export const jwt = (): VkrunJwt => new VkrunSetup()

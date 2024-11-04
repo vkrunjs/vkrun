@@ -1,5 +1,5 @@
-import { cors, VkrunCors } from '..'
-import * as type from '../../types'
+import { cors, CorsSetup } from '..'
+import { CorsSetOptions } from '../../types'
 
 describe('cors', () => {
   it('Should create a CORS with default options', () => {
@@ -24,7 +24,7 @@ describe('cors', () => {
     const vkrunCors = cors()
     vkrunCors.handle(requestMock, responseMock, nextMock)
 
-    expect(vkrunCors).toBeInstanceOf(VkrunCors)
+    expect(vkrunCors).toBeInstanceOf(CorsSetup)
     expect(responseMock.end).not.toHaveBeenCalled()
     expect(nextMock).toHaveBeenCalled()
     expect(responseMock.headers).toEqual({
@@ -53,7 +53,7 @@ describe('cors', () => {
 
     const nextMock: any = jest.fn()
 
-    const options: type.SetCorsOptions = {
+    const options: CorsSetOptions = {
       origin: 'http://localhost:3000',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
       preflightNext: false,
@@ -67,7 +67,7 @@ describe('cors', () => {
     const vkrunCors = cors(options)
     vkrunCors.handle(requestMock, responseMock, nextMock)
 
-    expect(vkrunCors).toBeInstanceOf(VkrunCors)
+    expect(vkrunCors).toBeInstanceOf(CorsSetup)
     expect(responseMock.end).not.toHaveBeenCalled()
     expect(nextMock).toHaveBeenCalled()
     expect(responseMock.headers).toEqual({
@@ -99,7 +99,7 @@ describe('cors', () => {
 
     const nextMock: any = jest.fn()
 
-    const options: type.SetCorsOptions = {
+    const options: CorsSetOptions = {
       origin: ['http://localhost:3000', 'http://localhost:5000'],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
       preflightNext: false,
@@ -141,7 +141,7 @@ describe('cors', () => {
 
     const nextMock: any = jest.fn()
 
-    const options: type.SetCorsOptions = {
+    const options: CorsSetOptions = {
       origin: 'http://localhost:3000',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
       preflightNext: false,
@@ -183,7 +183,7 @@ describe('cors', () => {
 
     const nextMock: any = jest.fn()
 
-    const options: type.SetCorsOptions = {
+    const options: CorsSetOptions = {
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
       preflightNext: true,
@@ -230,7 +230,7 @@ describe('cors', () => {
 
     const nextMock: any = jest.fn()
 
-    const options: type.SetCorsOptions = {
+    const options: CorsSetOptions = {
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
       preflightNext: false,

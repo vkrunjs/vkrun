@@ -1,6 +1,6 @@
-import * as type from '../../../../types'
+import { SchemaBigIntMinMethod, SchemaParamsMethod } from '../../../../types'
 
-export const bigIntMinMethod = (value: bigint, params: type.ParamsMethod): type.BigIntMinMethod => {
+export const bigIntMinMethod = (value: bigint, params: SchemaParamsMethod): SchemaBigIntMinMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'min', min: value })
 

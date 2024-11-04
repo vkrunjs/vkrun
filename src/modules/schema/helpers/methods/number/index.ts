@@ -1,4 +1,4 @@
-import * as type from '../../../../types'
+import { SchemaNumberMethod, SchemaParamsMethod } from '../../../../types'
 import { numberFloatMethod } from './float'
 import { numberIntegerMethod } from './integer'
 import { numberMaxMethod } from './max'
@@ -6,7 +6,7 @@ import { numberMinMethod } from './min'
 import { numberNegativeMethod } from './negative'
 import { numberPositiveMethod } from './positive'
 
-export const numberMethod = (params: type.ParamsMethod): type.NumberMethod => {
+export const numberMethod = (params: SchemaParamsMethod): SchemaNumberMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'number' })
 

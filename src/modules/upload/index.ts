@@ -1,17 +1,27 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import * as type from '../types'
+import { mkdirSync, statSync, writeFileSync } from 'fs'
+import { join } from 'path'
+import {
+  NextFunction,
+  Request,
+  Response,
+  RouterStorageFile,
+  UploadDiskStorageOptions,
+  UploadMultipleFilesFields,
+  UploadSingleFileConfig,
+  VkrunUpload
+} from '../types'
+import { isArray } from '../utils'
 
-export const upload: type.VkrunUpload = {
-  diskStorage: (options: type.UploadDiskStorageOptions) => {
-    const saveFileToDisk = (file: any): type.StorageFile => {
+export const upload: VkrunUpload = {
+  diskStorage: (options: UploadDiskStorageOptions) => {
+    const saveFileToDisk = (file: any): RouterStorageFile => {
       const filename = options.filename ? options.filename(file) : file.filename
-      const filepath = path.join(options.destination, filename)
+      const filepath = join(options.destination, filename)
 
-      fs.mkdirSync(options.destination, { recursive: true })
-      fs.writeFileSync(filepath, file.buffer)
+      mkdirSync(options.destination, { recursive: true })
+      writeFileSync(filepath, file.buffer)
 
-      const fileStats = fs.statSync(filepath)
+      const fileStats = statSync(filepath)
       return {
         fieldName: file.fieldName,
         originalName: file.fieldName,
@@ -25,9 +35,9 @@ export const upload: type.VkrunUpload = {
     }
 
     return {
-      singleFile: (config: type.UploadSingleFileConfig) => {
-        return async (request: type.Request, response: type.Response, next: type.NextFunction) => {
-          if (request.files && Array.isArray(request.files)) {
+      singleFile: (config: UploadSingleFileConfig) => {
+        return async (request: Request, response: Response, next: NextFunction) => {
+          if (request.files && isArray(request.files)) {
             const matchingFiles = request.files.filter(file => file.fieldName === config.fieldName)
 
             if (matchingFiles.length > 0) {
@@ -51,9 +61,9 @@ export const upload: type.VkrunUpload = {
         }
       },
 
-      multipleFiles: (fields?: type.UploadMultipleFilesFields) => {
-        return async (request: type.Request, response: type.Response, next: type.NextFunction) => {
-          const savedFiles: type.StorageFile[] = []
+      multipleFiles: (fields?: UploadMultipleFilesFields) => {
+        return async (request: Request, response: Response, next: NextFunction) => {
+          const savedFiles: RouterStorageFile[] = []
 
           if (request.files && Array.isArray(request.files)) {
             if (!fields) {

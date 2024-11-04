@@ -1,5 +1,10 @@
-import v from '../../../index'
 import { Logger } from '..'
+import { App } from '../../app'
+import { parseData } from '../../parse-data'
+import { Router } from '../../router'
+import { superRequest } from '../../super-request'
+import { Request, Response } from '../../types'
+import { isUUID } from '../../utils'
 import { getLog } from '../helpers/get-log'
 import { removeLogsFolder } from '../helpers/remove-logs-folder'
 
@@ -8,14 +13,14 @@ describe('Logger Middleware - end to end testing using super request', () => {
   afterEach(async () => { await removeLogsFolder() })
 
   it('Should create a log with middleware', async () => {
-    const app = v.App()
+    const app = App()
     const logger = Logger({ level: 'http' })
-    const router = v.Router()
-    router.post('/:string/:integer/query', (_request: v.Request, response: v.Response) => {
+    const router = Router()
+    router.post('/:string/:integer/query', (_request: Request, response: Response) => {
       response.status(200).json({ result: 'ok' })
     })
 
-    app.use(v.parseData())
+    app.use(parseData())
     app.use(logger.middleware())
     app.use(router)
 
@@ -28,7 +33,7 @@ describe('Logger Middleware - end to end testing using super request', () => {
 
     const path = '/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
 
-    await v.superRequest(app).post(path, data).then((response) => {
+    await superRequest(app).post(path, data).then((response) => {
       expect(response.statusCode).toEqual(200)
     })
 
@@ -41,7 +46,7 @@ describe('Logger Middleware - end to end testing using super request', () => {
     expect(receivedLog.date).toEqual(`${log.month}/${log.day}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}`)
 
     const request = receivedLog.message.request
-    expect(v.isUUID(request.requestId)).toBeTruthy()
+    expect(isUUID(request.requestId)).toBeTruthy()
     expect(request.url).toEqual('/any@mail.com/123/query?float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z')
     expect(request.method).toEqual('POST')
 

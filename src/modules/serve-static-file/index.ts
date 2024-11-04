@@ -1,20 +1,20 @@
-import fs from 'fs'
-import path from 'path'
-import * as type from '../types'
+import { readFileSync } from 'fs'
+import { basename, join } from 'path'
 import { mime } from '../mime'
+import { Request, Response } from '../types'
 
 export const serveStaticFile = (basePath: string) => {
-  return (request: type.Request, response: type.Response) => {
+  return (request: Request, response: Response) => {
     try {
       const routePath = request?.route?.path ?? ''
       const url = request?.url ?? ''
       const encodedFileName = url.replace(routePath.replace('*', ''), '')
       const filenamePath = decodeURIComponent(encodedFileName)
-      const filename = path.basename(filenamePath) // 'filename.txt'
-      const fullPath = path.join(basePath, filenamePath)
+      const filename = basename(filenamePath) // 'filename.txt'
+      const fullPath = join(basePath, filenamePath)
 
       try {
-        const data = fs.readFileSync(fullPath) // Lê o arquivo de forma síncrona
+        const data = readFileSync(fullPath) // Lê o arquivo de forma síncrona
         const extension = filename.split('.').pop() ?? ''
         const mimeType = mime.type(extension) ?? 'application/octet-stream'
 

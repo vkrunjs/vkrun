@@ -1,20 +1,23 @@
 import * as http from 'http'
-import * as type from '../types'
+import { ParseDataConfig } from './parse-data-types'
+import { CorsSetOptions } from './cors-types'
+import { RateLimitConfig } from './rate-limit-types'
+import { Request, Response } from './router-types'
 
-export type CreateServer = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
+export type AppCreateServer = http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
 
 export interface VkrunApp {
-  server: () => CreateServer
+  server: () => AppCreateServer
   use: (middleware: Record<string, any>) => void
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
   clearTimers: () => void
   close: () => void
   error: (
-    errorHandler: (error: any, request: type.Request, response: type.Response) => void
+    errorHandler: (error: any, request: Request, response: Response) => void
   ) => void
-  parseData: (config?: type.ParseDataConfig) => void
-  cors: (options?: type.SetCorsOptions) => void
-  rateLimit: (config?: type.RateLimitConfig) => void
+  parseData: (config?: ParseDataConfig) => void
+  cors: (options?: CorsSetOptions) => void
+  rateLimit: (config?: RateLimitConfig) => void
   get: (path: string, ...handlers: any) => void
   head: (path: string, ...handlers: any) => void
   post: (path: string, ...handlers: any) => void

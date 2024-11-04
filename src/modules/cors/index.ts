@@ -1,19 +1,26 @@
-import * as helper from './helpers'
-import * as util from '../utils'
-import * as type from '../types'
+import { setCorsHeaders, validateOptions } from './helpers'
+import { isArray } from '../utils'
+import {
+  CorsOptions,
+  NextFunction,
+  Request,
+  Response,
+  CorsSetOptions,
+  VkrunCors
+} from '../types'
 
-export class VkrunCors implements type.VkrunCors {
-  private readonly options: type.CorsOptions
+export class CorsSetup implements VkrunCors {
+  private readonly options: CorsOptions
 
-  constructor (options: type.CorsOptions) {
+  constructor (options: CorsOptions) {
     this.options = options
   }
 
-  handle (request: type.Request, response: type.Response, next: type.NextFunction): void {
-    helper.setCorsHeaders(request, response, this.options)
+  handle (request: Request, response: Response, next: NextFunction): void {
+    setCorsHeaders(request, response, this.options)
 
     if (this.options.origin !== '*') {
-      if (util.isArray(this.options.origin)) {
+      if (isArray(this.options.origin)) {
         const originHeader = this.options.origin.find(origin => origin === request.headers.origin)
         if (!originHeader) {
           response.end()
@@ -32,8 +39,8 @@ export class VkrunCors implements type.VkrunCors {
   }
 }
 
-export const cors = (options?: type.SetCorsOptions): type.VkrunCors => {
-  const defaultOptions: type.CorsOptions = {
+export const cors = (options?: CorsSetOptions): VkrunCors => {
+  const defaultOptions: CorsOptions = {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS',
     preflightNext: false,
@@ -41,6 +48,6 @@ export const cors = (options?: type.SetCorsOptions): type.VkrunCors => {
   }
   const mergeOptions = Object.assign({}, defaultOptions, options)
 
-  helper.validateOptions(mergeOptions)
-  return new VkrunCors(Object.assign({}, defaultOptions, mergeOptions))
+  validateOptions(mergeOptions)
+  return new CorsSetup(Object.assign({}, defaultOptions, mergeOptions))
 }

@@ -1,8 +1,10 @@
-import path from 'path'
-import fs from 'fs'
 import axios from 'axios'
-import v from '../../../index'
+import { join } from 'path'
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import FormData from 'form-data'
+import { isString, isUUID } from '../../utils'
+import { App } from '../../app'
+import { Request, Response } from '../../types'
 
 describe('Compare Super Request with axios', () => {
   let server: any
@@ -17,8 +19,8 @@ describe('Compare Super Request with axios', () => {
   const validateHeaderSuccess = (response: any): void => {
     expect(response.status).toEqual(200)
     expect(Object.keys(response.headers).length).toEqual(4)
-    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(v.isString(response.headers.date)).toBeTruthy()
+    expect(isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual('')
@@ -28,10 +30,10 @@ describe('Compare Super Request with axios', () => {
     let requestBody: any
     let requestFiles: any
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.post('/body-post', (request: v.Request, response: v.Response) => {
+    app.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       requestFiles = request.files
       response.status(200).end()
@@ -39,9 +41,9 @@ describe('Compare Super Request with axios', () => {
 
     const fileContent = 'Text file'
     const fileName = 'filename.txt'
-    const filePath = path.join(__dirname, fileName)
+    const filePath = join(__dirname, fileName)
 
-    fs.writeFileSync(filePath, fileContent)
+    writeFileSync(filePath, fileContent)
 
     const data = new FormData()
     data.append('string', 'any@mail.com')
@@ -50,7 +52,7 @@ describe('Compare Super Request with axios', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    const fileBuffer = fs.readFileSync(filePath)
+    const fileBuffer = readFileSync(filePath)
     data.append('file', fileBuffer, fileName)
 
     server = app.server()
@@ -58,14 +60,14 @@ describe('Compare Super Request with axios', () => {
 
     const response = await axios.post('http://localhost:3299/body-post', data)
 
-    fs.unlinkSync(filePath)
+    unlinkSync(filePath)
 
-    fs.writeFileSync(filePath, requestFiles[0].buffer)
-    const fileExists = fs.existsSync(filePath)
+    writeFileSync(filePath, requestFiles[0].buffer)
+    const fileExists = existsSync(filePath)
     expect(fileExists).toBeTruthy()
-    const savedFileContent = fs.readFileSync(filePath, 'utf-8')
+    const savedFileContent = readFileSync(filePath, 'utf-8')
     expect(savedFileContent).toEqual(fileContent)
-    fs.unlinkSync(filePath)
+    unlinkSync(filePath)
 
     validateHeaderSuccess(response)
     expect(requestBody).toEqual({
@@ -85,10 +87,10 @@ describe('Compare Super Request with axios', () => {
   it('Should parse query parameters correctly', async () => {
     let requestQuery
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.get('/query', (req: v.Request, res: v.Response) => {
+    app.get('/query', (req: Request, res: Response) => {
       requestQuery = req.query
       res.status(200).end()
     })
@@ -108,10 +110,10 @@ describe('Compare Super Request with axios', () => {
   it('Should parse JSON body in POST method', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.post('/json', (req: v.Request, res: v.Response) => {
+    app.post('/json', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
@@ -134,10 +136,10 @@ describe('Compare Super Request with axios', () => {
   it('Should parse URL encoded body in POST method', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.post('/urlencoded', (req: v.Request, res: v.Response) => {
+    app.post('/urlencoded', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
@@ -159,10 +161,10 @@ describe('Compare Super Request with axios', () => {
   it('Should handle PUT requests', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.put('/update', (req: v.Request, res: v.Response) => {
+    app.put('/update', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
@@ -185,10 +187,10 @@ describe('Compare Super Request with axios', () => {
   it('Should handle PATCH requests', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.patch('/modify', (req: v.Request, res: v.Response) => {
+    app.patch('/modify', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
@@ -209,10 +211,10 @@ describe('Compare Super Request with axios', () => {
   })
 
   it('Should handle DELETE requests', async () => {
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.delete('/delete/:id', (req: v.Request, res: v.Response) => {
+    app.delete('/delete/:id', (req: Request<{ params: { id: number } }>, res: Response) => {
       res.status(200).json({ deletedId: req?.params?.id })
     })
 
@@ -228,9 +230,9 @@ describe('Compare Super Request with axios', () => {
   })
 
   it('Should handle HEAD requests', async () => {
-    const app = v.App()
+    const app = App()
 
-    app.head('/info', (req: v.Request, res: v.Response) => {
+    app.head('/info', (req: Request, res: Response) => {
       res.setHeader('X-Custom-Header', 'CustomValue')
       res.status(200).end()
     })
@@ -247,9 +249,9 @@ describe('Compare Super Request with axios', () => {
   })
 
   it('Should handle OPTIONS requests', async () => {
-    const app = v.App()
+    const app = App()
 
-    app.options('/options', (req: v.Request, res: v.Response) => {
+    app.options('/options', (req: Request, res: Response) => {
       res.setHeader('Allow', 'GET,POST,OPTIONS')
       res.status(204).end()
     })
@@ -266,7 +268,7 @@ describe('Compare Super Request with axios', () => {
   })
 
   it('Should handle non-existent route with 404', async () => {
-    const app = v.App()
+    const app = App()
 
     server = app.server()
     server.listen(3290)

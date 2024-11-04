@@ -1,6 +1,6 @@
-import * as type from '../types'
+import { DateToStringTypes } from '../types'
 
-export const dateToString = (date: Date, type: type.DateToStringTypes, timestamp?: 'UTC' | 'local'): string => {
+export const dateToString = (date: Date, type: DateToStringTypes, timestamp?: 'UTC' | 'local'): string => {
   const year = timestamp === 'UTC' ? date.getUTCFullYear() : date.getFullYear()
   const month = (timestamp === 'UTC' ? date.getUTCMonth() + 1 : date.getMonth() + 1).toString().padStart(2, '0')
   const day = (timestamp === 'UTC' ? date.getUTCDate() : date.getDate()).toString().padStart(2, '0')

@@ -1,9 +1,9 @@
-import * as querystring from 'querystring'
+import { parse } from 'querystring'
 import { formatValue } from '../format'
-import * as type from '../../../types'
+import { Request } from '../../../types'
 
-export const parseFormUrlEncoded = (request: type.Request, escapeSQL: boolean): object => {
-  const parsedBody = querystring.parse(request.body.toString())
+export const parseFormUrlEncoded = (request: Request, escapeSQL: boolean): object => {
+  const parsedBody = parse(request.body.toString())
   const formattedBody: Record<string, string | number | boolean | Date> = {}
 
   for (const key in parsedBody) {

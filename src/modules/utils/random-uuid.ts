@@ -1,5 +1,5 @@
-import cripto from 'crypto'
+import { randomUUID as _randomUUID } from 'crypto'
 
 export const randomUUID = (): string => {
-  return cripto.randomUUID()
+  return _randomUUID()
 }

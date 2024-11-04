@@ -1,3 +1,5 @@
+import { NextFunction, ParseDataConfig, Request, Response, VkrunParseData } from '../types'
+import { isString, parseEscapeSQL } from '../utils'
 import {
   getData,
   parseMultipartFormData,
@@ -6,10 +8,8 @@ import {
   parseFormUrlEncoded,
   parseJSON
 } from './helpers'
-import * as util from '../utils'
-import * as type from '../types'
 
-export class VkrunParseData {
+export class ParseDataSetup implements VkrunParseData {
   private readonly urlencoded: boolean = true
   private readonly params: boolean = true
   private readonly query: boolean = true
@@ -17,7 +17,7 @@ export class VkrunParseData {
   private readonly formData: boolean = true
   private readonly escapeSQL: boolean = false
 
-  constructor (config?: type.ParseDataConfig) {
+  constructor (config?: ParseDataConfig) {
     if (config?.urlencoded !== undefined) this.urlencoded = config.urlencoded
     if (config?.params !== undefined) this.params = config.params
     if (config?.query !== undefined) this.query = config.query
@@ -26,7 +26,7 @@ export class VkrunParseData {
     if (config?.escapeSQL !== undefined) this.escapeSQL = config.escapeSQL
   }
 
-  async handle (request: type.Request, response: type.Response, next: () => void): Promise<void> {
+  async handle (request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
       const headerContentType = request.headers['content-type']
 
@@ -46,8 +46,8 @@ export class VkrunParseData {
             request.files = parsedData.files
           } else {
             request.body = request.body.toString()
-            if (this.escapeSQL && util.isString(request.body)) {
-              request.body = util.parseEscapeSQL(request.body)
+            if (this.escapeSQL && isString(request.body)) {
+              request.body = parseEscapeSQL(request.body)
             }
           }
         } else {
@@ -67,6 +67,6 @@ export class VkrunParseData {
   }
 }
 
-export const parseData = (config?: type.ParseDataConfig): VkrunParseData => {
-  return new VkrunParseData(config)
+export const parseData = (config?: ParseDataConfig): VkrunParseData => {
+  return new ParseDataSetup(config)
 }

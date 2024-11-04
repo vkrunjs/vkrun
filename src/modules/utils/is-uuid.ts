@@ -1,7 +1,7 @@
-import * as type from '../types'
+import { UUIDVersion } from '../types'
 
-export const isUUID = (value: any, version?: type.UUIDVersion): value is string => {
-  const uuidRegexMap: Record<type.UUIDVersion, RegExp> = {
+export const isUUID = (value: any, version?: UUIDVersion): value is string => {
+  const uuidRegexMap: Record<UUIDVersion, RegExp> = {
     v1: /^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
     v2: /^[0-9a-f]{8}-[0-9a-f]{4}-2[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
     v3: /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,

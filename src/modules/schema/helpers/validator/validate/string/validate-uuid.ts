@@ -1,6 +1,6 @@
+import { SchemaErrorTest, SchemaSuccessTest, UUIDVersion } from '../../../../../types'
+import { isUUID, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateUuid = ({
   value,
@@ -12,10 +12,10 @@ export const validateUuid = ({
 }: {
   value: any
   valueName: string
-  uuidVersion?: type.UUIDVersion
+  uuidVersion?: UUIDVersion
   indexArray: number
-  callbackAddPassed: (success: type.SuccessTest) => void
-  callbackAddFailed: (error: type.ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in UUID format' : 'format UUID',
@@ -24,7 +24,7 @@ export const validateUuid = ({
       .replace('[valueName]', valueName)
   }
 
-  if (util.isUUID(value, uuidVersion)) {
+  if (isUUID(value, uuidVersion)) {
     callbackAddPassed({
       method: 'UUID',
       name: valueName,
@@ -39,7 +39,7 @@ export const validateUuid = ({
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

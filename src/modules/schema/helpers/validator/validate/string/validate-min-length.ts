@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest } from '../../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { isString, received } from '../../../../../utils'
 
 export const validateMinLength = ({
@@ -14,8 +14,8 @@ export const validateMinLength = ({
   valueName: string
   minLength: number
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined

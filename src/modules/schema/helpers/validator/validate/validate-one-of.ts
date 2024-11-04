@@ -1,9 +1,9 @@
+import { SchemaValidateMethod } from '../../../../types'
+import { oneOf, received } from '../../../../utils'
 import { informativeMessage } from '../../location'
-import * as type from '../../../../types'
-import * as util from '../../../../utils'
 
 export const validateOneOf = (
-  params: type.ValidateMethod & {
+  params: SchemaValidateMethod & {
     comparisonItems: any[]
   }
 ): void => {
@@ -15,7 +15,7 @@ export const validateOneOf = (
     callbackAddFailed
   } = params
 
-  if (util.oneOf(value, comparisonItems)) {
+  if (oneOf(value, comparisonItems)) {
     callbackAddPassed({
       method: 'oneOf',
       name: valueName,
@@ -28,7 +28,7 @@ export const validateOneOf = (
       type: 'invalid value',
       name: valueName,
       expect: 'value matches',
-      received: util.received(value),
+      received: received(value),
       message: informativeMessage.oneOf
         .replace('[valueName]', valueName)
         .replace('[value]', value)

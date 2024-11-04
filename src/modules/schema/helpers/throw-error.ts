@@ -1,6 +1,6 @@
-import { ErrorTypes, Tests } from '../../types'
+import { SchemaErrorTypes, SchemaTests } from '../../types'
 
-export const throwError = (tests: Tests, ClassError: ErrorTypes): void => {
+export const throwError = (tests: SchemaTests, ClassError: SchemaErrorTypes): void => {
   if (tests.errors.length > 0) {
     if (ClassError) {
       let extendsError

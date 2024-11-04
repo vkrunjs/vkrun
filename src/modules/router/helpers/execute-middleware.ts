@@ -1,9 +1,9 @@
-import * as type from '../../types'
+import { Request, Response } from '../../types'
 
 export const executeMiddleware = async (
   middleware: any,
-  request: type.Request,
-  response: type.Response,
+  request: Request,
+  response: Response,
   nextMiddleware: () => void
 ): Promise<void> => {
   if (typeof middleware.handle === 'function' && middleware.handle.length === 3) {

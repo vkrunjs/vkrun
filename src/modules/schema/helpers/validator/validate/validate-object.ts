@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest, Tests } from '../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest, SchemaTests } from '../../../../types'
 import { isObject, received } from '../../../../utils'
 
 export const validateObject = ({
@@ -15,9 +15,9 @@ export const validateObject = ({
   valueName: string
   schema: any
   indexArray: number
-  callbackUpdateTest: (test: Tests) => void
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackUpdateTest: (test: SchemaTests) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in object type' : 'object type',

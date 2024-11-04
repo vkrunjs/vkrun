@@ -1,8 +1,8 @@
+import { Request, Route } from '../../../types'
 import { formatValue } from '../format'
-import * as type from '../../../types'
 
-export const parseParams = (request: type.Request, escapeSQL: boolean): Record<string, string | number | boolean | Date> => {
-  const route = request.route as type.Route
+export const parseParams = (request: Request, escapeSQL: boolean): Record<string, string | number | boolean | Date> => {
+  const route = request.route as Route
   const routeParams: Record<string, string | number | boolean | Date> = {}
   const routePathParts = route.path.split('/')
   const urlPathParts = (request.url ?? '').split('?')[0].split('/') // Adiciona o split('?')[0] para ignorar a query string

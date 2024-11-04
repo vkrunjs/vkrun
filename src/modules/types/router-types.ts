@@ -6,6 +6,7 @@ export interface VkrunRouter {
   put: (path: string, ...handlers: any) => void
   patch: (path: string, ...handlers: any) => void
   delete: (path: string, ...handlers: any) => void
+  head: (path: string, ...handlers: any) => void
   options: (path: string, ...handlers: any) => void
 }
 
@@ -21,18 +22,18 @@ export interface Request<T = any> extends IncomingMessage {
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
-export type Response = ServerResponse & CustomResponseMethods
+export type Response = ServerResponse & RouterCustomResponseMethods
 
-export interface CustomResponseMethods {
+export interface RouterCustomResponseMethods {
   status: (status: number) => Response
   json: (data: object) => Response
   send: (data: any) => Response
-  setCookie: (name: string, value: string, options?: CookieOptions) => Response
+  setCookie: (name: string, value: string, options?: RouterCookieOptions) => Response
   clearCookie: (name: string) => Response
   _body: any
 }
 
-export interface CookieOptions {
+export interface RouterCookieOptions {
   httpOnly?: boolean
   secure?: boolean
   expires?: string
@@ -43,7 +44,7 @@ export interface CookieOptions {
   priority?: 'Low' | 'Medium' | 'High'
 }
 
-export interface MemoryFile {
+export interface RouterMemoryFile {
   fieldName: string
   filename: string
   extension: string
@@ -51,7 +52,7 @@ export interface MemoryFile {
   buffer: Buffer
 }
 
-export interface StorageFile {
+export interface RouterStorageFile {
   fieldName: string
   originalName: string
   filename: string
@@ -62,7 +63,7 @@ export interface StorageFile {
   path: string
 }
 
-export type File = MemoryFile | StorageFile
+export type RouterFile = RouterMemoryFile | RouterStorageFile
 
 export interface ErrorHandlerMiddleware {
   handle: (error: any, request: Request, response: Response) => any
@@ -76,7 +77,7 @@ export interface Controller {
   handle: (request: Request, response: Response) => any
 }
 
-export type SendParam = ((cb?: () => void) => void) & ((chunk: any, cb?: () => void) => void) & ((chunk: any, encoding: BufferEncoding, cb?: () => void) => void)
+export type RouterSendParam = ((cb?: () => void) => void) & ((chunk: any, cb?: () => void) => void) & ((chunk: any, encoding: BufferEncoding, cb?: () => void) => void)
 
 export type NextFunction = () => void
 

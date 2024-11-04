@@ -1,10 +1,10 @@
-import * as http from 'http'
+import { RequestOptions, request } from 'http'
 import { Socket } from 'net'
-import * as util from '../../utils'
+import { isObject } from '../../utils'
 
 export const createHttpRequest = (params: { method: any, path: any, headers: Record<string, any>, data: any, host: string, port: number }): any => {
   const { method, path, headers, data, host, port } = params
-  const options: http.RequestOptions = {
+  const options: RequestOptions = {
     ...new URL(`http://${host}${path}`),
     method,
     headers,
@@ -13,11 +13,11 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
     path
   }
 
-  const request: any = http.request(options)
+  const fakeRequest: any = request(options)
 
-  request.socket = new Socket()
-  request.method = method
-  request.url = path.replaceAll(' ', '%20')
+  fakeRequest.socket = new Socket()
+  fakeRequest.method = method
+  fakeRequest.url = path.replaceAll(' ', '%20')
   const lowercaseHeaders: any = {}
 
   for (const key in headers) {
@@ -28,14 +28,14 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
     }
   }
 
-  request.headers = lowercaseHeaders
+  fakeRequest.headers = lowercaseHeaders
 
-  const headerContentType = request.headers['content-type']
+  const headerContentType = fakeRequest.headers['content-type']
 
-  if (!headerContentType && util.isObject(data)) {
-    request.headers['content-type'] = 'application/json'
+  if (!headerContentType && isObject(data)) {
+    fakeRequest.headers['content-type'] = 'application/json'
   } else if (!headerContentType && data) {
-    request.headers['content-type'] = 'text/plain'
+    fakeRequest.headers['content-type'] = 'text/plain'
   }
 
   const generateBufferData = (): Buffer => {
@@ -44,9 +44,9 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
       (data?._boundary && data?._streams)
     ) {
       if (!headerContentType) {
-        request.headers['content-type'] = `multipart/form-data; boundary=${data._boundary}`
+        fakeRequest.headers['content-type'] = `multipart/form-data; boundary=${data._boundary}`
       } else if (data && !headerContentType.includes('boundary=')) {
-        request.headers['content-type'] = `${headerContentType}; boundary=${data._boundary}`
+        fakeRequest.headers['content-type'] = `${headerContentType}; boundary=${data._boundary}`
       }
 
       if (!data) return Buffer.alloc(0)
@@ -64,7 +64,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
       }
 
       return Buffer.concat(parts)
-    } else if (util.isObject(data)) {
+    } else if (isObject(data)) {
       return Buffer.from(JSON.stringify(data), 'utf-8')
     } else {
       return data ? Buffer.from(data.toString(), 'utf-8') : Buffer.alloc(0)
@@ -72,7 +72,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
   }
   const bufferData = generateBufferData()
 
-  request.on = (event: string, listener: any) => {
+  fakeRequest.on = (event: string, listener: any) => {
     if (event === 'data') {
       listener(bufferData)
     } else if (event === 'end') {
@@ -80,7 +80,7 @@ export const createHttpRequest = (params: { method: any, path: any, headers: Rec
     }
   }
 
-  request.abort()
+  fakeRequest.abort()
 
-  return request
+  return fakeRequest
 }

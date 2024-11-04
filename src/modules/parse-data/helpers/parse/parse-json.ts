@@ -1,13 +1,13 @@
-import * as type from '../../../types'
-import * as util from '../../../utils'
+import { isISO8601, isString, parseEscapeSQL } from '../../../utils'
+import { Request } from '../../../types'
 
-export const parseJSON = (request: type.Request, escapeSQL: boolean): JSON => {
+export const parseJSON = (request: Request, escapeSQL: boolean): JSON => {
   const body = request.body.toString()
   const parsedBody = JSON.parse(body, (_key, value) => {
-    if (util.isString(value) && util.isISO8601(value)) {
+    if (isString(value) && isISO8601(value)) {
       return new Date(value)
-    } else if (util.isString(value) && escapeSQL) {
-      return util.parseEscapeSQL(value)
+    } else if (isString(value) && escapeSQL) {
+      return parseEscapeSQL(value)
     }
     return value
   })

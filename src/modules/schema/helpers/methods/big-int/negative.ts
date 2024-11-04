@@ -1,6 +1,6 @@
-import * as type from '../../../../types'
+import { SchemaBigIntNegativeMethod, SchemaParamsMethod } from '../../../../types'
 
-export const bigIntNegativeMethod = (params: type.ParamsMethod): type.BigIntNegativeMethod => {
+export const bigIntNegativeMethod = (params: SchemaParamsMethod): SchemaBigIntNegativeMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'negative' })
 

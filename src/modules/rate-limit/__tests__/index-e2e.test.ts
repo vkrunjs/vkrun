@@ -1,8 +1,12 @@
 import axios from 'axios'
-import v from '../../../index'
+import { RateLimitAccessData, Controller, Request, Response } from '../../types'
+import { App } from '../../app'
+import { rateLimit } from '..'
+import { Router } from '../../router'
+import { controllerAdapter, isString, isUUID } from '../../../public'
 
-class RateLimitController implements v.Controller {
-  public handle (_request: v.Request, response: v.Response): any {
+class RateLimitController implements Controller {
+  public handle (_request: Request, response: Response): any {
     response.status(200).send('rate limit')
   }
 }
@@ -18,11 +22,11 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
   })
 
   it('Should be able to call any route with default standard headers', async () => {
-    const app = v.App()
+    const app = App()
     const rateLimitConfig = { windowMs: 15 * 60 * 1000, limit: 100 }
-    app.use(v.rateLimit(rateLimitConfig))
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    app.use(rateLimit(rateLimitConfig))
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     server = app.server()
 
@@ -31,8 +35,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3899/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit')
@@ -48,16 +52,16 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
   })
 
   it('Should be able to call any route with legacy headers', async () => {
-    const app = v.App()
+    const app = App()
     const rateLimitConfig = {
       windowMs: 15 * 60 * 1000,
       limit: 100,
       standardHeaders: false,
       legacyHeaders: true
     }
-    app.use(v.rateLimit(rateLimitConfig))
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    app.use(rateLimit(rateLimitConfig))
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     server = app.server()
 
@@ -66,8 +70,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3898/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit-legacy')
@@ -83,16 +87,16 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
   })
 
   it('Should be able to call any route with standard headers and legacy headers', async () => {
-    const app = v.App()
+    const app = App()
     const rateLimitConfig = {
       windowMs: 15 * 60 * 1000,
       limit: 100,
       standardHeaders: true,
       legacyHeaders: true
     }
-    app.use(v.rateLimit(rateLimitConfig))
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    app.use(rateLimit(rateLimitConfig))
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     server = app.server()
 
@@ -101,8 +105,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3897/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(11)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit-legacy')
@@ -125,11 +129,11 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
   })
 
   it('Return to many requests if limit is reached', async () => {
-    const app = v.App()
+    const app = App()
     const rateLimitConfig = { windowMs: 15 * 60 * 1000, limit: 1 }
     app.rateLimit(rateLimitConfig)
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     server = app.server()
 
@@ -138,8 +142,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3896/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit')
@@ -154,8 +158,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3896/rate-limit').catch((error) => {
       expect(error.response.status).toEqual(429)
       expect(Object.keys(error.response.headers).length).toEqual(5)
-      expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(error.response.headers.date)).toBeTruthy()
+      expect(isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(isString(error.response.headers.date)).toBeTruthy()
       expect(error.response.headers.connection).toEqual('close')
       expect(error.response.headers['content-length']).toEqual('17')
       expect(error.response.data).toEqual('Too Many Requests')
@@ -165,11 +169,11 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
   })
 
   it('Return to many requests if limit is reached and reset count requests', async () => {
-    const app = v.App()
+    const app = App()
     const rateLimitConfig = { windowMs: 50, limit: 1 }
-    app.use(v.rateLimit(rateLimitConfig))
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    app.use(rateLimit(rateLimitConfig))
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     const server = app.server()
 
@@ -178,8 +182,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3895/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit')
@@ -194,8 +198,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3895/rate-limit').catch((error) => {
       expect(error.response.status).toEqual(429)
       expect(Object.keys(error.response.headers).length).toEqual(5)
-      expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(error.response.headers.date)).toBeTruthy()
+      expect(isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(isString(error.response.headers.date)).toBeTruthy()
       expect(error.response.headers.connection).toEqual('close')
       expect(error.response.headers['content-length']).toEqual('17')
       expect(error.response.data).toEqual('Too Many Requests')
@@ -208,8 +212,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3895/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit')
@@ -226,18 +230,18 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
 
   it('Return to many requests if limit is reached and call notification', async () => {
     let accessData: any
-    const app = v.App()
+    const app = App()
     const rateLimitConfig = {
       windowMs: 50,
       limit: 1,
       minToNotification: 1,
-      notification: (access: v.AccessData) => {
+      notification: (access: RateLimitAccessData) => {
         accessData = access
       }
     }
-    app.use(v.rateLimit(rateLimitConfig))
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    app.use(rateLimit(rateLimitConfig))
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     const server = app.server()
 
@@ -246,8 +250,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3894/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit')
@@ -262,8 +266,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3894/rate-limit').catch((error) => {
       expect(error.response.status).toEqual(429)
       expect(Object.keys(error.response.headers).length).toEqual(5)
-      expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(error.response.headers.date)).toBeTruthy()
+      expect(isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(isString(error.response.headers.date)).toBeTruthy()
       expect(error.response.headers.connection).toEqual('close')
       expect(error.response.headers['content-length']).toEqual('17')
       expect(error.response.data).toEqual('Too Many Requests')
@@ -278,16 +282,16 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     expect(accessData.exceeded.requests.length).toEqual(1)
     expect(requests[0].method).toEqual('GET')
     expect(requests[0].route).toEqual('/rate-limit')
-    expect(v.isUUID(requests[0].requestId)).toBeTruthy()
+    expect(isUUID(requests[0].requestId)).toBeTruthy()
 
     app.close()
   })
 
   it('Should be able to call any route with default config', async () => {
-    const app = v.App()
-    app.use(v.rateLimit())
-    const router = v.Router()
-    router.get('/rate-limit', v.controllerAdapter(new RateLimitController()))
+    const app = App()
+    app.use(rateLimit())
+    const router = Router()
+    router.get('/rate-limit', controllerAdapter(new RateLimitController()))
     app.use(router)
     const server = app.server()
 
@@ -296,8 +300,8 @@ describe('Rate Limit - end to end testing using axios and app server', () => {
     await axios.get('http://localhost:3892/rate-limit').then((response) => {
       expect(response.status).toEqual(200)
       expect(Object.keys(response.headers).length).toEqual(8)
-      expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-      expect(v.isString(response.headers.date)).toBeTruthy()
+      expect(isUUID(response.headers['request-id'])).toBeTruthy()
+      expect(isString(response.headers.date)).toBeTruthy()
       expect(response.headers.connection).toEqual('close')
       expect(response.headers['content-length']).toEqual('10')
       expect(response.headers).toHaveProperty('x-ratelimit-limit')

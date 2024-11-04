@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../location'
-import { ErrorTest, Method, Methods, SuccessTest } from '../../../../types'
+import { SchemaErrorTest, SchemaMethod, SchemaMethods, SchemaSuccessTest } from '../../../../types'
 import { isArray, received } from '../../../../utils'
 
 export const validateArray = ({
@@ -12,10 +12,10 @@ export const validateArray = ({
 }: {
   value: any
   valueName: string
-  methods: Methods
+  methods: SchemaMethods
   validateOtherMethods: (rule: any, value: any, index: number) => void
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const message = {
     expect: 'array type',
@@ -32,7 +32,7 @@ export const validateArray = ({
       received: received(value)
     })
 
-    const methodsWithoutArray = methods.filter((filteredMethod: Method) =>
+    const methodsWithoutArray = methods.filter((filteredMethod: SchemaMethod) =>
       filteredMethod.method !== 'array'
     )
 

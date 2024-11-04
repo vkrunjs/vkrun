@@ -1,6 +1,6 @@
-import * as type from '../../../../types'
+import { SchemaNumberIntegerMethod, SchemaParamsMethod } from '../../../../types'
 
-export const numberIntegerMethod = (params: type.ParamsMethod): type.NumberIntegerMethod => {
+export const numberIntegerMethod = (params: SchemaParamsMethod): SchemaNumberIntegerMethod => {
   const { callbackMethodBuild, callbackDefaultReturnMethods } = params
   callbackMethodBuild({ method: 'integer' })
 

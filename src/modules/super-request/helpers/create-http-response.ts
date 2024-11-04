@@ -1,9 +1,9 @@
-import * as http from 'http'
+import { ServerResponse } from 'http'
 import { STATUS_CODES } from './status-codes'
-import * as util from '../../utils'
+import { isObject } from '../../utils'
 
 export const createHttpResponse = (request: any): any => {
-  const response: any = new http.ServerResponse(request) // new CreateHttpResponse()
+  const response: any = new ServerResponse(request) // new CreateHttpResponse()
 
   response.headers = {}
 
@@ -11,7 +11,7 @@ export const createHttpResponse = (request: any): any => {
     response.statusMessage = STATUS_CODES[response.statusCode]
 
     if (data !== undefined) {
-      if (util.isObject(data)) {
+      if (isObject(data)) {
         response.data = JSON.stringify(data)
       } else if (Buffer.isBuffer(data)) {
         response.data = data.toString()
@@ -19,7 +19,7 @@ export const createHttpResponse = (request: any): any => {
         response.data = data.toString().trim()
       }
     } else {
-      if (util.isObject(response._body)) {
+      if (isObject(response._body)) {
         response.data = JSON.stringify(response._body)
       } else {
         if (response._body) response.data = response._body.toString().trim()

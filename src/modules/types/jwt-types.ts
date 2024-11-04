@@ -1,14 +1,14 @@
 export interface VkrunJwt {
-  encrypt: (data: any, config: EncryptConfig) => Token
-  decrypt: (token: Token, secretKey: string | string[]) => any | null
+  encrypt: (data: any, config: JwtEncryptConfig) => JwtToken
+  decrypt: (token: JwtToken, secretKey: string | string[]) => any | null
 }
 
-export interface EncryptConfig {
+export interface JwtEncryptConfig {
   secretKey: string | string[]
   expiresIn: number | string
 }
 
-export interface TokenData {
+export interface JwtTokenData {
   data: any
   config: {
     createdAt: number
@@ -16,4 +16,4 @@ export interface TokenData {
   }
 }
 
-export type Token = string
+export type JwtToken = string

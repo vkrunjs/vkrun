@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../location'
-import { ErrorTest, SuccessTest } from '../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { received } from '../../../../utils'
 
 export const validateRequired = ({
@@ -10,8 +10,8 @@ export const validateRequired = ({
 }: {
   value: any
   valueName: string
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   if (value !== undefined) {
     callbackAddPassed({

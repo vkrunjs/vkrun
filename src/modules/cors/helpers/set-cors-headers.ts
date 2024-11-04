@@ -1,11 +1,11 @@
-import * as util from '../../utils'
-import * as type from '../../types'
+import { Request, Response, CorsSetOptions } from '../../types'
+import { isArray } from '../../utils'
 
-export const setCorsHeaders = (request: type.Request, response: type.Response, options: type.SetCorsOptions): void => {
+export const setCorsHeaders = (request: Request, response: Response, options: CorsSetOptions): void => {
   if (options.origin === '*') {
     response.setHeader('Access-Control-Allow-Origin', options.origin)
   } else if (options.origin && options.origin !== '*') {
-    if (util.isArray(options.origin)) {
+    if (isArray(options.origin)) {
       const originHeader = options.origin.find(origin => origin === request.headers.origin)
       if (originHeader) {
         response.setHeader('Access-Control-Allow-Origin', originHeader)

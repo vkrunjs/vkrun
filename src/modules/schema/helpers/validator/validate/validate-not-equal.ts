@@ -1,9 +1,9 @@
+import { SchemaValidateMethod } from '../../../../types'
+import { isNotEqual, received } from '../../../../utils'
 import { informativeMessage } from '../../location'
-import * as type from '../../../../types'
-import * as util from '../../../../utils'
 
 export const validateNotEqual = (
-  params: type.ValidateMethod & {
+  params: SchemaValidateMethod & {
     valueToCompare: any
   }
 ): void => {
@@ -15,7 +15,7 @@ export const validateNotEqual = (
     callbackAddFailed
   } = params
 
-  if (util.isNotEqual(value, valueToCompare)) {
+  if (isNotEqual(value, valueToCompare)) {
     callbackAddPassed({
       method: 'notEqual',
       name: valueName,
@@ -28,7 +28,7 @@ export const validateNotEqual = (
       type: 'invalid value',
       name: valueName,
       expect: valueToCompare,
-      received: util.received(value),
+      received: received(value),
       message: informativeMessage.notEqual
         .replace('[valueName]', valueName)
         .replace('[value]', value)

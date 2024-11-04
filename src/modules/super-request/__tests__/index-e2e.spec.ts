@@ -1,13 +1,16 @@
-import path from 'path'
-import fs from 'fs'
-import v from '../../../index'
+import { join } from 'path'
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import FormData from 'form-data'
+import { isUUID } from '../../utils'
+import { App } from '../../app'
+import { Request, Response } from '../../types'
+import { superRequest } from '..'
 
 describe('Super Request - end to end testing', () => {
   const validateSuccess = (response: any): void => {
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
-    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(isUUID(response.headers['request-id'])).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
   }
 
@@ -15,10 +18,10 @@ describe('Super Request - end to end testing', () => {
     let requestBody: any
     let requestFiles: any
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.post('/body-post', (request: v.Request, response: v.Response) => {
+    app.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       requestFiles = request.files
       response.status(200).end()
@@ -26,9 +29,9 @@ describe('Super Request - end to end testing', () => {
 
     const fileContent = 'Text file'
     const fileName = 'filename.txt'
-    const filePath = path.join(__dirname, fileName)
+    const filePath = join(__dirname, fileName)
 
-    fs.writeFileSync(filePath, fileContent)
+    writeFileSync(filePath, fileContent)
 
     const data = new FormData()
     data.append('string', 'any@mail.com')
@@ -37,19 +40,19 @@ describe('Super Request - end to end testing', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    const fileBuffer = fs.readFileSync(filePath)
+    const fileBuffer = readFileSync(filePath)
     data.append('file', fileBuffer, fileName)
 
-    const response = await v.superRequest(app).post('/body-post', data)
+    const response = await superRequest(app).post('/body-post', data)
 
-    fs.unlinkSync(filePath)
+    unlinkSync(filePath)
 
-    fs.writeFileSync(filePath, requestFiles[0].buffer)
-    const fileExists = fs.existsSync(filePath)
+    writeFileSync(filePath, requestFiles[0].buffer)
+    const fileExists = existsSync(filePath)
     expect(fileExists).toBeTruthy()
-    const savedFileContent = fs.readFileSync(filePath, 'utf-8')
+    const savedFileContent = readFileSync(filePath, 'utf-8')
     expect(savedFileContent).toEqual(fileContent)
-    fs.unlinkSync(filePath)
+    unlinkSync(filePath)
 
     validateSuccess(response)
     expect(requestBody).toEqual({
@@ -69,16 +72,16 @@ describe('Super Request - end to end testing', () => {
   it('Should parse query parameters correctly', async () => {
     let requestQuery
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.get('/query', (req: v.Request, res: v.Response) => {
+    app.get('/query', (req: Request, res: Response) => {
       requestQuery = req.query
       res.status(200).end()
     })
 
     const query = 'name=John&age=30&boolean=true'
-    const response = await v.superRequest(app).get(`/query?${query}`)
+    const response = await superRequest(app).get(`/query?${query}`)
 
     validateSuccess(response)
     expect(requestQuery).toEqual({ name: 'John', age: 30, boolean: true })
@@ -89,17 +92,17 @@ describe('Super Request - end to end testing', () => {
   it('Should parse JSON body in POST method', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.post('/json', (req: v.Request, res: v.Response) => {
+    app.post('/json', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
 
     const data = { name: 'John', age: 30, isAdmin: true }
 
-    const response = await v.superRequest(app).post('/json', data, {
+    const response = await superRequest(app).post('/json', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -112,16 +115,16 @@ describe('Super Request - end to end testing', () => {
   it('Should parse URL encoded body in POST method', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.post('/urlencoded', (req: v.Request, res: v.Response) => {
+    app.post('/urlencoded', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
 
     const urlencoded = 'name=John&age=30&isAdmin=true'
-    const response = await v.superRequest(app).post('/urlencoded', urlencoded, {
+    const response = await superRequest(app).post('/urlencoded', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
@@ -134,17 +137,17 @@ describe('Super Request - end to end testing', () => {
   it('Should handle PUT requests', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.put('/update', (req: v.Request, res: v.Response) => {
+    app.put('/update', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
 
     const data = { name: 'Updated Name', age: 31 }
 
-    const response = await v.superRequest(app).put('/update', data, {
+    const response = await superRequest(app).put('/update', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -157,17 +160,17 @@ describe('Super Request - end to end testing', () => {
   it('Should handle PATCH requests', async () => {
     let requestBody
 
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.patch('/modify', (req: v.Request, res: v.Response) => {
+    app.patch('/modify', (req: Request, res: Response) => {
       requestBody = req.body
       res.status(200).end()
     })
 
     const data = { age: 32 }
 
-    const response = await v.superRequest(app).patch('/modify', data, {
+    const response = await superRequest(app).patch('/modify', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -178,14 +181,14 @@ describe('Super Request - end to end testing', () => {
   })
 
   it('Should handle DELETE requests', async () => {
-    const app = v.App()
+    const app = App()
     app.parseData()
 
-    app.delete('/delete/:id', (req: v.Request, res: v.Response) => {
+    app.delete('/delete/:id', (req: Request<{ params: { id: number } }>, res: Response) => {
       res.status(200).json({ deletedId: req?.params?.id })
     })
 
-    const response = await v.superRequest(app).delete('/delete/1')
+    const response = await superRequest(app).delete('/delete/1')
 
     expect(response.statusCode).toEqual(200)
     expect(response.data).toEqual({ deletedId: 1 })
@@ -194,14 +197,14 @@ describe('Super Request - end to end testing', () => {
   })
 
   it('Should handle HEAD requests', async () => {
-    const app = v.App()
+    const app = App()
 
-    app.head('/info', (req: v.Request, res: v.Response) => {
+    app.head('/info', (req: Request, res: Response) => {
       res.setHeader('X-Custom-Header', 'CustomValue')
       res.status(200).end()
     })
 
-    const response = await v.superRequest(app).head('/info')
+    const response = await superRequest(app).head('/info')
 
     expect(response.statusCode).toEqual(200)
     expect(response.headers['x-custom-header']).toEqual('CustomValue')
@@ -210,14 +213,14 @@ describe('Super Request - end to end testing', () => {
   })
 
   it('Should handle OPTIONS requests', async () => {
-    const app = v.App()
+    const app = App()
 
-    app.options('/options', (req: v.Request, res: v.Response) => {
+    app.options('/options', (req: Request, res: Response) => {
       res.setHeader('Allow', 'GET,POST,OPTIONS')
       res.status(204).end()
     })
 
-    const response = await v.superRequest(app).options('/options')
+    const response = await superRequest(app).options('/options')
 
     expect(response.statusCode).toEqual(204)
     expect(response.headers.allow).toEqual('GET,POST,OPTIONS')
@@ -226,9 +229,9 @@ describe('Super Request - end to end testing', () => {
   })
 
   it('Should handle non-existent route with 404', async () => {
-    const app = v.App()
+    const app = App()
 
-    await v.superRequest(app).get('/non-existent').catch((error) => {
+    await superRequest(app).get('/non-existent').catch((error) => {
       expect(error.response.statusCode).toEqual(404)
       expect(error.response.statusMessage).toEqual('Not Found')
     })
@@ -240,15 +243,15 @@ describe('Super Request - end to end testing', () => {
   /// //
 
   it('Should handle asynchronous response with delay', async () => {
-    const app = v.App()
+    const app = App()
 
-    app.get('/', (req: v.Request, res: v.Response) => {
+    app.get('/', (req: Request, res: Response) => {
       setTimeout(() => {
         res.status(200).send('waited 100ms')
       }, 100)
     })
 
-    await v.superRequest(app).get('/').then((response) => {
+    await superRequest(app).get('/').then((response) => {
       validateSuccess(response)
       expect(response.data).toEqual('waited 100ms')
     })

@@ -1,15 +1,20 @@
 import path from 'path'
 import fs from 'fs'
-import v from '../../../index'
 import FormData from 'form-data'
+import { isString, isUUID } from '../../utils'
+import { App } from '../../app'
+import { parseData } from '..'
+import { Router } from '../../router'
+import { Request, Response } from '../../types'
+import { superRequest } from '../../super-request'
 
 describe('Parse Data - end to end testing using super request', () => {
   const validateSuccess = (response: any): void => {
     expect(response.statusCode).toEqual(200)
     expect(response.statusMessage).toEqual('OK')
     expect(Object.keys(response.headers).length).toEqual(4)
-    expect(v.isUUID(response.headers['request-id'])).toBeTruthy()
-    expect(v.isString(response.headers.date)).toBeTruthy()
+    expect(isUUID(response.headers['request-id'])).toBeTruthy()
+    expect(isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('0')
     expect(response.data).toEqual('')
@@ -18,11 +23,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse query url', async () => {
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.get('/query', (request: v.Request, response: v.Response) => {
+    router.get('/query', (request: Request, response: Response) => {
       requestQuery = request.query
       response.status(200).end()
     })
@@ -30,7 +35,7 @@ describe('Parse Data - end to end testing using super request', () => {
     app.use(router)
 
     const query = 'string=any@mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02:00:00.000Z'
-    const response = await v.superRequest(app).get(`/query?${query}`)
+    const response = await superRequest(app).get(`/query?${query}`)
 
     validateSuccess(response)
     expect(requestQuery).toEqual({
@@ -47,18 +52,18 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse params url', async () => {
     let requestParams
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.get('/params/:string/:integer/:float/:boolean/:date', (request: v.Request, response: v.Response) => {
+    router.get('/params/:string/:integer/:float/:boolean/:date', (request: Request, response: Response) => {
       requestParams = request.params
       response.status(200).end()
     })
 
     app.use(router)
 
-    const response = await v.superRequest(app).get('/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z')
+    const response = await superRequest(app).get('/params/any@mail.com/123/1.56/true/2000-02-03T02:00:00.000Z')
 
     validateSuccess(response)
     expect(requestParams).toEqual({
@@ -75,11 +80,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the JSON body in the POST method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -98,7 +103,7 @@ describe('Parse Data - end to end testing using super request', () => {
       }
     }
 
-    const response = await v.superRequest(app).post('/body-post', data, {
+    const response = await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -111,11 +116,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the JSON body in the PUT method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.put('/body-put', (request: v.Request, response: v.Response) => {
+    router.put('/body-put', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -130,7 +135,7 @@ describe('Parse Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    const response = await v.superRequest(app).put('/body-put', data, {
+    const response = await superRequest(app).put('/body-put', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -143,11 +148,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the JSON body in the PATCH method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.patch('/body-patch', (request: v.Request, response: v.Response) => {
+    router.patch('/body-patch', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -162,7 +167,7 @@ describe('Parse Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    const response = await v.superRequest(app).patch('/body-patch', data, {
+    const response = await superRequest(app).patch('/body-patch', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -175,11 +180,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the urlencoded body in the POST method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -188,7 +193,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
-    const response = await v.superRequest(app).post('/body-post', urlencoded, {
+    const response = await superRequest(app).post('/body-post', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
@@ -207,11 +212,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the urlencoded body in the PUT method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.put('/body-put', (request: v.Request, response: v.Response) => {
+    router.put('/body-put', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -220,7 +225,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
-    const response = await v.superRequest(app).put('/body-put', urlencoded, {
+    const response = await superRequest(app).put('/body-put', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
@@ -239,11 +244,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the urlencoded body in the PATCH method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.patch('/body-patch', (request: v.Request, response: v.Response) => {
+    router.patch('/body-patch', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -252,7 +257,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const urlencoded = 'string=any%40mail.com&integer=123&float=1.56&boolean=true&date=2000-02-03T02%3A00%3A00.000Z'
 
-    const response = await v.superRequest(app).patch('/body-patch', urlencoded, {
+    const response = await superRequest(app).patch('/body-patch', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
@@ -272,11 +277,11 @@ describe('Parse Data - end to end testing using super request', () => {
     let requestBody: any
     let requestFiles: any
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       requestFiles = request.files
       response.status(200).end()
@@ -300,7 +305,7 @@ describe('Parse Data - end to end testing using super request', () => {
     const fileBuffer = fs.readFileSync(filePath)
     data.append('file', fileBuffer, fileName)
 
-    const response = await v.superRequest(app).post('/body-post', data, {
+    const response = await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
@@ -331,11 +336,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the form data body in the PUT method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.put('/body-put', (request: v.Request, response: v.Response) => {
+    router.put('/body-put', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -349,7 +354,7 @@ describe('Parse Data - end to end testing using super request', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    const response = await v.superRequest(app).put('/body-put', data, {
+    const response = await superRequest(app).put('/body-put', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
@@ -368,11 +373,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the form data body in the PATCH method', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.patch('/body-patch', (request: v.Request, response: v.Response) => {
+    router.patch('/body-patch', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -386,7 +391,7 @@ describe('Parse Data - end to end testing using super request', () => {
     data.append('boolean', String(true))
     data.append('date', new Date('2000-02-03T02:00:00.000Z').toISOString())
 
-    const response = await v.superRequest(app).patch('/body-patch', data, {
+    const response = await superRequest(app).patch('/body-patch', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
@@ -405,11 +410,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to use a string body in the POST, PUT, or PATCH method when not providing a content type supported by the data analysis module', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -424,7 +429,7 @@ describe('Parse Data - end to end testing using super request', () => {
       date: new Date('2000-02-03T02:00:00.000Z')
     }
 
-    const response = await v.superRequest(app).post('/body-post', data, {
+    const response = await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'text/plain' }
     })
 
@@ -437,11 +442,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse a string and parse it if there is SQL when the content type is JSON', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -452,7 +457,7 @@ describe('Parse Data - end to end testing using super request', () => {
       sql: 'SELECT * FROM USER;'
     }
 
-    const response = await v.superRequest(app).post('/body-post', data)
+    const response = await superRequest(app).post('/body-post', data)
 
     validateSuccess(response)
     expect(requestBody).toEqual({ sql: "'SELECT * FROM USER;'" })
@@ -463,11 +468,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse a string and parse it if there is SQL when the content type is urlencoded', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -476,7 +481,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const urlencoded = 'sql=SELECT * FROM USER;'
 
-    const response = await v.superRequest(app).post('/body-post', urlencoded, {
+    const response = await superRequest(app).post('/body-post', urlencoded, {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
@@ -489,11 +494,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse a string and parse it if there is SQL when the content type is form data', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -503,7 +508,7 @@ describe('Parse Data - end to end testing using super request', () => {
     const data = new FormData()
     data.append('sql', 'SELECT * FROM USER;')
 
-    const response = await v.superRequest(app).post('/body-post', data, {
+    const response = await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
@@ -516,11 +521,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse a string and parse it if there is SQL with others content types', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -529,7 +534,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const data = 'SELECT * FROM USER;'
 
-    const response = await v.superRequest(app).post('/body-post', data, {
+    const response = await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'text/plain' }
     })
 
@@ -542,11 +547,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the query if there is SQL', async () => {
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.get('/query', (request: v.Request, response: v.Response) => {
+    router.get('/query', (request: Request, response: Response) => {
       requestQuery = request.query
       response.status(200).end()
     })
@@ -555,7 +560,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const query = 'sql=SELECT * FROM USER;'
 
-    const response = await v.superRequest(app).get(`/query?${query}`)
+    const response = await superRequest(app).get(`/query?${query}`)
 
     validateSuccess(response)
     expect(requestQuery).toEqual({ sql: "'SELECT * FROM USER;'" })
@@ -566,11 +571,11 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to parse the params if there is SQL', async () => {
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData({ escapeSQL: true }))
-    const router = v.Router()
+    const app = App()
+    app.use(parseData({ escapeSQL: true }))
+    const router = Router()
 
-    router.get('/:sql', (request: v.Request, response: v.Response) => {
+    router.get('/:sql', (request: Request, response: Response) => {
       requestQuery = request.params
       response.status(200).end()
     })
@@ -579,7 +584,7 @@ describe('Parse Data - end to end testing using super request', () => {
 
     const data = 'SELECT * FROM USER;'
 
-    const response = await v.superRequest(app).get(`/${data}`)
+    const response = await superRequest(app).get(`/${data}`)
     validateSuccess(response)
     expect(requestQuery).toEqual({ sql: "'SELECT%20*%20FROM%20USER;'" })
 
@@ -587,27 +592,27 @@ describe('Parse Data - end to end testing using super request', () => {
   })
 
   it('Return bad request if invalid request data', async () => {
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (_request: v.Request, response: v.Response) => {
+    router.post('/body-post', (_request: Request, response: Response) => {
       response.status(200).end()
     })
 
     app.use(router)
     const data = 'Hello World!'
 
-    await v.superRequest(app).post('/body-post', data, {
+    await superRequest(app).post('/body-post', data, {
       headers: { 'Content-Type': 'application/json' }
     }).catch((error) => {
       expect(error.response.statusCode).toEqual(400)
       expect(error.response.statusMessage).toEqual('Bad Request')
       expect(Object.keys(error.response.headers).length).toEqual(6)
-      expect(v.isUUID(error.response.headers['request-id'])).toBeTruthy()
+      expect(isUUID(error.response.headers['request-id'])).toBeTruthy()
       expect(error.response.headers['access-control-allow-origin']).toEqual('*')
       expect(error.response.headers['content-type']).toEqual('text/plain')
-      expect(v.isString(error.response.headers.date)).toBeTruthy()
+      expect(isString(error.response.headers.date)).toBeTruthy()
       expect(error.response.headers.connection).toEqual('close')
       expect(error.response.headers['content-length']).toEqual('20')
       expect(error.response.data).toEqual('Invalid Request Data')
@@ -619,18 +624,18 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to return undefined body if request body is empty and content type is multipart/form-data', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.post('/body-post', (request: v.Request, response: v.Response) => {
+    router.post('/body-post', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
 
     app.use(router)
 
-    await v.superRequest(app).post('/body-post', '', {
+    await superRequest(app).post('/body-post', '', {
       headers: { 'Content-Type': 'multipart/form-data' }
     }).catch((error) => {
       expect(error.response.statusCode).toEqual(400)
@@ -644,8 +649,8 @@ describe('Parse Data - end to end testing using super request', () => {
   it('Should be able to return string json body if all config parse data is false', async () => {
     let requestBody
 
-    const app = v.App()
-    app.use(v.parseData({
+    const app = App()
+    app.use(parseData({
       urlencoded: false,
       params: false,
       query: false,
@@ -653,9 +658,9 @@ describe('Parse Data - end to end testing using super request', () => {
       formData: false,
       escapeSQL: false
     }))
-    const router = v.Router()
+    const router = Router()
 
-    router.post('/', (request: v.Request, response: v.Response) => {
+    router.post('/', (request: Request, response: Response) => {
       requestBody = request.body
       response.status(200).end()
     })
@@ -674,7 +679,7 @@ describe('Parse Data - end to end testing using super request', () => {
       }
     }
 
-    const response = await v.superRequest(app).post('/', data, {
+    const response = await superRequest(app).post('/', data, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -688,11 +693,11 @@ describe('Parse Data - end to end testing using super request', () => {
     let requestParams
     let requestQuery
 
-    const app = v.App()
-    app.use(v.parseData())
-    const router = v.Router()
+    const app = App()
+    app.use(parseData())
+    const router = Router()
 
-    router.get('/parse/:param1/:param2', (request: v.Request, response: v.Response) => {
+    router.get('/parse/:param1/:param2', (request: Request, response: Response) => {
       requestQuery = request.query
       requestParams = request.params
       response.status(200).end()
@@ -701,7 +706,7 @@ describe('Parse Data - end to end testing using super request', () => {
     app.use(router)
 
     const path = '/parse/value1/value2?query1=example@mail.com&query2=123'
-    const response = await v.superRequest(app).get(path)
+    const response = await superRequest(app).get(path)
 
     validateSuccess(response)
     expect(requestParams).toEqual({

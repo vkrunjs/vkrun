@@ -1,9 +1,9 @@
+import { SchemaValidateMethod } from '../../../../../types'
+import { isNumber, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateMinNumber = (
-  params: type.ValidateMethod & {
+  params: SchemaValidateMethod & {
     min: number
   }
 ): void => {
@@ -26,7 +26,7 @@ export const validateMinNumber = (
       .replace('[min]', String(min))
   }
 
-  if (util.isNumber(value) && value >= min) {
+  if (isNumber(value) && value >= min) {
     callbackAddPassed({
       method: 'min',
       name: valueName,
@@ -41,7 +41,7 @@ export const validateMinNumber = (
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

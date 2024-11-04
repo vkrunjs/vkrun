@@ -1,8 +1,8 @@
+import { SchemaValidateMethod } from '../../../../../types'
+import { isNumber, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
-export const validatePositiveNumber = (params: type.ValidateMethod): void => {
+export const validatePositiveNumber = (params: SchemaValidateMethod): void => {
   const {
     value,
     valueName,
@@ -20,7 +20,7 @@ export const validatePositiveNumber = (params: type.ValidateMethod): void => {
       .replace('[value]', value)
   }
 
-  if (util.isNumber(value) && value > 0) {
+  if (isNumber(value) && value > 0) {
     callbackAddPassed({
       method: 'positive',
       name: valueName,
@@ -35,7 +35,7 @@ export const validatePositiveNumber = (params: type.ValidateMethod): void => {
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }

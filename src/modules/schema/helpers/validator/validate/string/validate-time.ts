@@ -1,5 +1,5 @@
 import { informativeMessage } from '../../../location'
-import { ErrorTest, SuccessTest, TimeTypes } from '../../../../../types'
+import { SchemaErrorTest, SchemaSuccessTest, SchemaTimeTypes } from '../../../../../types'
 import { received } from '../../../../../utils'
 
 export const validateTime = ({
@@ -12,10 +12,10 @@ export const validateTime = ({
 }: {
   value: any
   valueName: string
-  type: TimeTypes
+  type: SchemaTimeTypes
   indexArray: number
-  callbackAddPassed: (success: SuccessTest) => void
-  callbackAddFailed: (error: ErrorTest) => void
+  callbackAddPassed: (success: SchemaSuccessTest) => void
+  callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
   const regTimeHHMM = /^([01]\d|2[0-3]):[0-5]\d$/
   const regTimeHHMMSS = /^([01]\d|2[0-3]):[0-5]\d:[0-5]\d$/

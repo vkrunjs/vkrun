@@ -1,9 +1,9 @@
+import { SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
-import * as type from '../../../../../types'
-import * as util from '../../../../../utils'
 
 export const validateMinBigInt = (
-  params: type.ValidateMethod & {
+  params: SchemaValidateMethod & {
     min: bigint
   }
 ): void => {
@@ -22,11 +22,11 @@ export const validateMinBigInt = (
       : 'value greater than or equal to the reference',
     error: informativeMessage.bigInt.min
       .replace('[valueName]', valueName)
-      .replace('[value]', util.isBigInt(value) ? `${value}n` : String(value))
-      .replace('[min]', util.isBigInt(min) ? `${min}n` : String(min))
+      .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
+      .replace('[min]', isBigInt(min) ? `${min}n` : String(min))
   }
 
-  if (util.isBigInt(value) && value >= min) {
+  if (isBigInt(value) && value >= min) {
     callbackAddPassed({
       method: 'min',
       name: valueName,
@@ -41,7 +41,7 @@ export const validateMinBigInt = (
       name: valueName,
       expect: message.expect,
       index: indexArray,
-      received: util.received(value),
+      received: received(value),
       message: message.error
     })
   }
