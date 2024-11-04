@@ -4,7 +4,7 @@ import { existsSync, readFileSync, rmSync } from 'fs'
 import FormData from 'form-data'
 import { upload } from '..'
 import { isString, isUUID } from '../../utils'
-import { Request, Response, StorageFile } from '../../types'
+import { Request, Response, RouterStorageFile } from '../../types'
 import { App } from '../../app'
 import { parseData } from '../../parse-data'
 import { Router } from '../../router'
@@ -33,7 +33,7 @@ describe('Upload - end-to-end testing using axios and app server', () => {
   })
 
   it('Should upload a single file without required or onError', async () => {
-    let requestFiles: StorageFile[] = []
+    let requestFiles: RouterStorageFile[] = []
 
     const app = App()
     app.use(parseData())
@@ -42,7 +42,7 @@ describe('Upload - end-to-end testing using axios and app server', () => {
     const middlewareUploads = upload.diskStorage({ destination: uploadsPath }).singleFile({ fieldName: 'file' })
 
     router.post('/upload', middlewareUploads, (request: Request, response: Response) => {
-      requestFiles = request.files as StorageFile[]
+      requestFiles = request.files as RouterStorageFile[]
       response.status(200).end()
     })
 
@@ -194,7 +194,7 @@ describe('Upload - end-to-end testing using axios and app server', () => {
   })
 
   it('Should save multiple files with matching field names when within min/max limits', async () => {
-    let requestFiles: StorageFile[] = []
+    let requestFiles: RouterStorageFile[] = []
 
     const app = App()
     app.use(parseData())
@@ -214,7 +214,7 @@ describe('Upload - end-to-end testing using axios and app server', () => {
     const middlewareUploads = upload.diskStorage({ destination: uploadsPath }).multipleFiles(fields)
 
     router.post('/upload-with-limits', middlewareUploads, (request: Request, response: Response) => {
-      requestFiles = request.files as StorageFile[]
+      requestFiles = request.files as RouterStorageFile[]
       response.status(200).end()
     })
 
