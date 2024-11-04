@@ -46,6 +46,7 @@ describe('Parse Data - Parse Multipart Form Data', () => {
       },
       files: [
         {
+          fieldName: 'file',
           buffer: '',
           extension: 'txt',
           filename: 'filename.txt',

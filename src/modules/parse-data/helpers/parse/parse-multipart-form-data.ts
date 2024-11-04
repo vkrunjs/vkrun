@@ -52,6 +52,8 @@ export const parseMultipartFormData = (request: type.Request, escapeSQL: boolean
       // Extract the filename from headers
       const filenameMatch = part.toString().match(/filename="(.+?)"/)
       const filename = filenameMatch ? filenameMatch[1] : 'uploaded_file'
+      const nameMatch = headers.match(/name="(.+?)"/)
+      const fieldName = nameMatch ? nameMatch[1] : ''
 
       // Extract the MIME type from headers
       const mimetypeMatch = part.toString().match(/Content-Type: (.+?)\r\n/)
@@ -67,7 +69,13 @@ export const parseMultipartFormData = (request: type.Request, escapeSQL: boolean
       const extension = filename.split('.').pop() ?? ''
 
       // Add the file information to the files array
-      files.push({ filename, mimetype, extension, buffer: fileData })
+      files.push({
+        fieldName,
+        filename,
+        mimetype,
+        extension,
+        buffer: fileData
+      })
     } else {
       // If not a file, treat as a regular form field
 

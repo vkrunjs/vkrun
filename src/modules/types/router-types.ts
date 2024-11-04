@@ -10,7 +10,7 @@ export interface VkrunRouter {
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export interface Request<T = {}> extends IncomingMessage {
+export interface Request<T = any> extends IncomingMessage {
   requestId?: string
   route?: Route
   body: T extends { body: infer B } ? B : Record<string, string | number | boolean | Date> | JSON | string | undefined | any
@@ -44,6 +44,7 @@ export interface CookieOptions {
 }
 
 export interface MemoryFile {
+  fieldName: string
   filename: string
   extension: string
   mimetype: string
@@ -51,6 +52,8 @@ export interface MemoryFile {
 }
 
 export interface StorageFile {
+  fieldName: string
+  originalName: string
   filename: string
   extension: string
   mimetype: string

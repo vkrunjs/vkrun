@@ -222,9 +222,10 @@ app.post('/upload', (request: v.Request, response: v.Response) => {
 
   console.log(request.files)
   // Output: Array of file objects, each containing:
+  // - fieldName: Field name specified in the form	
+  // - filename: original filename, e.g., 'photo.jpg'
   // - buffer: the file data in memory
   // - mimetype: e.g., 'image/jpeg'
-  // - filename: original filename, e.g., 'photo.jpg'
   // - size: file size in bytes
   // Useful for further processing, such as saving or validating the files
   response.status(200).end()
