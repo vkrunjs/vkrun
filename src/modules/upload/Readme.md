@@ -164,19 +164,6 @@ These properties allow for detailed information about each uploaded file, making
 
 Each file in `request.files` is an object of this structure, ensuring that you have access to both metadata and file path details for further operations, such as reading, moving, or deleting the files post-upload.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <h2 id="example-projects">Example projects</h2>
 
 If you are looking for practical examples of how to use our framework in different scenarios, just click the link below:
