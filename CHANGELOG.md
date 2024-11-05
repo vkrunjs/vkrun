@@ -1,5 +1,10 @@
 # VkrunJS Releases
 
+## 1.4.0
+- add to the upload module greater flexibility in managing files in memory, validations and custom returns by error type
+- remove all tests with axios
+- parse form data return file size
+
 ## 1.3.0
 - replace wildcard imports with explicit imports for modularization and change type names to avoid duplication between modules
 - add singleFile and multipleFiles methods to the upload module with configuration options
