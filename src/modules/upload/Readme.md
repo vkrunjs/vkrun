@@ -26,7 +26,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-The Vkrun Upload module is designed for file handling and must be used alongside parseData with formData enabled. This middleware supports single and multiple file uploads with options for validation, such as required fields and limits on the minimum and maximum number of files.
+The Vkrun Upload module is designed for file handling and must be used alongside `parseData` with `formData` enabled. This middleware supports single and multiple file uploads with options for validation, such as required fields, file size limits, and file extension validation.
 
 <h2 id="usage-examples">Usage Examples</h2>
 
@@ -35,31 +35,46 @@ The Vkrun Upload module is designed for file handling and must be used alongside
 Set up diskStorage with your preferred file storage destination and optional filename customization. This configuration will be used for both single and multiple file uploads.
 
 ```ts
-import v from 'vkrun/modules/upload'
+import { upload } from 'vkrun/modules/upload'
 
-const uploadConfig = v.upload.diskStorage({
-  destination: 'path-to-save-files' // Specifies where files will be saved
+// Disk storage setup with optional custom filename
+const diskStorage = upload.diskStorage({
+  destination: 'path/to/store/files', 
+  filename: (file) => `custom-${file.fieldName}-${Date.now()}`
 })
+
+// Memory storage setup
+const memoryStorage = upload.memoryStorage()
 ```
 
 <h3 id="using-singleFile">Single File Upload</h3>
 
-The following example demonstrates how to configure a single file upload, specifying that the file field is required and customizing the error response if the file is missing.
+The following example demonstrates a single file upload with a required field and custom error handling for missing files.
 
 ```ts
-import v from 'vkrun'
+import { App, Request, Response, Router } from 'vkrun'
 
-const app = v.App()
+const app = App()
 app.parseData({ formData: true })
-const router = v.Router()
+const router = Router()
 
-const singleFileUpload = uploadConfig.singleFile({
-  fieldName: 'file',        // The form field name for the file
-  required: true,           // Specifies that the file is required
-  onError: (res) => res.status(400).json({ error: 'File is required!' })
+const singleFileUpload = diskStorage.singleFile({
+  fieldName: 'file',
+  required: { 
+    enable: true, 
+    onError: (res) => res.status(400).json({ error: 'File is required!' }) 
+  },
+  size: { 
+    value: 500000, 
+    onError: (res) => res.status(413).json({ error: 'File too large!' }) 
+  },
+  extensions: { 
+    value: ['png', 'jpg'], 
+    onError: (res) => res.status(415).json({ error: 'Invalid file type!' }) 
+  }
 })
 
-router.post('/upload-single', singleFileUpload, (req: v.Request, res: v.Response) => {
+router.post('/upload-single', singleFileUpload, (req: Request, res: Response) => {
   res.status(200).json({ message: 'Single file uploaded successfully!', file: req.files })
 })
 
@@ -71,69 +86,102 @@ app.server().listen(3000, () => {
 
 <h3 id="using-multipleFiles">Using multipleFiles</h3>
 
-The example below shows how to set up multiple file uploads with specific validation criteria, such as minimum and maximum file counts, along with custom error responses for each condition.
+Here’s how to configure multiple file uploads with specific validation rules for minimum and maximum file counts, size limits, and custom extensions.
 
 ```ts
-const multipleFilesUpload = uploadConfig.multipleFiles([
+const multipleFilesUpload = diskStorage.multipleFiles([
   {
-    fieldName: 'file1',   // Field for the first set of files
-    min: { count: 2, onError: (res) => res.status(400).json({ error: 'At least 2 files required for file1' }) },
-    max: { count: 5, onError: (res) => res.status(400).json({ error: 'No more than 5 files allowed for file1' }) }
+    fieldName: 'images',
+    min: { 
+      value: 2, 
+      onError: (res) => res.status(400).json({ error: 'At least 2 images required' }) 
+    },
+    max: { 
+      value: 5, 
+      onError: (res) => res.status(400).json({ error: 'No more than 5 images allowed' }) 
+    },
+    size: { 
+      value: 500000, 
+      onError: (res) => res.status(413).json({ error: 'One of the images is too large' }) 
+    },
+    extensions: { 
+      value: ['jpg', 'png'], 
+      onError: (res) => res.status(415).json({ error: 'Invalid image format' }) 
+    }
   },
   {
-    fieldName: 'file2',   // Field for the second set of files
-    min: { count: 1 },
-    max: { count: 1, onError: (res) => res.status(400).json({ error: 'Only 1 file allowed for file2' }) }
+    fieldName: 'documents',
+    min: { 
+      value: 1, 
+      onError: (res) => res.status(400).json({ error: 'At least 1 document required' }) 
+    },
+    max: { 
+      value: 3 
+    },
+    extensions: { 
+      value: ['pdf'], 
+      onError: (res) => res.status(415).json({ error: 'Invalid document format' }) 
+    }
   }
 ])
 
-router.post('/upload-multiple', multipleFilesUpload, (req: v.Request, res: v.Response) => {
+router.post('/upload-multiple', multipleFilesUpload, (req: Request, res: Response) => {
   res.status(200).json({ message: 'Multiple files uploaded successfully!', files: req.files })
 })
 ```
 
 <h3 id="setting-custom-file-names">Setting Custom File Names</h3>
 
+To set custom file names, define a `filename` function in `diskStorage`. The function receives the file object and can return a customized filename based on properties such as the file’s field name and the current timestamp.
+
+
 ```ts
 const uploadWithCustomFilename = upload.diskStorage({
-  destination: 'path-to-save-files',
+  destination: 'path/to/store/files',
   filename: (file) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    return `${file.filename}-${uniqueSuffix}.${file.extension}`
+    const timestamp = Date.now()
+    return `${file.fieldName}-${timestamp}.${file.extension}`
   }
 })
 ```
 
 #### Full Example with Single and Multiple File Uploads
 
-Here’s a complete setup for handling both single and multiple file uploads using the configurations defined above:
+This example demonstrates a full setup for handling both single and multiple file uploads with disk storage configuration.
 
 ```ts
-import v from 'vkrun'
+import { App, Request, Response, Router } from 'vkrun'
 import { upload } from 'vkrun/modules/upload'
 
-const app = v.App()
+const app = App()
 app.parseData({ formData: true })
-const router = v.Router()
+const router = Router()
 
-const singleFileUpload = uploadConfig.singleFile({
+// Single file upload configuration
+const singleFileUpload = upload.diskStorage({
+  destination: 'uploads/single'
+}).singleFile({
   fieldName: 'file',
-  required: true,
-  onError: (res) => res.status(400).json({ error: 'File is required!' })
+  required: { 
+    enable: true, 
+    onError: (res) => res.status(400).json({ error: 'File is required!' }) 
+  }
 })
 
-const multipleFilesUpload = uploadConfig.multipleFiles([
-  { fieldName: 'file1', min: { count: 2 }, max: { count: 5 } },
-  { fieldName: 'file2', min: { count: 1 }, max: { count: 1 } }
+// Multiple files upload configuration
+const multipleFilesUpload = upload.diskStorage({
+  destination: 'uploads/multiple'
+}).multipleFiles([
+  { fieldName: 'images', min: { value: 2 }, max: { value: 5 } },
+  { fieldName: 'documents', min: { value: 1 }, max: { value: 3 } }
 ])
 
-// Route for single file upload
-router.post('/upload-single', singleFileUpload, (req: v.Request, res: v.Response) => {
+// Routes
+router.post('/upload-single', singleFileUpload, (req: Request, res: Response) => {
   res.status(200).json({ message: 'Single file uploaded successfully!', file: req.files })
 })
 
-// Route for multiple files upload
-router.post('/upload-multiple', multipleFilesUpload, (req: v.Request, res: v.Response) => {
+router.post('/upload-multiple', multipleFilesUpload, (req: Request, res: Response) => {
   res.status(200).json({ message: 'Multiple files uploaded successfully!', files: req.files })
 })
 
@@ -147,7 +195,7 @@ app.server().listen(3000, () => {
 
 ### File Data Structure
 
-The `request.files` array contains information about each uploaded file. Each file object in this array follows the structure below:
+The `request.files` array contains details about each uploaded file:
 
 | Property      | Type     | Description                                                                                   |
 |---------------|----------|-----------------------------------------------------------------------------------------------|
@@ -160,9 +208,7 @@ The `request.files` array contains information about each uploaded file. Each fi
 | `destination` | `string` | The path to the directory where the file is saved.                                            |
 | `path`        | `string` | The full file path including filename and extension where the file is stored on disk.         |
 
-These properties allow for detailed information about each uploaded file, making it easy to handle, verify, and process files within your application. 
-
-Each file in `request.files` is an object of this structure, ensuring that you have access to both metadata and file path details for further operations, such as reading, moving, or deleting the files post-upload.
+This structure provides all necessary details for handling each file, making it easier to manage operations like validation, reading, and deletion.
 
 <h2 id="example-projects">Example projects</h2>
 
