@@ -74,7 +74,8 @@ export const parseMultipartFormData = (request: Request, escapeSQL: boolean): {
         filename,
         mimetype,
         extension,
-        buffer: fileData
+        buffer: fileData,
+        size: fileData.length
       })
     } else {
       // If not a file, treat as a regular form field

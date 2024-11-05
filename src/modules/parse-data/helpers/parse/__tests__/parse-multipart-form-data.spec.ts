@@ -50,7 +50,8 @@ describe('Parse Data - Parse Multipart Form Data', () => {
           buffer: '',
           extension: 'txt',
           filename: 'filename.txt',
-          mimetype: 'text/plain'
+          mimetype: 'text/plain',
+          size: 0
         }
       ]
     })
