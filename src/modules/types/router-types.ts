@@ -18,7 +18,7 @@ export interface Request<T = any> extends IncomingMessage {
   params: T extends { params: infer P } ? P : Record<string, string | number | boolean | Date> | undefined
   query: T extends { query: infer Q } ? Q : Record<string, string | number | boolean | Date> | undefined
   session?: any
-  files: T extends { files: infer F } ? F : File[] | undefined
+  files: T extends { files: infer F } ? F : RouterFile[]
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
@@ -50,6 +50,7 @@ export interface RouterMemoryFile {
   extension: string
   mimetype: string
   buffer: Buffer
+  size: number
 }
 
 export interface RouterStorageFile {
