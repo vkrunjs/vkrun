@@ -2,7 +2,7 @@
 
 > This is a module for [Node.js](https://nodejs.org/en/) available through the [npm registry](https://www.npmjs.com/package/vkrun).
 
-#### Step 1: [Install Node.js](https://nodejs.org/en/download/) 0.10 or higher is required.
+#### Step 1: [Install Node.js](https://nodejs.org/en/download/) 18 or higher is required.
 
 #### Step 2: Create a new directory for your project. (For new projects)
 
