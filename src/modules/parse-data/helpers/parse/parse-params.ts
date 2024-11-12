@@ -5,7 +5,7 @@ export const parseParams = (request: Request, escapeSQL: boolean): Record<string
   const route = request.route as Route
   const routeParams: Record<string, string | number | boolean | Date> = {}
   const routePathParts = route.path.split('/')
-  const urlPathParts = (request.url ?? '').split('?')[0].split('/') // Adiciona o split('?')[0] para ignorar a query string
+  const urlPathParts = (request.url ?? '').split('?')[0].split('/')
 
   if (routePathParts.length === urlPathParts.length) {
     for (let i = 0; i < routePathParts.length; i++) {

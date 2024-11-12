@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, LoggerSetConfig, VkrunLogger } from '../types'
+import { isArray, isObject } from '../utils'
 import { configLogger } from './helpers/config-logger'
 import { createLog } from './helpers/create-log'
 
@@ -15,8 +16,7 @@ export const LoggerSetup = (configParams: LoggerSetConfig): VkrunLogger => {
       // @ts-ignore
       const value = configParams[key]
       
-      // Se o valor for um objeto, aplicamos a atualização recursivamente
-      if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
+      if (isObject(value) && !isArray(value) && value !== null) {
         // @ts-ignore
         config[key] = { ...config[key], ...value }
       } else {

@@ -189,7 +189,7 @@ export class SwaggerBuilderSetup implements VkrunSwaggerBuilder {
                   }
                 });
               } else {
-                setTimeout(setupFilterEvents, 500);  // Tenta novamente em 500ms
+                setTimeout(setupFilterEvents, 500);
               }
             }
           
@@ -280,7 +280,7 @@ export class SwaggerBuilderSetup implements VkrunSwaggerBuilder {
                   }
                 });
               } else {
-                setTimeout(setupFilterEvents, 500);  // Tenta novamente em 500ms
+                setTimeout(setupFilterEvents, 500);
               }
             }
           

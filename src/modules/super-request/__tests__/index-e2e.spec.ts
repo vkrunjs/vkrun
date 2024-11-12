@@ -239,9 +239,6 @@ describe('Super Request - end to end testing', () => {
     app.close()
   })
 
-  /// ///
-  /// //
-
   it('Should handle asynchronous response with delay', async () => {
     const app = App()
 

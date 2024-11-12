@@ -36,7 +36,7 @@ export type SwaggerHttpStatusCode =
   | 500 | 501 | 502 | 503 | 504 | 505 | 506 | 507 | 508 | 510 | 511
 
 export interface SwaggerRequestBody {
-  $ref?: string // Permite $ref sem exigir outras propriedades
+  $ref?: string
   required?: boolean
   content?: Record<string, {
     schema: SwaggerSchema
@@ -50,8 +50,8 @@ export interface SwaggerRequestBody {
 }
 
 export interface SwaggerResponse {
-  $ref?: string // Permite $ref sem exigir outras propriedades
-  description?: string // `description` é opcional porque pode ser usado `$ref`
+  $ref?: string
+  description?: string
   content?: Record<string, {
     schema: SwaggerSchema
     examples?: Record<string, {
@@ -182,7 +182,6 @@ export interface SwaggerOperation {
       enum?: string[]
     }>
   }>
-  // Adicionando visibilityKeys ao tipo SwaggerOperation
   visibilityKeys?: string[]
 }
 

@@ -10,16 +10,16 @@ export const serveStaticFile = (basePath: string) => {
       const url = request?.url ?? ''
       const encodedFileName = url.replace(routePath.replace('*', ''), '')
       const filenamePath = decodeURIComponent(encodedFileName)
-      const filename = basename(filenamePath) // 'filename.txt'
+      const filename = basename(filenamePath)
       const fullPath = join(basePath, filenamePath)
 
       try {
-        const data = readFileSync(fullPath) // Lê o arquivo de forma síncrona
+        const data = readFileSync(fullPath)
         const extension = filename.split('.').pop() ?? ''
         const mimeType = mime.type(extension) ?? 'application/octet-stream'
 
         response.setHeader('Content-Type', mimeType)
-        return response.status(200).end(data) // Envia o conteúdo do arquivo como resposta
+        return response.status(200).end(data)
       } catch (err) {
         response.setHeader('Content-Type', 'text/plain')
         return response.status(404).send('404 - File Not Found')

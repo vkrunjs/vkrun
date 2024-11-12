@@ -14,7 +14,6 @@ describe('SwaggerBuilder', () => {
       servers: [{ url: 'http://localhost:3000', description: 'Servidor de Teste' }]
     })
 
-    // Define uma rota de exemplo
     swagger.route('/public').get({
       summary: 'Rota Pública',
       description: 'Uma rota pública de teste',
