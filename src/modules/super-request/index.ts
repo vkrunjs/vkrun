@@ -2,6 +2,7 @@ import { isObject } from '../utils'
 import {
   createHttpRequest,
   createHttpResponse,
+  customResponse,
   formatResponseData
 } from './helpers'
 import {
@@ -24,7 +25,9 @@ export const superRequest = (app: any): SuperRequest => {
       })
 
       const httpResponse = createHttpResponse(httpRequest)
-      const serverResponse = await app._reqWithoutServer(httpRequest, httpResponse)
+      const serverResponse = await app._reqWithoutServer(
+        httpRequest, customResponse(httpResponse)
+      )
       serverResponse.data = formatResponseData(serverResponse)
       serverResponse.headers.connection = 'close'
       serverResponse.headers.date = new Date().toUTCString()

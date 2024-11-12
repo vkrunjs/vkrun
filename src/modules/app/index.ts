@@ -1,7 +1,5 @@
-import * as http from 'http'
 import { RouterSetup } from '../router'
-import * as routerHelper from '../router/helpers'
-import { customResponse } from '../router/helpers/custom-response'
+import { createServer, routeExists } from '../router/helpers'
 import { loggerSanitizeInterval } from '../logger'
 import { RouterHandler } from '../router/helpers/router-handler'
 import { ParseDataSetup } from '../parse-data'
@@ -59,26 +57,23 @@ class AppSetup implements VkrunApp {
 
   public server (): AppCreateServer {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.createdServer = http.createServer(async (request, response) => {
+    this.createdServer = createServer(async (request, response) => {
       this.instance = 'server'
-      const _request = request as Request
-      _request.setTimer = this.setTimer.bind(this)
-      const _response = customResponse(response)
       if (this.errorHandler) {
         try {
           await this.routerHandler.handleRequest(
-            _request,
-            _response,
+            request as Request,
+            response,
             this.routes,
             this.globalMiddlewares
           )
         } catch (error: any) {
-          this.errorHandler(error, _request, _response)
+          this.errorHandler(error, request as Request, response)
         }
       } else {
         await this.routerHandler.handleRequest(
-          _request,
-          _response,
+          request as Request,
+          response,
           this.routes,
           this.globalMiddlewares
         )
@@ -97,27 +92,29 @@ class AppSetup implements VkrunApp {
 
   // Method to simulate a request with superRequest
 
-  public async _reqWithoutServer (request: Request, response: Response): Promise<Response> {
+  public async _reqWithoutServer (
+    request: Request,
+    response: Response & { _ended: boolean }
+  ): Promise<Response> {
     this.instance = '_reqWithoutServer'
     const _request = request
     _request.setTimer = this.setTimer.bind(this)
-    this.createdServer = customResponse(response)
 
     if (this.errorHandler) {
       try {
         await this.routerHandler.handleRequest(
           _request,
-          this.createdServer,
+          response,
           this.routes,
           this.globalMiddlewares
         )
       } catch (error: any) {
-        this.errorHandler(error, _request, this.createdServer)
+        this.errorHandler(error, _request, response)
       }
     } else {
       await this.routerHandler.handleRequest(
         _request,
-        this.createdServer,
+        response,
         this.routes,
         this.globalMiddlewares
       )
@@ -125,9 +122,9 @@ class AppSetup implements VkrunApp {
 
     return await new Promise<Response>((resolve) => {
       const monitor = setInterval(() => {
-        if (this.createdServer._ended) {
+        if (response._ended) {
           clearInterval(monitor)
-          resolve(this.createdServer)
+          resolve(response)
         }
       }, 5)
     })
@@ -175,37 +172,37 @@ class AppSetup implements VkrunApp {
   // Routing
 
   public get (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'GET', this.routes)
+    routeExists(path, 'GET', this.routes)
     this.routes.push({ path, method: 'GET', handlers })
   }
 
   public head (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'HEAD', this.routes)
+    routeExists(path, 'HEAD', this.routes)
     this.routes.push({ path, method: 'HEAD', handlers })
   }
 
   public post (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'POST', this.routes)
+    routeExists(path, 'POST', this.routes)
     this.routes.push({ path, method: 'POST', handlers })
   }
 
   public put (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'PUT', this.routes)
+    routeExists(path, 'PUT', this.routes)
     this.routes.push({ path, method: 'PUT', handlers })
   }
 
   public patch (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'PATCH', this.routes)
+    routeExists(path, 'PATCH', this.routes)
     this.routes.push({ path, method: 'PATCH', handlers })
   }
 
   public delete (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'DELETE', this.routes)
+    routeExists(path, 'DELETE', this.routes)
     this.routes.push({ path, method: 'DELETE', handlers })
   }
 
   public options (path: string, ...handlers: any): void {
-    routerHelper.routeExists(path, 'OPTIONS', this.routes)
+    routeExists(path, 'OPTIONS', this.routes)
     this.routes.push({ path, method: 'OPTIONS', handlers })
   }
 }

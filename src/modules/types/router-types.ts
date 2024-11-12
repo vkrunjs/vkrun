@@ -22,7 +22,7 @@ export interface Request<T = any> extends IncomingMessage {
   setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
-export type Response = ServerResponse & RouterCustomResponseMethods
+export type Response = ServerResponse
 
 export interface RouterCustomResponseMethods {
   status: (status: number) => Response

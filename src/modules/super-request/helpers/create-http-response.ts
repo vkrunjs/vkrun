@@ -3,7 +3,7 @@ import { STATUS_CODES } from './status-codes'
 import { isObject } from '../../utils'
 
 export const createHttpResponse = (request: any): any => {
-  const response: any = new ServerResponse(request) // new CreateHttpResponse()
+  const response: any = new ServerResponse(request)
 
   response.headers = {}
 
