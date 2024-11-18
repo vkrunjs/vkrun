@@ -11,6 +11,13 @@ import {
 export class RouterHandler {
   private routes: Route[] = []
 
+  private compileRegex (path: string): RegExp {
+    const pattern = path
+      .replace(/\/\*/g, '/.*') // Support wildcard `*`
+      .replace(/\/:([^/]+)/g, '/([^/]+)') // Dynamic parameters `:param`
+    return new RegExp(`^${pattern}$`)
+  }
+
   private addRoutesOptionsWithCors (globalMiddlewares: any[]): void {
     const corsMiddleware = globalMiddlewares.find(middleware => middleware instanceof CorsSetup)
 
@@ -32,7 +39,7 @@ export class RouterHandler {
 
         if (!optionsRouteExists) {
           const handlers: any[] = [() => null]
-          this.routes.push({ path, method: 'OPTIONS', handlers })
+          this.routes.push({ path, method: 'OPTIONS', handlers, regex: this.compileRegex(path) })
         }
       })
     }
@@ -53,12 +60,7 @@ export class RouterHandler {
     const { url, method } = request
     const [path] = String(url).split('?')
     const route = this.routes.find((route) => {
-      const routePattern = route.path
-        .replace(/\/\*/g, '/.*') // Support `*` after `/` by matching any characters
-        .replace(/\/:([^/]+)/g, '/([^/]+)') // Dynamic parameters matching `/:param`
-
-      const regex = new RegExp('^' + routePattern + '$')
-      return regex.test(path) && route.method === method
+      return route.regex.test(path) && route.method === method
     })
 
     if (route) {

@@ -12,6 +12,7 @@ export interface VkrunRouter {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export interface Request<T = any> extends IncomingMessage {
+  request: { handlers: any[], params: Record<string, string> }
   requestId?: string
   route?: Route
   body: T extends { body: infer B } ? B : Record<string, string | number | boolean | Date> | JSON | string | undefined | any
@@ -90,6 +91,7 @@ export interface Route {
   path: string
   method: RouteMethods
   handlers: RouteHandler[]
+  regex: RegExp
 }
 
 export interface ResponseHttpStatus {
