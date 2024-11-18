@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 1.5.0
+- remove the use of customResponse from the app server, leaving it only for use by superRequest
+- route matching refactoring
+
 ## 1.4.0
 - add to the upload module greater flexibility in managing files in memory, validations and custom returns by error type
 - remove all tests with axios
