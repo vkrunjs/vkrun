@@ -1,5 +1,5 @@
 import { CorsSetup } from '../../cors'
-import { randomUUID } from '../../utils'
+import { compileRegex, randomUUID } from '../../utils'
 import { executeMiddleware } from './execute-middleware'
 import {
   NextFunction,
@@ -10,13 +10,6 @@ import {
 
 export class RouterHandler {
   private routes: Route[] = []
-
-  private compileRegex (path: string): RegExp {
-    const pattern = path
-      .replace(/\/\*/g, '/.*') // Support wildcard `*`
-      .replace(/\/:([^/]+)/g, '/([^/]+)') // Dynamic parameters `:param`
-    return new RegExp(`^${pattern}$`)
-  }
 
   private addRoutesOptionsWithCors (globalMiddlewares: any[]): void {
     const corsMiddleware = globalMiddlewares.find(middleware => middleware instanceof CorsSetup)
@@ -39,7 +32,7 @@ export class RouterHandler {
 
         if (!optionsRouteExists) {
           const handlers: any[] = [() => null]
-          this.routes.push({ path, method: 'OPTIONS', handlers, regex: this.compileRegex(path) })
+          this.routes.push({ path, method: 'OPTIONS', handlers, regex: compileRegex(path) })
         }
       })
     }
