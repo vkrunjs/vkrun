@@ -44,7 +44,11 @@ describe('Set translation message', () => {
         max: 'o [valueName] [value] deve ser menor ou igual a [refDate]!'
       },
       object: 'o valor de [valueName] deve ser um objeto!',
-      array: 'o valor de [valueName] deve ser um array!',
+      array: {
+        invalidValue: '[valueName] value deve ser um array!',
+        min: 'a lista [valueName] deve ter o número mínimo de itens, sendo igual ou maior que [min]!',
+        max: 'a lista [valueName] deve ter o número máximo de itens, sendo igual ou menor que [max]!'
+      },
       nullable: 'o valor [valueName] pode ser nulo, mas não pode ser undefined!',
       equal: 'o valor não corresponde!',
       notEqual: 'o valor pode não corresponder!',
@@ -102,7 +106,11 @@ describe('Set translation message', () => {
         max: 'the [valueName] [value] must be less than or equal to the [refDate]!'
       },
       object: '[valueName] value must be an object!',
-      array: '[valueName] value must be an array!',
+      array: {
+        invalidValue: '[valueName] value must be an array!',
+        min: 'the list [valueName] must have the minimum number of items, being equal to or greater than [min]!',
+        max: 'e list [valueName] must have the maximum number of items, being equal to or less than [max]!'
+      },
       nullable: '[valueName] value can be null, but other than undefined!',
       equal: 'value does not match!',
       notEqual: 'value may not match!',

@@ -10,16 +10,24 @@ export const validateNotOneOf = (
   const {
     value,
     valueName,
+    indexArray,
     comparisonItems,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
+  const message = {
+    expect: indexArray !== undefined ? 'array index in value does not match' : 'value does not match',
+    error: informativeMessage.notOneOf
+      .replace('[valueName]', valueName)
+      .replace('[value]', value)
+  }
+
   if (notOneOf(value, comparisonItems)) {
     callbackAddPassed({
       method: 'notOneOf',
       name: valueName,
-      expect: 'value does not match',
+      expect: message.expect,
       received: value
     })
   } else {
@@ -27,11 +35,9 @@ export const validateNotOneOf = (
       method: 'notOneOf',
       type: 'invalid value',
       name: valueName,
-      expect: 'value does not match',
+      expect: message.expect,
       received: received(value),
-      message: informativeMessage.notOneOf
-        .replace('[valueName]', valueName)
-        .replace('[value]', value)
+      message: message.error
     })
   }
 }

@@ -10,16 +10,23 @@ export const validateOneOf = (
   const {
     value,
     valueName,
+    indexArray,
     comparisonItems,
     callbackAddPassed,
     callbackAddFailed
   } = params
+  const message = {
+    expect: indexArray !== undefined ? 'array index in value matches' : 'value matches',
+    error: informativeMessage.oneOf
+      .replace('[valueName]', valueName)
+      .replace('[value]', value)
+  }
 
   if (oneOf(value, comparisonItems)) {
     callbackAddPassed({
       method: 'oneOf',
       name: valueName,
-      expect: 'value matches',
+      expect: message.expect,
       received: value
     })
   } else {
@@ -29,9 +36,7 @@ export const validateOneOf = (
       name: valueName,
       expect: 'value matches',
       received: received(value),
-      message: informativeMessage.oneOf
-        .replace('[valueName]', valueName)
-        .replace('[value]', value)
+      message: message.error
     })
   }
 }

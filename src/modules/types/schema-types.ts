@@ -8,7 +8,7 @@ export interface VkrunSchema {
   boolean: () => SchemaReturn
   date: (type?: SchemaDateTypes) => SchemaDateMethod
   alias: (valueName: string) => SchemaAliasMethod
-  array: () => SchemaArrayMethod
+  array: (config?: SchemaArrayConfig) => SchemaArrayMethod
   equal: (valueToCompare: any) => SchemaReturn
   notEqual: (valueToCompare: any) => SchemaReturn
   oneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
@@ -398,9 +398,14 @@ export interface SchemaAliasMethod extends SchemaReturn {
   number: () => SchemaNumberMethod
   boolean: () => SchemaReturn
   date: (type?: SchemaDateTypes) => SchemaDateMethod
-  array: () => SchemaArrayMethod
+  array: (config?: SchemaArrayConfig) => SchemaArrayMethod
   equal: (valueToCompare: any) => SchemaReturn
   object: (schema: SchemaObjectType) => SchemaReturn
+}
+
+export interface SchemaArrayConfig {
+  min?: number
+  max?: number
 }
 
 export interface SchemaArrayMethod extends SchemaReturn {
@@ -410,6 +415,8 @@ export interface SchemaArrayMethod extends SchemaReturn {
   bigInt: () => SchemaBigIntMethod
   date: (type?: SchemaDateTypes) => SchemaDateMethod
   object: (schema: SchemaObjectType) => SchemaReturn
+  oneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
+  notOneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
 }
 
 export type SchemaDateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
@@ -550,7 +557,11 @@ export interface SchemaSetLocation {
     max?: string
   }
   object?: string
-  array?: string
+  array?: {
+    invalidValue?: string
+    min?: string
+    max?: string
+  }
   nullable?: string
   equal?: string
   notEqual?: string
@@ -594,7 +605,11 @@ export interface SchemaInformativeMessage {
     max: string
   }
   object: string
-  array: string
+  array: {
+    invalidValue: string
+    min: string
+    max: string
+  }
   nullable: string
   equal: string
   notEqual: string

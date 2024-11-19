@@ -29,7 +29,8 @@ import {
   SchemaTimeMethod,
   SchemaTimeTypes,
   SchemaUUIDMethod,
-  UUIDVersion
+  UUIDVersion,
+  SchemaArrayConfig
 } from '../types'
 
 export class SchemaSetup implements VkrunSchema {
@@ -258,7 +259,7 @@ export class SchemaSetup implements VkrunSchema {
       number: () => this.number(),
       boolean: () => this.boolean(),
       date: (type?: SchemaDateTypes) => this.date(type),
-      array: () => this.array(),
+      array: (config?: SchemaArrayConfig) => this.array(config),
       equal: (valueToCompare: any) => this.equal(valueToCompare),
       object: (schema: SchemaObjectType) => this.object(schema),
       ...this.defaultReturnMethods()
@@ -279,8 +280,8 @@ export class SchemaSetup implements VkrunSchema {
     return this.defaultReturnMethods()
   }
 
-  array (): SchemaArrayMethod {
-    this.methodBuild({ method: 'array' })
+  array (config?: SchemaArrayConfig): SchemaArrayMethod {
+    this.methodBuild({ method: 'array', min: config?.min, max: config?.max })
     return {
       string: () => this.string(),
       boolean: () => this.boolean(),
@@ -288,6 +289,8 @@ export class SchemaSetup implements VkrunSchema {
       bigInt: () => this.bigInt(),
       date: (type?: SchemaDateTypes) => this.date(type),
       object: (schema: SchemaObjectType) => this.object(schema),
+      oneOf: (comparisonItems: SchemaReturn[] | any[]) => this.oneOf(comparisonItems),
+      notOneOf: (comparisonItems: SchemaReturn[] | any[]) => this.notOneOf(comparisonItems),
       ...this.defaultReturnMethods()
     }
   }

@@ -33,7 +33,9 @@ export const locationConfig: Array<{ keys: string[] }> = [
 
   { keys: ['nullable'] },
 
-  { keys: ['array'] },
+  { keys: ['array', 'invalidValue'] },
+  { keys: ['array', 'min'] },
+  { keys: ['array', 'max'] },
 
   { keys: ['equal'] },
   { keys: ['notEqual'] },
