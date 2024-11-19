@@ -1,6 +1,72 @@
 import { schema } from '../../../index'
 
 describe('Validator OneOf Method', () => {
+  it('Should return true if the value does not match any of the schemas or values', () => {
+    const value = 42
+    const comparisonItems = [schema().string(), true]
+
+    const sut = schema()
+      .notOneOf(comparisonItems)
+      .validate(value)
+
+    expect(sut).toBeTruthy()
+  })
+
+  it('Should return false if the value matches one of the schemas', () => {
+    const value = 'hello'
+    const comparisonItems = [schema().string(), true]
+
+    const sut = schema()
+      .notOneOf(comparisonItems)
+      .validate(value)
+
+    expect(sut).toBeFalsy()
+  })
+
+  it('Should return false if the value matches a static value in the notOneOf array', () => {
+    const value = true
+    const comparisonItems = [schema().string(), true]
+
+    const sut = schema()
+      .notOneOf(comparisonItems)
+      .validate(value)
+
+    expect(sut).toBeFalsy()
+  })
+
+  it('Should return true if the value matches one of the schemas or values', () => {
+    const value = 'hello'
+    const comparisonItems = [schema().string(), true]
+
+    const sut = schema()
+      .oneOf(comparisonItems)
+      .validate(value)
+
+    expect(sut).toBeTruthy()
+  })
+
+  it('Should return true if the value matches a static value in the oneOf array', () => {
+    const value = true
+    const comparisonItems = [schema().string(), true]
+
+    const sut = schema()
+      .oneOf(comparisonItems)
+      .validate(value)
+
+    expect(sut).toBeTruthy()
+  })
+
+  it('Should return false if the value does not match any of the schemas or values', () => {
+    const value = 42
+    const comparisonItems = [schema().string(), true]
+
+    const sut = schema()
+      .oneOf(comparisonItems)
+      .validate(value)
+
+    expect(sut).toBeFalsy()
+  })
+
   it('Should be able to validate oneOf equals and return true if the value is equal to a comparison value', () => {
     const value = 'hello'
     const comparisonItems = ['hello', 'world']

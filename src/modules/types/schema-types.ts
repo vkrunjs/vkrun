@@ -11,8 +11,8 @@ export interface VkrunSchema {
   array: () => SchemaArrayMethod
   equal: (valueToCompare: any) => SchemaReturn
   notEqual: (valueToCompare: any) => SchemaReturn
-  oneOf: (comparisonItems: any[]) => SchemaReturn
-  notOneOf: (comparisonItems: any[]) => SchemaReturn
+  oneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
+  notOneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
   object: (schema: SchemaObjectType) => SchemaReturn
   nullable: () => SchemaNullableMethod
   notRequired: () => SchemaNotRequiredMethod

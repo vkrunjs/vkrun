@@ -893,38 +893,46 @@ console.log(validateB) // false
   .<span style="color:#66B2FF">oneOf</span>(<span style="color:#66B2FF">comparisonItems</span>: <span style="color:#99CC99">any[]</span>)
 </h2>
 
-> The oneOf method accepts any type of data structure to be compared.
+> The `oneOf` method accepts any type of data structure to be compared, including primitive values and schemas.
 
 ```ts
 import { schema } from "vkrun"
 
-const comparisonItems = ['hello', 'world']
+// Comparison items can include static values and schemas
+const comparisonItems = ['hello', 'world', schema().boolean()]
 const schema = schema().oneOf(comparisonItems)
 
-const validateA = schema.validate('hello')
-const validateB = schema.validate('hi')
+// Validate against the schema
+const validateA = schema.validate('hello') // Matches 'hello'
+const validateB = schema.validate(false)   // Matches schema().boolean()
+const validateC = schema.validate('hi')    // No match
 
 console.log(validateA) // true
-console.log(validateB) // false
+console.log(validateB) // true
+console.log(validateC) // false
 ```
 
 <h2 id="notOneOf">
   .<span style="color:#66B2FF">notOneOf</span>(<span style="color:#66B2FF">comparisonItems</span>: <span style="color:#99CC99">any[]</span>)
 </h2>
 
-> The notOneOf method accepts any type of data structure to be compared.
+> The `notOneOf` method accepts any type of data structure to be compared, including primitive values and schemas.
 
 ```ts
 import { schema } from "vkrun"
 
-const comparisonItems = ['hello', 'world']
+// Comparison items can include static values and schemas
+const comparisonItems = ['hello', 'world', schema().boolean()]
 const schema = schema().notOneOf(comparisonItems)
 
-const validateA = schema.validate('hi')
-const validateB = schema.validate('hello')
+// Validate against the schema
+const validateA = schema.validate('hi')    // No match
+const validateB = schema.validate('hello') // Matches 'hello'
+const validateC = schema.validate(true)    // Matches schema().boolean()
 
 console.log(validateA) // true
 console.log(validateB) // false
+console.log(validateC) // false
 ```
 
 <h2 id="object">

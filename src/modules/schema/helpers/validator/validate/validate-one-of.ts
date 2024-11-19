@@ -1,10 +1,10 @@
-import { SchemaValidateMethod } from '../../../../types'
+import { SchemaReturn, SchemaValidateMethod } from '../../../../types'
 import { oneOf, received } from '../../../../utils'
 import { informativeMessage } from '../../location'
 
 export const validateOneOf = (
   params: SchemaValidateMethod & {
-    comparisonItems: any[]
+    comparisonItems: SchemaReturn[] | any[]
   }
 ): void => {
   const {

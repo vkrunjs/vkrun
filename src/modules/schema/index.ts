@@ -236,12 +236,12 @@ export class SchemaSetup implements VkrunSchema {
     return this.defaultReturnMethods()
   }
 
-  oneOf (comparisonItems: any[]): SchemaReturn {
+  oneOf (comparisonItems: SchemaReturn[] | any[]): SchemaReturn {
     this.methodBuild({ method: 'oneOf', comparisonItems })
     return this.defaultReturnMethods()
   }
 
-  notOneOf (comparisonItems: any[]): SchemaReturn {
+  notOneOf (comparisonItems: SchemaReturn[] | any[]): SchemaReturn {
     this.methodBuild({ method: 'notOneOf', comparisonItems })
     return this.defaultReturnMethods()
   }
