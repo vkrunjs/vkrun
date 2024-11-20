@@ -1,5 +1,12 @@
 # VkrunJS Releases
 
+## 1.6.0
+- oneOf and notOneOf methods of schema module must accept schemas as comparison
+- add compileRegex util
+- add to schema module validation of min, max, oneOf and notOneOf for arrays
+- migrate schema documentation to official website
+- change the default export of vkrun to the App module
+
 ## 1.5.0
 - remove the use of customResponse from the app server, leaving it only for use by superRequest
 - route matching refactoring

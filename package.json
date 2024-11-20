@@ -1,6 +1,6 @@
 {
   "name": "vkrun",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Vkrun is a Node.js framework for building server-side applications",
   "author": "Mario Elvio",
   "license": "MIT",
