@@ -1,5 +1,5 @@
 import { rateLimit } from '..'
-import { controllerAdapter, isString, isUUID, superRequest } from '../../../public'
+import { controllerAdapter, isString, isUUID, superRequest } from '../../..'
 import { App } from '../../app'
 import { Router } from '../../router'
 import { RateLimitAccessData, Controller, Request, Response, SuperRequestError } from '../../types'
