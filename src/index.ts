@@ -1,3 +1,3 @@
-import * as vkrun from './public'
+import { App } from './public'
 export * from './public'
-export default vkrun
+export default App
