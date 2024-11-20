@@ -1,5 +1,8 @@
 # VkrunJS Releases
 
+## 1.7.0
+- change build from commonjs to ESNext
+
 ## 1.6.0
 - oneOf and notOneOf methods of schema module must accept schemas as comparison
 - add compileRegex util
