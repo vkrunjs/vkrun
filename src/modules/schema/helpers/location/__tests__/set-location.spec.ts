@@ -38,6 +38,9 @@ describe('Set translation message', () => {
       boolean: {
         invalidValue: '[valueName] deve ser do tipo booleano!'
       },
+      buffer: {
+        invalidValue: '[valueName] deve ser do tipo buffer!'
+      },
       required: '[valueName] é obrigatório!',
       date: {
         invalidValue: 'a data [valueName] não está no formato [type]!',
@@ -100,6 +103,9 @@ describe('Set translation message', () => {
       },
       boolean: {
         invalidValue: '[valueName] must be a boolean type!'
+      },
+      buffer: {
+        invalidValue: '[valueName] must be a buffer type!'
       },
       required: '[valueName] is required!',
       date: {
