@@ -1,6 +1,6 @@
 import { informativeMessage } from '../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { received } from '../../../../../utils'
+import { isEmail, received } from '../../../../../utils'
 
 export const validateEmail = ({
   value,
@@ -15,7 +15,6 @@ export const validateEmail = ({
   callbackAddPassed: (success: SchemaSuccessTest) => void
   callbackAddFailed: (error: SchemaErrorTest) => void
 }): void => {
-  const regEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const message = {
     expect: indexArray !== undefined ? 'array index in email format' : 'email format',
     error: informativeMessage.string.email
@@ -23,8 +22,7 @@ export const validateEmail = ({
       .replace('[valueName]', valueName)
   }
 
-  const emailFormatIsValid = regEmail.test(String(value))
-  if (emailFormatIsValid) {
+  if (isEmail(value)) {
     callbackAddPassed({
       method: 'email',
       name: valueName,
