@@ -159,6 +159,11 @@ export class SchemaSetup implements VkrunSchema {
     return this.defaultReturnMethods()
   }
 
+  buffer (): SchemaReturn {
+    this.methodBuild({ method: 'buffer' })
+    return this.defaultReturnMethods()
+  }
+
   notRequired (): SchemaNotRequiredMethod {
     this.methodBuild({ method: 'notRequired' })
     return {

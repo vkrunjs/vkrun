@@ -51,6 +51,8 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
       }
     } else if (rule.method === 'boolean') {
       validate.validateBoolean({ ...validateMethodParams, indexArray })
+    } else if (rule.method === 'buffer') {
+      validate.validateBuffer({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'date') {
       validate.validateDate({ ...validateMethodParams, indexArray, type: rule.dateType })
     } else if (rule.method === 'min') {

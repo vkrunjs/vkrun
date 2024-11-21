@@ -30,6 +30,9 @@ export const informativeMessage: SchemaInformativeMessage = {
   boolean: {
     invalidValue: '[valueName] must be a boolean type!'
   },
+  buffer: {
+    invalidValue: '[valueName] must be a buffer type!'
+  },
   required: '[valueName] is required!',
   date: {
     invalidValue: 'the date [valueName] is not in the format [type]!',

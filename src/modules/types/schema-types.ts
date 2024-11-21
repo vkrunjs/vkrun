@@ -6,6 +6,7 @@ export interface VkrunSchema {
   number: () => SchemaNumberMethod
   bigInt: () => SchemaBigIntMethod
   boolean: () => SchemaReturn
+  buffer: () => SchemaReturn
   date: (type?: SchemaDateTypes) => SchemaDateMethod
   alias: (valueName: string) => SchemaAliasMethod
   array: (config?: SchemaArrayConfig) => SchemaArrayMethod
@@ -441,6 +442,7 @@ export type SchemaMethodTypes =
   'array' |
   'string' |
   'email' |
+  'buffer' |
   'UUID' |
   'minWord' |
   'maxLength' |
@@ -561,6 +563,9 @@ export interface SchemaSetLocation {
   boolean?: {
     invalidValue?: string
   }
+  buffer?: {
+    invalidValue?: string
+  }
   required?: string
   date?: {
     invalidValue?: string
@@ -608,6 +613,9 @@ export interface SchemaInformativeMessage {
     negative: string
   }
   boolean: {
+    invalidValue: string
+  }
+  buffer: {
     invalidValue: string
   }
   required: string
