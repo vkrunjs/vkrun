@@ -1,5 +1,8 @@
 # VkrunJS Releases
 
+## 1.7.1
+- migrating documents to the official website and removing export default vkrun
+
 ## 1.7.0
 - change build from commonjs to ESNext
 
