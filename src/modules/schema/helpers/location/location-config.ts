@@ -6,6 +6,7 @@ export const locationConfig: Array<{ keys: string[] }> = [
   { keys: ['string', 'maxLength'] },
   { keys: ['string', 'minLength'] },
   { keys: ['string', 'time'] },
+  { keys: ['string', 'regex'] },
 
   { keys: ['number', 'invalidValue'] },
   { keys: ['number', 'float'] },

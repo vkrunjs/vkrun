@@ -10,7 +10,8 @@ export const resetTranslationMessage = (): void => {
       email: 'email [value] is invalid!',
       time: 'the time [value] is not in the format [type]!',
       maxLength: '[valueName] must have a maximum of [maxLength] characters!',
-      minLength: '[valueName] must have a minimum of [minLength] characters!'
+      minLength: '[valueName] must have a minimum of [minLength] characters!',
+      regex: 'value does not match!'
     },
     number: {
       invalidValue: '[valueName] must be a number type!',

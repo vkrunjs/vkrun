@@ -30,7 +30,9 @@ import {
   SchemaTimeTypes,
   SchemaUUIDMethod,
   UUIDVersion,
-  SchemaArrayConfig
+  SchemaArrayConfig,
+  SchemaRegexMethod,
+  SchemaOtherMethodConfig
 } from '../types'
 
 export class SchemaSetup implements VkrunSchema {
@@ -121,6 +123,11 @@ export class SchemaSetup implements VkrunSchema {
       return { minLength, maxLength, ...this.defaultReturnMethods() }
     }
 
+    const regex = (regExp: RegExp, config?: SchemaOtherMethodConfig): SchemaRegexMethod => {
+      this.methodBuild({ method: 'regex', regExp, config })
+      return this.defaultReturnMethods()
+    }
+
     return {
       minLength,
       maxLength,
@@ -128,6 +135,7 @@ export class SchemaSetup implements VkrunSchema {
       email,
       UUID,
       time,
+      regex,
       ...this.defaultReturnMethods()
     }
   }

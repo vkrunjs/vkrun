@@ -22,6 +22,13 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
       validate.validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
     } else if (rule.method === 'minLength') {
       validate.validateMinLength({ ...validateMethodParams, indexArray, minLength: rule.minLength })
+    } else if (rule.method === 'regex') {
+      validate.validateRegex({
+        ...validateMethodParams,
+        indexArray,
+        regExp: rule.regExp,
+        config: rule.config
+      })
     } else if (rule.method === 'number') {
       validate.validateNumber({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'bigInt') {

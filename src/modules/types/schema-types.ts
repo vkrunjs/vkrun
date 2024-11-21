@@ -334,6 +334,10 @@ export interface SchemaNullableMethod {
   testAsync: (value: any, valueName: string) => Promise<SchemaTests>
 }
 
+export interface SchemaOtherMethodConfig {
+  errorMessage?: string
+}
+
 export interface SchemaStringMethod extends SchemaReturn {
   minLength: (limit: number) => SchemaMinLengthMethod
   maxLength: (limit: number) => SchemaMaxLengthMethod
@@ -341,6 +345,7 @@ export interface SchemaStringMethod extends SchemaReturn {
   email: () => SchemaEmailMethod
   UUID: (version?: UUIDVersion) => SchemaUUIDMethod
   time: (type: SchemaTimeTypes) => SchemaTimeMethod
+  regex: (regExp: RegExp, config?: SchemaOtherMethodConfig) => SchemaRegexMethod
 }
 
 export interface SchemaEmailMethod extends SchemaReturn {}
@@ -348,6 +353,8 @@ export interface SchemaEmailMethod extends SchemaReturn {}
 export interface SchemaUUIDMethod extends SchemaReturn {}
 
 export interface SchemaTimeMethod extends SchemaReturn {}
+
+export interface SchemaRegexMethod extends SchemaReturn {}
 
 export interface SchemaMinLengthMethod extends SchemaReturn {
   maxLength: (limit: number) => SchemaReturn & {
@@ -438,6 +445,7 @@ export type SchemaMethodTypes =
   'minWord' |
   'maxLength' |
   'minLength' |
+  'regex' |
   'required' |
   'notRequired' |
   'number' |
@@ -463,8 +471,10 @@ export interface SchemaMethod {
   min?: number | bigint
   dateType?: SchemaDateTypes
   dateToCompare?: Date
+  config?: SchemaOtherMethodConfig
   timeType?: SchemaTimeTypes
   arrayType?: SchemaArrayTypes
+  regExp?: RegExp
   arrayRules?: any
   valueToCompare?: any
   alias?: string
@@ -530,6 +540,7 @@ export interface SchemaSetLocation {
     time?: string
     maxLength?: string
     minLength?: string
+    regex?: string
   }
   number?: {
     invalidValue?: string
@@ -578,6 +589,7 @@ export interface SchemaInformativeMessage {
     time: string
     maxLength: string
     minLength: string
+    regex: string
   }
   number: {
     invalidValue: string
