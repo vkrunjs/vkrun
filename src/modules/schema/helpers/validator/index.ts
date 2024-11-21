@@ -91,6 +91,8 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
   }
 
   if (hasMethod(validateMethodParams.methods, 'array')) {
+    validate.validateMinArray(validateMethodParams)
+    validate.validateMaxArray(validateMethodParams)
     validate.validateArray({ ...validateMethodParams, validateOtherMethods })
   } else {
     validateMethodParams.methods.forEach((rule: any) => { validateOtherMethods(rule, validateMethodParams.value) })
