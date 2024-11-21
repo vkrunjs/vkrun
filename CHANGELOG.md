@@ -1,5 +1,14 @@
 # VkrunJS Releases
 
+## 1.8.0
+- separate min array and max array validations from validate-array file
+- add isEmail util
+- add isBuffer util
+- add isFunction util
+- add regex validation method to schema module
+- add buffer validation method to schema module
+- add function validation method to schema module
+
 ## 1.7.1
 - migrating documents to the official website and removing export default vkrun
 
