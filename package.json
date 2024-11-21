@@ -39,11 +39,8 @@
     "Readme.md",
     "lib",
     "Publishing-Guide.md",
-    "Installation-Guide.md",
-    "Code-Of-Conduct.md",
-    "Contributing.md",
     "CHANGELOG.md",
-    "Security.md"
+    "LICENSE"
   ],
   "homepage": "https://github.com/vkrunjs/vkrunjs#readme",
   "repository": {

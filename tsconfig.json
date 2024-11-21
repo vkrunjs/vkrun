@@ -1,9 +1,8 @@
 {
   "exclude": ["coverage", "./dist", "__tests__", "jest.config.ts", "jest-e2e.config.ts", "jest-all.config.ts", "examples"],
   "compilerOptions": {
-    "moduleResolution": "node",
     "target": "ES2021",
-    "module": "ESNext",
+    "module": "CommonJS",
     "allowJs": true,
     "outDir": "./lib",
     "rootDir": "./src",

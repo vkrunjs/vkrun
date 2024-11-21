@@ -12,9 +12,6 @@ import { upload } from './modules/upload'
 import { swaggerBuilder } from './modules/swagger-builder'
 import { mime } from './modules/mime'
 import { serveStaticFile } from './modules/serve-static-file'
-
-export default App
-
 export * from './modules/router/helpers/adapters'
 export * from './modules/utils'
 export * from './modules/types'
