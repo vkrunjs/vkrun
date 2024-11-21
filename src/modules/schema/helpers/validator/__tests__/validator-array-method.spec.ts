@@ -1,6 +1,8 @@
 import { schema } from '../../../../../index'
 
 describe('Validator Array Method', () => {
+  const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
   it('Should be able to validate the array method and return true if array is valid', () => {
     const stringArray = schema().array().string().validate(['string'])
     const stringArrayMin = schema().array({ min: 1 }).string().validate(['string'])
@@ -11,6 +13,7 @@ describe('Validator Array Method', () => {
     const minLengthArray = schema().array().string().minLength(5).validate(['12345'])
     const timeHHMMArray = schema().array().string().time('HH:MM').validate(['01:01'])
     const minWordArray = schema().array().string().minWord(2).validate(['one two'])
+    const regexArray = schema().array().string().regex(regexEmail).validate(['any_email@email.com'])
     const numberArray = schema().array().number().validate([1])
     const floatArray = schema().array().number().float().validate([1.5])
     const integerArray = schema().array().number().integer().validate([2])
@@ -43,6 +46,7 @@ describe('Validator Array Method', () => {
     expect(minLengthArray).toBeTruthy()
     expect(minWordArray).toBeTruthy()
     expect(timeHHMMArray).toBeTruthy()
+    expect(regexArray).toBeTruthy()
     expect(numberArray).toBeTruthy()
     expect(floatArray).toBeTruthy()
     expect(integerArray).toBeTruthy()
@@ -78,6 +82,7 @@ describe('Validator Array Method', () => {
     const minLengthArray = schema().array().string().minLength(5).validate(['1234'])
     const timeHHMMArray = schema().array().string().time('HH:MM').validate(['111:11'])
     const minWordArray = schema().array().string().minWord(2).validate(['one'])
+    const regexArray = schema().array().string().regex(regexEmail).validate(['any_email@email'])
     const numberArray = schema().array().number().validate([null])
     const floatArray = schema().array().number().float().validate([1])
     const integerArray = schema().array().number().integer().validate([1.5])
@@ -108,6 +113,7 @@ describe('Validator Array Method', () => {
     expect(minLengthArray).toBeFalsy()
     expect(minWordArray).toBeFalsy()
     expect(timeHHMMArray).toBeFalsy()
+    expect(regexArray).toBeFalsy()
     expect(numberArray).toBeFalsy()
     expect(floatArray).toBeFalsy()
     expect(integerArray).toBeFalsy()

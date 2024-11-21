@@ -16,7 +16,8 @@ describe('Set translation message', () => {
         email: 'o email [value] é inválido!',
         time: 'o horário [value] não está no formato [type]!',
         maxLength: '[valueName] deve ter no máximo [maxLength] caracteres!',
-        minLength: '[valueName] deve ter no mínimo [minLength] caracteres!'
+        minLength: '[valueName] deve ter no mínimo [minLength] caracteres!',
+        regex: 'o valor não corresponde!'
       },
       number: {
         invalidValue: '[valueName] deve ser do tipo numérico!',
@@ -78,7 +79,8 @@ describe('Set translation message', () => {
         email: 'email [value] is invalid!',
         time: 'the time [value] is not in the format [type]!',
         maxLength: '[valueName] must have a maximum of [maxLength] characters!',
-        minLength: '[valueName] must have a minimum of [minLength] characters!'
+        minLength: '[valueName] must have a minimum of [minLength] characters!',
+        regex: 'value does not match!'
       },
       number: {
         invalidValue: '[valueName] must be a number type!',
