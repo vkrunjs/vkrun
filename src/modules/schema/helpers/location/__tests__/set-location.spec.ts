@@ -41,6 +41,9 @@ describe('Set translation message', () => {
       buffer: {
         invalidValue: '[valueName] deve ser do tipo buffer!'
       },
+      function: {
+        invalidValue: '[valueName] deve ser do tipo função!'
+      },
       required: '[valueName] é obrigatório!',
       date: {
         invalidValue: 'a data [valueName] não está no formato [type]!',
@@ -106,6 +109,9 @@ describe('Set translation message', () => {
       },
       buffer: {
         invalidValue: '[valueName] must be a buffer type!'
+      },
+      function: {
+        invalidValue: '[valueName] must be a function type!'
       },
       required: '[valueName] is required!',
       date: {
