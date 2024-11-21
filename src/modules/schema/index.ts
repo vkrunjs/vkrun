@@ -304,6 +304,7 @@ export class SchemaSetup implements VkrunSchema {
       object: (schema: SchemaObjectType) => this.object(schema),
       oneOf: (comparisonItems: SchemaReturn[] | any[]) => this.oneOf(comparisonItems),
       notOneOf: (comparisonItems: SchemaReturn[] | any[]) => this.notOneOf(comparisonItems),
+      buffer: () => this.buffer(),
       ...this.defaultReturnMethods()
     }
   }

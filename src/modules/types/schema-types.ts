@@ -425,6 +425,7 @@ export interface SchemaArrayMethod extends SchemaReturn {
   object: (schema: SchemaObjectType) => SchemaReturn
   oneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
   notOneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
+  buffer: () => SchemaReturn
 }
 
 export type SchemaDateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
