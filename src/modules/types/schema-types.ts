@@ -7,6 +7,7 @@ export interface VkrunSchema {
   bigInt: () => SchemaBigIntMethod
   boolean: () => SchemaReturn
   buffer: () => SchemaReturn
+  function: () => SchemaReturn
   date: (type?: SchemaDateTypes) => SchemaDateMethod
   alias: (valueName: string) => SchemaAliasMethod
   array: (config?: SchemaArrayConfig) => SchemaArrayMethod
@@ -426,6 +427,7 @@ export interface SchemaArrayMethod extends SchemaReturn {
   oneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
   notOneOf: (comparisonItems: SchemaReturn[] | any[]) => SchemaReturn
   buffer: () => SchemaReturn
+  function: () => SchemaReturn
 }
 
 export type SchemaDateTypes = 'ISO8601' | 'DD/MM/YYYY' | 'MM/DD/YYYY' | 'DD-MM-YYYY' | 'MM-DD-YYYY' | 'YYYY/MM/DD' | 'YYYY/DD/MM' | 'YYYY-MM-DD' | 'YYYY-DD-MM'
@@ -444,6 +446,7 @@ export type SchemaMethodTypes =
   'string' |
   'email' |
   'buffer' |
+  'function' |
   'UUID' |
   'minWord' |
   'maxLength' |
@@ -567,6 +570,9 @@ export interface SchemaSetLocation {
   buffer?: {
     invalidValue?: string
   }
+  function?: {
+    invalidValue?: string
+  }
   required?: string
   date?: {
     invalidValue?: string
@@ -617,6 +623,9 @@ export interface SchemaInformativeMessage {
     invalidValue: string
   }
   buffer: {
+    invalidValue: string
+  }
+  function: {
     invalidValue: string
   }
   required: string

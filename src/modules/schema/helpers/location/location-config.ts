@@ -26,6 +26,8 @@ export const locationConfig: Array<{ keys: string[] }> = [
 
   { keys: ['buffer', 'invalidValue'] },
 
+  { keys: ['function', 'invalidValue'] },
+
   { keys: ['required'] },
 
   { keys: ['date', 'invalidValue'] },

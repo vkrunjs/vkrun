@@ -35,6 +35,9 @@ export const resetTranslationMessage = (): void => {
     buffer: {
       invalidValue: '[valueName] must be a buffer type!'
     },
+    function: {
+      invalidValue: '[valueName] must be a function type!'
+    },
     required: '[valueName] is required!',
     date: {
       invalidValue: 'the date [valueName] is not in the format [type]!',

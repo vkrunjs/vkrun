@@ -164,6 +164,11 @@ export class SchemaSetup implements VkrunSchema {
     return this.defaultReturnMethods()
   }
 
+  function (): SchemaReturn {
+    this.methodBuild({ method: 'function' })
+    return this.defaultReturnMethods()
+  }
+
   notRequired (): SchemaNotRequiredMethod {
     this.methodBuild({ method: 'notRequired' })
     return {
@@ -305,6 +310,7 @@ export class SchemaSetup implements VkrunSchema {
       oneOf: (comparisonItems: SchemaReturn[] | any[]) => this.oneOf(comparisonItems),
       notOneOf: (comparisonItems: SchemaReturn[] | any[]) => this.notOneOf(comparisonItems),
       buffer: () => this.buffer(),
+      function: () => this.function(),
       ...this.defaultReturnMethods()
     }
   }
