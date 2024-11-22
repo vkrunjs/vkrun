@@ -903,6 +903,17 @@ const mimeTypes: Record<string, string> = {
   ice: 'x-conference/x-cooltalk'
 }
 
+/**
+ * @const mime
+ *
+ * This object contains a collection of predefined MIME types based on file extensions.
+ *
+ * **Example:**
+ * ```typescript
+ * mime.type('txt') // Returns 'text/plain'
+ * mime.type('json') // Returns 'application/json'
+ * ```
+ */
 export const mime: VkrunMime = {
   type: (extension: string): string | null => {
     const type = mimeTypes[extension]
