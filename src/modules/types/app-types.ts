@@ -475,5 +475,4 @@ export interface VkrunApp {
  * })
  */
   options: (path: string, ...handlers: any) => void
-
 }
