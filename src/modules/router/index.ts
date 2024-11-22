@@ -45,4 +45,45 @@ export class RouterSetup implements VkrunRouter {
   }
 }
 
+/**
+ * @function Router
+ *
+ * Creates and returns an instance of the `RouterSetup` class, which manages route definitions
+ * and handlers for HTTP methods (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS). The router allows you to
+ * define multiple routes and associate them with specific HTTP methods and handler functions.
+ *
+ * You can use the `Router` instance to organize your application's routes and handle HTTP requests.
+ * Once the router instance is created, it can be passed to the `app.use()` method to register the routes globally.
+ *
+ * **Usage Examples:**
+ * - You can define routes using the methods `.get()`, `.post()`, `.put()`, `.delete()`, `.patch()`, `.head()`, and `.options()`.
+ * - You can define route handlers that accept request (`req`) and response (`res`) objects, which are used to process HTTP requests and send responses.
+ *
+ * @returns {VkrunRouter} - Returns an instance of the `RouterSetup` class which provides the routing functionality.
+ *
+ * @example
+ * // Example usage of Router with GET method
+ * const app = App()
+ * const router = Router()
+ *
+ * // Define a route for GET requests to the root path
+ * router.get('/', (_request: Request, response: Response) => {
+ *   response.setHeader('Content-Type', 'text/plain')
+ *   response.status(200).end('GET ok')
+ * })
+ *
+ * app.use(router) // Register the router globally to handle the defined routes
+ *
+ * // Example usage of Router with POST method
+ * router.post('/submit', (_request: Request, response: Response) => {
+ *   response.setHeader('Content-Type', 'text/plain')
+ *   response.status(200).end('POST submitted')
+ * })
+ *
+ * // Start the server
+ * const server = app.server()
+ * server.listen(3000, () => {
+ *   console.log('Server is running on port 3000')
+ * })
+ */
 export const Router = (): VkrunRouter => new RouterSetup()
