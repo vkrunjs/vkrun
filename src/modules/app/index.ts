@@ -15,7 +15,8 @@ import {
   Route,
   CorsSetOptions,
   VkrunApp,
-  VkrunParseData
+  VkrunParseData,
+  NextFunction
 } from '../types'
 
 class AppSetup implements VkrunApp {
@@ -48,7 +49,7 @@ class AppSetup implements VkrunApp {
     return timeout
   }
 
-  public clearTimers (): void {
+  private clearTimers (): void {
     this.timers.forEach((timerId: NodeJS.Timeout) => clearTimeout(timerId))
     this.timers = []
     if (loggerSanitizeInterval) clearInterval(loggerSanitizeInterval)
@@ -133,7 +134,7 @@ class AppSetup implements VkrunApp {
 
   // Middleware management
 
-  public use (middleware: Record<string, any>): void {
+  public use (middleware: Record<string, any> | ((request: Request, response: Response, next: NextFunction) => any)): void {
     if (middleware instanceof RouterSetup) {
       this.routes = [...this.routes, ...middleware._routes()]
     } else {
@@ -208,6 +209,55 @@ class AppSetup implements VkrunApp {
   }
 }
 
+/**
+ * @function App
+ *
+ * Configures and sets up an application using the VkrunJS framework.
+ * This function creates an instance of the `VkrunApp` interface, which provides methods for configuring
+ * middleware, routing, CORS, rate limiting, data parsing, and creating a Node.js HTTP server instance.
+ *
+ * The returned `VkrunApp` instance allows you to:
+ * - Set up middleware to handle requests and responses.
+ * - Define routes with their corresponding handlers.
+ * - Configure Cross-Origin Resource Sharing (CORS).
+ * - Apply rate limiting to manage request rates.
+ * - Parse incoming data (e.g., JSON, form data).
+ * - Start and manage the Node.js HTTP server instance.
+ *
+ * @returns {VkrunApp} - An instance of `VkrunApp` with methods for application configuration,
+ * including `server()`, `use()`, `error()`, `parseData()`, `cors()`, `rateLimit()`, and route handling.
+ *
+ * @example
+ * // Example usage of the App function
+ * const app = App() // Create a new VkrunJS app instance
+ *
+ * // Set up data parsing middleware (e.g., JSON parsing)
+ * app.parseData()
+ *
+ * // Configure Cross-Origin Resource Sharing (CORS)
+ * app.cors({ origin: "*", methods: ["GET", "POST"] })
+ *
+ * // Set up rate limiting
+ * app.rateLimit({ windowMs: 15 * 60 * 1000, limit: 100 })
+ *
+ * // Define a simple route handler
+ * const controller = (req, res) => { res.status(200).send("Hello World") }
+ * app.get("/hello", controller)
+ *
+ * // Example of applying global middleware using app.use()
+ * app.use((req, res, next) => {
+ *   console.log(`Request received for ${req.method} ${req.url}`);
+ *   next(); // Pass control to the next handler
+ * })
+ *
+ * // Create the HTTP server instance
+ * const server = app.server() // Get the HTTP server instance
+ *
+ * // Start the server and begin accepting requests
+ * server.listen(3000, () => {
+ *   console.log("Server is running on port 3000")
+ * })
+ */
 export const App = (): VkrunApp => {
   return new AppSetup()
 }
