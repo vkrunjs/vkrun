@@ -61,6 +61,8 @@ export class RouterSetup implements VkrunRouter {
  *
  * @returns {VkrunRouter} - Returns an instance of the `RouterSetup` class which provides the routing functionality.
  *
+ * @see [Router Documentation](https://vkrunjs.com/router/introduction)
+ *
  * @example
  * // Example usage of Router with GET method
  * const app = App()

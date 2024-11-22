@@ -2,164 +2,178 @@ import { IncomingMessage, ServerResponse } from 'http'
 
 export interface VkrunRouter {
   /**
- * @method get
- *
- * Defines a route that handles `GET` requests. This method registers a handler for incoming `GET` requests
- * to the specified path. It is used to retrieve data or perform read operations on the server.
- *
- * @param {string} path - The path for the route (e.g., `/users`).
- * @param {...any} handlers - The handler functions to be executed for the `GET` request.
- *
- * @example
- * // Example of a simple GET route
- * const app = App()
- * app.get('/hello', (req, res) => {
- *   res.status(200).send('Hello World')
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+   * @method get
+   *
+   * Defines a route that handles `GET` requests. This method registers a handler for incoming `GET` requests
+   * to the specified path. It is used to retrieve data or perform read operations on the server.
+   *
+   * @param {string} path - The path for the route (e.g., `/users`).
+   * @param {...any} handlers - The handler functions to be executed for the `GET` request.
+   *
+   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   *
+   * @example
+   * // Example of a simple GET route
+   * const app = App()
+   * app.get('/hello', (req, res) => {
+   *   res.status(200).send('Hello World')
+   * })
+   * const server = app.server()
+   * server.listen(3000, () => {
+   *   console.log('Server is running on port 3000')
+   * })
+   */
   get: (path: string, ...handlers: any) => void
 
   /**
- * @method head
- *
- * Defines a route that handles `HEAD` requests. This method registers a handler for incoming `HEAD` requests,
- * which are similar to `GET` requests but without the response body. It is typically used to retrieve metadata
- * (e.g., headers) without the actual content.
- *
- * @param {string} path - The path for the route (e.g., `/users`).
- * @param {...any} handlers - The handler functions to be executed for the `HEAD` request.
- *
- * @example
- * // Example of a simple HEAD route
- * const app = App()
- * app.head('/check', (req, res) => {
- *   res.status(200).send()
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+  * @method head
+  *
+  * Defines a route that handles `HEAD` requests. This method registers a handler for incoming `HEAD` requests,
+  * which are similar to `GET` requests but without the response body. It is typically used to retrieve metadata
+  * (e.g., headers) without the actual content.
+  *
+  * @param {string} path - The path for the route (e.g., `/users`).
+  * @param {...any} handlers - The handler functions to be executed for the `HEAD` request.
+  *
+  * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+  *
+  * @example
+  * // Example of a simple HEAD route
+  * const app = App()
+  * app.head('/check', (req, res) => {
+  *   res.status(200).send()
+  * })
+  * const server = app.server()
+  * server.listen(3000, () => {
+  *   console.log('Server is running on port 3000')
+  * })
+  */
   head: (path: string, ...handlers: any) => void
 
   /**
- * @method post
- *
- * Defines a route that handles `POST` requests. This method registers a handler for incoming `POST` requests
- * to the specified path. It is used to send data to the server to create or update resources.
- *
- * @param {string} path - The path for the route (e.g., `/users`).
- * @param {...any} handlers - The handler functions to be executed for the `POST` request.
- *
- * @example
- * // Example of a simple POST route
- * const app = App()
- * app.post('/submit', (req, res) => {
- *   const data = req.body
- *   res.status(200).send(`Received data: ${JSON.stringify(data)}`)
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+  * @method post
+  *
+  * Defines a route that handles `POST` requests. This method registers a handler for incoming `POST` requests
+  * to the specified path. It is used to send data to the server to create or update resources.
+  *
+  * @param {string} path - The path for the route (e.g., `/users`).
+  * @param {...any} handlers - The handler functions to be executed for the `POST` request.
+  *
+  * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+  *
+  * @example
+  * // Example of a simple POST route
+  * const app = App()
+  * app.post('/submit', (req, res) => {
+  *   const data = req.body
+  *   res.status(200).send(`Received data: ${JSON.stringify(data)}`)
+  * })
+  * const server = app.server()
+  * server.listen(3000, () => {
+  *   console.log('Server is running on port 3000')
+  * })
+  */
   post: (path: string, ...handlers: any) => void
 
   /**
- * @method put
- *
- * Defines a route that handles `PUT` requests. This method registers a handler for incoming `PUT` requests
- * to the specified path. It is used to update an existing resource with new data.
- *
- * @param {string} path - The path for the route (e.g., `/users/:id`).
- * @param {...any} handlers - The handler functions to be executed for the `PUT` request.
- *
- * @example
- * // Example of a simple PUT route
- * const app = App()
- * app.put('/update/:id', (req, res) => {
- *   const updatedData = req.body
- *   const id = req.params.id
- *   res.status(200).send(`Updated data for ID: ${id}, New data: ${JSON.stringify(updatedData)}`)
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+  * @method put
+  *
+  * Defines a route that handles `PUT` requests. This method registers a handler for incoming `PUT` requests
+  * to the specified path. It is used to update an existing resource with new data.
+  *
+  * @param {string} path - The path for the route (e.g., `/users/:id`).
+  * @param {...any} handlers - The handler functions to be executed for the `PUT` request.
+  *
+  * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+  *
+  * @example
+  * // Example of a simple PUT route
+  * const app = App()
+  * app.put('/update/:id', (req, res) => {
+  *   const updatedData = req.body
+  *   const id = req.params.id
+  *   res.status(200).send(`Updated data for ID: ${id}, New data: ${JSON.stringify(updatedData)}`)
+  * })
+  * const server = app.server()
+  * server.listen(3000, () => {
+  *   console.log('Server is running on port 3000')
+  * })
+  */
   put: (path: string, ...handlers: any) => void
 
   /**
- * @method patch
- *
- * Defines a route that handles `PATCH` requests. This method registers a handler for incoming `PATCH` requests
- * to the specified path. It is used to apply partial updates to an existing resource.
- *
- * @param {string} path - The path for the route (e.g., `/users/:id`).
- * @param {...any} handlers - The handler functions to be executed for the `PATCH` request.
- *
- * @example
- * // Example of a simple PATCH route
- * const app = App()
- * app.patch('/update-partial/:id', (req, res) => {
- *   const partialData = req.body
- *   const id = req.params.id
- *   res.status(200).send(`Partially updated data for ID: ${id}, Partial data: ${JSON.stringify(partialData)}`)
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+  * @method patch
+  *
+  * Defines a route that handles `PATCH` requests. This method registers a handler for incoming `PATCH` requests
+  * to the specified path. It is used to apply partial updates to an existing resource.
+  *
+  * @param {string} path - The path for the route (e.g., `/users/:id`).
+  * @param {...any} handlers - The handler functions to be executed for the `PATCH` request.
+  *
+  * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+  *
+  * @example
+  * // Example of a simple PATCH route
+  * const app = App()
+  * app.patch('/update-partial/:id', (req, res) => {
+  *   const partialData = req.body
+  *   const id = req.params.id
+  *   res.status(200).send(`Partially updated data for ID: ${id}, Partial data: ${JSON.stringify(partialData)}`)
+  * })
+  * const server = app.server()
+  * server.listen(3000, () => {
+  *   console.log('Server is running on port 3000')
+  * })
+  */
   patch: (path: string, ...handlers: any) => void
 
   /**
- * @method delete
- *
- * Defines a route that handles `DELETE` requests. This method registers a handler for incoming `DELETE` requests
- * to the specified path. It is used to delete a resource from the server.
- *
- * @param {string} path - The path for the route (e.g., `/users/:id`).
- * @param {...any} handlers - The handler functions to be executed for the `DELETE` request.
- *
- * @example
- * // Example of a simple DELETE route
- * const app = App()
- * app.delete('/delete/:id', (req, res) => {
- *   const id = req.params.id
- *   res.status(200).send(`Deleted resource with ID: ${id}`)
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+  * @method delete
+  *
+  * Defines a route that handles `DELETE` requests. This method registers a handler for incoming `DELETE` requests
+  * to the specified path. It is used to delete a resource from the server.
+  *
+  * @param {string} path - The path for the route (e.g., `/users/:id`).
+  * @param {...any} handlers - The handler functions to be executed for the `DELETE` request.
+  *
+  * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+  *
+  * @example
+  * // Example of a simple DELETE route
+  * const app = App()
+  * app.delete('/delete/:id', (req, res) => {
+  *   const id = req.params.id
+  *   res.status(200).send(`Deleted resource with ID: ${id}`)
+  * })
+  * const server = app.server()
+  * server.listen(3000, () => {
+  *   console.log('Server is running on port 3000')
+  * })
+  */
   delete: (path: string, ...handlers: any) => void
 
   /**
- * @method options
- *
- * Defines a route that handles `OPTIONS` requests. This method registers a handler for incoming `OPTIONS` requests,
- * which are typically used to retrieve the allowed HTTP methods for a particular resource.
- *
- * @param {string} path - The path for the route (e.g., `/users`).
- * @param {...any} handlers - The handler functions to be executed for the `OPTIONS` request.
- *
- * @example
- * // Example of a simple OPTIONS route
- * const app = App()
- * app.options('/options', (req, res) => {
- *   res.status(200).send('Allowed methods: GET, POST, PUT')
- * })
- * const server = app.server()
- * server.listen(3000, () => {
- *   console.log('Server is running on port 3000')
- * })
- */
+  * @method options
+  *
+  * Defines a route that handles `OPTIONS` requests. This method registers a handler for incoming `OPTIONS` requests,
+  * which are typically used to retrieve the allowed HTTP methods for a particular resource.
+  *
+  * @param {string} path - The path for the route (e.g., `/users`).
+  * @param {...any} handlers - The handler functions to be executed for the `OPTIONS` request.
+  *
+  * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+  *
+  * @example
+  * // Example of a simple OPTIONS route
+  * const app = App()
+  * app.options('/options', (req, res) => {
+  *   res.status(200).send('Allowed methods: GET, POST, PUT')
+  * })
+  * const server = app.server()
+  * server.listen(3000, () => {
+  *   console.log('Server is running on port 3000')
+  * })
+  */
   options: (path: string, ...handlers: any) => void
 }
 
@@ -175,10 +189,10 @@ export interface VkrunRouter {
  * - **`params`**: Contains the route parameters extracted from the URL path (e.g., for `/users/:id`, the `id` will be available in `params`).
  * - **`query`**: Contains the query parameters from the URL (e.g., for `/search?q=test`, the `query` will contain `{ q: 'test' }`).
  * - **`files`**: Contains files sent with the request, either stored in memory or on disk, depending on the configuration.
- * - **`session`**: Optional session data (if session handling is implemented).
- * - **`route`**: The route object associated with the request, providing details like path and method.
  *
  * @param {T} [T] - A generic type for the request body, allowing the user to specify the shape of the request's body.
+ *
+ * @see [Router Request Documentation](https://vkrunjs.com/router/handlers/router-request)
  *
  * @example
  * // Example usage of `Request` in route handler
@@ -215,6 +229,8 @@ export interface Request<T = any> extends IncomingMessage {
  * - **`clearCookie()`**: Clears a cookie from the response.
  *
  * **`_body`**: Contains the body data of the response before sending.
+ *
+ * @see [Router Response Documentation](https://vkrunjs.com/router/handlers/router-response)
  *
  * @example
  * // Example usage of `Response` in a route handler
