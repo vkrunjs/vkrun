@@ -2,7 +2,7 @@ import * as crypto from 'crypto'
 import { JwtEncryptConfig, JwtToken, JwtTokenData, VkrunJwt } from '../types'
 import { convertExpiresIn, validateSecretKey, validateTimeFormat } from '../utils'
 
-class VkrunSetup implements VkrunJwt {
+class JwtSetup implements VkrunJwt {
   encrypt (data: any, config: JwtEncryptConfig): JwtToken {
     const { secretKey, expiresIn } = config
     validateSecretKey(secretKey, 'jwt')
@@ -69,4 +69,22 @@ class VkrunSetup implements VkrunJwt {
   }
 }
 
-export const jwt = (): VkrunJwt => new VkrunSetup()
+/**
+ * @function jwt
+ *
+ * This function is used to generate tokens and decrypt them, and can be customized with various
+ * configurations such as secret keys and expiration times.
+ *
+ * **Usage:**
+ * - You can call this function to create a new instance of the `JwtSetup` class, which contains the
+ *   methods `encrypt` and `decrypt` to handle JWT tokens.
+ *
+ * @returns {VkrunJwt} - Returns an instance of the `JwtSetup` class, which implements the `VkrunJwt` interface.
+ *
+ * @example
+ * const data = { id: 123, name: 'John Doe' }
+ * const config = { secretKey: 'your-secret-key-SHA256', expiresIn: '1h' }
+ * const token = jwt().encrypt(data, config)
+ * console.log(token) // token string
+ */
+export const jwt = (): VkrunJwt => new JwtSetup()
