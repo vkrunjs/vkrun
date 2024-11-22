@@ -20,7 +20,6 @@ export interface Request<T = any> extends IncomingMessage {
   query: T extends { query: infer Q } ? Q : Record<string, string | number | boolean | Date> | undefined
   session?: any
   files: T extends { files: infer F } ? F : RouterFile[]
-  setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
 }
 
 export type Response = ServerResponse

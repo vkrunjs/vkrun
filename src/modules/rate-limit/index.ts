@@ -15,6 +15,7 @@ export class RateLimitSetup {
   private readonly notification?: (access: RateLimitAccessData) => void
   private readonly minToNotification: number
   private readonly requests: RateLimitRequests
+  private readonly expirationTimers: Map<string, NodeJS.Timeout>
 
   constructor (config?: RateLimitConfig) {
     this.windowMs = config?.windowMs ?? 60 * 1000 // Default: 1 minute
@@ -24,9 +25,14 @@ export class RateLimitSetup {
     this.notification = config?.notification
     this.minToNotification = config?.minToNotification ?? 0
     this.requests = new Map()
+    this.expirationTimers = new Map() // Inicializando a lista de timers
   }
 
-  handle (request: Request, response: Response, next: NextFunction): void {
+  handle (
+    request: Request & { setTimer: (callback: () => void, ms: number) => NodeJS.Timeout },
+    response: Response,
+    next: NextFunction
+  ): void {
     const remoteAddress = request.socket.remoteAddress ?? '127.0.0.1'
     const remoteFamily = request.socket.remoteFamily ?? ''
     const userAgent = request.headers['user-agent'] ?? ''
@@ -73,9 +79,18 @@ export class RateLimitSetup {
       return
     }
 
-    request.setTimer(() => {
-      this.requests.delete(key)
-    }, this.windowMs)
+    if (request?.setTimer) {
+      request.setTimer(() => {
+        this.requests.delete(key)
+      }, this.windowMs)
+    } else {
+      const timer = setTimeout(() => {
+        this.requests.delete(key)
+        this.expirationTimers.delete(key)
+      }, this.windowMs)
+
+      this.expirationTimers.set(key, timer)
+    }
 
     if (this.standardHeaders) {
       const remaining = Math.max(0, this.limit - requestInfo.count)

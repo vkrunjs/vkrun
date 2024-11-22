@@ -42,7 +42,7 @@ class AppSetup implements VkrunApp {
 
   // Timeout management
 
-  public setTimer (callback: () => void, ms: number): NodeJS.Timeout {
+  private setTimer (callback: () => void, ms: number): NodeJS.Timeout {
     const timeout = setTimeout(callback, ms)
     this.timers.push(timeout)
     return timeout
@@ -94,7 +94,7 @@ class AppSetup implements VkrunApp {
   // Method to simulate a request with superRequest
 
   public async _reqWithoutServer (
-    request: Request,
+    request: Request & { setTimer: (callback: () => void, ms: number) => NodeJS.Timeout },
     response: Response & { _ended: boolean }
   ): Promise<Response> {
     this.instance = '_reqWithoutServer'

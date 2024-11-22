@@ -9,7 +9,6 @@ export type AppCreateServer = http.Server<typeof http.IncomingMessage, typeof ht
 export interface VkrunApp {
   server: () => AppCreateServer
   use: (middleware: Record<string, any>) => void
-  setTimer: (callback: () => void, ms: number) => NodeJS.Timeout
   clearTimers: () => void
   close: () => void
   error: (
