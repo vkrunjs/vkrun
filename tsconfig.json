@@ -6,7 +6,6 @@
     "allowJs": true,
     "outDir": "./lib",
     "rootDir": "./src",
-    "removeComments": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
