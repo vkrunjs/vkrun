@@ -1,5 +1,8 @@
 # VkrunJS Releases
 
+## 1.9.1
+- remove config removeComments
+
 ## 1.9.0
 - change rateLimit sanitation method for superRequest and production with createServer
 - add jsDoc to App module
