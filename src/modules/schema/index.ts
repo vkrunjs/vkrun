@@ -439,6 +439,24 @@ export class SchemaSetup implements VkrunSchema {
   }
 }
 
+/**
+ * @function schema
+ *
+ * The `schema` construct provides several methods to validate schema rules such as string, number, date, and more. It supports custom error handling, asynchronous validation, and testing.
+ *
+ * **Usage Example:**
+ * ```ts
+ * import { schema } from "vkrun"
+ *
+ * const emailSchema = schema().string().email()
+ *
+ * const validateA = emailSchema.validate("any_email@mail.com")
+ * const validateB = emailSchema.validate("any_email@mail")
+ *
+ * console.log(validateA) // true
+ * console.log(validateB) // false
+ * ```
+ */
 const schema = (): VkrunSchema => {
   return new SchemaSetup()
 }
