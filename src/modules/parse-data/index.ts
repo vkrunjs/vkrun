@@ -67,6 +67,74 @@ export class ParseDataSetup implements VkrunParseData {
   }
 }
 
+/**
+ * @function parseData
+ *
+ * `ParseData` is a middleware responsible for parsing incoming request data. It automatically processes the request
+ * body, query parameters, route parameters, and other data types based on the content type of the request
+ * (e.g., JSON, URL-encoded, multipart form data). This middleware is typically used with `app.use(parseData())`
+ * in your application to handle incoming data.
+ *
+ * **Supported data parsing types:**
+ * - **JSON**: Parses `application/json` body.
+ * - **URL-encoded**: Parses `application/x-www-form-urlencoded` body.
+ * - **Multipart form data**: Parses `multipart/form-data` body.
+ * - **Query**: Parses query parameters from the URL.
+ * - **Params**: Parses URL route parameters.
+ * - **Escape SQL**: Optionally applies SQL escaping to the request data to prevent SQL injection attacks.
+ *
+ * **Usage Example:**
+ * ```ts
+ * import { App, parseData } from 'vkrun'
+ *
+ * const app = App()
+ *
+ * // Use parseData middleware to handle incoming request data
+ * app.use(parseData()) // Parse body, query, and params automatically
+ *
+ * app.get('/example', (req, res) => {
+ *   // Access parsed data in req.query, req.params, and req.body
+ *   res.json({ query: req.query, params: req.params, body: req.body })
+ * })
+ *
+ * // Start the server
+ * app.server().listen(3000, () => {
+ *   console.log('Server running on port 3000')
+ * })
+ * ```
+ * In this example:
+ * - `req.query`, `req.params`, and `req.body` will be automatically populated based on the incoming request.
+ *
+ * **Configuration Example:**
+ * You can configure the middleware to selectively enable or disable data parsing for certain types.
+ * ```ts
+ * const app = App()
+ *
+ * // Use parseData with custom config to disable JSON parsing
+ * app.use(parseData({ json: false }))
+ * ```
+ * In this case, the `json` body parsing will be disabled, and other types of parsing (e.g., URL-encoded, query, params)
+ * will still be active.
+ *
+ * @param {ParseDataConfig} [config] - Optional configuration to customize how data is parsed. If not provided, all data types are enabled.
+ *
+ * @returns {VkrunParseData} - Returns an instance of `ParseDataSetup` which handles the parsing logic.
+ *
+ * @example
+ * // Example of parsing URL query parameters
+ * ```ts
+ * const app = App()
+ *
+ * app.use(parseData()) // Use parseData middleware
+ *
+ * app.get('/query', (req, res) => {
+ *   console.log(req.query) // Access parsed query parameters
+ *   res.status(200).send()
+ * })
+ *
+ * // Requesting /query?name=test&age=25 will populate req.query with { name: 'test', age: 25 }
+ * ```
+ */
 export const parseData = (config?: ParseDataConfig): VkrunParseData => {
   return new ParseDataSetup(config)
 }
