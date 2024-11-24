@@ -121,8 +121,8 @@ export class ParseDataSetup implements VkrunParseData {
  * @returns {VkrunParseData} - Returns an instance of `ParseDataSetup` which handles the parsing logic.
  *
  * @example
- * // Example of parsing URL query parameters
  * ```ts
+ * // Example of parsing URL query parameters
  * const app = App()
  *
  * app.use(parseData()) // Use parseData middleware
