@@ -387,6 +387,87 @@ export class SwaggerBuilderSetup implements VkrunSwaggerBuilder {
   }
 }
 
+/**
+ * @function swaggerBuilder
+ *
+ * The `swaggerBuilder` function is a factory for creating an instance of the `SwaggerBuilderSetup` class. This instance is responsible for dynamically generating Swagger OpenAPI documentation with customizable visibility per route using `visibilityKeys`. It also supports serving multiple Swagger UI instances on different ports, allowing for segmented views of your API documentation (e.g., public vs private documentation).
+ *
+ * **Usage Example:**
+ * ```ts
+ * import { App, swaggerBuilder } from 'vkrun'
+ * import swaggerUiDist from 'swagger-ui-dist'
+ *
+ * const app = App()
+ * app.parseData()
+ * app.cors()
+ *
+ * const swagger = swaggerBuilder(swaggerUiDist)
+ *
+ * swagger.create({
+ *   openapi: '3.0.0',
+ *   info: {
+ *     title: 'Complete API Documentation',
+ *     version: '1.0.2',
+ *     description: 'API routes including public and private.',
+ *     contact: {
+ *       name: 'Support Team',
+ *       email: 'support@example.com'
+ *     }
+ *   },
+ *   servers: [{
+ *     url: 'http://localhost:3000',
+ *     description: 'Development Server'
+ *   }]
+ * })
+ *
+ * // Define a public route
+ * swagger.route('/public').get({
+ *   summary: 'Public Route',
+ *   description: 'A route available without authentication.',
+ *   responses: {
+ *     200: {
+ *       description: 'Successful response',
+ *       content: {
+ *         'application/json': {
+ *           schema: {
+ *             type: 'string'
+ *           }
+ *         }
+ *       }
+ *     }
+ *   },
+ *   visibilityKeys: ['public']
+ * })
+ *
+ * // Start serving the public Swagger documentation
+ * swagger.listen({
+ *   port: 3001,
+ *   path: '/api-docs',
+ *   visibilityKeys: ['public'],
+ *   callback: () => {
+ *     console.log('Public Swagger UI running on port 3001')
+ *   }
+ * })
+ * ```
+ *
+ * **Creating Routes**:
+ * The `swaggerBuilder` allows you to dynamically define routes using the `route()` method, and add HTTP methods (GET, POST, PUT, DELETE, etc.) to those routes.
+ *
+ * **Serving Multiple Swagger Instances**:
+ * `swaggerBuilder` supports serving multiple instances of Swagger UI on different ports. This is useful for displaying different views of the API documentation based on visibility keys.
+ *
+ * **Visibility Keys**:
+ * Routes can be tagged with one or more `visibilityKeys`, and Swagger UI instances can be configured to display only those routes that match the visibility keys provided.
+ *
+ * @param {any} swaggerUiDist - The distribution of Swagger UI files, typically sourced from the `swagger-ui-dist` package. This is used to serve the Swagger UI interface.
+ *
+ * @returns {VkrunSwaggerBuilder} - Returns an instance of `SwaggerBuilderSetup`, which provides methods for configuring and serving Swagger API documentation.
+ *
+ * **Methods Available**:
+ * - `create(config: SwaggerOpenAPIConfig)`: Initializes the Swagger documentation with the provided OpenAPI configuration.
+ * - `route(path: string)`: Defines an endpoint path and returns a `SwaggerRouteBuilder` to add HTTP methods (GET, POST, etc.).
+ * - `listen(config: SwaggerListenConfig)`: Starts the Swagger UI server on the specified port, filtering routes based on `visibilityKeys`.
+ */
 export const swaggerBuilder = (swaggerUiDist: any): VkrunSwaggerBuilder => {
   return new SwaggerBuilderSetup(swaggerUiDist)
 }
