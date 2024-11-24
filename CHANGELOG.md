@@ -1,5 +1,21 @@
 # VkrunJS Releases
 
+## 1.9.0
+- change rateLimit sanitation method for superRequest and production with createServer
+- add jsDoc to App module
+- add jsDoc to CORS module
+- add jsDoc to Router module
+- add jsDoc to JWT module
+- add jsDoc to Logger module
+- add jsDoc to Mime module
+- add jsDoc to ParseData module
+- add jsDoc to RateLimit module
+- add jsDoc to serveStaticFile module
+- add jsDoc to superRequest module
+- add jsDoc to upload module
+- add jsDoc to swaggerBuilder module
+- add jsDoc to schema module
+
 ## 1.8.0
 - separate min array and max array validations from validate-array file
 - add isEmail util

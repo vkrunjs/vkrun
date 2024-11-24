@@ -1,6 +1,6 @@
 {
   "name": "vkrun",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "Vkrun is a Node.js framework for building server-side applications",
   "author": "Mario Elvio",
   "license": "MIT",
@@ -25,7 +25,6 @@
     "parse data",
     "jwt",
     "logger",
-    "session",
     "super request",
     "mime",
     "serve static file",
