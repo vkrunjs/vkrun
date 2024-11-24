@@ -8,10 +8,106 @@ import {
 import {
   SuperRequest,
   SuperRequestError,
-  SuperRequestSuccess
+  SuperRequestSuccess,
+  VkrunApp
 } from '../types'
 
-export const superRequest = (app: any): SuperRequest => {
+/**
+ * @function superRequest
+ *
+ * A function that simulates HTTP requests without the need to initialize a server listening on a port.
+ * This is useful for testing and integration purposes where an actual HTTP server is not required.
+ * It supports all HTTP methods like `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, and `OPTIONS`.
+ *
+ * This function allows you to test endpoints by simulating HTTP requests and receiving the response
+ * without having to manually start and stop a server.
+ *
+ * **Usage Example:**
+ * ```ts
+ * import { App, superRequest } from 'vkrun'
+ *
+ * describe('Basic example with superRequest', () => {
+ *   it('Should respond with "Hello, World!" on GET /hello route', async () => {
+ *     const app = App()
+ *
+ *     // Define the GET /hello route
+ *     app.get('/hello', (req, res) => {
+ *       res.status(200).send('Hello, World!')
+ *     })
+ *
+ *     // Perform a GET request using superRequest
+ *     await superRequest(app).get('/hello').then((response) => {
+ *       // Validate the response
+ *       expect(response.statusCode).toEqual(200)
+ *       expect(response.data).toEqual('Hello, World!')
+ *     })
+ *
+ *     app.close() // closes all app processes
+ *   })
+ * })
+ * ```
+ * In this example, `superRequest` simulates the `GET /hello` request, and you can validate the status code and data of the response.
+ *
+ * @param {VkrunApp} app - The Vkrun application instance that will be used to simulate HTTP requests.
+ *                         This should be the application where routes and handlers are defined.
+ *
+ * @returns {SuperRequest} - Returns an object containing methods for making HTTP requests. The methods include:
+ *   - `get(path: string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *   - `post(path: string, data?: Record<string, any> | string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *   - `put(path: string, data?: Record<string, any> | string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *   - `patch(path: string, data?: Record<string, any> | string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *   - `delete(path: string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *   - `head(path: string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *   - `options(path: string, options?: Record<string, any>): Promise<SuperRequestSuccess>`
+ *
+ * **Supported HTTP Methods:**
+ * - **GET**: Simulates a GET request to retrieve data from the server.
+ * - **POST**: Simulates a POST request to send data to the server.
+ * - **PUT**: Simulates a PUT request to update an existing resource on the server.
+ * - **PATCH**: Simulates a PATCH request to partially update a resource.
+ * - **DELETE**: Simulates a DELETE request to remove a resource.
+ * - **HEAD**: Simulates a HEAD request to retrieve only the headers without the body.
+ * - **OPTIONS**: Simulates an OPTIONS request to check what HTTP methods are supported by the server.
+ *
+ * @example
+ * ```ts
+ * // Example of using superRequest to make a GET request
+ * const response = await superRequest(app).get('/some-endpoint')
+ * console.log(response.statusCode)  // Output: 200
+ * console.log(response.data)        // Output: response data
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Example of using superRequest to make a POST request with JSON data
+ * const data = { name: 'John', age: 30 }
+ * const response = await superRequest(app).post('/submit', data, {
+ *   headers: { 'Content-Type': 'application/json' }
+ * })
+ * console.log(response.statusCode)  // Output: 200
+ * console.log(response.data)        // Output: { name: 'John', age: 30 }
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Example of using superRequest to make a DELETE request
+ * const response = await superRequest(app).delete('/delete/1')
+ * console.log(response.statusCode)  // Output: 200
+ * console.log(response.data)        // Output: { deletedId: '1' }
+ * ```
+ *
+ * @example
+ * ```ts
+ * // Example of using superRequest to make a HEAD request
+ * const response = await superRequest(app).head('/info')
+ * console.log(response.statusCode)  // Output: 200
+ * console.log(response.headers)     // Output: response headers
+ * ```
+ *
+ * @throws {SuperRequestError} - Throws an error if the request fails with a status code of 400 or higher.
+ */
+export const superRequest = (app: VkrunApp): SuperRequest => {
+  const _app = app as VkrunApp & { _reqWithoutServer: any }
   const request = async (method: string, path: any, data: any, options?: Record<string, any>): Promise<SuperRequestSuccess> => {
     // eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
     return await new Promise(async (resolve, reject) => {
@@ -25,7 +121,7 @@ export const superRequest = (app: any): SuperRequest => {
       })
 
       const httpResponse = createHttpResponse(httpRequest)
-      const serverResponse = await app._reqWithoutServer(
+      const serverResponse = await _app._reqWithoutServer(
         httpRequest, customResponse(httpResponse)
       )
       serverResponse.data = formatResponseData(serverResponse)
