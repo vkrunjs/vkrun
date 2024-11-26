@@ -55,8 +55,8 @@ export class SchemaSetup implements VkrunSchema {
     }
   }
 
-  string (): SchemaStringMethod {
-    this.methodBuild({ method: 'string' })
+  string (config?: SchemaOtherMethodConfig): SchemaStringMethod {
+    this.methodBuild({ method: 'string', config })
 
     const email = (): SchemaEmailMethod => {
       this.methodBuild({ method: 'email' })

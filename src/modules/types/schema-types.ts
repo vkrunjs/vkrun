@@ -2,7 +2,7 @@ import { SchemaSetup } from '../schema'
 import { UUIDVersion } from './utils-types'
 
 export interface VkrunSchema {
-  string: () => SchemaStringMethod
+  string: (config?: SchemaOtherMethodConfig) => SchemaStringMethod
   number: () => SchemaNumberMethod
   bigInt: () => SchemaBigIntMethod
   boolean: () => SchemaReturn
@@ -24,6 +24,10 @@ export interface VkrunSchema {
   validateAsync: (value: any) => Promise<boolean>
   test: (value: any, valueName: string) => SchemaTests
   testAsync: (value: any, valueName: string) => Promise<SchemaTests>
+}
+
+export interface SchemaOtherMethodConfig {
+  errorMessage?: string
 }
 
 export interface SchemaReturn {
@@ -336,10 +340,6 @@ export interface SchemaNullableMethod {
   testAsync: (value: any, valueName: string) => Promise<SchemaTests>
 }
 
-export interface SchemaOtherMethodConfig {
-  errorMessage?: string
-}
-
 export interface SchemaStringMethod extends SchemaReturn {
   minLength: (limit: number) => SchemaMinLengthMethod
   maxLength: (limit: number) => SchemaMaxLengthMethod
@@ -403,7 +403,7 @@ export interface SchemaMaxDateMethod extends SchemaReturn {
 }
 
 export interface SchemaAliasMethod extends SchemaReturn {
-  string: () => SchemaStringMethod
+  string: (config?: SchemaOtherMethodConfig) => SchemaStringMethod
   number: () => SchemaNumberMethod
   boolean: () => SchemaReturn
   date: (type?: SchemaDateTypes) => SchemaDateMethod
@@ -418,7 +418,7 @@ export interface SchemaArrayConfig {
 }
 
 export interface SchemaArrayMethod extends SchemaReturn {
-  string: () => SchemaStringMethod
+  string: (config?: SchemaOtherMethodConfig) => SchemaStringMethod
   boolean: () => SchemaReturn
   number: () => SchemaNumberMethod
   bigInt: () => SchemaBigIntMethod

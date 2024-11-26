@@ -11,7 +11,7 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
     if (rule.method === 'object') {
       validate.validateObject({ ...validateMethodParams, indexArray, schema: rule.schema })
     } else if (rule.method === 'string') {
-      validate.validateString({ ...validateMethodParams, indexArray })
+      validate.validateString({ ...validateMethodParams, indexArray, config: rule.config })
     } else if (rule.method === 'minWord') {
       validate.validateMinWord({ ...validateMethodParams, indexArray, minWord: rule.minWord })
     } else if (rule.method === 'email') {

@@ -89,6 +89,36 @@ describe('Validator String Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error messages for string validation', () => {
+    const value = 123
+
+    const sut = schema()
+      .string({ errorMessage: '[valueName] [value] any message' })
+      .test(value, 'value_name')
+    console.log(JSON.stringify({ sut }, null, 2))
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 123
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'string',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'string type',
+      received: 123,
+      message: 'value_name 123 any message'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the string method and passedAll to equal false if the value is not of type string', () => {
     const value = false
 
