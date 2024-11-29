@@ -1,5 +1,11 @@
 # VkrunJS Releases
 
+## 1.9.5
+- add custom error message to string method of schema module
+- add loadEnv module
+- fix saveFileToDisk returning fieldName instead of originalName
+- add custom error message to UUID method of schema module
+
 ## 1.9.1
 - remove config removeComments
 
