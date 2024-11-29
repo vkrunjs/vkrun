@@ -178,7 +178,7 @@ class UploadSetup implements VkrunUpload {
 
       return {
         fieldName: file.fieldName,
-        originalName: file.fieldName,
+        originalName: file.filename,
         filename,
         extension: file.extension,
         mimetype: file.mimetype,

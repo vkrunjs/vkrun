@@ -95,7 +95,7 @@ describe('Validator String Method', () => {
     const sut = schema()
       .string({ errorMessage: '[valueName] [value] any message' })
       .test(value, 'value_name')
-    console.log(JSON.stringify({ sut }, null, 2))
+
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(1)
     expect(sut.failed).toEqual(1)
