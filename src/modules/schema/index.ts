@@ -63,8 +63,8 @@ export class SchemaSetup implements VkrunSchema {
       return this.defaultReturnMethods()
     }
 
-    const UUID = (version?: UUIDVersion): SchemaUUIDMethod => {
-      this.methodBuild({ method: 'UUID', uuidVersion: version })
+    const UUID = (version?: UUIDVersion, config?: SchemaOtherMethodConfig): SchemaUUIDMethod => {
+      this.methodBuild({ method: 'UUID', uuidVersion: version, config })
       return this.defaultReturnMethods()
     }
 
@@ -301,7 +301,7 @@ export class SchemaSetup implements VkrunSchema {
   array (config?: SchemaArrayConfig): SchemaArrayMethod {
     this.methodBuild({ method: 'array', min: config?.min, max: config?.max })
     return {
-      string: () => this.string(),
+      string: (config?: SchemaOtherMethodConfig) => this.string(config),
       boolean: () => this.boolean(),
       number: () => this.number(),
       bigInt: () => this.bigInt(),

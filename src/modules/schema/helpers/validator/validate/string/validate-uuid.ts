@@ -1,27 +1,32 @@
-import { SchemaErrorTest, SchemaSuccessTest, UUIDVersion } from '../../../../../types'
-import { isUUID, received } from '../../../../../utils'
+import { SchemaOtherMethodConfig, SchemaValidateMethod, UUIDVersion } from '../../../../../types'
+import { isString, isUUID, received } from '../../../../../utils'
 import { informativeMessage } from '../../../location'
 
-export const validateUuid = ({
-  value,
-  valueName,
-  uuidVersion,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  uuidVersion?: UUIDVersion
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateUuid = (
+  params: SchemaValidateMethod & {
+    config: SchemaOtherMethodConfig
+    uuidVersion?: UUIDVersion
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    indexArray,
+    config,
+    uuidVersion,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const message = {
     expect: indexArray !== undefined ? 'array index in UUID format' : 'format UUID',
-    error: informativeMessage.string.uuid
-      .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
+    error: isString(config?.errorMessage)
+      ? config.errorMessage
+        .replace('[value]', String(value))
+        .replace('[valueName]', String(valueName))
+      : informativeMessage.string.uuid
+        .replace('[value]', String(value))
+        .replace('[valueName]', valueName)
   }
 
   if (isUUID(value, uuidVersion)) {

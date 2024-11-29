@@ -112,6 +112,43 @@ describe('Validator UUID Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error messages for UUID validation', () => {
+    const value = '123'
+
+    const sut = schema()
+      .string({ errorMessage: '[valueName] [value] any message' })
+      .UUID('v4', { errorMessage: '[valueName] [value] any message' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: '123'
+      },
+      {
+        method: 'string',
+        name: 'value_name',
+        expect: 'string type',
+        received: '123'
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'UUID',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'format UUID',
+      received: '123',
+      message: 'value_name 123 any message'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the UUID method and passedAll to equal false if the value is a invalid UUID format', () => {
     const value = false
 

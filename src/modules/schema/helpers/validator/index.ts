@@ -17,7 +17,12 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
     } else if (rule.method === 'email') {
       validate.validateEmail({ ...validateMethodParams, indexArray })
     } else if (rule.method === 'UUID') {
-      validate.validateUuid({ ...validateMethodParams, indexArray, uuidVersion: rule.uuidVersion })
+      validate.validateUuid({
+        ...validateMethodParams,
+        indexArray,
+        uuidVersion: rule.uuidVersion,
+        config: rule.config
+      })
     } else if (rule.method === 'maxLength') {
       validate.validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
     } else if (rule.method === 'minLength') {

@@ -345,7 +345,7 @@ export interface SchemaStringMethod extends SchemaReturn {
   maxLength: (limit: number) => SchemaMaxLengthMethod
   minWord: (limit: number) => SchemaMinWordMethod
   email: () => SchemaEmailMethod
-  UUID: (version?: UUIDVersion) => SchemaUUIDMethod
+  UUID: (version?: UUIDVersion, config?: SchemaOtherMethodConfig) => SchemaUUIDMethod
   time: (type: SchemaTimeTypes) => SchemaTimeMethod
   regex: (regExp: RegExp, config?: SchemaOtherMethodConfig) => SchemaRegexMethod
 }
