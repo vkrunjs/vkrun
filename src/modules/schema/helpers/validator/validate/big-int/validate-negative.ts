@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../../types'
 import { isBigInt, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateNegativeBigInt = (params: SchemaValidateMethod): void => {
   const {
@@ -15,7 +15,7 @@ export const validateNegativeBigInt = (params: SchemaValidateMethod): void => {
     expect: indexArray !== undefined
       ? 'array index must contain a bigint negative'
       : 'negative bigint',
-    error: informativeMessage.bigInt.negative
+    error: getLocation().schema.bigInt.negative
       .replace('[valueName]', valueName)
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
   }

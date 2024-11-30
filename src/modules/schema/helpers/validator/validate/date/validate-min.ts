@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { dateToString, received } from '../../../../../utils'
 
@@ -38,7 +38,7 @@ export const validateMinDate = ({
 
   const message = {
     expect: expect(),
-    error: informativeMessage.date.invalidValue
+    error: getLocation().schema.date.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[type]', 'date')
@@ -67,7 +67,7 @@ export const validateMinDate = ({
   const deadlineExceeded = dateTimestamp < dateToCompareTimestamp && value.getMilliseconds() <= dateToCompare.getMilliseconds()
 
   if (deadlineExceeded) {
-    message.error = informativeMessage.date.min
+    message.error = getLocation().schema.date.min
       .replace('[value]', dateToString(value, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC'))
       .replace('[valueName]', valueName)
       .replace('[refDate]', dateToString(dateToCompare, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC'))

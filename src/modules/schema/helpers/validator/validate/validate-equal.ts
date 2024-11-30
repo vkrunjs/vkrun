@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { received } from '../../../../utils'
 import { isEqual } from '../../../../utils/is-equal'
@@ -30,7 +30,7 @@ export const validateEqual = ({
       name: valueName,
       expect: valueToCompare,
       received: received(value),
-      message: informativeMessage.equal
+      message: getLocation().schema.equal
         .replace('[valueName]', valueName)
         .replace('[value]', value)
     })

@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../../types'
 import { isNumber, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateMaxNumber = (
   params: SchemaValidateMethod & {
@@ -20,7 +20,7 @@ export const validateMaxNumber = (
     expect: indexArray !== undefined
       ? 'array index must contain a number less than or equal to the reference'
       : 'value less than or equal to the reference',
-    error: informativeMessage.number.max
+    error: getLocation().schema.number.max
       .replace('[valueName]', valueName)
       .replace('[value]', String(value))
       .replace('[max]', String(max))

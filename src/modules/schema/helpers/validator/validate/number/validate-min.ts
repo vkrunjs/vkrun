@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../../types'
 import { isNumber, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateMinNumber = (
   params: SchemaValidateMethod & {
@@ -20,7 +20,7 @@ export const validateMinNumber = (
     expect: indexArray !== undefined
       ? 'array index must contain a number greater than or equal to the reference'
       : 'value greater than or equal to the reference',
-    error: informativeMessage.number.min
+    error: getLocation().schema.number.min
       .replace('[valueName]', valueName)
       .replace('[value]', String(value))
       .replace('[min]', String(min))

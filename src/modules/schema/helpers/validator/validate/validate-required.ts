@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { received } from '../../../../utils'
 
@@ -21,7 +21,7 @@ export const validateRequired = ({
       received: value
     })
   } else {
-    const message = informativeMessage.required
+    const message = getLocation().schema.required
     const messageError = message
       .replace('[valueName]', valueName)
       .replace('[value]', value)

@@ -1,6 +1,6 @@
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { isBigInt, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateBigInt = ({
   value,
@@ -17,7 +17,7 @@ export const validateBigInt = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in bigint type' : 'bigint type',
-    error: informativeMessage.bigInt.invalidValue
+    error: getLocation().schema.bigInt.invalidValue
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
       .replace('[valueName]', valueName)
   }

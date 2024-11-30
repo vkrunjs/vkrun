@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../../types'
 import { isNumber, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validatePositiveNumber = (params: SchemaValidateMethod): void => {
   const {
@@ -15,7 +15,7 @@ export const validatePositiveNumber = (params: SchemaValidateMethod): void => {
     expect: indexArray !== undefined
       ? 'array index must contain a number positive'
       : 'positive number',
-    error: informativeMessage.number.positive
+    error: getLocation().schema.number.positive
       .replace('[valueName]', valueName)
       .replace('[value]', value)
   }

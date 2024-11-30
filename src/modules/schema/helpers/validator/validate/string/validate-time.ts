@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest, SchemaTimeTypes } from '../../../../../types'
 import { received } from '../../../../../utils'
 
@@ -23,7 +23,7 @@ export const validateTime = ({
   let isTime = false
   const message = {
     expect: indexArray !== undefined ? `array index in ${type} format` : `${type} format`,
-    error: informativeMessage.string.time
+    error: getLocation().schema.string.time
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[type]', type)

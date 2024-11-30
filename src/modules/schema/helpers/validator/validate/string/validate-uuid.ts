@@ -1,6 +1,6 @@
 import { SchemaOtherMethodConfig, SchemaValidateMethod, UUIDVersion } from '../../../../../types'
 import { isString, isUUID, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateUuid = (
   params: SchemaValidateMethod & {
@@ -24,7 +24,7 @@ export const validateUuid = (
       ? config.errorMessage
         .replace('[value]', String(value))
         .replace('[valueName]', String(valueName))
-      : informativeMessage.string.uuid
+      : getLocation().schema.string.uuid
         .replace('[value]', String(value))
         .replace('[valueName]', valueName)
   }

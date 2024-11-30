@@ -1,6 +1,6 @@
 import { SchemaReturn, SchemaValidateMethod } from '../../../../types'
 import { oneOf, received } from '../../../../utils'
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 
 export const validateOneOf = (
   params: SchemaValidateMethod & {
@@ -17,7 +17,7 @@ export const validateOneOf = (
   } = params
   const message = {
     expect: indexArray !== undefined ? 'array index in value matches' : 'value matches',
-    error: informativeMessage.oneOf
+    error: getLocation().schema.oneOf
       .replace('[valueName]', valueName)
       .replace('[value]', value)
   }

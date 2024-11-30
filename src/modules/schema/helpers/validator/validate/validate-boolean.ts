@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { isBoolean, received } from '../../../../utils'
 
@@ -17,7 +17,7 @@ export const validateBoolean = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',
-    error: informativeMessage.boolean.invalidValue
+    error: getLocation().schema.boolean.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }

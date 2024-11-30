@@ -59,8 +59,7 @@ export class ParseDataSetup implements VkrunParseData {
     } catch (error: any) {
       response.setHeader('Content-Type', 'text/plain')
       response.setHeader('Access-Control-Allow-Origin', '*')
-      response.statusCode = 400
-      response.end('Invalid Request Data')
+      response.status(400).end('Invalid Request Data')
       return
     }
     next()

@@ -1,8 +1,7 @@
-import { SchemaInformativeMessage } from '../../../types'
-import { informativeMessage } from './informative-message'
+import { InformativeMessage } from '../types'
 
-export const resetTranslationMessage = (): void => {
-  const newInformativeMessage: SchemaInformativeMessage = {
+export const informativeMessage: InformativeMessage = {
+  schema: {
     string: {
       invalidValue: '[valueName] must be a string type!',
       minWord: '[valueName] must have at least [minWord] words!',
@@ -56,6 +55,4 @@ export const resetTranslationMessage = (): void => {
     oneOf: 'value does not have a match!',
     notOneOf: 'value cannot have a matches!'
   }
-
-  Object.assign(informativeMessage, newInformativeMessage)
 }

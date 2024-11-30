@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaOtherMethodConfig, SchemaValidateMethod } from '../../../../../types'
 import { isString, received } from '../../../../../utils'
 
@@ -22,7 +22,7 @@ export const validateString = (
       ? config.errorMessage
         .replace('[value]', String(value))
         .replace('[valueName]', String(valueName))
-      : informativeMessage.string.invalidValue
+      : getLocation().schema.string.invalidValue
         .replace('[value]', String(value))
         .replace('[valueName]', String(valueName))
   }

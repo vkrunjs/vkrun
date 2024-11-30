@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { isString, received } from '../../../../../utils'
 
@@ -21,7 +21,7 @@ export const validateMaxLength = ({
     expect: indexArray !== undefined
       ? 'array index with a length less than or equal to the limit'
       : 'value with a length less than or equal to the limit',
-    error: informativeMessage.string.maxLength
+    error: getLocation().schema.string.maxLength
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[maxLength]', String(maxLength))
@@ -53,7 +53,7 @@ export const validateMaxLength = ({
       received: value
     })
   } else {
-    message.error = informativeMessage.string.invalidValue
+    message.error = getLocation().schema.string.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
     handleAddFailed()

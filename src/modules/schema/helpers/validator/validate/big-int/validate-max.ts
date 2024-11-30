@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../../types'
 import { isBigInt, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateMaxBigInt = (
   params: SchemaValidateMethod & {
@@ -20,7 +20,7 @@ export const validateMaxBigInt = (
     expect: indexArray !== undefined
       ? 'array index must contain a bigint less than or equal to the reference'
       : 'value less than or equal to the reference',
-    error: informativeMessage.bigInt.max
+    error: getLocation().schema.bigInt.max
       .replace('[valueName]', valueName)
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
       .replace('[max]', isBigInt(max) ? `${max}n` : String(max))

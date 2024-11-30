@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { received } from '../../../../utils'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 
@@ -16,7 +16,7 @@ export const validateNullable = ({
   if (value === undefined) {
     const message = {
       expect: 'the value can be null, but other than undefined',
-      error: informativeMessage.nullable
+      error: getLocation().schema.nullable
         .replace('[valueName]', valueName)
         .replace('[value]', value)
     }

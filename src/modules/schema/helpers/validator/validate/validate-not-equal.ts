@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../types'
 import { isNotEqual, received } from '../../../../utils'
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 
 export const validateNotEqual = (
   params: SchemaValidateMethod & {
@@ -29,7 +29,7 @@ export const validateNotEqual = (
       name: valueName,
       expect: valueToCompare,
       received: received(value),
-      message: informativeMessage.notEqual
+      message: getLocation().schema.notEqual
         .replace('[valueName]', valueName)
         .replace('[value]', value)
     })

@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { isFunction, received } from '../../../../utils'
 
@@ -17,7 +17,7 @@ export const validateFunction = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in function type' : 'function type',
-    error: informativeMessage.function.invalidValue
+    error: getLocation().schema.function.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }

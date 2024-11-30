@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { isEmail, received } from '../../../../../utils'
 
@@ -17,7 +17,7 @@ export const validateEmail = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in email format' : 'email format',
-    error: informativeMessage.string.email
+    error: getLocation().schema.string.email
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }

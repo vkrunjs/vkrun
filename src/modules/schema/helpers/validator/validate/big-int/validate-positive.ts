@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../../types'
 import { isBigInt, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validatePositiveBigInt = (params: SchemaValidateMethod): void => {
   const {
@@ -15,7 +15,7 @@ export const validatePositiveBigInt = (params: SchemaValidateMethod): void => {
     expect: indexArray !== undefined
       ? 'array index must contain a bigint positive'
       : 'positive bigint',
-    error: informativeMessage.bigInt.positive
+    error: getLocation().schema.bigInt.positive
       .replace('[valueName]', valueName)
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
   }

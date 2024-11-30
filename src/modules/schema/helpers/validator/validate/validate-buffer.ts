@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
 import { isBuffer, received } from '../../../../utils'
 
@@ -17,7 +17,7 @@ export const validateBuffer = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in buffer type' : 'buffer type',
-    error: informativeMessage.buffer.invalidValue
+    error: getLocation().schema.buffer.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }

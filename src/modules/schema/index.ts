@@ -1,4 +1,4 @@
-import { hasMethod, setLocation, throwError, validator } from './helpers'
+import { hasMethod, throwError, validator } from './helpers'
 import { numberMethod } from './helpers/methods/number'
 import { bigIntMethod } from './helpers/methods/big-int'
 import {
@@ -461,4 +461,4 @@ const schema = (): VkrunSchema => {
   return new SchemaSetup()
 }
 
-export { schema, setLocation }
+export { schema }

@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaDateTypes, SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { received } from '../../../../../utils'
 
@@ -23,7 +23,7 @@ export const validateDate = ({
     expect: indexArray !== undefined
       ? `array index in the ${type ?? 'ISO8601'} date type`
       : `${type ?? 'ISO8601'} date type`,
-    error: informativeMessage.date.invalidValue
+    error: getLocation().schema.date.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
       .replace('[type]', type ?? 'ISO8601')

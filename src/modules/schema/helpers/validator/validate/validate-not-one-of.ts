@@ -1,6 +1,6 @@
 import { SchemaValidateMethod } from '../../../../types'
 import { notOneOf, received } from '../../../../utils'
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 
 export const validateNotOneOf = (
   params: SchemaValidateMethod & {
@@ -18,7 +18,7 @@ export const validateNotOneOf = (
 
   const message = {
     expect: indexArray !== undefined ? 'array index in value does not match' : 'value does not match',
-    error: informativeMessage.notOneOf
+    error: getLocation().schema.notOneOf
       .replace('[valueName]', valueName)
       .replace('[value]', value)
   }

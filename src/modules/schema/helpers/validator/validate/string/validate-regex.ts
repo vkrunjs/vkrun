@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaOtherMethodConfig, SchemaValidateMethod } from '../../../../../types'
 import { received, regexMatch } from '../../../../../utils'
 
@@ -24,7 +24,7 @@ export const validateRegex = (
       ? config.errorMessage
         .replace('[value]', String(value))
         .replace('[valueName]', valueName)
-      : informativeMessage.string.regex
+      : getLocation().schema.string.regex
         .replace('[value]', String(value))
         .replace('[valueName]', valueName)
   }

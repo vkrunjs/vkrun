@@ -1,6 +1,6 @@
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { isFloat, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateFloatNumber = ({
   value,
@@ -17,7 +17,7 @@ export const validateFloatNumber = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in float type' : 'float type',
-    error: informativeMessage.number.float
+    error: getLocation().schema.number.float
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }

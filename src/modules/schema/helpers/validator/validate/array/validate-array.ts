@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaErrorTest, SchemaMethod, SchemaMethods, SchemaSuccessTest } from '../../../../../types'
 import { isArray, received } from '../../../../../utils'
 
@@ -41,7 +41,7 @@ export const validateArray = ({
       name: valueName,
       expect: 'array type',
       received: received(value),
-      message: informativeMessage.array.invalidValue
+      message: getLocation().schema.array.invalidValue
         .replace('[valueName]', valueName)
         .replace('[value]', value)
     })

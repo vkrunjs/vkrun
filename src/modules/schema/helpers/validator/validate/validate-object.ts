@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../location'
+import { getLocation } from '../../../../location'
 import { SchemaErrorTest, SchemaSuccessTest, SchemaTests } from '../../../../types'
 import { isObject, received } from '../../../../utils'
 
@@ -21,7 +21,7 @@ export const validateObject = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in object type' : 'object type',
-    error: informativeMessage.object
+    error: getLocation().schema.object
       .replace('[valueName]', valueName)
       .replace('[value]', value)
   }

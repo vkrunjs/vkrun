@@ -1,4 +1,4 @@
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 import { SchemaMethod, SchemaMethods, SchemaValidateMethod } from '../../../../../types'
 import { isArray, isNumber, received } from '../../../../../utils'
 
@@ -28,7 +28,7 @@ export const validateMaxArray = (
           name: valueName,
           expect: 'the list must have the maximum number of items',
           received: received(value),
-          message: informativeMessage.array.max
+          message: getLocation().schema.array.max
             .replace('[valueName]', valueName)
             .replace('[max]', String(arrayMethod?.max))
         })

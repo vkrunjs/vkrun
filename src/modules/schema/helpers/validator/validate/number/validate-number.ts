@@ -1,6 +1,6 @@
 import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
 import { isNumber, received } from '../../../../../utils'
-import { informativeMessage } from '../../../location'
+import { getLocation } from '../../../../../location'
 
 export const validateNumber = ({
   value,
@@ -17,7 +17,7 @@ export const validateNumber = ({
 }): void => {
   const message = {
     expect: indexArray !== undefined ? 'array index in number type' : 'number type',
-    error: informativeMessage.number.invalidValue
+    error: getLocation().schema.number.invalidValue
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }
