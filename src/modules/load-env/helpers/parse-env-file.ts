@@ -8,9 +8,10 @@ export const parseEnvFile = (
   encoding: BufferEncoding,
   override: boolean,
   debug: boolean
-): void => {
+): Record<string, any> => {
   const envContent = readFileSync(filePath, { encoding })
   const sanitizedEnv = sanitizeProcessEnv()
+  const envs: Record<string, any> = {}
 
   envContent.split('\n').forEach((line, lineNumber) => {
     const cleanedLine = line.split('#')[0].trim()
@@ -28,16 +29,18 @@ export const parseEnvFile = (
       const trimmedKey = key.trim()
       let parsedValue = parseValue(value.trim())
 
-      // Interpolação para strings
       if (typeof parsedValue === 'string') {
         parsedValue = interpolateValue(parsedValue, { ...sanitizedEnv, ...process.env })
       }
 
       if (!process.env[trimmedKey] || override) {
         process.env[trimmedKey] = parsedValue
+        envs[trimmedKey] = parsedValue
       }
     } else if (debug) {
       console.warn(`loadEnv: ignoring invalid line at ${lineNumber + 1}: ${line}`)
     }
   })
+
+  return envs
 }

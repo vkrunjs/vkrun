@@ -43,7 +43,20 @@ EXAMPLE_12={ "key": "value" }`
 
     createEnvFile(envContent)
 
-    loadEnv({ path: tempEnvPath })
+    const envs = loadEnv<{
+      EXAMPLE_1: string
+      EXAMPLE_2: string
+      EXAMPLE_3: string
+      EXAMPLE_4: string
+      EXAMPLE_5: boolean
+      EXAMPLE_6: boolean
+      EXAMPLE_7: string
+      EXAMPLE_8: string
+      EXAMPLE_9: number
+      EXAMPLE_10: string
+      EXAMPLE_11: any[]
+      EXAMPLE_12: Record<string, any>
+    }>({ path: tempEnvPath })
 
     expect(process.env.EXAMPLE_1).toEqual('John Doe')
     expect(process.env.EXAMPLE_2).toEqual('John Doe')
@@ -57,6 +70,19 @@ EXAMPLE_12={ "key": "value" }`
     expect(process.env.EXAMPLE_10).toEqual('42')
     expect(process.env.EXAMPLE_11).toEqual(['42', true, 123, { key: 'value' }])
     expect(process.env.EXAMPLE_12).toEqual({ key: 'value' })
+
+    expect(envs.EXAMPLE_1).toEqual('John Doe')
+    expect(envs.EXAMPLE_2).toEqual('John Doe')
+    expect(envs.EXAMPLE_3).toEqual('John Doe')
+    expect(envs.EXAMPLE_4).toEqual('JohnDoe')
+    expect(envs.EXAMPLE_5).toBeTruthy()
+    expect(envs.EXAMPLE_6).toBeFalsy()
+    expect(envs.EXAMPLE_7).toEqual('true')
+    expect(envs.EXAMPLE_8).toEqual('false')
+    expect(envs.EXAMPLE_9).toEqual(42)
+    expect(envs.EXAMPLE_10).toEqual('42')
+    expect(envs.EXAMPLE_11).toEqual(['42', true, 123, { key: 'value' }])
+    expect(envs.EXAMPLE_12).toEqual({ key: 'value' })
   })
 
   it('Should load variables from a real .env file with comments', () => {
@@ -113,6 +139,8 @@ EXAMPLE_12={ "key": "value" }`
         key: schema().string()
       })
     })
+
+    console.log({ envSchema })
 
     expect(() => loadEnv({ path: tempEnvPath, schema: envSchema })).not.toThrow()
   })

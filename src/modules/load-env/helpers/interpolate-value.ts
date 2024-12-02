@@ -2,7 +2,6 @@ export const interpolateValue = (value: string, env: { [x: string]: string | und
   let interpolatedValue = value
   const interpolationPattern = /\$(\w+)/g
 
-  // Use process.env diretamente para capturar as substituições em tempo real
   while (interpolationPattern.test(interpolatedValue)) {
     interpolatedValue = interpolatedValue.replace(interpolationPattern, (_, key) => env[key] ?? '')
   }
