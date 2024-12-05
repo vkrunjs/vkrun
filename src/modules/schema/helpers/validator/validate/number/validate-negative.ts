@@ -1,23 +1,25 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isNumber, received } from '../../../../../utils'
+import { SchemaNumberNegativeConfig, SchemaValidateMethod } from '../../../../../types'
+import { isNumber, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
-export const validateNegativeNumber = (params: SchemaValidateMethod): void => {
+export const validateNegativeNumber = (
+  params: SchemaValidateMethod & {
+    config: SchemaNumberNegativeConfig
+  }
+): void => {
   const {
     value,
     valueName,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a number negative'
-      : 'negative number',
-    error: getLocation().schema.number.negative
-      .replace('[valueName]', valueName)
-      .replace('[value]', value)
+    expect: 'negative number',
+    error: (isString(config?.message) ? config.message : getLocation().schema.number.negative)
+      .replace('[value]', String(value))
+      .replace('[valueName]', String(valueName))
   }
 
   if (isNumber(value) && value < 0) {
@@ -25,7 +27,6 @@ export const validateNegativeNumber = (params: SchemaValidateMethod): void => {
       method: 'negative',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -34,7 +35,6 @@ export const validateNegativeNumber = (params: SchemaValidateMethod): void => {
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

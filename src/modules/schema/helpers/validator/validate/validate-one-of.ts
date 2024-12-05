@@ -1,23 +1,25 @@
-import { SchemaReturn, SchemaValidateMethod } from '../../../../types'
-import { oneOf, received } from '../../../../utils'
+import { SchemaOneOfConfig, SchemaReturn, SchemaValidateMethod } from '../../../../types'
+import { isString, oneOf, received } from '../../../../utils'
 import { getLocation } from '../../../../location'
 
 export const validateOneOf = (
   params: SchemaValidateMethod & {
     comparisonItems: SchemaReturn[] | any[]
+    config: SchemaOneOfConfig
   }
 ): void => {
   const {
     value,
     valueName,
-    indexArray,
     comparisonItems,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
+
   const message = {
-    expect: indexArray !== undefined ? 'array index in value matches' : 'value matches',
-    error: getLocation().schema.oneOf
+    expect: 'value matches',
+    error: (isString(config?.message) ? config.message : getLocation().schema.oneOf)
       .replace('[valueName]', valueName)
       .replace('[value]', value)
   }

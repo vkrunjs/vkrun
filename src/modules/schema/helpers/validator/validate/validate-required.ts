@@ -1,38 +1,45 @@
 import { getLocation } from '../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
-import { received } from '../../../../utils'
+import { SchemaMethod, SchemaValidateMethod } from '../../../../types'
+import { isString, received } from '../../../../utils'
 
-export const validateRequired = ({
-  value,
-  valueName,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateRequired = (
+  params: SchemaValidateMethod & {
+    methods: SchemaMethod[]
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    methods,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+  const config = methods.find((method: any) =>
+    method.method === 'required'
+  )?.config
+
+  const message = {
+    expect: 'value other than undefined',
+    error: (isString(config?.message) ? config.message : getLocation().schema.required)
+      .replace('[valueName]', valueName)
+      .replace('[value]', value)
+  }
+
   if (value !== undefined) {
     callbackAddPassed({
       method: 'required',
       name: valueName,
-      expect: 'value other than undefined',
+      expect: message.expect,
       received: value
     })
   } else {
-    const message = getLocation().schema.required
-    const messageError = message
-      .replace('[valueName]', valueName)
-      .replace('[value]', value)
-
     callbackAddFailed({
       method: 'required',
       type: 'missing value',
       name: valueName,
-      expect: 'value other than undefined',
+      expect: message.expect,
       received: received(value),
-      message: messageError
+      message: message.error
     })
   }
 }

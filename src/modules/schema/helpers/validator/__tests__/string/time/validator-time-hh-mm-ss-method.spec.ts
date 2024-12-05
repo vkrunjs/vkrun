@@ -16,7 +16,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
 
     expect(completeListOfHoursAndMinutes.every((value) => sut.validate(value))).toBeTruthy()
   })
@@ -38,7 +38,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -54,7 +54,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -71,7 +71,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -82,7 +82,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -118,7 +118,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -155,7 +155,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .notRequired()
       .test(value, 'value_name')
 
@@ -184,7 +184,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -226,7 +226,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -265,7 +265,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = (): void => schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -283,7 +283,7 @@ describe('Validator Time HH:MM:SS Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .string()
-      .time('HH:MM:SS')
+      .time({ type: 'HH:MM:SS' })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('the time 23:60 is not in the format HH:MM:SS!')

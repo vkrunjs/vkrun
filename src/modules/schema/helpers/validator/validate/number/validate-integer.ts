@@ -1,25 +1,25 @@
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { isInteger, received } from '../../../../../utils'
+import { SchemaNumberIntegerConfig, SchemaValidateMethod } from '../../../../../types'
+import { isInteger, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
-export const validateIntegerNumber = ({
-  value,
-  valueName,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateIntegerNumber = (
+  params: SchemaValidateMethod & {
+    config: SchemaNumberIntegerConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const message = {
-    expect: indexArray !== undefined ? 'array index in integer type' : 'integer type',
-    error: getLocation().schema.number.integer
+    expect: 'integer type',
+    error: (isString(config?.message) ? config.message : getLocation().schema.number.integer)
       .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
+      .replace('[valueName]', String(valueName))
   }
 
   if (isInteger(value)) {
@@ -27,7 +27,6 @@ export const validateIntegerNumber = ({
       method: 'integer',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -36,7 +35,6 @@ export const validateIntegerNumber = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

@@ -8,85 +8,85 @@ describe('Validator Negative Method', () => {
     ).toBeTruthy()
 
     expect(
-      schema().number().float().min(-10).max(-1).negative().validate(-1.5)
+      schema().number().float().min({ min: -10 }).max({ max: -1 }).negative().validate(-1.5)
     ).toBeTruthy()
     expect(
-      schema().number().float().min(-10).negative().validate(-1.5)
+      schema().number().float().min({ min: -10 }).negative().validate(-1.5)
     ).toBeTruthy()
     expect(
-      schema().number().float().max(-1).min(-10).negative().validate(-1.5)
+      schema().number().float().max({ max: -1 }).min({ min: -10 }).negative().validate(-1.5)
     ).toBeTruthy()
     expect(
-      schema().number().float().max(-1).negative().validate(-1.5)
+      schema().number().float().max({ max: -1 }).negative().validate(-1.5)
     ).toBeTruthy()
     expect(
       schema().number().float().negative().validate(-1.5)
     ).toBeTruthy()
 
     expect(
-      schema().number().integer().min(-10).max(-1).negative().validate(-2)
+      schema().number().integer().min({ min: -10 }).max({ max: -1 }).negative().validate(-2)
     ).toBeTruthy()
     expect(
-      schema().number().integer().min(-10).negative().validate(-2)
+      schema().number().integer().min({ min: -10 }).negative().validate(-2)
     ).toBeTruthy()
     expect(
-      schema().number().integer().max(-1).min(-10).negative().validate(-2)
+      schema().number().integer().max({ max: -1 }).min({ min: -10 }).negative().validate(-2)
     ).toBeTruthy()
     expect(
-      schema().number().integer().max(-1).negative().validate(-2)
+      schema().number().integer().max({ max: -1 }).negative().validate(-2)
     ).toBeTruthy()
     expect(
       schema().number().integer().negative().validate(-2)
     ).toBeTruthy()
 
     expect(
-      schema().number().min(-10).float().max(-1).negative().validate(-4.5)
+      schema().number().min({ min: -10 }).float().max({ max: -1 }).negative().validate(-4.5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).float().negative().validate(-4.5)
+      schema().number().min({ min: -10 }).float().negative().validate(-4.5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).integer().max(-1).negative().validate(-5)
+      schema().number().min({ min: -10 }).integer().max({ max: -1 }).negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).integer().negative().validate(-5)
+      schema().number().min({ min: -10 }).integer().negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).max(-1).float().negative().validate(-4.5)
+      schema().number().min({ min: -10 }).max({ max: -1 }).float().negative().validate(-4.5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).max(-1).integer().negative().validate(-5)
+      schema().number().min({ min: -10 }).max({ max: -1 }).integer().negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).max(-1).negative().validate(-5)
+      schema().number().min({ min: -10 }).max({ max: -1 }).negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().min(-10).negative().validate(-4.5)
+      schema().number().min({ min: -10 }).negative().validate(-4.5)
     ).toBeTruthy()
 
     expect(
-      schema().number().max(-1).float().min(-10).negative().validate(-4.5)
+      schema().number().max({ max: -1 }).float().min({ min: -10 }).negative().validate(-4.5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).float().negative().validate(-4.5)
+      schema().number().max({ max: -1 }).float().negative().validate(-4.5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).integer().min(-10).negative().validate(-5)
+      schema().number().max({ max: -1 }).integer().min({ min: -10 }).negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).integer().negative().validate(-5)
+      schema().number().max({ max: -1 }).integer().negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).min(-10).float().negative().validate(-4.5)
+      schema().number().max({ max: -1 }).min({ min: -10 }).float().negative().validate(-4.5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).min(-10).integer().negative().validate(-5)
+      schema().number().max({ max: -1 }).min({ min: -10 }).integer().negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).min(-10).negative().validate(-5)
+      schema().number().max({ max: -1 }).min({ min: -10 }).negative().validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().max(-1).negative().validate(-4.5)
+      schema().number().max({ max: -1 }).negative().validate(-4.5)
     ).toBeTruthy()
   })
 
@@ -213,6 +213,43 @@ describe('Validator Negative Method', () => {
       expect: 'negative number',
       received: 4.5,
       message: 'value_name must be negative!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it('Should allow custom error message', () => {
+    const value = 4.5
+
+    const sut = schema()
+      .number()
+      .negative({ message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 4.5
+      },
+      {
+        method: 'number',
+        name: 'value_name',
+        expect: 'number type',
+        received: 4.5
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'negative',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'negative number',
+      received: 4.5,
+      message: 'value_name 4.5!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })

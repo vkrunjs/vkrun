@@ -7,7 +7,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
 
     expect(sut.validate(value)).toBeTruthy()
   })
@@ -26,7 +26,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -42,7 +42,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = await schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -59,7 +59,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = await schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -70,7 +70,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -106,7 +106,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -138,12 +138,49 @@ describe('Validator MinLength Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = 'abcd'
+
+    const sut = schema()
+      .string()
+      .minLength({ min: 5, message: '[valueName] [value] [minLength]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 'abcd'
+      },
+      {
+        method: 'string',
+        name: 'value_name',
+        expect: 'string type',
+        received: 'abcd'
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'minLength',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'value with a length greater than or equal to the limit',
+      received: 'abcd',
+      message: 'value_name abcd 5!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the minLength and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
     const sut = schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .notRequired()
       .test(value, 'value_name')
 
@@ -172,7 +209,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = await schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -214,7 +251,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = await schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -251,7 +288,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = (): void => schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -269,7 +306,7 @@ describe('Validator MinLength Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .string()
-      .minLength(5)
+      .minLength({ min: 5 })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('value_name must have a minimum of 5 characters!')
@@ -282,13 +319,13 @@ describe('Validator MinLength Method', () => {
     try {
       const sut: void = schema()
       .string()
-      .minLength(5)
-      .maxLength(5)
+      .minLength({ min: 5 })
+      .maxLength({ max: 5 })
       // @ts-ignore
       .minLength(5)
     } catch (error: any) {
       const sut = error
-      expect(sut.message).toEqual('minLength method has already been called!')
+      expect(sut.message).toEqual('vkrun-schema: minLength method has already been called!')
     }
   })
 
@@ -297,7 +334,7 @@ describe('Validator MinLength Method', () => {
       schema()
         .string()
         // @ts-ignore
-        .minLength(false)
+        .minLength({ min: false })
     } catch (error: any) {
       const sut = error
       expect(sut.message).toEqual('vkrun-schema: minLength method received invalid parameter!')

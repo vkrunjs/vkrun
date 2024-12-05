@@ -1,61 +1,50 @@
 import { getLocation } from '../../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
+import { SchemaStringMinLengthConfig, SchemaValidateMethod } from '../../../../../types'
 import { isString, received } from '../../../../../utils'
 
-export const validateMinLength = ({
-  value,
-  valueName,
-  minLength,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  minLength: number
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
-  const message = {
-    expect: indexArray !== undefined
-      ? 'array index with a length greater than or equal to the limit'
-      : 'value with a length greater than or equal to the limit',
-    error: getLocation().schema.string.minLength
-      .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
-      .replace('[minLength]', String(minLength))
+export const validateMinLength = (
+  params: SchemaValidateMethod & {
+    config: SchemaStringMinLengthConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
+  if (typeof config.min !== 'number' || config.min < 0) {
+    console.error('vkrun-schema: minLength method received invalid parameter!')
+    throw Error('vkrun-schema: minLength method received invalid parameter!')
   }
 
-  const handleAddFailed = (): void => {
+  const message = {
+    expect: 'value with a length greater than or equal to the limit',
+    error: (isString(config?.message) ? config.message : getLocation().schema.string.minLength)
+      .replace('[value]', String(value))
+      .replace('[valueName]', valueName)
+      .replace('[minLength]', String(config.min))
+  }
+
+  const exceededLimit = String(value).length < config.min
+
+  if (exceededLimit) {
     callbackAddFailed({
       method: 'minLength',
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })
-  }
-
-  if (isString(value)) {
-    const exceededLimit = String(value).length < minLength
-    if (exceededLimit) {
-      handleAddFailed()
-      return
-    }
+  } else {
     callbackAddPassed({
       method: 'minLength',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
-  } else {
-    message.error = getLocation().schema.string.invalidValue
-      .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
-    handleAddFailed()
   }
 }

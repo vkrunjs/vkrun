@@ -1,86 +1,58 @@
 import { getLocation } from '../../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { dateToString, received } from '../../../../../utils'
+import { SchemaDateMaxConfig, SchemaValidateMethod } from '../../../../../types'
+import { dateToString, isString, received } from '../../../../../utils'
 
-export const validateMaxDate = ({
-  value,
-  valueName,
-  dateToCompare,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  dateToCompare: Date
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateMaxDate = (
+  params: SchemaValidateMethod & {
+    config: SchemaDateMaxConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const date = new Date(String(value))
   const isInvalidDate = isNaN(date.getTime())
 
   const expect = (): string => {
-    if (indexArray !== undefined) {
-      if (value instanceof Date) {
-        return `array index at date ${dateToString(value, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC')} less than or equal to ${dateToString(dateToCompare, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC')}`
-      } else {
-        return 'array index at date less than or equal to reference date'
-      }
+    if (value instanceof Date) {
+      return `${dateToString(value, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC')} less than or equal to ${dateToString(config.max, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC')}`
     } else {
-      if (value instanceof Date) {
-        return `${dateToString(value, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC')} less than or equal to ${dateToString(dateToCompare, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC')}`
-      } else {
-        return 'date less than or equal to reference date'
-      }
+      return 'date less than or equal to reference date'
     }
   }
 
-  const message = {
-    expect: expect(),
-    error: getLocation().schema.date.invalidValue
-      .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
-      .replace('[type]', 'date')
+  if (isInvalidDate) {
+    return
   }
 
-  const handleAddFailed = (): void => {
+  const dateTimestamp = value.getTime()
+  const dateToCompareTimestamp = config.max.getTime()
+
+  const deadlineExceeded = dateTimestamp > dateToCompareTimestamp && value.getMilliseconds() >= config.max.getMilliseconds()
+
+  if (deadlineExceeded) {
     callbackAddFailed({
       method: 'max',
       type: 'invalid value',
       name: valueName,
       expect: expect(),
-      index: indexArray,
       received: received(value),
-      message: message.error
+      message: (isString(config?.message) ? config.message : getLocation().schema.date.min)
+        .replace('[value]', dateToString(value, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC'))
+        .replace('[valueName]', valueName)
+        .replace('[refDate]', dateToString(config.max, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC'))
+    })
+  } else {
+    callbackAddPassed({
+      method: 'max',
+      name: valueName,
+      expect: expect(),
+      received: value
     })
   }
-
-  if (isInvalidDate) {
-    handleAddFailed()
-    return
-  }
-
-  const dateTimestamp = value.getTime()
-  const dateToCompareTimestamp = dateToCompare.getTime()
-
-  const deadlineExceeded = dateTimestamp > dateToCompareTimestamp && value.getMilliseconds() >= dateToCompare.getMilliseconds()
-
-  if (deadlineExceeded) {
-    message.error = getLocation().schema.date.min
-      .replace('[value]', dateToString(value, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC'))
-      .replace('[valueName]', valueName)
-      .replace('[refDate]', dateToString(dateToCompare, 'YYYY/MM/DD HH:MM:SS.MS', 'UTC'))
-
-    handleAddFailed()
-    return
-  }
-
-  callbackAddPassed({
-    method: 'max',
-    name: valueName,
-    expect: expect(),
-    index: indexArray,
-    received: value
-  })
 }

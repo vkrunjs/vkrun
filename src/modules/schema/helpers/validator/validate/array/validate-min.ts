@@ -1,6 +1,6 @@
 import { getLocation } from '../../../../../location'
-import { SchemaMethod, SchemaMethods, SchemaValidateMethod } from '../../../../../types'
-import { isArray, isNumber, received } from '../../../../../utils'
+import { SchemaArrayMinConfig, SchemaMethod, SchemaMethods, SchemaValidateMethod } from '../../../../../types'
+import { isArray, isNumber, isString, received } from '../../../../../utils'
 
 export const validateMinArray = (
   params: SchemaValidateMethod & {
@@ -15,22 +15,23 @@ export const validateMinArray = (
     callbackAddFailed
   } = params
 
-  const arrayMethod = methods.find((filteredMethod: SchemaMethod) =>
-    filteredMethod.method === 'array'
-  )
+  const config = methods.find((filteredMethod: SchemaMethod) =>
+    filteredMethod.method === 'min'
+  )?.config as SchemaArrayMinConfig
 
   if (isArray(value)) {
-    if (isNumber(arrayMethod?.min)) {
-      if (value.length < arrayMethod.min) {
+    if (isNumber(config?.min)) {
+      if (value.length < config.min) {
         callbackAddFailed({
           method: 'min',
           type: 'invalid value',
           name: valueName,
           expect: 'the list must have the minimum number of items',
           received: received(value),
-          message: getLocation().schema.array.min
-            .replace('[valueName]', valueName)
-            .replace('[min]', String(arrayMethod?.min))
+          message: (isString(config?.message) ? config.message : getLocation().schema.array.min)
+            .replace('[valueName]', String(valueName))
+            .replace('[value]', isArray(value) ? JSON.stringify(value) : String(value))
+            .replace('[min]', String(config?.min))
         })
       } else {
         callbackAddPassed({

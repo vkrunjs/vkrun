@@ -8,85 +8,85 @@ describe('Validator Positive Method', () => {
     ).toBeTruthy()
 
     expect(
-      schema().number().float().min(1).max(2).positive().validate(1.5)
+      schema().number().float().min({ min: 1 }).max({ max: 2 }).positive().validate(1.5)
     ).toBeTruthy()
     expect(
-      schema().number().float().min(1).positive().validate(1.5)
+      schema().number().float().min({ min: 1 }).positive().validate(1.5)
     ).toBeTruthy()
     expect(
-      schema().number().float().max(2).min(1).positive().validate(1.5)
+      schema().number().float().max({ max: 2 }).min({ min: 1 }).positive().validate(1.5)
     ).toBeTruthy()
     expect(
-      schema().number().float().max(2).positive().validate(1.5)
+      schema().number().float().max({ max: 2 }).positive().validate(1.5)
     ).toBeTruthy()
     expect(
       schema().number().float().positive().validate(1.5)
     ).toBeTruthy()
 
     expect(
-      schema().number().integer().min(1).max(2).positive().validate(2)
+      schema().number().integer().min({ min: 1 }).max({ max: 2 }).positive().validate(2)
     ).toBeTruthy()
     expect(
-      schema().number().integer().min(1).positive().validate(2)
+      schema().number().integer().min({ min: 1 }).positive().validate(2)
     ).toBeTruthy()
     expect(
-      schema().number().integer().max(2).min(1).positive().validate(2)
+      schema().number().integer().max({ max: 2 }).min({ min: 1 }).positive().validate(2)
     ).toBeTruthy()
     expect(
-      schema().number().integer().max(2).positive().validate(2)
+      schema().number().integer().max({ max: 2 }).positive().validate(2)
     ).toBeTruthy()
     expect(
       schema().number().integer().positive().validate(2)
     ).toBeTruthy()
 
     expect(
-      schema().number().min(1).float().max(5).positive().validate(4.5)
+      schema().number().min({ min: 1 }).float().max({ max: 5 }).positive().validate(4.5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).float().positive().validate(4.5)
+      schema().number().min({ min: 1 }).float().positive().validate(4.5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).integer().max(5).positive().validate(5)
+      schema().number().min({ min: 1 }).integer().max({ max: 5 }).positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).integer().positive().validate(5)
+      schema().number().min({ min: 1 }).integer().positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).max(5).float().positive().validate(4.5)
+      schema().number().min({ min: 1 }).max({ max: 5 }).float().positive().validate(4.5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).max(5).integer().positive().validate(5)
+      schema().number().min({ min: 1 }).max({ max: 5 }).integer().positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).max(5).positive().validate(5)
+      schema().number().min({ min: 1 }).max({ max: 5 }).positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).positive().validate(4.5)
+      schema().number().min({ min: 1 }).positive().validate(4.5)
     ).toBeTruthy()
 
     expect(
-      schema().number().max(5).float().min(1).positive().validate(4.5)
+      schema().number().max({ max: 5 }).float().min({ min: 1 }).positive().validate(4.5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).float().positive().validate(4.5)
+      schema().number().max({ max: 5 }).float().positive().validate(4.5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).integer().min(1).positive().validate(5)
+      schema().number().max({ max: 5 }).integer().min({ min: 1 }).positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).integer().positive().validate(5)
+      schema().number().max({ max: 5 }).integer().positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).min(1).float().positive().validate(4.5)
+      schema().number().max({ max: 5 }).min({ min: 1 }).float().positive().validate(4.5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).min(1).integer().positive().validate(5)
+      schema().number().max({ max: 5 }).min({ min: 1 }).integer().positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).min(1).positive().validate(5)
+      schema().number().max({ max: 5 }).min({ min: 1 }).positive().validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().max(5).positive().validate(4.5)
+      schema().number().max({ max: 5 }).positive().validate(4.5)
     ).toBeTruthy()
   })
 
@@ -213,6 +213,43 @@ describe('Validator Positive Method', () => {
       expect: 'positive number',
       received: -4.5,
       message: 'value_name must be positive!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it('Should allow custom error message', () => {
+    const value = -4.5
+
+    const sut = schema()
+      .number()
+      .positive({ message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: -4.5
+      },
+      {
+        method: 'number',
+        name: 'value_name',
+        expect: 'number type',
+        received: -4.5
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'positive',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'positive number',
+      received: -4.5,
+      message: 'value_name -4.5!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })

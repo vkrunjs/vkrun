@@ -1,37 +1,33 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isBigInt, received } from '../../../../../utils'
+import { SchemaBigIntMinConfig, SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
 export const validateMinBigInt = (
   params: SchemaValidateMethod & {
-    min: bigint
+    config: SchemaBigIntMinConfig
   }
 ): void => {
   const {
     value,
     valueName,
-    min,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a bigint greater than or equal to the reference'
-      : 'value greater than or equal to the reference',
-    error: getLocation().schema.bigInt.min
-      .replace('[valueName]', valueName)
+    expect: 'value greater than or equal to the reference',
+    error: (isString(config?.message) ? config.message : getLocation().schema.bigInt.min)
+      .replace('[valueName]', String(valueName))
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
-      .replace('[min]', isBigInt(min) ? `${min}n` : String(min))
+      .replace('[min]', isBigInt(config.min) ? `${config.min}n` : String(config.min))
   }
 
-  if (isBigInt(value) && value >= min) {
+  if (isBigInt(value) && value >= config.min) {
     callbackAddPassed({
       method: 'min',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -40,7 +36,6 @@ export const validateMinBigInt = (
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

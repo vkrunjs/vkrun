@@ -1,21 +1,23 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isBigInt, received } from '../../../../../utils'
+import { SchemaBigIntNegativeConfig, SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
-export const validateNegativeBigInt = (params: SchemaValidateMethod): void => {
+export const validateNegativeBigInt = (
+  params: SchemaValidateMethod & {
+    config: SchemaBigIntNegativeConfig
+  }
+): void => {
   const {
     value,
     valueName,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a bigint negative'
-      : 'negative bigint',
-    error: getLocation().schema.bigInt.negative
+    expect: 'negative bigint',
+    error: (isString(config?.message) ? config.message : getLocation().schema.bigInt.negative)
       .replace('[valueName]', valueName)
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
   }
@@ -25,7 +27,6 @@ export const validateNegativeBigInt = (params: SchemaValidateMethod): void => {
       method: 'negative',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -34,7 +35,6 @@ export const validateNegativeBigInt = (params: SchemaValidateMethod): void => {
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

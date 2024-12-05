@@ -139,6 +139,43 @@ describe('Validator Integer Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = 1.5
+
+    const sut = schema()
+      .number()
+      .integer({ message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 1.5
+      },
+      {
+        method: 'number',
+        name: 'value_name',
+        expect: 'number type',
+        received: 1.5
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'integer',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'integer type',
+      received: 1.5,
+      message: 'value_name 1.5!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the integer and passAll method as equal to true when it is not required, undefined value and not integer', () => {
     const value = undefined
 

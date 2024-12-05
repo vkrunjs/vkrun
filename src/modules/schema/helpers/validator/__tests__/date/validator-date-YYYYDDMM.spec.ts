@@ -6,7 +6,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = '2000-30-12'
 
     const sut = schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .validate(value)
 
     expect(sut).toBeTruthy()
@@ -16,7 +16,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = '2000/30/12'
 
     const sut = schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .validate(value)
 
     expect(sut).toBeTruthy()
@@ -26,7 +26,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = '2000-12-30'
 
     const sut = schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .validate(value)
 
     expect(sut).toBeFalsy()
@@ -36,7 +36,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = '2000/12/30'
 
     const sut = schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .validate(value)
 
     expect(sut).toBeFalsy()
@@ -52,7 +52,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -68,7 +68,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -84,7 +84,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -100,7 +100,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -110,7 +110,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = '2000-30-12'
 
     const sut = schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -139,7 +139,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = '2000/30/12'
 
     const sut = schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -168,7 +168,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = new Date('2000-02-03T02:00:00.000Z')
 
     const sut = schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -196,7 +196,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = new Date('2000-02-03T02:00:00.000Z')
 
     const sut = schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -224,7 +224,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = undefined
 
     const sut = schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .notRequired()
       .test(value, 'value_name')
 
@@ -246,7 +246,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = undefined
 
     const sut = schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .notRequired()
       .test(value, 'value_name')
 
@@ -274,7 +274,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -309,7 +309,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -344,7 +344,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -378,7 +378,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -406,7 +406,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = undefined
 
     const sut = (): void => schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -417,7 +417,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     const value = undefined
 
     const sut = (): void => schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -434,7 +434,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = async (): Promise<void> => await schema()
-      .date('YYYY-DD-MM')
+      .date({ type: 'YYYY-DD-MM' })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('the date value_name is not in the format YYYY-DD-MM!')
@@ -450,7 +450,7 @@ describe('Validator Date (YYYY-DD-MM and YYYY/DD/MM) Method', () => {
     }
 
     const sut = async (): Promise<void> => await schema()
-      .date('YYYY/DD/MM')
+      .date({ type: 'YYYY/DD/MM' })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('the date value_name is not in the format YYYY/DD/MM!')

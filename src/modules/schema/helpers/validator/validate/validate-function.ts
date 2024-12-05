@@ -1,23 +1,23 @@
 import { getLocation } from '../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
-import { isFunction, received } from '../../../../utils'
+import { SchemaFunctionConfig, SchemaValidateMethod } from '../../../../types'
+import { isFunction, isString, received } from '../../../../utils'
 
-export const validateFunction = ({
-  value,
-  valueName,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateFunction = (
+  params: SchemaValidateMethod & {
+    config: SchemaFunctionConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const message = {
-    expect: indexArray !== undefined ? 'array index in function type' : 'function type',
-    error: getLocation().schema.function.invalidValue
+    expect: 'function type',
+    error: (isString(config?.message) ? config.message : getLocation().schema.function.invalidValue)
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }
@@ -27,7 +27,6 @@ export const validateFunction = ({
       method: 'function',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -36,7 +35,6 @@ export const validateFunction = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

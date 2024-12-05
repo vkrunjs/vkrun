@@ -8,7 +8,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
 
     expect(sut.validate(date)).toBeTruthy()
   })
@@ -25,7 +25,7 @@ describe('Validator Min Date Method', () => {
 
     expect(invalidList.every(
       (sut) => dateSchema
-        .min(sut)
+        .min({ min: sut })
         .validate(date))
     ).toBeFalsy()
   })
@@ -42,7 +42,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = await schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .validateAsync(date())
 
     expect(sut).toBeTruthy()
@@ -60,7 +60,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = await schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .validateAsync(date())
 
     expect(sut).toBeFalsy()
@@ -72,7 +72,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .test(date, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -109,7 +109,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .test(date, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -147,7 +147,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .notRequired()
       .test(date, 'value_name')
 
@@ -171,13 +171,13 @@ describe('Validator Min Date Method', () => {
 
     const sut = schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .test(date, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
     expect(sut.passed).toEqual(0)
-    expect(sut.failed).toEqual(3)
-    expect(sut.totalTests).toEqual(3)
+    expect(sut.failed).toEqual(2)
+    expect(sut.totalTests).toEqual(2)
     expect(sut.successes).toEqual([])
     expect(sut.errors).toEqual([
       {
@@ -195,14 +195,6 @@ describe('Validator Min Date Method', () => {
         expect: 'ISO8601 date type',
         received: 'undefined',
         message: 'the date value_name is not in the format ISO8601!'
-      },
-      {
-        method: 'min',
-        type: 'invalid value',
-        name: 'value_name',
-        expect: 'date greater than or equal to reference date',
-        received: 'undefined',
-        message: 'the date value_name is not in the format date!'
       }
     ])
     expect(typeof sut.time === 'string').toBeTruthy()
@@ -220,7 +212,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = await schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .testAsync(date(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -263,7 +255,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = await schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .testAsync(date(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -295,13 +287,51 @@ describe('Validator Min Date Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const refDate = new Date('2000-03-02T02:00:00.001Z')
+    const value = new Date('2000-03-02T02:00:00.000Z')
+
+    const sut = schema()
+      .date()
+      .min({ min: refDate, message: '[valueName] [value] any message' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: new Date('2000-03-02T02:00:00.000Z')
+      },
+      {
+        method: 'date',
+        name: 'value_name',
+        expect: 'ISO8601 date type',
+        received: new Date('2000-03-02T02:00:00.000Z')
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'min',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: '2000/03/02 02:00:00.000 greater than or equal to 2000/03/02 02:00:00.001',
+      received: new Date('2000-03-02T02:00:00.000Z'),
+      message: 'value_name 2000/03/02 02:00:00.000 any message'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the min method and throw AnyError if the value is undefined', () => {
     const date = undefined
     const refDate = new Date('2000-03-02T02:00:00.000Z')
 
     const sut = (): void => schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .throw(date, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -320,7 +350,7 @@ describe('Validator Min Date Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .date()
-      .min(refDate)
+      .min({ min: refDate })
       .throwAsync(date(), 'value_name')
 
     await expect(sut).rejects.toThrow('the value_name 2000/03/02 02:00:00.000 must be greater than or equal to the 2000/03/02 02:00:00.001!')
@@ -333,13 +363,13 @@ describe('Validator Min Date Method', () => {
     try {
       const sut: void = schema()
       .date()
-      .min(refDate)
-      .max(refDate)
+      .min({ min: refDate })
+      .max({ max: refDate })
       // @ts-ignore
-      .min(refDate)
+      .min({min:refDate})
     } catch (error: any) {
       const sut = error
-      expect(sut.message).toEqual('min method has already been called!')
+      expect(sut.message).toEqual('vkrun-schema: min method has already been called!')
     }
   })
   

@@ -1,38 +1,50 @@
 import { getLocation } from '../../../../../location'
-import { SchemaErrorTest, SchemaMethod, SchemaMethods, SchemaSuccessTest } from '../../../../../types'
-import { isArray, received } from '../../../../../utils'
+import { SchemaArrayConfig, SchemaMethod, SchemaMethods, SchemaReturn, SchemaValidateMethod } from '../../../../../types'
+import { isArray, isString, received } from '../../../../../utils'
 
-export const validateArray = ({
-  value,
-  valueName,
-  methods,
-  validateOtherMethods,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  methods: SchemaMethods
-  validateOtherMethods: (rule: any, value: any, index: number) => void
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateArray = (
+  params: SchemaValidateMethod & {
+    methods: SchemaMethods
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    methods,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
+  const schema = methods.find((filteredMethod: SchemaMethod) =>
+    filteredMethod.method === 'array'
+  )?.schema as SchemaReturn
+
+  const config = methods.find((filteredMethod: SchemaMethod) =>
+    filteredMethod.method === 'array'
+  )?.config as SchemaArrayConfig
+
   if (isArray(value)) {
-    callbackAddPassed({
-      method: 'array',
-      name: valueName,
-      expect: 'array type',
-      received: received(value)
-    })
-
-    const methodsWithoutArray = methods.filter((filteredMethod: SchemaMethod) =>
-      filteredMethod.method !== 'array'
-    )
-
     value.forEach((indexValue: any, index: number) => {
-      methodsWithoutArray.forEach(rule => {
-        validateOtherMethods(rule, indexValue, index)
-      })
+      const test = schema.test(indexValue, valueName)
+
+      if (test.passedAll) {
+        callbackAddPassed({
+          method: 'array',
+          name: valueName,
+          expect: 'array type',
+          received: received(value)
+        })
+      } else {
+        callbackAddFailed({
+          method: 'array',
+          type: test.errors[0].type,
+          name: test.errors[0].name,
+          index,
+          expect: test.errors[0].expect,
+          received: test.errors[0].received,
+          message: test.errors[0].message
+        })
+      }
     })
   } else {
     callbackAddFailed({
@@ -41,9 +53,9 @@ export const validateArray = ({
       name: valueName,
       expect: 'array type',
       received: received(value),
-      message: getLocation().schema.array.invalidValue
-        .replace('[valueName]', valueName)
-        .replace('[value]', value)
+      message: (isString(config?.message) ? config.message : getLocation().schema.array.invalidValue)
+        .replace('[valueName]', String(valueName))
+        .replace('[value]', isArray(value) ? JSON.stringify(value) : String(value))
     })
   }
 }

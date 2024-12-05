@@ -1,32 +1,29 @@
 import { getLocation } from '../../../../../location'
-import { SchemaDateTypes, SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { received } from '../../../../../utils'
+import { SchemaDateConfig, SchemaValidateMethod } from '../../../../../types'
+import { isString, received } from '../../../../../utils'
 
-export const validateDate = ({
-  value,
-  valueName,
-  type,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  type?: SchemaDateTypes
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateDate = (
+  params: SchemaValidateMethod & {
+    config: SchemaDateConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   let year: number, month: number, day: number
   let formattedDate: Date
+
   const message = {
-    expect: indexArray !== undefined
-      ? `array index in the ${type ?? 'ISO8601'} date type`
-      : `${type ?? 'ISO8601'} date type`,
-    error: getLocation().schema.date.invalidValue
+    expect: `${config?.type ?? 'ISO8601'} date type`,
+    error: (isString(config?.message) ? config.message : getLocation().schema.date.invalidValue)
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
-      .replace('[type]', type ?? 'ISO8601')
+      .replace('[type]', config?.type ?? 'ISO8601')
   }
 
   const invalidFormat = (): boolean => (
@@ -35,7 +32,7 @@ export const validateDate = ({
     value === undefined ||
     value === null ||
     (typeof value === 'string' && value.length < 10) ||
-    (typeof value === 'string' && value.length <= 10 && type === 'ISO8601')
+    (typeof value === 'string' && value.length <= 10 && config?.type === 'ISO8601')
   )
 
   const handleAddFailed = (): void => {
@@ -44,7 +41,6 @@ export const validateDate = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })
@@ -55,7 +51,7 @@ export const validateDate = ({
     return
   }
 
-  switch (type) {
+  switch (config?.type) {
     case 'DD/MM/YYYY':
       [day, month, year] = String(value).split('/').map(Number)
       if (month > 12 || day > new Date(year, month, 0).getDate()) {

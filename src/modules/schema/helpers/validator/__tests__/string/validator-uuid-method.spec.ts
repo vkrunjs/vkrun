@@ -112,12 +112,12 @@ describe('Validator UUID Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should allow custom error messages for UUID validation', () => {
+  it('Should allow custom error message', () => {
     const value = '123'
 
     const sut = schema()
-      .string({ errorMessage: '[valueName] [value] any message' })
-      .UUID('v4', { errorMessage: '[valueName] [value] any message' })
+      .string()
+      .UUID({ message: '[valueName] [value] any message' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()

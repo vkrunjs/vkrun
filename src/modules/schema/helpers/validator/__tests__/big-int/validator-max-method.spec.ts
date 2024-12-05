@@ -4,22 +4,22 @@ import { AnyError } from '../../../../../errors'
 describe('Validator Max BigInt Method', () => {
   it('Should be able to validate the max method and return true if the value is less than or equal to the reference', () => {
     expect(
-      schema().bigInt().max(5n).validate(5n)
+      schema().bigInt().max({ max: 5n }).validate(5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().min(1n).max(5n).validate(5n)
+      schema().bigInt().min({ min: 1n }).max({ max: 5n }).validate(5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().negative().max(-1n).validate(-5n)
+      schema().bigInt().negative().max({ max: -1n }).validate(-5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().negative().min(-5n).max(-1n).validate(-5n)
+      schema().bigInt().negative().min({ min: -5n }).max({ max: -1n }).validate(-5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().positive().max(5n).validate(5n)
+      schema().bigInt().positive().max({ max: 5n }).validate(5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().positive().min(1n).max(5n).validate(5n)
+      schema().bigInt().positive().min({ min: 1n }).max({ max: 5n }).validate(5n)
     ).toBeTruthy()
   })
 
@@ -38,7 +38,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -54,7 +54,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = await schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -71,7 +71,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = await schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -82,7 +82,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -118,7 +118,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -150,12 +150,49 @@ describe('Validator Max BigInt Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = 6n
+
+    const sut = schema()
+      .bigInt()
+      .max({ max: 5n, message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 6n
+      },
+      {
+        method: 'bigInt',
+        name: 'value_name',
+        expect: 'bigint type',
+        received: 6n
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'max',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'value less than or equal to the reference',
+      received: 6n,
+      message: 'value_name 6n!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the max and passAll method as equal to true when it is not required', () => {
     const value = undefined
 
     const sut = schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .notRequired()
       .test(value, 'value_name')
 
@@ -178,7 +215,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .nullable()
       .test(value, 'value_name')
 
@@ -207,7 +244,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = await schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -249,7 +286,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = await schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -288,7 +325,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = (): void => schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -306,7 +343,7 @@ describe('Validator Max BigInt Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .bigInt()
-      .max(5n)
+      .max({ max: 5n })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('value_name must be a bigint type!')

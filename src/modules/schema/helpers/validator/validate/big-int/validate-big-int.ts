@@ -1,25 +1,25 @@
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { isBigInt, received } from '../../../../../utils'
+import { SchemaBigIntConfig, SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
-export const validateBigInt = ({
-  value,
-  valueName,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateBigInt = (
+  params: SchemaValidateMethod & {
+    config: SchemaBigIntConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const message = {
-    expect: indexArray !== undefined ? 'array index in bigint type' : 'bigint type',
-    error: getLocation().schema.bigInt.invalidValue
+    expect: 'bigint type',
+    error: (isString(config?.message) ? config.message : getLocation().schema.bigInt.invalidValue)
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
-      .replace('[valueName]', valueName)
+      .replace('[valueName]', String(valueName))
   }
 
   if (isBigInt(value)) {
@@ -27,7 +27,6 @@ export const validateBigInt = ({
       method: 'bigInt',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -36,7 +35,6 @@ export const validateBigInt = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

@@ -1,16 +1,18 @@
-import { SchemaValidateMethod } from '../../../../types'
-import { isNotEqual, received } from '../../../../utils'
+import { SchemaNotEqualConfig, SchemaValidateMethod } from '../../../../types'
+import { isNotEqual, isString, received } from '../../../../utils'
 import { getLocation } from '../../../../location'
 
 export const validateNotEqual = (
   params: SchemaValidateMethod & {
     valueToCompare: any
+    config: SchemaNotEqualConfig
   }
 ): void => {
   const {
     value,
     valueName,
     valueToCompare,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
@@ -29,7 +31,7 @@ export const validateNotEqual = (
       name: valueName,
       expect: valueToCompare,
       received: received(value),
-      message: getLocation().schema.notEqual
+      message: (isString(config?.message) ? config.message : getLocation().schema.notEqual)
         .replace('[valueName]', valueName)
         .replace('[value]', value)
     })

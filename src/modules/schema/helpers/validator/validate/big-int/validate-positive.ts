@@ -1,22 +1,24 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isBigInt, received } from '../../../../../utils'
+import { SchemaBigIntPositiveConfig, SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
-export const validatePositiveBigInt = (params: SchemaValidateMethod): void => {
+export const validatePositiveBigInt = (
+  params: SchemaValidateMethod & {
+    config: SchemaBigIntPositiveConfig
+  }
+): void => {
   const {
     value,
     valueName,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a bigint positive'
-      : 'positive bigint',
-    error: getLocation().schema.bigInt.positive
-      .replace('[valueName]', valueName)
+    expect: 'positive bigint',
+    error: (isString(config?.message) ? config.message : getLocation().schema.bigInt.positive)
+      .replace('[valueName]', String(valueName))
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
   }
 
@@ -25,7 +27,6 @@ export const validatePositiveBigInt = (params: SchemaValidateMethod): void => {
       method: 'positive',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -34,7 +35,6 @@ export const validatePositiveBigInt = (params: SchemaValidateMethod): void => {
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

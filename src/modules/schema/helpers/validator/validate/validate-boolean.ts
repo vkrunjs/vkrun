@@ -1,23 +1,23 @@
 import { getLocation } from '../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
-import { isBoolean, received } from '../../../../utils'
+import { SchemaBooleanConfig, SchemaValidateMethod } from '../../../../types'
+import { isBoolean, isString, received } from '../../../../utils'
 
-export const validateBoolean = ({
-  value,
-  valueName,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateBoolean = (
+  params: SchemaValidateMethod & {
+    config: SchemaBooleanConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const message = {
-    expect: indexArray !== undefined ? 'array index in boolean type' : 'boolean type',
-    error: getLocation().schema.boolean.invalidValue
+    expect: 'boolean type',
+    error: (isString(config?.message) ? config.message : getLocation().schema.boolean.invalidValue)
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
   }
@@ -27,7 +27,6 @@ export const validateBoolean = ({
       method: 'boolean',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -36,7 +35,6 @@ export const validateBoolean = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

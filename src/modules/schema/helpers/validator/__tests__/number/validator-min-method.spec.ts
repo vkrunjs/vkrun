@@ -4,34 +4,34 @@ import { AnyError } from '../../../../../errors'
 describe('Validator Min Number Method', () => {
   it('Should be able to validate the min method and return true if the value is greater than or equal to the reference', () => {
     expect(
-      schema().number().min(5).validate(5)
+      schema().number().min({ min: 5 }).validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().min(1).max(5).validate(5)
+      schema().number().min({ min: 1 }).max({ max: 5 }).validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().float().max(5).validate(4.9)
+      schema().number().float().max({ max: 5 }).validate(4.9)
     ).toBeTruthy()
     expect(
-      schema().number().float().min(1).max(5).validate(4.9)
+      schema().number().float().min({ min: 1 }).max({ max: 5 }).validate(4.9)
     ).toBeTruthy()
     expect(
-      schema().number().integer().max(5).validate(5)
+      schema().number().integer().max({ max: 5 }).validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().integer().min(1).max(5).validate(5)
+      schema().number().integer().min({ min: 1 }).max({ max: 5 }).validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().negative().max(-1).validate(-5)
+      schema().number().negative().max({ max: -1 }).validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().negative().min(-5).max(-1).validate(-5)
+      schema().number().negative().min({ min: -5 }).max({ max: -1 }).validate(-5)
     ).toBeTruthy()
     expect(
-      schema().number().positive().max(5).validate(5)
+      schema().number().positive().max({ max: 5 }).validate(5)
     ).toBeTruthy()
     expect(
-      schema().number().positive().min(1).max(5).validate(5)
+      schema().number().positive().min({ min: 1 }).max({ max: 5 }).validate(5)
     ).toBeTruthy()
   })
 
@@ -50,7 +50,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = schema()
       .number()
-      .min(7)
+      .min({ min: 7 })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -66,7 +66,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = await schema()
       .number()
-      .min(1)
+      .min({ min: 1 })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -83,7 +83,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = await schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -94,7 +94,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = schema()
       .number()
-      .min(1)
+      .min({ min: 1 })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -130,7 +130,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -162,12 +162,49 @@ describe('Validator Min Number Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = 4.5
+
+    const sut = schema()
+      .number()
+      .min({ min: 5, message: '[valueName] [value] [min]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 4.5
+      },
+      {
+        method: 'number',
+        name: 'value_name',
+        expect: 'number type',
+        received: 4.5
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'min',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'value greater than or equal to the reference',
+      received: 4.5,
+      message: 'value_name 4.5 5!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the min and passAll method as equal to true when it is not required', () => {
     const value = undefined
 
     const sut = schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .notRequired()
       .test(value, 'value_name')
 
@@ -190,7 +227,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .nullable()
       .test(value, 'value_name')
 
@@ -219,7 +256,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = await schema()
       .number()
-      .min(1)
+      .min({ min: 1 })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -261,7 +298,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = await schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -300,7 +337,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = (): void => schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -318,7 +355,7 @@ describe('Validator Min Number Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .number()
-      .min(5)
+      .min({ min: 5 })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('value_name must be a number type!')

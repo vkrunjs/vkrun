@@ -1,25 +1,25 @@
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { isFloat, received } from '../../../../../utils'
+import { SchemaNumberFloatConfig, SchemaValidateMethod } from '../../../../../types'
+import { isFloat, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
-export const validateFloatNumber = ({
-  value,
-  valueName,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateFloatNumber = (
+  params: SchemaValidateMethod & {
+    config: SchemaNumberFloatConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   const message = {
-    expect: indexArray !== undefined ? 'array index in float type' : 'float type',
-    error: getLocation().schema.number.float
+    expect: 'float type',
+    error: (isString(config?.message) ? config.message : getLocation().schema.number.float)
       .replace('[value]', String(value))
-      .replace('[valueName]', valueName)
+      .replace('[valueName]', String(valueName))
   }
 
   if (isFloat(value)) {
@@ -27,7 +27,6 @@ export const validateFloatNumber = ({
       method: 'float',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -36,7 +35,6 @@ export const validateFloatNumber = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

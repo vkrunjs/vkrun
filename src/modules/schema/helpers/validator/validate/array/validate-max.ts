@@ -1,6 +1,6 @@
 import { getLocation } from '../../../../../location'
-import { SchemaMethod, SchemaMethods, SchemaValidateMethod } from '../../../../../types'
-import { isArray, isNumber, received } from '../../../../../utils'
+import { SchemaArrayMaxConfig, SchemaMethod, SchemaMethods, SchemaValidateMethod } from '../../../../../types'
+import { isArray, isNumber, isString, received } from '../../../../../utils'
 
 export const validateMaxArray = (
   params: SchemaValidateMethod & {
@@ -15,22 +15,23 @@ export const validateMaxArray = (
     callbackAddFailed
   } = params
 
-  const arrayMethod = methods.find((filteredMethod: SchemaMethod) =>
-    filteredMethod.method === 'array'
-  )
+  const config = methods.find((filteredMethod: SchemaMethod) =>
+    filteredMethod.method === 'max'
+  )?.config as SchemaArrayMaxConfig
 
   if (isArray(value)) {
-    if (isNumber(arrayMethod?.max)) {
-      if (value.length > arrayMethod.max) {
+    if (isNumber(config?.max)) {
+      if (value.length > config.max) {
         callbackAddFailed({
           method: 'max',
           type: 'invalid value',
           name: valueName,
           expect: 'the list must have the maximum number of items',
           received: received(value),
-          message: getLocation().schema.array.max
-            .replace('[valueName]', valueName)
-            .replace('[max]', String(arrayMethod?.max))
+          message: (isString(config?.message) ? config.message : getLocation().schema.array.max)
+            .replace('[valueName]', String(valueName))
+            .replace('[value]', isArray(value) ? JSON.stringify(value) : String(value))
+            .replace('[max]', String(config?.max))
         })
       } else {
         callbackAddPassed({

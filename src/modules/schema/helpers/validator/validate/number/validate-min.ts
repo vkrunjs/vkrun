@@ -1,37 +1,33 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isNumber, received } from '../../../../../utils'
+import { SchemaNumberMinConfig, SchemaValidateMethod } from '../../../../../types'
+import { isNumber, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
 export const validateMinNumber = (
   params: SchemaValidateMethod & {
-    min: number
+    config: SchemaNumberMinConfig
   }
 ): void => {
   const {
     value,
     valueName,
-    min,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a number greater than or equal to the reference'
-      : 'value greater than or equal to the reference',
-    error: getLocation().schema.number.min
-      .replace('[valueName]', valueName)
+    expect: 'value greater than or equal to the reference',
+    error: (isString(config?.message) ? config.message : getLocation().schema.number.min)
+      .replace('[valueName]', String(valueName))
       .replace('[value]', String(value))
-      .replace('[min]', String(min))
+      .replace('[min]', String(config.min))
   }
 
-  if (isNumber(value) && value >= min) {
+  if (isNumber(value) && value >= config.min) {
     callbackAddPassed({
       method: 'min',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -40,7 +36,6 @@ export const validateMinNumber = (
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

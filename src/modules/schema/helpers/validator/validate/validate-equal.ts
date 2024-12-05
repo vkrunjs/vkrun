@@ -1,21 +1,23 @@
 import { getLocation } from '../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../types'
-import { received } from '../../../../utils'
+import { SchemaEqualConfig, SchemaValidateMethod } from '../../../../types'
+import { isString, received } from '../../../../utils'
 import { isEqual } from '../../../../utils/is-equal'
 
-export const validateEqual = ({
-  value,
-  valueToCompare,
-  valueName,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueToCompare: any
-  valueName: string
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateEqual = (
+  params: SchemaValidateMethod & {
+    config: SchemaEqualConfig
+    valueToCompare: any
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    valueToCompare,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
   if (isEqual(value, valueToCompare)) {
     callbackAddPassed({
       method: 'equal',
@@ -30,7 +32,7 @@ export const validateEqual = ({
       name: valueName,
       expect: valueToCompare,
       received: received(value),
-      message: getLocation().schema.equal
+      message: (isString(config?.message) ? config.message : getLocation().schema.equal)
         .replace('[valueName]', valueName)
         .replace('[value]', value)
     })

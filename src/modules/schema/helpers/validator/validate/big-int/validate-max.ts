@@ -1,37 +1,33 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isBigInt, received } from '../../../../../utils'
+import { SchemaBigIntMaxConfig, SchemaValidateMethod } from '../../../../../types'
+import { isBigInt, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
 export const validateMaxBigInt = (
   params: SchemaValidateMethod & {
-    max: bigint
+    config: SchemaBigIntMaxConfig
   }
 ): void => {
   const {
     value,
     valueName,
-    max,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a bigint less than or equal to the reference'
-      : 'value less than or equal to the reference',
-    error: getLocation().schema.bigInt.max
-      .replace('[valueName]', valueName)
+    expect: 'value less than or equal to the reference',
+    error: (isString(config?.message) ? config.message : getLocation().schema.bigInt.max)
+      .replace('[valueName]', String(valueName))
       .replace('[value]', isBigInt(value) ? `${value}n` : String(value))
-      .replace('[max]', isBigInt(max) ? `${max}n` : String(max))
+      .replace('[max]', isBigInt(config.max) ? `${config.max}n` : String(config.max))
   }
 
-  if (isBigInt(value) && value <= max) {
+  if (isBigInt(value) && value <= config.max) {
     callbackAddPassed({
       method: 'max',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -40,7 +36,6 @@ export const validateMaxBigInt = (
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

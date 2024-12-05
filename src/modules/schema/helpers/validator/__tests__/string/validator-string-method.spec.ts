@@ -89,11 +89,11 @@ describe('Validator String Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should allow custom error messages for string validation', () => {
+  it('Should allow custom error message', () => {
     const value = 123
 
     const sut = schema()
-      .string({ errorMessage: '[valueName] [value] any message' })
+      .string({ message: '[valueName] [value] any message' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()

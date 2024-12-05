@@ -1,33 +1,34 @@
 import { getLocation } from '../../../../../location'
-import { SchemaErrorTest, SchemaSuccessTest } from '../../../../../types'
-import { received } from '../../../../../utils'
+import { SchemaStringMinWordConfig, SchemaValidateMethod } from '../../../../../types'
+import { isString, received } from '../../../../../utils'
 
-export const validateMinWord = ({
-  value,
-  valueName,
-  minWord,
-  indexArray,
-  callbackAddPassed,
-  callbackAddFailed
-}: {
-  value: any
-  valueName: string
-  minWord: number
-  indexArray: number
-  callbackAddPassed: (success: SchemaSuccessTest) => void
-  callbackAddFailed: (error: SchemaErrorTest) => void
-}): void => {
+export const validateMinWord = (
+  params: SchemaValidateMethod & {
+    config: SchemaStringMinWordConfig
+  }
+): void => {
+  const {
+    value,
+    valueName,
+    config,
+    callbackAddPassed,
+    callbackAddFailed
+  } = params
+
+  if (typeof config.min !== 'number' || config.min < 0) {
+    console.error('vkrun-schema: minWord method received invalid parameter!')
+    throw Error('vkrun-schema: minWord method received invalid parameter!')
+  }
+
   const trimmedValue = String(value).trim()
   const words = trimmedValue.split(/\s+/)
-  const hasMinOfWords = words.length >= minWord
+  const hasMinOfWords = words.length >= config.min
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index with minimum of words'
-      : 'minimum of words',
-    error: getLocation().schema.string.minWord
+    expect: 'minimum of words',
+    error: (isString(config?.message) ? config.message : getLocation().schema.string.minWord)
       .replace('[value]', String(value))
       .replace('[valueName]', valueName)
-      .replace('[minWord]', String(minWord))
+      .replace('[minWord]', String(config.min))
   }
 
   if (hasMinOfWords) {
@@ -35,7 +36,6 @@ export const validateMinWord = ({
       method: 'minWord',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -44,7 +44,6 @@ export const validateMinWord = ({
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

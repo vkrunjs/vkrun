@@ -8,17 +8,17 @@ describe('Validator Negative BigInt Method', () => {
     ).toBeTruthy()
 
     expect(
-      schema().bigInt().min(-10n).max(-1n).negative().validate(-5n)
+      schema().bigInt().min({ min: -10n }).max({ max: -1n }).negative().validate(-5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().min(-10n).negative().validate(-4n)
+      schema().bigInt().min({ min: -10n }).negative().validate(-4n)
     ).toBeTruthy()
 
     expect(
-      schema().bigInt().max(-1n).min(-10n).negative().validate(-5n)
+      schema().bigInt().max({ max: -1n }).min({ min: -10n }).negative().validate(-5n)
     ).toBeTruthy()
     expect(
-      schema().bigInt().max(-1n).negative().validate(-4n)
+      schema().bigInt().max({ max: -1n }).negative().validate(-4n)
     ).toBeTruthy()
   })
 
@@ -145,6 +145,43 @@ describe('Validator Negative BigInt Method', () => {
       expect: 'negative bigint',
       received: 4n,
       message: 'value_name must be negative!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
+  it('Should allow custom error message', () => {
+    const value = 4n
+
+    const sut = schema()
+      .bigInt()
+      .negative({ message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 4n
+      },
+      {
+        method: 'bigInt',
+        name: 'value_name',
+        expect: 'bigint type',
+        received: 4n
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'negative',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'negative bigint',
+      received: 4n,
+      message: 'value_name 4n!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })

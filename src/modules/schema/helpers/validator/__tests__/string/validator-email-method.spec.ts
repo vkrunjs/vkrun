@@ -171,6 +171,45 @@ describe('Validator Email Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = false
+
+    const sut = schema()
+      .string()
+      .email({ message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(2)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([{
+      method: 'required',
+      name: 'value_name',
+      expect: 'value other than undefined',
+      received: false
+    }])
+    expect(sut.errors).toEqual([
+      {
+        method: 'string',
+        type: 'invalid value',
+        name: 'value_name',
+        expect: 'string type',
+        received: false,
+        message: 'value_name must be a string type!'
+      },
+      {
+        method: 'email',
+        type: 'invalid value',
+        name: 'value_name',
+        expect: 'email format',
+        received: false,
+        message: 'value_name false!'
+      }
+    ])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the email and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 

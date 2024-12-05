@@ -1,37 +1,33 @@
-import { SchemaValidateMethod } from '../../../../../types'
-import { isNumber, received } from '../../../../../utils'
+import { SchemaNumberMaxConfig, SchemaValidateMethod } from '../../../../../types'
+import { isNumber, isString, received } from '../../../../../utils'
 import { getLocation } from '../../../../../location'
 
 export const validateMaxNumber = (
   params: SchemaValidateMethod & {
-    max: number
+    config: SchemaNumberMaxConfig
   }
 ): void => {
   const {
     value,
     valueName,
-    max,
-    indexArray,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined
-      ? 'array index must contain a number less than or equal to the reference'
-      : 'value less than or equal to the reference',
-    error: getLocation().schema.number.max
-      .replace('[valueName]', valueName)
+    expect: 'value less than or equal to the reference',
+    error: (isString(config?.message) ? config.message : getLocation().schema.number.max)
+      .replace('[valueName]', String(valueName))
       .replace('[value]', String(value))
-      .replace('[max]', String(max))
+      .replace('[max]', String(config.max))
   }
 
-  if (isNumber(value) && value <= max) {
+  if (isNumber(value) && value <= config.max) {
     callbackAddPassed({
       method: 'max',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: value
     })
   } else {
@@ -40,7 +36,6 @@ export const validateMaxNumber = (
       type: 'invalid value',
       name: valueName,
       expect: message.expect,
-      index: indexArray,
       received: received(value),
       message: message.error
     })

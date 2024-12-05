@@ -14,7 +14,7 @@ describe('Validator Regex Method', () => {
 
     const sut = schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
 
     expect(validList.every((value) => sut.validate(value))).toBeTruthy()
   })
@@ -59,7 +59,7 @@ describe('Validator Regex Method', () => {
 
     const sut = schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -75,7 +75,7 @@ describe('Validator Regex Method', () => {
 
     const sut = await schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -92,7 +92,7 @@ describe('Validator Regex Method', () => {
 
     const sut = await schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -103,7 +103,7 @@ describe('Validator Regex Method', () => {
 
     const sut = schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -139,7 +139,7 @@ describe('Validator Regex Method', () => {
 
     const sut = schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -178,7 +178,7 @@ describe('Validator Regex Method', () => {
 
     const sut = schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .notRequired()
       .test(value, 'value_name')
 
@@ -207,7 +207,7 @@ describe('Validator Regex Method', () => {
 
     const sut = await schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -249,7 +249,7 @@ describe('Validator Regex Method', () => {
 
     const sut = await schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -288,7 +288,7 @@ describe('Validator Regex Method', () => {
 
     const sut = (): void => schema()
       .string()
-      .regex(regex)
+      .regex({ regExp: regex })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -306,7 +306,10 @@ describe('Validator Regex Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .string()
-      .regex(regex, { errorMessage: 'email [value] is invalid!' })
+      .regex({
+        regExp: regex,
+        message: 'email [value] is invalid!'
+      })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('email any_email@domain is invalid!')

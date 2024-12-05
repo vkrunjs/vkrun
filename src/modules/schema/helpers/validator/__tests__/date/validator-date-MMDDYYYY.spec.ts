@@ -1,116 +1,116 @@
 import { schema } from '../../../../index'
 import { AnyError } from '../../../../../errors'
 
-describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
-  it('Should be able to validate the date method and return true if the value is of type YYYY-MM-DD date', () => {
-    const value = '2000-12-30'
+describe('Validator Date (MM-DD-YYYY and MM/DD/YYYY) Method', () => {
+  it('Should be able to validate the date method and return true if the value is of type MM-DD-YYYY date', () => {
+    const value = '12-30-2000'
 
     const sut = schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .validate(value)
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the date method and return true if the value is of type YYYY/MM/DD date', () => {
-    const value = '2000/12/30'
+  it('Should be able to validate the date method and return true if the value is of type MM/DD/YYYY date', () => {
+    const value = '12/30/2000'
 
     const sut = schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .validate(value)
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the date method and return false if the value is not of type YYYY-MM-DD date', () => {
-    const value = '2000-30-12'
+  it('Should be able to validate the date method and return false if the value is not of type MM-DD-YYYY date', () => {
+    const value = '30-12-2000'
 
     const sut = schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .validate(value)
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the date method and return false if the value is not of type YYYY/MM/DD date', () => {
-    const value = '2000/30/12'
+  it('Should be able to validate the date method and return false if the value is not of type MM/DD/YYYY date', () => {
+    const value = '30/12/2000'
 
     const sut = schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .validate(value)
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the date method when value is promise and return true if the value is of type YYYY-MM-DD date', async () => {
+  it('Should be able to validate the date method when value is promise and return true if the value is of type MM-DD-YYYY date', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('2000-12-30')
+          resolve('12-30-2000')
         }, 100)
       })
     }
 
     const sut = await schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the date method when value is promise and return true if the value is of type YYYY/MM/DD date', async () => {
+  it('Should be able to validate the date method when value is promise and return true if the value is of type MM/DD/YYYY date', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve): any => {
         setTimeout(() => {
-          resolve('2000/12/30')
+          resolve('12/30/2000')
         }, 100)
       })
     }
 
     const sut = await schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
   })
 
-  it('Should be able to validate the date method when value is promise and return false if the value is not of type YYYY-MM-DD date', async () => {
-    const value = async (): Promise<string> => {
+  it('Should be able to validate the date method when value is promise and return false if the value is not of type MM-DD-YYYY date', async () => {
+    const value = async (): Promise<Date> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('2000-30-12')
+          resolve(new Date())
         }, 100)
       })
     }
 
     const sut = await schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the date method when value is promise and return false if the value is not of type YYYY/MM/DD date', async () => {
-    const value = async (): Promise<string> => {
-      return await new Promise((resolve): any => {
+  it('Should be able to validate the date method when value is promise and return false if the value is not of type MM/DD/YYYY date', async () => {
+    const value = async (): Promise<Date> => {
+      return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('2000/30/12')
+          resolve(new Date())
         }, 100)
       })
     }
 
     const sut = await schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal true if the value is of type YYYY-MM-DD date', () => {
-    const value = '2000-12-30'
+  it('Should be able to validate the date method and passedAll to equal true if the value is of type MM-DD-YYYY date', () => {
+    const value = '12-30-2000'
 
     const sut = schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -122,24 +122,24 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: '2000-12-30'
+        received: '12-30-2000'
       },
       {
         method: 'date',
-        expect: 'YYYY-MM-DD date type',
+        expect: 'MM-DD-YYYY date type',
         name: 'value_name',
-        received: '2000-12-30'
+        received: '12-30-2000'
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal true if the value is of type YYYY/MM/DD date', () => {
-    const value = '2000/12/30'
+  it('Should be able to validate the date method and passedAll to equal true if the value is of type MM/DD/YYYY date', () => {
+    const value = '12/30/2000'
 
     const sut = schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -151,24 +151,24 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: '2000/12/30'
+        received: '12/30/2000'
       },
       {
         method: 'date',
-        expect: 'YYYY/MM/DD date type',
+        expect: 'MM/DD/YYYY date type',
         name: 'value_name',
-        received: '2000/12/30'
+        received: '12/30/2000'
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal false if the value is not of type YYYY-MM-DD date', () => {
-    const value = '2000-30-12'
+  it('Should be able to validate the date method and passedAll to equal false if the value is not of type MM-DD-YYYY date', () => {
+    const value = new Date('2000-02-03T02:00:00.000Z')
 
     const sut = schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -179,24 +179,24 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
       method: 'required',
       name: 'value_name',
       expect: 'value other than undefined',
-      received: '2000-30-12'
+      received: new Date('2000-02-03T02:00:00.000Z')
     }])
     expect(sut.errors).toEqual([{
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'YYYY-MM-DD date type',
-      received: '2000-30-12',
-      message: 'the date value_name is not in the format YYYY-MM-DD!'
+      expect: 'MM-DD-YYYY date type',
+      received: new Date('2000-02-03T02:00:00.000Z'),
+      message: 'the date value_name is not in the format MM-DD-YYYY!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal false if the value is not of type YYYY/MM/DD date', () => {
-    const value = '2000/30/12'
+  it('Should be able to validate the date method and passedAll to equal false if the value is not of type MM/DD/YYYY date', () => {
+    const value = new Date('2000-02-03T02:00:00.000Z')
 
     const sut = schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -207,24 +207,24 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
       method: 'required',
       name: 'value_name',
       expect: 'value other than undefined',
-      received: '2000/30/12'
+      received: new Date('2000-02-03T02:00:00.000Z')
     }])
     expect(sut.errors).toEqual([{
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'YYYY/MM/DD date type',
-      received: '2000/30/12',
-      message: 'the date value_name is not in the format YYYY/MM/DD!'
+      expect: 'MM/DD/YYYY date type',
+      received: new Date('2000-02-03T02:00:00.000Z'),
+      message: 'the date value_name is not in the format MM/DD/YYYY!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type YYYY-MM-DD date', () => {
+  it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type MM-DD-YYYY date', () => {
     const value = undefined
 
     const sut = schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .notRequired()
       .test(value, 'value_name')
 
@@ -242,11 +242,11 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type YYYY/MM/DD date', () => {
+  it('Should be able to validate the date and passAll method as equal to true when it is not required, undefined value and not of type MM/DD/YYYY date', () => {
     const value = undefined
 
     const sut = schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .notRequired()
       .test(value, 'value_name')
 
@@ -264,17 +264,17 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal true if the value is promise of type YYYY-MM-DD date', async () => {
+  it('Should be able to validate the date method and passedAll to equal true if the value is promise of type MM-DD-YYYY date', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
-          resolve('2000-12-30')
+          resolve('12-30-2000')
         }, 100)
       })
     }
 
     const sut = await schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -286,30 +286,30 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: '2000-12-30'
+        received: '12-30-2000'
       },
       {
         method: 'date',
-        expect: 'YYYY-MM-DD date type',
+        expect: 'MM-DD-YYYY date type',
         name: 'value_name',
-        received: '2000-12-30'
+        received: '12-30-2000'
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal true if the value is promise of type YYYY/MM/DD date', async () => {
+  it('Should be able to validate the date method and passedAll to equal true if the value is promise of type MM/DD/YYYY date', async () => {
     const value = async (): Promise<string> => {
       return await new Promise((resolve): any => {
         setTimeout(() => {
-          resolve('2000/12/30')
+          resolve('12/30/2000')
         }, 100)
       })
     }
 
     const sut = await schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -321,20 +321,20 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
         method: 'required',
         name: 'value_name',
         expect: 'value other than undefined',
-        received: '2000/12/30'
+        received: '12/30/2000'
       },
       {
         method: 'date',
-        expect: 'YYYY/MM/DD date type',
+        expect: 'MM/DD/YYYY date type',
         name: 'value_name',
-        received: '2000/12/30'
+        received: '12/30/2000'
       }
     ])
     expect(sut.errors).toEqual([])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal false if the value is a promise and is not of type YYYY-MM-DD date', async () => {
+  it('Should be able to validate the date method and passedAll to equal false if the value is a promise and is not of type MM-DD-YYYY date', async () => {
     const value = async (): Promise<Date> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -344,7 +344,7 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -361,14 +361,14 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'YYYY-MM-DD date type',
+      expect: 'MM-DD-YYYY date type',
       received: new Date('2000-02-03T02:00:00.000Z'),
-      message: 'the date value_name is not in the format YYYY-MM-DD!'
+      message: 'the date value_name is not in the format MM-DD-YYYY!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and passedAll to equal false if the value is a promise and is not of type YYYY/MM/DD date', async () => {
+  it('Should be able to validate the date method and passedAll to equal false if the value is a promise and is not of type MM/DD/YYYY date', async () => {
     const value = async (): Promise<Date> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -378,7 +378,7 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
     }
 
     const sut = await schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -395,36 +395,36 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
       method: 'date',
       type: 'invalid value',
       name: 'value_name',
-      expect: 'YYYY/MM/DD date type',
+      expect: 'MM/DD/YYYY date type',
       received: new Date('2000-02-03T02:00:00.000Z'),
-      message: 'the date value_name is not in the format YYYY/MM/DD!'
+      message: 'the date value_name is not in the format MM/DD/YYYY!'
     }])
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
-  it('Should be able to validate the date method and throw AnyError if the value is not of type YYYY-MM-DD date', () => {
+  it('Should be able to validate the date method and throw AnyError if the value is not of type MM-DD-YYYY date', () => {
     const value = undefined
 
     const sut = (): void => schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
     expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
-  it('Should be able to validate the date method and throw AnyError if the value is not of type YYYY/MM/DD date', () => {
+  it('Should be able to validate the date method and throw AnyError if the value is not of type MM/DD/YYYY date', () => {
     const value = undefined
 
     const sut = (): void => schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
     expect(sut).toThrow(new AnyError('value_name is required!'))
   })
 
-  it('Should be able to validate the date method and throw Error if the value is a promise and is not of type YYYY-MM-DD date', async () => {
+  it('Should be able to validate the date method and throw Error if the value is a promise and is not of type MM-DD-YYYY date', async () => {
     const value = async (): Promise<null> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -434,13 +434,13 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
     }
 
     const sut = async (): Promise<void> => await schema()
-      .date('YYYY-MM-DD')
+      .date({ type: 'MM-DD-YYYY' })
       .throwAsync(value(), 'value_name')
 
-    await expect(sut).rejects.toThrow('the date value_name is not in the format YYYY-MM-DD!')
+    await expect(sut).rejects.toThrow('the date value_name is not in the format MM-DD-YYYY!')
   })
 
-  it('Should be able to validate the date method and throw Error if the value is a promise and is not of type YYYY/MM/DD date', async () => {
+  it('Should be able to validate the date method and throw Error if the value is a promise and is not of type MM/DD/YYYY date', async () => {
     const value = async (): Promise<null> => {
       return await new Promise((resolve) => {
         setTimeout(() => {
@@ -450,9 +450,9 @@ describe('Validator Date (YYYY-MM-DD and YYYY/MM/DD) Method', () => {
     }
 
     const sut = async (): Promise<void> => await schema()
-      .date('YYYY/MM/DD')
+      .date({ type: 'MM/DD/YYYY' })
       .throwAsync(value(), 'value_name')
 
-    await expect(sut).rejects.toThrow('the date value_name is not in the format YYYY/MM/DD!')
+    await expect(sut).rejects.toThrow('the date value_name is not in the format MM/DD/YYYY!')
   })
 })

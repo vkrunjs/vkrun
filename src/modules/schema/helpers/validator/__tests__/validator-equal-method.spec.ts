@@ -127,6 +127,35 @@ describe('Validator Equal Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const valueToCompare = 1
+    const value = 2
+
+    const sut = schema()
+      .equal(valueToCompare, { message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([{
+      method: 'required',
+      name: 'value_name',
+      expect: 'value other than undefined',
+      received: 2
+    }])
+    expect(sut.errors).toEqual([{
+      method: 'equal',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 1,
+      received: 2,
+      message: 'value_name 2!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the equal method and passedAll to equal false if the value is not equal to the comparison value', () => {
     const valueToCompare = 1
     const value = 2

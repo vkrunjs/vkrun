@@ -110,6 +110,39 @@ describe('Validator Object Method', () => {
     expect(sut).toBeFalsy()
   })
 
+  it('Should allow custom error message', () => {
+    const objectSchema = schema().object({
+      valueA: schema().string()
+    }, { message: '[valueName] [value]!' })
+
+    const sut = objectSchema.test(undefined, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(0)
+    expect(sut.failed).toEqual(2)
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([])
+    expect(sut.errors).toEqual([
+      {
+        method: 'required',
+        type: 'missing value',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 'undefined',
+        message: 'value_name is required!'
+      },
+      {
+        method: 'object',
+        type: 'invalid value',
+        name: 'value_name',
+        expect: 'object type',
+        received: 'undefined',
+        message: 'value_name undefined!'
+      }
+    ])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the object method and passedAll to equal true if the value is valid', () => {
     const objectSchema = schema().object({
       valueA: schema().string(),

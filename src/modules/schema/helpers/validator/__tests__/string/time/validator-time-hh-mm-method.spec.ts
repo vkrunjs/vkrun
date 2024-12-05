@@ -14,7 +14,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
 
     expect(completeListOfHoursAndMinutes.every((value) => sut.validate(value))).toBeTruthy()
   })
@@ -35,7 +35,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -51,7 +51,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .validateAsync(value())
 
     expect(sut).toBeTruthy()
@@ -68,7 +68,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -79,7 +79,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -110,12 +110,49 @@ describe('Validator Time HH:MM Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = '13:5'
+
+    const sut = schema({ message: '[valueName] is required new message!' })
+      .string()
+      .time({ type: 'HH:MM', message: '[valueName] [value] [type]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: '13:5'
+      },
+      {
+        method: 'string',
+        name: 'value_name',
+        expect: 'string type',
+        received: '13:5'
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'time',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'HH:MM format',
+      received: '13:5',
+      message: 'value_name 13:5 HH:MM!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the time method and passedAll to equal false if the value is a invalid time format', () => {
     const value = '13:5'
 
     const sut = schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -152,7 +189,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .notRequired()
       .test(value, 'value_name')
 
@@ -181,7 +218,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -223,7 +260,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = await schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -262,7 +299,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = (): void => schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -280,7 +317,7 @@ describe('Validator Time HH:MM Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .string()
-      .time('HH:MM')
+      .time({ type: 'HH:MM' })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('the time 23:60 is not in the format HH:MM!')

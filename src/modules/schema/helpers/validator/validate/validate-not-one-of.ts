@@ -1,24 +1,25 @@
-import { SchemaValidateMethod } from '../../../../types'
-import { notOneOf, received } from '../../../../utils'
+import { SchemaNotOneOfConfig, SchemaValidateMethod } from '../../../../types'
+import { isString, notOneOf, received } from '../../../../utils'
 import { getLocation } from '../../../../location'
 
 export const validateNotOneOf = (
   params: SchemaValidateMethod & {
     comparisonItems: any[]
+    config: SchemaNotOneOfConfig
   }
 ): void => {
   const {
     value,
     valueName,
-    indexArray,
     comparisonItems,
+    config,
     callbackAddPassed,
     callbackAddFailed
   } = params
 
   const message = {
-    expect: indexArray !== undefined ? 'array index in value does not match' : 'value does not match',
-    error: getLocation().schema.notOneOf
+    expect: 'value does not match',
+    error: (isString(config?.message) ? config.message : getLocation().schema.notOneOf)
       .replace('[valueName]', valueName)
       .replace('[value]', value)
   }

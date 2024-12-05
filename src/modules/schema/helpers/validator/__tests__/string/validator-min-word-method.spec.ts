@@ -7,7 +7,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
 
     expect(sut.validate(value)).toBeTruthy()
   })
@@ -26,7 +26,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
 
     expect(invalidList.every((value) => sut.validate(value))).toBeFalsy()
   })
@@ -42,7 +42,7 @@ describe('Validator MinWord Method', () => {
 
     const test = await schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .validateAsync(value())
 
     expect(test).toBeTruthy()
@@ -59,7 +59,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = await schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .validateAsync(value())
 
     expect(sut).toBeFalsy()
@@ -70,7 +70,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -106,7 +106,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .test(value, 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -138,12 +138,49 @@ describe('Validator MinWord Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = 'Full'
+
+    const sut = schema()
+      .string()
+      .minWord({ min: 2, message: '[valueName] [value] [minWord]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(2)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(3)
+    expect(sut.successes).toEqual([
+      {
+        method: 'required',
+        name: 'value_name',
+        expect: 'value other than undefined',
+        received: 'Full'
+      },
+      {
+        method: 'string',
+        name: 'value_name',
+        expect: 'string type',
+        received: 'Full'
+      }
+    ])
+    expect(sut.errors).toEqual([{
+      method: 'minWord',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'minimum of words',
+      received: 'Full',
+      message: 'value_name Full 2!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the minWord and passAll method as equal to true when it is not required and value is undefined', () => {
     const value = undefined
 
     const sut = schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .notRequired()
       .test(value, 'value_name')
 
@@ -172,7 +209,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = await schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeTruthy()
@@ -214,7 +251,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = await schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .testAsync(value(), 'value_name')
 
     expect(sut.passedAll).toBeFalsy()
@@ -251,7 +288,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = (): void => schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .throw(value, 'value_name', AnyError)
 
     expect(sut).toThrow(AnyError)
@@ -269,7 +306,7 @@ describe('Validator MinWord Method', () => {
 
     const sut = async (): Promise<void> => await schema()
       .string()
-      .minWord(2)
+      .minWord({ min: 2 })
       .throwAsync(value(), 'value_name')
 
     await expect(sut).rejects.toThrow('value_name must have at least 2 words!')
@@ -282,10 +319,10 @@ describe('Validator MinWord Method', () => {
     try {
       const sut: void = schema()
       .string()
-      .minWord(2)
-      .maxLength(5)
+      .minWord({ min: 2 })
+      .maxLength({ max: 5})
       // @ts-ignore
-      .minWord(5)
+      .minWord({ min: 5 })
     } catch (error: any) {
       const sut = error
       expect(sut.message).toEqual('vkrun-schema: minWord method has already been called!')
@@ -297,7 +334,7 @@ describe('Validator MinWord Method', () => {
       schema()
         .string()
         // @ts-ignore
-        .minWord(false)
+        .minWord({ min: false })
     } catch (error: any) {
       const sut = error
       expect(sut.message).toEqual('vkrun-schema: minWord method received invalid parameter!')

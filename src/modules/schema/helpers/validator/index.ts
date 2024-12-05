@@ -6,88 +6,102 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
   params.resetTests()
   const validateMethodParams: any = params
 
-  const validateOtherMethods = (rule: any, value: any, indexArray?: number): void => {
+  const validateOtherMethods = (rule: any, value: any): void => {
     validateMethodParams.value = value
     if (rule.method === 'object') {
-      validate.validateObject({ ...validateMethodParams, indexArray, schema: rule.schema })
+      validate.validateObject({ ...validateMethodParams, schema: rule.schema, config: rule.config })
     } else if (rule.method === 'string') {
-      validate.validateString({ ...validateMethodParams, indexArray, config: rule.config })
+      validate.validateString({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'minWord') {
-      validate.validateMinWord({ ...validateMethodParams, indexArray, minWord: rule.minWord })
+      validate.validateMinWord({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'email') {
-      validate.validateEmail({ ...validateMethodParams, indexArray })
+      validate.validateEmail({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'UUID') {
-      validate.validateUuid({
+      validate.validateUUID({
         ...validateMethodParams,
-        indexArray,
         uuidVersion: rule.uuidVersion,
         config: rule.config
       })
     } else if (rule.method === 'maxLength') {
-      validate.validateMaxLength({ ...validateMethodParams, indexArray, maxLength: rule.maxLength })
+      validate.validateMaxLength({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'minLength') {
-      validate.validateMinLength({ ...validateMethodParams, indexArray, minLength: rule.minLength })
+      validate.validateMinLength({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'regex') {
       validate.validateRegex({
         ...validateMethodParams,
-        indexArray,
         regExp: rule.regExp,
         config: rule.config
       })
     } else if (rule.method === 'number') {
-      validate.validateNumber({ ...validateMethodParams, indexArray })
+      validate.validateNumber({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'bigInt') {
-      validate.validateBigInt({ ...validateMethodParams, indexArray })
+      validate.validateBigInt({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'float') {
-      validate.validateFloatNumber({ ...validateMethodParams, indexArray })
+      validate.validateFloatNumber({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'integer') {
-      validate.validateIntegerNumber({ ...validateMethodParams, indexArray })
+      validate.validateIntegerNumber({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'positive') {
       if (hasMethod(validateMethodParams.methods, 'number')) {
-        validate.validatePositiveNumber({ ...validateMethodParams, indexArray })
+        validate.validatePositiveNumber({ ...validateMethodParams, config: rule.config })
       } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
-        validate.validatePositiveBigInt({ ...validateMethodParams, indexArray })
+        validate.validatePositiveBigInt({ ...validateMethodParams, config: rule.config })
       }
     } else if (rule.method === 'negative') {
       if (hasMethod(validateMethodParams.methods, 'number')) {
-        validate.validateNegativeNumber({ ...validateMethodParams, indexArray })
+        validate.validateNegativeNumber({ ...validateMethodParams, config: rule.config })
       } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
-        validate.validateNegativeBigInt({ ...validateMethodParams, indexArray })
+        validate.validateNegativeBigInt({ ...validateMethodParams, config: rule.config })
       }
     } else if (rule.method === 'boolean') {
-      validate.validateBoolean({ ...validateMethodParams, indexArray })
+      validate.validateBoolean({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'buffer') {
-      validate.validateBuffer({ ...validateMethodParams, indexArray })
+      validate.validateBuffer({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'function') {
-      validate.validateFunction({ ...validateMethodParams, indexArray })
+      validate.validateFunction({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'date') {
-      validate.validateDate({ ...validateMethodParams, indexArray, type: rule.dateType })
+      validate.validateDate({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'min') {
       if (hasMethod(validateMethodParams.methods, 'date')) {
-        validate.validateMinDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
+        validate.validateMinDate({ ...validateMethodParams, config: rule.config })
       } else if (hasMethod(validateMethodParams.methods, 'number')) {
-        validate.validateMinNumber({ ...validateMethodParams, indexArray, min: rule.min })
+        validate.validateMinNumber({ ...validateMethodParams, config: rule.config })
       } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
-        validate.validateMinBigInt({ ...validateMethodParams, indexArray, min: rule.min })
+        validate.validateMinBigInt({ ...validateMethodParams, config: rule.config })
       }
     } else if (rule.method === 'max') {
       if (hasMethod(validateMethodParams.methods, 'date')) {
-        validate.validateMaxDate({ ...validateMethodParams, indexArray, dateToCompare: rule.dateToCompare })
+        validate.validateMaxDate({ ...validateMethodParams, config: rule.config })
       } else if (hasMethod(validateMethodParams.methods, 'number')) {
-        validate.validateMaxNumber({ ...validateMethodParams, indexArray, max: rule.max })
+        validate.validateMaxNumber({ ...validateMethodParams, config: rule.config })
       } else if (hasMethod(validateMethodParams.methods, 'bigInt')) {
-        validate.validateMaxBigInt({ ...validateMethodParams, indexArray, max: rule.max })
+        validate.validateMaxBigInt({ ...validateMethodParams, config: rule.config })
       }
     } else if (rule.method === 'time') {
-      validate.validateTime({ ...validateMethodParams, indexArray, type: rule.timeType })
+      validate.validateTime({ ...validateMethodParams, config: rule.config })
     } else if (rule.method === 'equal') {
-      validate.validateEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
+      validate.validateEqual({
+        ...validateMethodParams,
+        valueToCompare: rule.valueToCompare,
+        config: rule.config
+      })
     } else if (rule.method === 'notEqual') {
-      validate.validateNotEqual({ ...validateMethodParams, indexArray, valueToCompare: rule.valueToCompare })
+      validate.validateNotEqual({
+        ...validateMethodParams,
+        valueToCompare: rule.valueToCompare,
+        config: rule.config
+      })
     } else if (rule.method === 'oneOf') {
-      validate.validateOneOf({ ...validateMethodParams, indexArray, comparisonItems: rule.comparisonItems })
+      validate.validateOneOf({
+        ...validateMethodParams,
+        comparisonItems: rule.comparisonItems,
+        config: rule.config
+      })
     } else if (rule.method === 'notOneOf') {
-      validate.validateNotOneOf({ ...validateMethodParams, indexArray, comparisonItems: rule.comparisonItems })
+      validate.validateNotOneOf({
+        ...validateMethodParams,
+        comparisonItems: rule.comparisonItems,
+        config: rule.config
+      })
     }
   }
 
@@ -102,14 +116,14 @@ export const validator = (params: SchemaExecuteValidateMethods): void => {
   } else if (hasMethod(validateMethodParams.methods, 'notRequired')) {
     validate.validateNotRequired(validateMethodParams)
     if (validateMethodParams.value === undefined) return
-  } else {
+  } else if (hasMethod(validateMethodParams.methods, 'required')) {
     validate.validateRequired(validateMethodParams)
   }
 
   if (hasMethod(validateMethodParams.methods, 'array')) {
     validate.validateMinArray(validateMethodParams)
     validate.validateMaxArray(validateMethodParams)
-    validate.validateArray({ ...validateMethodParams, validateOtherMethods })
+    validate.validateArray(validateMethodParams)
   } else {
     validateMethodParams.methods.forEach((rule: any) => { validateOtherMethods(rule, validateMethodParams.value) })
   }

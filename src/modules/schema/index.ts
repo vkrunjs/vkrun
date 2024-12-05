@@ -1,13 +1,10 @@
 import { hasMethod, throwError, validator } from './helpers'
-import { numberMethod } from './helpers/methods/number'
-import { bigIntMethod } from './helpers/methods/big-int'
 import {
   VkrunSchema,
   SchemaAliasMethod,
   SchemaArrayMethod,
   SchemaBigIntMethod,
   SchemaDateMethod,
-  SchemaDateTypes,
   SchemaReturn,
   SchemaEmailMethod,
   SchemaErrorTest,
@@ -27,12 +24,55 @@ import {
   SchemaSuccessTest,
   SchemaTests,
   SchemaTimeMethod,
-  SchemaTimeTypes,
   SchemaUUIDMethod,
-  UUIDVersion,
   SchemaArrayConfig,
   SchemaRegexMethod,
-  SchemaOtherMethodConfig
+  SchemaStringUUIDConfig,
+  SchemaStringRegexConfig,
+  SchemaStringConfig,
+  SchemaConfig,
+  SchemaStringTimeConfig,
+  SchemaStringMinLengthConfig,
+  SchemaStringMaxLengthConfig,
+  SchemaStringMinWordConfig,
+  SchemaStringEmailConfig,
+  SchemaBooleanConfig,
+  SchemaBufferConfig,
+  SchemaFunctionConfig,
+  SchemaNumberConfig,
+  SchemaNumberFloatMethod,
+  SchemaNumberIntegerMethod,
+  SchemaNumberMinMethod,
+  SchemaNumberNegativeMethod,
+  SchemaNumberPositiveMethod,
+  SchemaNumberMaxMethod,
+  SchemaBigIntMinMethod,
+  SchemaBigIntMaxMethod,
+  SchemaBigIntPositiveMethod,
+  SchemaBigIntNegativeMethod,
+  SchemaNumberFloatConfig,
+  SchemaNumberIntegerConfig,
+  SchemaNumberMinConfig,
+  SchemaNumberMaxConfig,
+  SchemaNumberPositiveConfig,
+  SchemaNumberNegativeConfig,
+  SchemaBigIntConfig,
+  SchemaBigIntMinConfig,
+  SchemaBigIntMaxConfig,
+  SchemaBigIntPositiveConfig,
+  SchemaBigIntNegativeConfig,
+  SchemaArrayMinConfig,
+  SchemaArrayMinMethod,
+  SchemaArrayMaxMethod,
+  SchemaOneOfConfig,
+  SchemaNotOneOfConfig,
+  SchemaDateConfig,
+  SchemaDateMinConfig,
+  SchemaDateMaxConfig,
+  SchemaObjectConfig,
+  SchemaNullableConfig,
+  SchemaEqualConfig,
+  SchemaNotEqualConfig
 } from '../types'
 
 export class SchemaSetup implements VkrunSchema {
@@ -41,7 +81,7 @@ export class SchemaSetup implements VkrunSchema {
   private readonly methods: SchemaMethods
   private tests: SchemaTests
 
-  constructor () {
+  constructor (config?: SchemaConfig) {
     this.valueName = undefined
     this.methods = []
     this.tests = {
@@ -53,82 +93,76 @@ export class SchemaSetup implements VkrunSchema {
       errors: [],
       time: ''
     }
+    this.methodBuild({ method: 'required', config })
   }
 
-  string (config?: SchemaOtherMethodConfig): SchemaStringMethod {
+  string (config?: SchemaStringConfig): SchemaStringMethod {
     this.methodBuild({ method: 'string', config })
 
-    const email = (): SchemaEmailMethod => {
-      this.methodBuild({ method: 'email' })
-      return this.defaultReturnMethods()
-    }
-
-    const UUID = (version?: UUIDVersion, config?: SchemaOtherMethodConfig): SchemaUUIDMethod => {
-      this.methodBuild({ method: 'UUID', uuidVersion: version, config })
-      return this.defaultReturnMethods()
-    }
-
-    const time = (type: SchemaTimeTypes): SchemaTimeMethod => {
-      if (!['HH:MM', 'HH:MM:SS', 'HH:MM:SS.MS'].includes(type)) {
-        console.error('vkrun-schema: time method received invalid parameter!')
-        throw Error('vkrun-schema: time method received invalid parameter!')
+    const email = (config?: SchemaStringEmailConfig): SchemaEmailMethod => {
+      if (hasMethod(this.methods, 'email')) {
+        throw Error('vkrun-schema: email method has already been called!')
       }
 
-      this.methodBuild({ method: 'time', timeType: type })
-      return this.defaultReturnMethods()
+      this.methodBuild({ method: 'email', config })
+      return stringMethods
     }
 
-    const minLength = (limit: number): SchemaMinLengthMethod => {
+    const UUID = (config?: SchemaStringUUIDConfig): SchemaUUIDMethod => {
+      if (hasMethod(this.methods, 'UUID')) {
+        throw Error('vkrun-schema: UUID method has already been called!')
+      }
+
+      this.methodBuild({ method: 'UUID', config })
+      return stringMethods
+    }
+
+    const time = (config: SchemaStringTimeConfig): SchemaTimeMethod => {
+      if (hasMethod(this.methods, 'time')) {
+        throw Error('vkrun-schema: time method has already been called!')
+      }
+
+      this.methodBuild({ method: 'time', config })
+      return stringMethods
+    }
+
+    const minLength = (config: SchemaStringMinLengthConfig): SchemaMinLengthMethod => {
       if (hasMethod(this.methods, 'minLength')) {
-        console.error('vkrun-schema: minLength method has already been called!')
-        throw Error('minLength method has already been called!')
+        throw Error('vkrun-schema: minLength method has already been called!')
       }
 
-      if (typeof limit !== 'number' || limit < 0) {
-        console.error('vkrun-schema: minLength method received invalid parameter!')
-        throw Error('vkrun-schema: minLength method received invalid parameter!')
-      }
-
-      this.methodBuild({ method: 'minLength', minLength: limit })
-      return { maxLength, minWord, ...this.defaultReturnMethods() }
+      this.methodBuild({ method: 'minLength', config })
+      return stringMethods
     }
 
-    const maxLength = (limit: number): SchemaMaxLengthMethod => {
+    const maxLength = (config: SchemaStringMaxLengthConfig): SchemaMaxLengthMethod => {
       if (hasMethod(this.methods, 'maxLength')) {
-        console.error('vkrun-schema: maxLength method has already been called!')
-        throw Error('maxLength method has already been called!')
+        throw Error('vkrun-schema: maxLength method has already been called!')
       }
 
-      if (typeof limit !== 'number' || limit < 0) {
-        console.error('vkrun-schema: maxLength method received invalid parameter!')
-        throw Error('vkrun-schema: maxLength method received invalid parameter!')
-      }
-
-      this.methodBuild({ method: 'maxLength', maxLength: limit })
-      return { minLength, minWord, ...this.defaultReturnMethods() }
+      this.methodBuild({ method: 'maxLength', config })
+      return stringMethods
     }
 
-    const minWord = (limit: number): SchemaMinWordMethod => {
+    const minWord = (config: SchemaStringMinWordConfig): SchemaMinWordMethod => {
       if (hasMethod(this.methods, 'minWord')) {
-        console.error('vkrun-schema: minWord method has already been called!')
         throw Error('vkrun-schema: minWord method has already been called!')
       }
 
-      if (typeof limit !== 'number' || limit < 0) {
-        console.error('vkrun-schema: minWord method received invalid parameter!')
-        throw Error('vkrun-schema: minWord method received invalid parameter!')
+      this.methodBuild({ method: 'minWord', config })
+      return stringMethods
+    }
+
+    const regex = (config?: SchemaStringRegexConfig): SchemaRegexMethod => {
+      if (hasMethod(this.methods, 'regex')) {
+        throw Error('vkrun-schema: regex method has already been called!')
       }
 
-      this.methodBuild({ method: 'minWord', minWord: limit })
-      return { minLength, maxLength, ...this.defaultReturnMethods() }
+      this.methodBuild({ method: 'regex', config })
+      return stringMethods
     }
 
-    const regex = (regExp: RegExp, config?: SchemaOtherMethodConfig): SchemaRegexMethod => {
-      this.methodBuild({ method: 'regex', regExp, config })
-      return this.defaultReturnMethods()
-    }
-
-    return {
+    const stringMethods = {
       minLength,
       maxLength,
       minWord,
@@ -137,35 +171,143 @@ export class SchemaSetup implements VkrunSchema {
       time,
       regex,
       ...this.defaultReturnMethods()
+    } as unknown as SchemaStringMethod
+
+    return stringMethods
+  }
+
+  number (config?: SchemaNumberConfig): SchemaNumberMethod {
+    this.methodBuild({ method: 'number', config })
+
+    const float = (config?: SchemaNumberFloatConfig): SchemaNumberFloatMethod => {
+      if (hasMethod(this.methods, 'float')) {
+        throw Error('vkrun-schema: float method has already been called!')
+      }
+
+      this.methodBuild({ method: 'float', config })
+      return numberMethods
     }
+
+    const integer = (config?: SchemaNumberIntegerConfig): SchemaNumberIntegerMethod => {
+      if (hasMethod(this.methods, 'integer')) {
+        throw Error('vkrun-schema: integer method has already been called!')
+      }
+
+      this.methodBuild({ method: 'integer', config })
+      return numberMethods
+    }
+
+    const min = (config?: SchemaNumberMinConfig): SchemaNumberMinMethod => {
+      if (hasMethod(this.methods, 'min')) {
+        throw Error('vkrun-schema: min method has already been called!')
+      }
+
+      this.methodBuild({ method: 'min', config })
+      return numberMethods
+    }
+
+    const max = (config?: SchemaNumberMaxConfig): SchemaNumberMaxMethod => {
+      if (hasMethod(this.methods, 'max')) {
+        throw Error('vkrun-schema: max method has already been called!')
+      }
+
+      this.methodBuild({ method: 'max', config })
+      return numberMethods
+    }
+
+    const positive = (config?: SchemaNumberPositiveConfig): SchemaNumberPositiveMethod => {
+      if (hasMethod(this.methods, 'positive')) {
+        throw Error('vkrun-schema: positive method has already been called!')
+      }
+
+      this.methodBuild({ method: 'positive', config })
+      return numberMethods
+    }
+
+    const negative = (config?: SchemaNumberNegativeConfig): SchemaNumberNegativeMethod => {
+      if (hasMethod(this.methods, 'negative')) {
+        throw Error('vkrun-schema: negative method has already been called!')
+      }
+
+      this.methodBuild({ method: 'negative', config })
+      return numberMethods
+    }
+
+    const numberMethods = {
+      float,
+      integer,
+      min,
+      max,
+      positive,
+      negative,
+      ...this.defaultReturnMethods()
+    } as unknown as SchemaNumberMethod
+
+    return numberMethods
   }
 
-  number (): SchemaNumberMethod {
-    return numberMethod({
-      callbackMethodBuild: (build: SchemaMethod) => this.methodBuild(build),
-      callbackDefaultReturnMethods: () => this.defaultReturnMethods()
-    })
+  bigInt (config?: SchemaBigIntConfig): SchemaBigIntMethod {
+    this.methodBuild({ method: 'bigInt', config })
+
+    const min = (config: SchemaBigIntMinConfig): SchemaBigIntMinMethod => {
+      if (hasMethod(this.methods, 'min')) {
+        throw Error('vkrun-schema: min method has already been called!')
+      }
+
+      this.methodBuild({ method: 'min', config })
+      return bigIntMethods
+    }
+
+    const max = (config: SchemaBigIntMaxConfig): SchemaBigIntMaxMethod => {
+      if (hasMethod(this.methods, 'max')) {
+        throw Error('vkrun-schema: max method has already been called!')
+      }
+
+      this.methodBuild({ method: 'max', config })
+      return bigIntMethods
+    }
+
+    const positive = (config?: SchemaBigIntPositiveConfig): SchemaBigIntPositiveMethod => {
+      if (hasMethod(this.methods, 'positive')) {
+        throw Error('vkrun-schema: positive method has already been called!')
+      }
+
+      this.methodBuild({ method: 'positive', config })
+      return bigIntMethods
+    }
+
+    const negative = (config?: SchemaBigIntNegativeConfig): SchemaBigIntNegativeMethod => {
+      if (hasMethod(this.methods, 'negative')) {
+        throw Error('vkrun-schema: negative method has already been called!')
+      }
+
+      this.methodBuild({ method: 'negative', config })
+      return bigIntMethods
+    }
+
+    const bigIntMethods = {
+      min,
+      max,
+      positive,
+      negative,
+      ...this.defaultReturnMethods()
+    } as unknown as SchemaBigIntMethod
+
+    return bigIntMethods
   }
 
-  bigInt (): SchemaBigIntMethod {
-    return bigIntMethod({
-      callbackMethodBuild: (build: SchemaMethod) => this.methodBuild(build),
-      callbackDefaultReturnMethods: () => this.defaultReturnMethods()
-    })
-  }
-
-  boolean (): SchemaReturn {
-    this.methodBuild({ method: 'boolean' })
+  boolean (config?: SchemaBooleanConfig): SchemaReturn {
+    this.methodBuild({ method: 'boolean', config })
     return this.defaultReturnMethods()
   }
 
-  buffer (): SchemaReturn {
-    this.methodBuild({ method: 'buffer' })
+  buffer (config?: SchemaBufferConfig): SchemaReturn {
+    this.methodBuild({ method: 'buffer', config })
     return this.defaultReturnMethods()
   }
 
-  function (): SchemaReturn {
-    this.methodBuild({ method: 'function' })
+  function (config?: SchemaFunctionConfig): SchemaReturn {
+    this.methodBuild({ method: 'function', config })
     return this.defaultReturnMethods()
   }
 
@@ -181,8 +323,8 @@ export class SchemaSetup implements VkrunSchema {
     }
   }
 
-  nullable (): SchemaNullableMethod {
-    this.methodBuild({ method: 'nullable' })
+  nullable (config?: SchemaNullableConfig): SchemaNullableMethod {
+    this.methodBuild({ method: 'nullable', config })
     return {
       throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => { this.throw(value, valueName, ClassError) },
       throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) => { await this.throwAsync(value, valueName, ClassError) },
@@ -193,7 +335,7 @@ export class SchemaSetup implements VkrunSchema {
     }
   }
 
-  date (type?: SchemaDateTypes): SchemaDateMethod {
+  date (config?: SchemaDateConfig): SchemaDateMethod {
     const dateTypes = [
       'ISO8601',
       'DD/MM/YYYY',
@@ -205,114 +347,141 @@ export class SchemaSetup implements VkrunSchema {
       'YYYY-MM-DD',
       'YYYY-DD-MM'
     ]
-    if (type !== undefined && !dateTypes.includes(type)) {
-      console.error('vkrun-schema: date method received invalid parameter!')
+    if (config?.type && !dateTypes.includes(config.type)) {
       throw Error('vkrun-schema: date method received invalid parameter!')
     }
 
-    this.methodBuild({ method: 'date', dateType: type })
+    this.methodBuild({ method: 'date', config })
 
-    const min = (dateToCompare: Date): SchemaMinDateMethod => {
-      if (!(dateToCompare instanceof Date)) {
-        console.error('vkrun-schema: min method received invalid parameter!')
+    const min = (config: SchemaDateMinConfig): SchemaMinDateMethod => {
+      if (!(config.min instanceof Date)) {
         throw Error('vkrun-schema: min method received invalid parameter!')
       }
 
       if (hasMethod(this.methods, 'min')) {
-        console.error('vkrun-schema: min method has already been called!')
-        throw Error('min method has already been called!')
+        throw Error('vkrun-schema: min method has already been called!')
       }
 
-      this.methodBuild({ method: 'min', dateToCompare })
+      this.methodBuild({ method: 'min', config })
       return { max, ...this.defaultReturnMethods() }
     }
 
-    const max = (dateToCompare: Date): SchemaMaxDateMethod => {
-      if (!(dateToCompare instanceof Date)) {
-        console.error('vkrun-schema: max method received invalid parameter!')
+    const max = (config: SchemaDateMaxConfig): SchemaMaxDateMethod => {
+      if (!(config.max instanceof Date)) {
         throw Error('vkrun-schema: max method received invalid parameter!')
       }
 
       if (hasMethod(this.methods, 'max')) {
-        console.error('vkrun-schema: max method has already been called!')
-        throw Error('max method has already been called!')
+        throw Error('vkrun-schema: max method has already been called!')
       }
 
-      this.methodBuild({ method: 'max', dateToCompare })
+      this.methodBuild({ method: 'max', config })
       return { min, ...this.defaultReturnMethods() }
     }
 
-    return { min, max, ...this.defaultReturnMethods() }
+    const dateMethods = {
+      min,
+      max,
+      ...this.defaultReturnMethods()
+    } as unknown as SchemaDateMethod
+
+    return dateMethods
   }
 
-  equal (valueToCompare: any): SchemaReturn {
-    this.methodBuild({ method: 'equal', valueToCompare })
+  equal (valueToCompare: any, config?: SchemaEqualConfig): SchemaReturn {
+    this.methodBuild({ method: 'equal', valueToCompare, config })
     return this.defaultReturnMethods()
   }
 
-  notEqual (valueToCompare: any): SchemaReturn {
-    this.methodBuild({ method: 'notEqual', valueToCompare })
+  notEqual (valueToCompare: any, config?: SchemaNotEqualConfig): SchemaReturn {
+    this.methodBuild({ method: 'notEqual', valueToCompare, config })
     return this.defaultReturnMethods()
   }
 
-  oneOf (comparisonItems: SchemaReturn[] | any[]): SchemaReturn {
-    this.methodBuild({ method: 'oneOf', comparisonItems })
+  oneOf (comparisonItems: SchemaReturn[] | any[], config?: SchemaOneOfConfig): SchemaReturn {
+    this.methodBuild({ method: 'oneOf', comparisonItems, config })
     return this.defaultReturnMethods()
   }
 
-  notOneOf (comparisonItems: SchemaReturn[] | any[]): SchemaReturn {
-    this.methodBuild({ method: 'notOneOf', comparisonItems })
+  notOneOf (comparisonItems: SchemaReturn[] | any[], config?: SchemaNotOneOfConfig): SchemaReturn {
+    this.methodBuild({ method: 'notOneOf', comparisonItems, config })
     return this.defaultReturnMethods()
   }
 
   alias (valueName: string): SchemaAliasMethod {
     if (typeof valueName !== 'string') {
-      console.error('vkrun-schema: alias method received invalid parameter!')
       throw Error('vkrun-schema: alias method received invalid parameter!')
     }
 
     this.methodBuild({ method: 'alias', alias: valueName })
     return {
-      string: () => this.string(),
-      number: () => this.number(),
-      boolean: () => this.boolean(),
-      date: (type?: SchemaDateTypes) => this.date(type),
-      array: (config?: SchemaArrayConfig) => this.array(config),
-      equal: (valueToCompare: any) => this.equal(valueToCompare),
-      object: (schema: SchemaObjectType) => this.object(schema),
+      string: (config?: SchemaStringConfig) => this.string(config),
+      number: (config?: SchemaNumberConfig) => this.number(config),
+      bigInt: (config?: SchemaBigIntConfig) => this.bigInt(config),
+      boolean: (config?: SchemaBooleanConfig) => this.boolean(config),
+      date: (config?: SchemaDateConfig) => this.date(config),
+      array: (schema: SchemaReturn, config?: SchemaArrayConfig) => this.array(schema, config),
+      equal: (valueToCompare: any, config?: SchemaEqualConfig) => this.equal(valueToCompare, config),
+      notEqual: (
+        valueToCompare: any,
+        config?: SchemaNotEqualConfig
+      ) => this.notEqual(valueToCompare, config),
+      object: (schema: SchemaObjectType, config?: SchemaObjectConfig) => this.object(schema, config),
+      oneOf: (
+        comparisonItems: SchemaReturn[] | any[],
+        config?: SchemaNotOneOfConfig
+      ) => this.oneOf(comparisonItems, config),
+      notOneOf: (
+        comparisonItems: SchemaReturn[] | any[],
+        config?: SchemaNotOneOfConfig
+      ) => this.notOneOf(comparisonItems, config),
+      buffer: (config?: SchemaBufferConfig) => this.buffer(config),
+      function: (config?: SchemaFunctionConfig) => this.function(config),
       ...this.defaultReturnMethods()
     }
   }
 
-  object (schema: SchemaObjectType): SchemaReturn {
+  object (schema: SchemaObjectType, config?: SchemaObjectConfig): SchemaReturn {
     try {
       for (const [key, rule] of Object.entries(schema) as [string, any]) {
         rule.validate(undefined, key)
       }
     } catch (error) {
-      console.error('vkrun-schema: object method received invalid parameter!')
       throw Error('vkrun-schema: object method received invalid parameter!')
     }
 
-    this.methodBuild({ method: 'object', schema })
+    this.methodBuild({ method: 'object', schema, config })
     return this.defaultReturnMethods()
   }
 
-  array (config?: SchemaArrayConfig): SchemaArrayMethod {
-    this.methodBuild({ method: 'array', min: config?.min, max: config?.max })
-    return {
-      string: (config?: SchemaOtherMethodConfig) => this.string(config),
-      boolean: () => this.boolean(),
-      number: () => this.number(),
-      bigInt: () => this.bigInt(),
-      date: (type?: SchemaDateTypes) => this.date(type),
-      object: (schema: SchemaObjectType) => this.object(schema),
-      oneOf: (comparisonItems: SchemaReturn[] | any[]) => this.oneOf(comparisonItems),
-      notOneOf: (comparisonItems: SchemaReturn[] | any[]) => this.notOneOf(comparisonItems),
-      buffer: () => this.buffer(),
-      function: () => this.function(),
-      ...this.defaultReturnMethods()
+  array (schema: SchemaReturn, config?: SchemaArrayConfig): SchemaArrayMethod {
+    this.methodBuild({ method: 'array', config, schema })
+
+    const min = (config: SchemaArrayMinConfig): SchemaArrayMinMethod => {
+      if (hasMethod(this.methods, 'min')) {
+        throw Error('vkrun-schema: min method has already been called!')
+      }
+
+      this.methodBuild({ method: 'min', config })
+      return arrayMethods
     }
+
+    const max = (config: SchemaArrayMinConfig): SchemaArrayMaxMethod => {
+      if (hasMethod(this.methods, 'max')) {
+        throw Error('vkrun-schema: min method has already been called!')
+      }
+
+      this.methodBuild({ method: 'max', config })
+      return arrayMethods
+    }
+
+    const arrayMethods = {
+      min,
+      max,
+      ...this.defaultReturnMethods()
+    } as unknown as SchemaArrayMethod
+
+    return arrayMethods
   }
 
   private methodBuild (build: SchemaMethod): void {
@@ -368,7 +537,7 @@ export class SchemaSetup implements VkrunSchema {
   private defaultReturnMethods (): SchemaReturn {
     return {
       notRequired: () => this.notRequired(),
-      nullable: () => this.nullable(),
+      nullable: (config?: SchemaNullableConfig) => this.nullable(config),
       throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
         this.throw(value, valueName, ClassError)
       },
@@ -457,8 +626,8 @@ export class SchemaSetup implements VkrunSchema {
  * console.log(validateB) // false
  * ```
  */
-const schema = (): VkrunSchema => {
-  return new SchemaSetup()
+const schema = (config?: SchemaConfig): VkrunSchema => {
+  return new SchemaSetup(config)
 }
 
 export { schema }

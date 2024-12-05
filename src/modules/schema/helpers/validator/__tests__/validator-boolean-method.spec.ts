@@ -117,6 +117,34 @@ describe('Validator Boolean Method', () => {
     expect(typeof sut.time === 'string').toBeTruthy()
   })
 
+  it('Should allow custom error message', () => {
+    const value = 1
+
+    const sut = schema()
+      .boolean({ message: '[valueName] [value]!' })
+      .test(value, 'value_name')
+
+    expect(sut.passedAll).toBeFalsy()
+    expect(sut.passed).toEqual(1)
+    expect(sut.failed).toEqual(1)
+    expect(sut.totalTests).toEqual(2)
+    expect(sut.successes).toEqual([{
+      method: 'required',
+      name: 'value_name',
+      expect: 'value other than undefined',
+      received: 1
+    }])
+    expect(sut.errors).toEqual([{
+      method: 'boolean',
+      type: 'invalid value',
+      name: 'value_name',
+      expect: 'boolean type',
+      received: 1,
+      message: 'value_name 1!'
+    }])
+    expect(typeof sut.time === 'string').toBeTruthy()
+  })
+
   it('Should be able to validate the boolean and passAll method as equal to true when it is not required, undefined value and not of type boolean', () => {
     const value = undefined
 
