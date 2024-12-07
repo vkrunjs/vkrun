@@ -4,6 +4,7 @@ import { colorizeJSON } from './colorize-json'
 import { sanitizeLogs } from './sanitize-logs'
 import { LoggerLog } from '../../types'
 import { dateToString, isArray, isObject } from '../../utils'
+import { sendToSyslog } from './send-to-syslog'
 
 export const createLog = (log: LoggerLog): void => {
   try {
@@ -70,6 +71,8 @@ export const createLog = (log: LoggerLog): void => {
     const logLevelConfig = log.config.levels[log.config.level]
 
     if (logLevel <= logLevelConfig) {
+      sendToSyslog(logData, log.config)
+
       if (log.config.extension === 'json') {
         let logs: any[] = []
 

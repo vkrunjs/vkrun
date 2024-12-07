@@ -37,6 +37,14 @@ export const configLogger = (): LoggerConfig => {
       green: '\x1b[32m',
       purple: '\x1b[35m',
       reset: '\x1b[0m'
+    },
+    syslog: {
+      enabled: false,
+      appName: '',
+      host: '',
+      port: 0,
+      protocol: 'udp',
+      facility: 1
     }
   }
 }

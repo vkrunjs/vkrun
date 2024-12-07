@@ -1,5 +1,3 @@
-import { Request, Response, NextFunction } from './router-types'
-
 export type LoggerLogLevel = 'error' | 'warn' | 'info' | 'http' | 'verbose' | 'debug' | 'silly'
 
 export type LoggerLogExtension = 'log' | 'txt' | 'json'
@@ -88,22 +86,6 @@ export interface VkrunLogger {
    * logger.silly({ silly: 'Random log entry for testing' })
    */
   silly: (message: any) => void
-
-  /**
-   * Middleware function that logs HTTP request and response data.
-   *
-   * This middleware logs details about incoming requests and their corresponding responses, such as request URL,
-   * method, headers, body, parameters, query, and the response status.
-   * It should be added to the application to track HTTP activity for debugging or monitoring purposes.
-   *
-   * @returns {(request: Request, response: Response, next: NextFunction) => void} A middleware function that
-   * logs request and response data and then passes control to the next middleware in the stack.
-   *
-   * @example
-   * // Example usage in an Express-like app
-   * app.use(logger.middleware())
-   */
-  middleware: () => (request: Request, response: Response, next: NextFunction) => void
 }
 
 export interface LoggerLog {
@@ -144,6 +126,14 @@ export interface LoggerConfig {
     silly: 6
   }
   colors: LoggerColors
+  syslog: {
+    enabled: boolean
+    appName: string
+    host: string
+    port: number
+    protocol: 'udp' | 'tcp'
+    facility: number
+  }
 }
 
 export interface LoggerColors {
@@ -176,4 +166,12 @@ export interface LoggerSetConfig {
   daysToStoreLogs?: number
   extension?: LoggerLogExtension
   path?: string
+  syslog?: {
+    enabled: boolean
+    appName: string
+    host: string
+    port: number
+    protocol: 'udp' | 'tcp'
+    facility: number
+  }
 }

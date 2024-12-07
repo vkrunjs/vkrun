@@ -21,7 +21,6 @@
 - [Configuration Logger](#configuration-logger)
   - [Default setting](#default-setting)
   - [Log Levels](#log-levels)
-- [Logger Middleware Usage](#logger-middleware-usage)
 - [Example projects](#example-projects)
 
 <h2 id="introduction">Introduction</h2>
@@ -160,40 +159,6 @@ In logging, log levels are used to categorize log messages based on their severi
 * **silly (6)**: Represents extremely low-priority or trivial messages. These messages are typically used for fine-grained debugging or for logging verbose, non-essential information.
 
 By setting the log level, you can control which types of messages are recorded and which ones are ignored. For example, setting the log level to error will only capture critical errors, while setting it to debug will capture detailed debugging information. This allows developers to fine-tune logging output based on their specific needs and the desired level of detail.
-
-<h2 id="logger-middleware-usage">Logger Middleware Usage</h2>
-
-The logger middleware allows you to log information about each incoming HTTP request in your application. This can be particularly useful for monitoring and debugging purposes. Below is an example of how to use the logger middleware as a global middleware for all requests in your Vkrun application.
-
-```ts
-import v from 'vkrun'
-
-const app = v.App()
-const router = v.Router()
-const logger = v.Logger({ level: 'debug' })
-
-router.post('/', (_request: v.Request, response: v.Response) => {
-  response.status(200).json({ result: 'ok' })
-})
-
-app.use(logger.middleware()) // Apply logger middleware globally
-app.use(router)
-
-app.server().listen(3000, () => {
-  console.log('Vkrun started on port 3000')
-})
-
-// Now it will generate a log for each request received
-await fetch('http://domain/', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ key: "any value" })
-})
-```
-
-This example demonstrates how to use the logger middleware as a global middleware in a Vkrun application. The middleware logs information about each HTTP request, including details such as the request URL, method, headers, request body, parameters, query, and response status code. This can be helpful for monitoring and debugging purposes, allowing you to track the flow of requests through your application and diagnose any issues that may arise.
 
 <h2 id="example-projects">Example projects</h2>
 

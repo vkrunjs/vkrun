@@ -29,8 +29,7 @@ describe('Logger', () => {
       http: expect.any(Function),
       verbose: expect.any(Function),
       debug: expect.any(Function),
-      silly: expect.any(Function),
-      middleware: expect.any(Function)
+      silly: expect.any(Function)
     })
   })
 })
