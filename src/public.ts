@@ -10,7 +10,7 @@ import { rateLimit } from './modules/rate-limit'
 import { jwt } from './modules/jwt'
 import { superRequest } from './modules/super-request'
 import { upload } from './modules/upload'
-import { swaggerBuilder } from './modules/swagger-builder'
+import { swaggerUi } from './modules/swagger-ui'
 import { mime } from './modules/mime'
 import { serveStaticFile } from './modules/serve-static-file'
 import { loadEnv } from './modules/load-env'
@@ -31,7 +31,7 @@ export {
   jwt,
   superRequest,
   upload,
-  swaggerBuilder,
+  swaggerUi,
   mime,
   serveStaticFile,
   loadEnv

@@ -6,11 +6,8 @@ const app = v.App();
 app.parseData();
 app.cors();
 
-// Initialize Swagger with dynamic visibility keys
-const swagger = v.swaggerBuilder(swaggerUiDist);
-
-// Basic Swagger configuration with Bearer Token security scheme
-swagger.create({
+// Initialize Swagger with configuration with Bearer Token security scheme
+const swagger = v.swaggerUi({
   openapi: '3.0.0',
   info: {
     title: 'API Documentation',
@@ -50,8 +47,7 @@ swagger.route('/public')
           }
         }
       }
-    },
-    visibilityKeys: ['public']
+    }
   });
 
 // Define a private route using Bearer Token authentication
@@ -87,17 +83,16 @@ swagger.route('/private')
           }
         }
       }
-    },
-    visibilityKeys: ['private']
+    }
   });
 
 // Public route in the application
-app.get('/public', (req, res) => {
+app.get('/public', (req: v.Request, res: v.Response) => {
   res.status(200).json({ message: 'This is a public route.' });
 });
 
 // Private route in the application (requires Bearer Token)
-app.get('/private', (req, res) => {
+app.get('/private', (req: v.Request, res: v.Response) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
 
@@ -108,17 +103,10 @@ app.get('/private', (req, res) => {
   }
 });
 
+// Route to provide swagger ui
+app.get('/api-docs/*', swagger.serve(swaggerUiDist.absolutePath()));
+
 // Start the main server
 app.server().listen(3000, () => {
   console.log('Vkrun server running on port 3000');
-});
-
-// Serve public Swagger documentation
-swagger.listen(3001, ['public'], () => {
-  console.log('Public Swagger UI running on port 3001');
-});
-
-// Serve public and private Swagger documentation
-swagger.listen(3002, ['public', 'private'], () => {
-  console.log('Public and Private Swagger UI running on port 3002');
 });

@@ -16,25 +16,6 @@
 
 VkrunJs documentation, visit [vkrunjs.com](https://vkrunjs.com/)
 
-### Content
-
-- [Installation](#installation)
-- [Router](https://vkrunjs.com/router/introduction)
-- [Schema](https://vkrunjs.com/schema/introduction)
-- [Super Request](./src/modules/super-request/Readme.md)
-- [Rate Limit](./src/modules/rate-limit/Readme.md)
-- [Parse Data](https://vkrunjs.com/parse-data/introduction)
-- [Upload](./src/modules/upload/Readme.md)
-- [Mime](./src/modules/mime/Readme.md)
-- [ServerStaticFile](./src/modules/serve-static-file/Readme.md)
-- [Logger](./src/modules/logger/Readme.md)
-- [JWT](https://vkrunjs.com/jwt/introduction)
-- [SwaggerBuilder](./src/modules/swagger-builder/Readme.md)
-- [Cors](./src/modules/cors/Readme.md)
-- [License](#license)
-
-<hr/>
-
 ### Installation:
 
 #### NPM

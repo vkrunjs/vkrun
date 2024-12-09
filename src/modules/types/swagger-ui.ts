@@ -1,3 +1,5 @@
+import { NextFunction, Request, Response } from './router-types'
+
 export type SwaggerSchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object' | 'null'
 
 export interface SwaggerSchema {
@@ -182,7 +184,6 @@ export interface SwaggerOperation {
       enum?: string[]
     }>
   }>
-  visibilityKeys?: string[]
 }
 
 export interface SwaggerOpenAPIConfig {
@@ -273,7 +274,6 @@ export interface SwaggerOpenAPIDocument extends Omit<SwaggerOpenAPIConfig, 'path
 export interface SwaggerListenConfig {
   port: number
   path?: string
-  visibilityKeys: string[]
   callback?: () => Promise<void> | void
 }
 
@@ -286,10 +286,7 @@ export interface SwaggerRouteBuilder {
   options: (options: SwaggerOperation) => SwaggerRouteBuilder
 }
 
-export interface VkrunSwaggerBuilder {
-  create: (config: SwaggerOpenAPIConfig) => this
+export interface VkrunSwaggerUi {
   route: (path: string) => SwaggerRouteBuilder
-  getConfig: () => SwaggerOpenAPIConfig & SwaggerOpenAPIDocument
-  getDocument: () => string
-  listen: (config: SwaggerListenConfig) => void
+  serve: (absolutePath: string) => (req: Request, res: Response, next: NextFunction) => void
 }
