@@ -1,5 +1,13 @@
 # VkrunJS Releases
 
+## 2.0.0
+- add constomizable messages to schema methods
+- migrate setLocation to Location module so that other modules can share the context of custom informational messages
+- loadEnv must return the parsed env itself
+- add sysLog to Logger module and remove Logger middleware
+- change swagger builder to work only serving swagger ui files
+- streaming with response pipe in superRequest module
+
 ## 1.9.5
 - add custom error message to string method of schema module
 - add loadEnv module
