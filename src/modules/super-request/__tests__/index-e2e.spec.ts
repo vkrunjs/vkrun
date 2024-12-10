@@ -1,7 +1,7 @@
 import { join } from 'path'
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
+import { createReadStream, existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
 import FormData from 'form-data'
-import { isUUID } from '../../utils'
+import { isBuffer, isUUID } from '../../utils'
 import { App } from '../../app'
 import { Request, Response } from '../../types'
 import { superRequest } from '..'
@@ -252,6 +252,34 @@ describe('Super Request - end to end testing', () => {
       validateSuccess(response)
       expect(response.data).toEqual('waited 100ms')
     })
+
+    app.close()
+  })
+
+  it('Should handle file streaming with response pipe', async () => {
+    const app = App()
+
+    const fileContent = 'Text file'
+    const fileName = 'filename.txt'
+    const filePath = join(__dirname, fileName)
+
+    writeFileSync(filePath, fileContent)
+
+    app.get('/', (req: Request, res: Response) => {
+      res.setHeader('Content-Type', 'text/plain')
+      res.setHeader(
+        'Content-Disposition',
+        'filename="filename.txt"'
+      )
+      const fileStream = createReadStream(filePath)
+      return fileStream.pipe(res)
+    })
+
+    await superRequest(app).get('/').then((response) => {
+      expect(isBuffer(response.data)).toBeTruthy()
+    })
+
+    unlinkSync(filePath)
 
     app.close()
   })

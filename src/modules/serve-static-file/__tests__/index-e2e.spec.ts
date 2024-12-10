@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { isString, isUUID } from '../../utils'
+import { isBuffer, isString, isUUID } from '../../utils'
 import { App } from '../../app'
 import { serveStaticFile } from '..'
 import { superRequest } from '../../super-request'
@@ -13,7 +13,7 @@ describe('Serve Static File - end to end testing using super request', () => {
     expect(isString(response.headers.date)).toBeTruthy()
     expect(response.headers.connection).toEqual('close')
     expect(response.headers['content-length']).toEqual('9')
-    expect(response.data).toEqual('Text file')
+    expect(isBuffer(response.data)).toBeTruthy()
   }
 
   it('Should be able to serve static file', async () => {

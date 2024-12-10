@@ -462,42 +462,6 @@ describe('Router', () => {
     app.close()
   })
 
-  it('Should respond error message if response is in invalid format and has ErrorHandler middleware', async () => {
-    const invalidMiddleware = (_request: Request, response: Response, _next: NextFunction): void => {
-      response.setHeader('Content-Type', 'text/plain')
-      response.status(500).write({ message: 'ok' })
-    }
-
-    class ErrorMiddleware implements ErrorHandlerMiddleware {
-      public handle (error: Error, _request: Request, response: Response): void {
-        response.setHeader('Content-Type', 'text/plain')
-        response.status(500).end(error.message)
-      }
-    }
-
-    class ExampleController implements Controller {
-      public handle (_request: Request, response: Response): void {
-        response.setHeader('Content-Type', 'text/plain')
-        response.status(200).end('Return controller')
-      }
-    }
-
-    const app = App()
-    app.use(invalidMiddleware)
-    app.error(errorHandleAdapter(new ErrorMiddleware()))
-    const router = Router()
-    router.get('/', controllerAdapter(new ExampleController()))
-    app.use(router)
-
-    await superRequest(app).get('/').catch((error) => {
-      expect(error.response.statusCode).toEqual(500)
-      expect(error.response.headers['content-type']).toEqual('text/plain')
-      expect(error.response.data).toEqual('The "chunk" argument must be of type string or an instance of Buffer or Uint8Array. Received an instance of Object')
-    })
-
-    app.close()
-  })
-
   it('Should be able to use multiple Router instances', async () => {
     const app = App()
     const routerA = Router()

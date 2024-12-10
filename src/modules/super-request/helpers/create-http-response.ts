@@ -14,13 +14,15 @@ export const createHttpResponse = (request: any): any => {
       if (isObject(data)) {
         response.data = JSON.stringify(data)
       } else if (Buffer.isBuffer(data)) {
-        response.data = data.toString()
+        response.data = data
       } else {
         response.data = data.toString().trim()
       }
     } else {
       if (isObject(response._body)) {
         response.data = JSON.stringify(response._body)
+      } else if (Buffer.isBuffer(response._body)) {
+        response.data = response._body
       } else {
         if (response._body) response.data = response._body.toString().trim()
       }
@@ -30,11 +32,19 @@ export const createHttpResponse = (request: any): any => {
     delete response._body
   }
 
-  response.on = (event: string, listener: any) => {
-    if (event === 'finish') {
-      listener()
-    }
+  response.write = (chunk: any, callback?: (error: Error | null | undefined) => void) => {
+    response._body = chunk
   }
+
+  // response.on = (event: string, listener: any) => {
+  //   if (event === 'finish') {
+  //     listener()
+  //   }
+  //   if (event === 'unpipe') {
+  //     console.log({ event, listener })
+  //     listener()
+  //   }
+  // }
 
   response.hasHeader = (name: string): boolean => {
     return !!response.headers[name.toLowerCase()]
