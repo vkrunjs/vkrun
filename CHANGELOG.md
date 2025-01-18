@@ -1,7 +1,10 @@
 # VkrunJS Releases
 
+## 2.1.1
+- export only utils that are not from the exclusive usage context of vkrun
+
 ## 2.1.0
--add html response and redirect to route module
+- add html response and redirect to route module
 - add html utility to render html template string with html color palette
 
 ## 2.0.0
