@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 2.1.0
+-add html response and redirect to route module
+- add html utility to render html template string with html color palette
+
 ## 2.0.0
 - add constomizable messages to schema methods
 - migrate setLocation to Location module so that other modules can share the context of custom informational messages
