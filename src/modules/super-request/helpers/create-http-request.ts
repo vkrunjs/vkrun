@@ -3,7 +3,8 @@ import { Socket } from 'net'
 import { isObject } from '../../utils'
 
 export const createHttpRequest = (params: { method: any, path: any, headers: Record<string, any>, data: any, host: string, port: number }): any => {
-  const { method, path, headers, data, host, port } = params
+  const { method, path, headers, host, port } = params
+  const { data } = params
   const options: RequestOptions = {
     ...new URL(`http://${host}${path}`),
     method,

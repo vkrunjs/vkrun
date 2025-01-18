@@ -36,16 +36,6 @@ export const createHttpResponse = (request: any): any => {
     response._body = chunk
   }
 
-  // response.on = (event: string, listener: any) => {
-  //   if (event === 'finish') {
-  //     listener()
-  //   }
-  //   if (event === 'unpipe') {
-  //     console.log({ event, listener })
-  //     listener()
-  //   }
-  // }
-
   response.hasHeader = (name: string): boolean => {
     return !!response.headers[name.toLowerCase()]
   }

@@ -669,4 +669,127 @@ describe('Router', () => {
 
     app.close()
   })
+
+  it('Should send an HTML response using the html method', async () => {
+    const app = App()
+    const router = Router()
+
+    router.get('/html', (_request: Request, response: Response) => {
+      const name = 'World'
+      response.html`
+        <html>
+          <head><title>Test</title></head>
+          <body>
+            <h1>Hello, ${name}!</h1>
+          </body>
+        </html>
+      `
+    })
+
+    app.use(router)
+
+    await superRequest(app).get('/html').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.headers['content-type']).toEqual('text/html')
+      expect(response.data).toEqual(
+        '<html>\n          <head><title>Test</title></head>\n          <body>\n            <h1>Hello, World!</h1>\n          </body>\n        </html>'
+      )
+    })
+
+    app.close()
+  })
+
+  it('Should redirect to an external URL and retrieve the response body using the GET method', async () => {
+    const app = App()
+    const router = Router()
+
+    router.get('/redirect', (_request: Request, response: Response) => {
+      response.redirect('https://jsonplaceholder.typicode.com/posts/1')
+    })
+
+    app.use(router)
+
+    await superRequest(app).get('/redirect').then((response) => {
+      // Status code from the external request
+      expect(response.statusCode).toEqual(200)
+      // Content-Type from the external request
+      expect(response.headers['content-type']).toEqual('application/json; charset=utf-8')
+      // Verifies response body from the external request
+      expect(response.data).toEqual({
+        userId: 1,
+        id: 1,
+        title: 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+        body: 'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto'
+      })
+    })
+
+    app.close()
+  })
+
+  it('Should redirect to an external URL using the redirect method with POST protocol', async () => {
+    const app = App()
+    app.parseData()
+    const router = Router()
+
+    router.post('/redirect', (_request: Request, response: Response) => {
+      response.redirect('https://jsonplaceholder.typicode.com/posts')
+    })
+
+    app.use(router)
+
+    const data = {
+      title: 'foo',
+      body: 'bar',
+      userId: 1
+    }
+
+    await superRequest(app).post('/redirect', data, {
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    }).then((response) => {
+      // Status code from the external request
+      expect(response.statusCode).toEqual(201)
+      // Content-Type from the external request
+      expect(response.headers['content-type']).toEqual('application/json; charset=utf-8')
+      // Verifies response body from the external request
+      expect(response.data).toEqual({
+        title: 'foo',
+        body: 'bar',
+        userId: 1,
+        id: 101
+      })
+    })
+
+    app.close()
+  })
+
+  it('Should redirect to a local server URL using the POST method and retrieve the response body', async () => {
+    // App A localhost
+    const appA = App()
+
+    appA.post('/redirect', (request: Request, response: Response) => {
+      response.status(200).json({
+        message: 'Hello World!'
+      })
+    })
+
+    appA.server().listen(3100)
+
+    // App B test redirect to localhost
+    const appB = App()
+    appB.parseData()
+
+    appB.post('/redirect', (_request: Request, response: Response) => {
+      response.redirect('http://localhost:3100/redirect')
+    })
+
+    await superRequest(appB).post('/redirect').then((response) => {
+      expect(response.statusCode).toEqual(200)
+      expect(response.data).toEqual({
+        message: 'Hello World!'
+      })
+    })
+
+    appA.close()
+    appB.close()
+  })
 })

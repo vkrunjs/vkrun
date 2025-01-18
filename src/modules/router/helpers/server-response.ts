@@ -1,5 +1,7 @@
-import { ServerResponse, createServer } from 'http'
+import http, { ServerResponse, createServer } from 'http'
+import https from 'https'
 import { RouterCookieOptions } from '../../types'
+import { isArray, isObject } from '../../utils'
 
 declare module 'http' {
   interface ServerResponse {
@@ -20,7 +22,7 @@ declare module 'http' {
  *   res.status(404).send('Resource not found')
  * }
  */
-    status: (status: number) => ServerResponse
+    status: (status: number) => Omit<ServerResponse, 'redirect'>
 
     /**
  * @method json
@@ -40,6 +42,53 @@ declare module 'http' {
  * }
  */
     json: (data: object) => ServerResponse
+
+    /**
+ * @method html
+ *
+ * Sends an HTML response using template literals. Useful for dynamically
+ * generating HTML content.
+ *
+ * @param {TemplateStringsArray} strings - Template literal strings array.
+ * @param {unknown[]} values - Template literal interpolated values.
+ * @returns {ServerResponse} - The updated ServerResponse instance for chaining.
+ *
+ * @example
+ * response.html`
+ *   <html>
+ *     <body>
+ *       <h1>Hello, ${name}!</h1>
+ *     </body>
+ *   </html>
+ * `;
+ */
+    html: (strings: TemplateStringsArray, ...values: unknown[]) => ServerResponse
+
+    /**
+ * @method redirect
+ *
+ * Redirects the request to the specified URL. Makes an HTTP request to the target URL,
+ * and forwards the response headers and body back to the client.
+ *
+ * **Important:** The URL must include the protocol (`http://` or `https://`) at the beginning.
+ * Without the protocol, the method will not know whether to use HTTP or HTTPS for the request.
+ *
+ * @param {string} url - The fully qualified URL (must include `http://` or `https://`) to redirect the request to.
+ * @returns {ServerResponse} - Returns the response object for chaining.
+ *
+ * @example
+ * // Example of redirecting to an external domain
+ * app.get('/google', (req, res) => {
+ *   res.redirect('https://www.my-domain.com');
+ * });
+ *
+ * @example
+ * // Example of redirecting to an internal service
+ * app.get('/service', (req, res) => {
+ *   res.redirect('http://localhost:4000/api');
+ * });
+ */
+    redirect: (url: string) => ServerResponse
 
     /**
  * @method send
@@ -132,7 +181,7 @@ declare module 'http' {
   }
 }
 
-ServerResponse.prototype.status = function (status: number): ServerResponse {
+ServerResponse.prototype.status = function (status: number): Omit<ServerResponse, 'redirect'> {
   this.statusCode = status
   return this
 }
@@ -140,6 +189,83 @@ ServerResponse.prototype.status = function (status: number): ServerResponse {
 ServerResponse.prototype.json = function (body: object): ServerResponse {
   this.setHeader('Content-Type', 'application/json')
   this.end(JSON.stringify(body))
+  return this
+}
+
+ServerResponse.prototype.html = function (
+  strings: TemplateStringsArray,
+  ...values: unknown[]
+): ServerResponse {
+  const htmlContent = strings.reduce((acc, str, i) => {
+    const value = values[i]
+    const safeValue = typeof value === 'string' ? value : String(value ?? '')
+    return acc + str + safeValue
+  }, '')
+
+  if (!this.hasHeader('Content-Type')) {
+    this.setHeader('Content-Type', 'text/html')
+  }
+  this.end(htmlContent)
+  return this
+}
+
+ServerResponse.prototype.redirect = function (url: string): ServerResponse {
+  const requestModule = url.startsWith('https') ? https : http
+
+  const options = {
+    method: this.req.method, // Usa o método da requisição original
+    headers: this.req.headers
+  }
+
+  const handleResponse = (externalRes: http.IncomingMessage): void => {
+    // Copies the headers from the outer response to the original response
+    Object.entries(externalRes.headers).forEach(([key, value]) => {
+      if (value) {
+        this.setHeader(key, value)
+      }
+    })
+
+    // Wait for the external response body
+    let data = ''
+    externalRes.on('data', (chunk) => {
+      data += chunk
+    })
+
+    externalRes.on('end', () => {
+      // Send the response to the original client
+      this.statusCode = externalRes.statusCode ?? 302 // Default status for redirection
+      this.end(data)
+    })
+
+    externalRes.on('error', (err) => {
+      // Error handling during external response
+      this.statusCode = 500
+      this.end(`Error while redirecting: ${err.message}`)
+    })
+  }
+
+  const req = requestModule.request(url, options, handleResponse)
+
+  req.on('error', (err) => {
+    this.statusCode = 500
+    this.end(`Request error: ${err.message}`)
+    return this
+  })
+
+  // Adds the request body, if it exists
+  if (this.req.body) {
+    if (
+      this.req.headers?.['content-type'].includes('application/json') &&
+        (isObject(this.req.body) || isArray(this.req.body))
+    ) {
+      req.end(JSON.stringify(this.req.body))
+    } else {
+      req.end(this.req.body)
+    }
+  } else {
+    req.end()
+  }
+
   return this
 }
 
