@@ -14,8 +14,36 @@ import { swaggerUi } from './modules/swagger-ui'
 import { mime } from './modules/mime'
 import { serveStaticFile } from './modules/serve-static-file'
 import { loadEnv } from './modules/load-env'
+import {
+  dateToString,
+  html,
+  isArray,
+  isBigInt,
+  isBoolean,
+  isBuffer,
+  isDate,
+  isEmail,
+  isEmpty,
+  isEqual,
+  isFloat,
+  isFunction,
+  isInteger,
+  isISO8601,
+  isNotEmpty,
+  isNotEqual,
+  isNumber,
+  isObject,
+  isString,
+  isUUID,
+  notOneOf,
+  oneOf,
+  parseEscapeHTML,
+  parseEscapeSQL,
+  randomUUID,
+  regexMatch,
+  stringToDate
+} from './modules/utils'
 export * from './modules/router/helpers/adapters'
-export * from './modules/utils'
 export * from './modules/types'
 
 export {
@@ -34,5 +62,32 @@ export {
   swaggerUi,
   mime,
   serveStaticFile,
-  loadEnv
+  loadEnv,
+  dateToString,
+  html,
+  isArray,
+  isBigInt,
+  isBoolean,
+  isBuffer,
+  isDate,
+  isEmail,
+  isEmpty,
+  isEqual,
+  isFloat,
+  isFunction,
+  isInteger,
+  isISO8601,
+  isNotEmpty,
+  isNotEqual,
+  isNumber,
+  isObject,
+  isString,
+  isUUID,
+  notOneOf,
+  oneOf,
+  parseEscapeHTML,
+  parseEscapeSQL,
+  randomUUID,
+  regexMatch,
+  stringToDate
 }
