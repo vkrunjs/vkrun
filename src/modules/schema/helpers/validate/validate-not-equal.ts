@@ -1,5 +1,5 @@
 import { SchemaConfig, SchemaValidateMethod } from "../../../types";
-import { isNotEqual, isString, received } from "../../../utils";
+import { dateToString, isDate, isNotEqual, isString, received } from "../../../utils";
 import { getLocation } from "../../../location";
 
 export const validateNotEqual = (
@@ -26,8 +26,11 @@ export const validateNotEqual = (
       received: received(value),
       message: (isString(config?.message) ? config.message : getLocation().schema.notEqual)
         .replace("[valueName]", valueName)
-        .replace("[value]", value)
-        .replace("[valueToCompare]", valueToCompare),
+        .replace("[value]", isDate(value) ? dateToString(value, "YYYY/MM/DD HH:MM:SS.MS", "UTC") : value)
+        .replace(
+          "[valueToCompare]",
+          isDate(valueToCompare) ? dateToString(valueToCompare, "YYYY/MM/DD HH:MM:SS.MS", "UTC") : valueToCompare,
+        ),
     });
   }
 };

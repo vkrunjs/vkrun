@@ -118,7 +118,7 @@ describe("Validator Date Equal Method", () => {
         name: "value_name",
         expect: new Date("2020-01-01T00:00:00+02:00"),
         received: new Date("2020-02-01T00:00:00+02:00"),
-        message: "value_name Fri Jan 31 2020 19:00:00 GMT-0300 (Horário Padrão de Brasília)!",
+        message: "value_name 2020/01/31 22:00:00.000!",
       },
     ]);
     expect(sut.value).toBe(value);

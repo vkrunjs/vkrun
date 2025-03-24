@@ -1,6 +1,6 @@
 import { getLocation } from "../../../location";
 import { SchemaConfig, SchemaValidateMethod } from "../../../types";
-import { isString, received } from "../../../utils";
+import { dateToString, isDate, isString, received } from "../../../utils";
 import { isEqual } from "../../../utils/is-equal";
 
 export const validateEqual = (
@@ -27,8 +27,11 @@ export const validateEqual = (
       received: received(value),
       message: (isString(config?.message) ? config.message : getLocation().schema.equal)
         .replace("[valueName]", valueName)
-        .replace("[value]", value)
-        .replace("[valueToCompare]", valueToCompare),
+        .replace("[value]", isDate(value) ? dateToString(value, "YYYY/MM/DD HH:MM:SS.MS", "UTC") : value)
+        .replace(
+          "[valueToCompare]",
+          isDate(valueToCompare) ? dateToString(valueToCompare, "YYYY/MM/DD HH:MM:SS.MS", "UTC") : valueToCompare,
+        ),
     });
   }
 };
