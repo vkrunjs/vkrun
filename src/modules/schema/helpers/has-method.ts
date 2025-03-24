@@ -1,6 +1,6 @@
-import { SchemaMethodTypes } from '../../types'
+import { SchemaMethods, SchemaMethodTypes } from "../../types";
 
-export const hasMethod = (value: any, method: SchemaMethodTypes): boolean => {
-  if (!value) return false
-  return value.some((rule: any) => rule.method === method)
-}
+export const hasMethod = (methods: SchemaMethods, method: SchemaMethodTypes): boolean => {
+  if (!methods) return false;
+  return methods.some((rule: any) => rule.method === method);
+};

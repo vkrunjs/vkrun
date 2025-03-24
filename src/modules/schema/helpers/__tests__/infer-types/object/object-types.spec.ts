@@ -1,0 +1,186 @@
+import { schema, InferIn, InferOut, CheckType } from "../../../../../../index";
+
+describe("Validator Object Method Types", () => {
+  it("should infer a object", () => {
+    const objectSchema = schema().object({
+      string: schema().string(),
+      date: schema().date(),
+      number: schema().number(),
+      bigInt: schema().bigInt(),
+      boolean: schema().boolean(),
+      function: schema().function(),
+      buffer: schema().buffer(),
+      array: schema().array(schema().string()),
+      any: schema().any(),
+      custom: schema()
+        .string()
+        .custom(({ success }) => {
+          success("string");
+        }),
+    });
+
+    type ObjectSchemaIn = InferIn<typeof objectSchema>;
+    type ObjectSchemaOut = InferOut<typeof objectSchema>;
+
+    type EqualSchemaCheckIn = CheckType<
+      ObjectSchemaIn,
+      {
+        string: string;
+        date: Date;
+        number: number;
+        bigInt: bigint;
+        boolean: boolean;
+        function: Function;
+        buffer: Buffer<ArrayBufferLike>;
+        array: string[];
+        any: any;
+        custom: string;
+      }
+    >;
+
+    type EqualSchemaCheckOut = CheckType<
+      ObjectSchemaOut,
+      {
+        string: string;
+        date: Date;
+        number: number;
+        bigInt: bigint;
+        boolean: boolean;
+        function: Function;
+        buffer: Buffer<ArrayBufferLike>;
+        array: string[];
+        any: any;
+        custom: string;
+      }
+    >;
+
+    const checkIn: EqualSchemaCheckIn = true;
+    const checkOut: EqualSchemaCheckOut = true;
+  });
+
+  it("should infer a object or null", () => {
+    const objectSchema = schema()
+      .object({
+        string: schema().string().nullable(),
+        date: schema().date().nullable(),
+        number: schema().number().nullable(),
+        bigInt: schema().bigInt().nullable(),
+        boolean: schema().boolean().nullable(),
+        function: schema().function().nullable(),
+        buffer: schema().buffer().nullable(),
+        array: schema().array(schema().string().nullable()).nullable(),
+        any: schema().any(),
+        custom: schema()
+          .string()
+          .nullable()
+          .custom(({ success }) => {
+            success("string");
+          }),
+      })
+      .nullable();
+
+    type ObjectSchemaIn = InferIn<typeof objectSchema>;
+    type ObjectSchemaOut = InferOut<typeof objectSchema>;
+
+    type EqualSchemaCheckIn = CheckType<
+      ObjectSchemaIn,
+      {
+        string: string | null;
+        date: Date | null;
+        number: number | null;
+        bigInt: bigint | null;
+        boolean: boolean | null;
+        function: Function | null;
+        buffer: Buffer<ArrayBufferLike> | null;
+        array: (string | null)[] | null;
+        any: any;
+        custom: string | null;
+      } | null
+    >;
+
+    type EqualSchemaCheckOut = CheckType<
+      ObjectSchemaOut,
+      {
+        string: string | null;
+        date: Date | null;
+        number: number | null;
+        bigInt: bigint | null;
+        boolean: boolean | null;
+        function: Function | null;
+        buffer: Buffer<ArrayBufferLike> | null;
+        array: (string | null)[] | null;
+        any: any;
+        custom: string | null;
+      } | null
+    >;
+
+    const checkIn: EqualSchemaCheckIn = true;
+    const checkOut: EqualSchemaCheckOut = true;
+  });
+
+  it("should infer a object, null or undefined", () => {
+    const objectSchema = schema()
+      .object({
+        string: schema().string().nullable().notRequired(),
+        date: schema().date().nullable().notRequired(),
+        number: schema().number().nullable().notRequired(),
+        bigInt: schema().bigInt().nullable().notRequired(),
+        boolean: schema().boolean().nullable().notRequired(),
+        function: schema().function().nullable().notRequired(),
+        buffer: schema().buffer().nullable().notRequired(),
+        array: schema().array(schema().string().nullable().notRequired()).nullable().notRequired(),
+        any: schema().any(),
+        custom: schema()
+          .string()
+          .nullable()
+          .notRequired()
+          .custom(({ success }) => {
+            success("string");
+          }),
+      })
+      .nullable()
+      .notRequired();
+
+    type ObjectSchemaIn = InferIn<typeof objectSchema>;
+    type ObjectSchemaOut = InferOut<typeof objectSchema>;
+
+    type EqualSchemaCheckIn = CheckType<
+      ObjectSchemaIn,
+      | {
+          string: string | null | undefined;
+          date: Date | null | undefined;
+          number: number | null | undefined;
+          bigInt: bigint | null | undefined;
+          boolean: boolean | null | undefined;
+          function: Function | null | undefined;
+          buffer: Buffer<ArrayBufferLike> | null | undefined;
+          array: (string | null | undefined)[] | null | undefined;
+          any: any;
+          custom: string | null | undefined;
+        }
+      | null
+      | undefined
+    >;
+
+    type EqualSchemaCheckOut = CheckType<
+      ObjectSchemaOut,
+      | {
+          string: string | null | undefined;
+          date: Date | null | undefined;
+          number: number | null | undefined;
+          bigInt: bigint | null | undefined;
+          boolean: boolean | null | undefined;
+          function: Function | null | undefined;
+          buffer: Buffer<ArrayBufferLike> | null | undefined;
+          array: (string | null | undefined)[] | null | undefined;
+          any: any;
+          custom: string | null | undefined;
+        }
+      | null
+      | undefined
+    >;
+
+    const checkIn: EqualSchemaCheckIn = true;
+    const checkOut: EqualSchemaCheckOut = true;
+  });
+});
