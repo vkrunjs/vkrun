@@ -51,11 +51,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test-runner": "ts-node src/modules/test-runner/helpers/runner.ts",
-    "test-runner:pass": "ts-node src/modules/test-runner/helpers/runner-pass.ts",
-    "test-runner:fail": "ts-node src/modules/test-runner/helpers/runner-fail.ts",
     "test": "jest --coverage=false",
-    "test:test-runner": "jest --selectProjects test-runner",
     "test:cors": "jest --selectProjects cors",
     "test:jwt": "jest --selectProjects jwt",
     "test:load-env": "jest --selectProjects load-env",

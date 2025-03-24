@@ -39,11 +39,6 @@ const config: Config = {
   projects: [
     {
       ...commonConfig,
-      displayName: "test-runner",
-      roots: ["<rootDir>/src/modules/test-runner"],
-    },
-    {
-      ...commonConfig,
       displayName: "cors",
       roots: ["<rootDir>/src/modules/cors"],
     },
