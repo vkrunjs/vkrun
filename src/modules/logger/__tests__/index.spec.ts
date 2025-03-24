@@ -1,26 +1,26 @@
-import { Logger } from '..'
+import { Logger } from "..";
 
-describe('Logger', () => {
-  it('Should create a logger with correct configuration', async () => {
+describe("Logger", () => {
+  it("Should create a logger with correct configuration", async () => {
     const logger = Logger({
-      level: 'error',
-      format: 'indented',
-      dateType: 'MM-DD-YYYY',
+      level: "error",
+      format: "indented",
+      dateType: "DD-MM-YYYY",
       print: {
         enabled: true,
-        format: 'default',
+        format: "default",
         colors: {
-          key: 'green',
-          string: 'yellow',
-          number: 'blue',
-          boolean: 'purple'
-        }
+          key: "green",
+          string: "yellow",
+          number: "blue",
+          boolean: "purple",
+        },
       },
-      size: 5,
+      size: 0,
       daysToStoreLogs: 0,
-      extension: 'log',
-      path: 'logs'
-    })
+      extension: "log",
+      path: "logs",
+    });
 
     expect(logger).toEqual({
       error: expect.any(Function),
@@ -29,7 +29,7 @@ describe('Logger', () => {
       http: expect.any(Function),
       verbose: expect.any(Function),
       debug: expect.any(Function),
-      silly: expect.any(Function)
-    })
-  })
-})
+      silly: expect.any(Function),
+    });
+  });
+});

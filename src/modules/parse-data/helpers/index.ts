@@ -1,3 +1,3 @@
-export * from './format'
-export * from './get-data'
-export * from './parse'
+export * from "./format";
+export * from "./get-data";
+export * from "./parse";

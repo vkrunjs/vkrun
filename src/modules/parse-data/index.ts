@@ -1,68 +1,61 @@
-import { NextFunction, ParseDataConfig, Request, Response, VkrunParseData } from '../types'
-import { isString, parseEscapeSQL } from '../utils'
-import {
-  getData,
-  parseMultipartFormData,
-  parseQuery,
-  parseParams,
-  parseFormUrlEncoded,
-  parseJSON
-} from './helpers'
+import { NextFunction, ParseDataConfig, Request, Response, VkrunParseData } from "../types";
+import { isString, parseEscapeSQL } from "../utils";
+import { getData, parseMultipartFormData, parseQuery, parseParams, parseFormUrlEncoded, parseJSON } from "./helpers";
 
 export class ParseDataSetup implements VkrunParseData {
-  private readonly urlencoded: boolean = true
-  private readonly params: boolean = true
-  private readonly query: boolean = true
-  private readonly json: boolean = true
-  private readonly formData: boolean = true
-  private readonly escapeSQL: boolean = false
+  private readonly urlencoded: boolean = true;
+  private readonly params: boolean = true;
+  private readonly query: boolean = true;
+  private readonly json: boolean = true;
+  private readonly formData: boolean = true;
+  private readonly escapeSQL: boolean = false;
 
-  constructor (config?: ParseDataConfig) {
-    if (config?.urlencoded !== undefined) this.urlencoded = config.urlencoded
-    if (config?.params !== undefined) this.params = config.params
-    if (config?.query !== undefined) this.query = config.query
-    if (config?.json !== undefined) this.json = config.json
-    if (config?.formData !== undefined) this.formData = config.formData
-    if (config?.escapeSQL !== undefined) this.escapeSQL = config.escapeSQL
+  constructor(config?: ParseDataConfig) {
+    if (config?.urlencoded !== undefined) this.urlencoded = config.urlencoded;
+    if (config?.params !== undefined) this.params = config.params;
+    if (config?.query !== undefined) this.query = config.query;
+    if (config?.json !== undefined) this.json = config.json;
+    if (config?.formData !== undefined) this.formData = config.formData;
+    if (config?.escapeSQL !== undefined) this.escapeSQL = config.escapeSQL;
   }
 
-  async handle (request: Request, response: Response, next: NextFunction): Promise<void> {
+  async handle(request: Request, response: Response, next: NextFunction): Promise<void> {
     try {
-      const headerContentType = request.headers['content-type']
+      const headerContentType = request.headers["content-type"];
 
-      request.body = await getData(request)
-      if (this.params) request.params = parseParams(request, this.escapeSQL)
-      if (this.query) request.query = parseQuery(request, this.escapeSQL)
+      request.body = await getData(request);
+      if (this.params) request.params = parseParams(request, this.escapeSQL);
+      if (this.query) request.query = parseQuery(request, this.escapeSQL);
 
       if (request.body) {
-        if (request.method === 'POST' || request.method === 'PUT' || request.method === 'PATCH') {
-          if (this.json && headerContentType && headerContentType?.includes('application/json')) {
-            request.body = parseJSON(request, this.escapeSQL)
-          } else if (this.urlencoded && headerContentType && headerContentType?.includes('application/x-www-form-urlencoded')) {
-            request.body = parseFormUrlEncoded(request, this.escapeSQL)
-          } else if (this.formData && headerContentType && headerContentType?.includes('multipart/form-data')) {
-            const parsedData = parseMultipartFormData(request, this.escapeSQL)
-            request.body = parsedData.body
-            request.files = parsedData.files
+        if (request.method === "POST" || request.method === "PUT" || request.method === "PATCH") {
+          if (this.json && headerContentType && headerContentType?.includes("application/json")) {
+            request.body = parseJSON(request, this.escapeSQL);
+          } else if (this.urlencoded && headerContentType && headerContentType?.includes("application/x-www-form-urlencoded")) {
+            request.body = parseFormUrlEncoded(request, this.escapeSQL);
+          } else if (this.formData && headerContentType && headerContentType?.includes("multipart/form-data")) {
+            const parsedData = parseMultipartFormData(request, this.escapeSQL);
+            request.body = parsedData.body;
+            request.files = parsedData.files;
           } else {
-            request.body = request.body.toString()
+            request.body = request.body.toString();
             if (this.escapeSQL && isString(request.body)) {
-              request.body = parseEscapeSQL(request.body)
+              request.body = parseEscapeSQL(request.body);
             }
           }
         } else {
-          request.body = {}
+          request.body = {};
         }
       } else {
-        request.body = undefined
+        request.body = undefined;
       }
     } catch (error: any) {
-      response.setHeader('Content-Type', 'text/plain')
-      response.setHeader('Access-Control-Allow-Origin', '*')
-      response.status(400).end('Invalid Request Data')
-      return
+      response.setHeader("Content-Type", "text/plain");
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.status(400).end("Invalid Request Data");
+      return;
     }
-    next()
+    next();
   }
 }
 
@@ -135,5 +128,5 @@ export class ParseDataSetup implements VkrunParseData {
  * ```
  */
 export const parseData = (config?: ParseDataConfig): VkrunParseData => {
-  return new ParseDataSetup(config)
-}
+  return new ParseDataSetup(config);
+};
