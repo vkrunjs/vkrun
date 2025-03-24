@@ -124,7 +124,7 @@ export class ParseDataSetup implements VkrunParseData {
  *   res.status(200).send()
  * })
  *
- * // Requesting /query?name=test&age=25 will populate req.query with { name: 'test', age: 25 }
+ * // Requesting /query?name=test&age=25 will populate req.query with { name: "test", age: "25" }
  * ```
  */
 export const parseData = (config?: ParseDataConfig): VkrunParseData => {

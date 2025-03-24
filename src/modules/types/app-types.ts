@@ -188,8 +188,7 @@ export interface VkrunApp {
    * router.get('/user/:id', (req, res) => {
    *   // Access parsed params and query data
    *   const userId = req.params.id
-   *   const userQuery = req.query.search
-   *   res.status(200).send(`User ID: ${userId}, Search Query: ${userQuery}`)
+   *   res.status(200).send(`User ID: ${userId}`)
    * })
    *
    * // Create and start the server
