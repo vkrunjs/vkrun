@@ -1,0 +1,9 @@
+{
+  "id": 123,
+  "user": {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+  },
+  "active": true
+}
