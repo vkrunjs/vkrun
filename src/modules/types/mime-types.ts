@@ -12,5 +12,5 @@ export interface VkrunMime {
    * mime.type('html') // Returns 'text/html'
    * mime.type('abc')  // Returns `null` if the extension does not exist
    */
-  type: (extension: string) => string | null
+  type: (extension: string) => string | null;
 }

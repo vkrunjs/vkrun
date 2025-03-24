@@ -1,2 +1,2 @@
-export * from './set-cors-headers'
-export * from './validate-options'
+export * from "./set-cors-headers";
+export * from "./validate-options";

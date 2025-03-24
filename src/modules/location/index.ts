@@ -1,5 +1,5 @@
-import { informativeMessage } from './informative-message'
-import { setLocation } from './set-location'
-import { getLocation } from './get-location'
+import { informativeMessage } from "./informative-message";
+import { setLocation } from "./set-location";
+import { getLocation } from "./get-location";
 
-export { informativeMessage, setLocation, getLocation }
+export { informativeMessage, setLocation, getLocation };
