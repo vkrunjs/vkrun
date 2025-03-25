@@ -6,6 +6,7 @@
 - add parseTo method to schema module
 - add custom method to schema module
 - add infer type to schema module
+- add validate route data module
 - refactor with new eslint configuration
 - refactor util isEqual to check more data types
 - separate node dependencies into an isolated module
