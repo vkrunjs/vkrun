@@ -67,6 +67,7 @@
     "test:swagger-ui": "jest --selectProjects swagger-ui",
     "test:upload": "jest --selectProjects upload",
     "test:utils": "jest --selectProjects utils",
+    "test:validate-route-data": "jest --selectProjects validate-route-data",
     "test:coverage": "jest",
     "test:staged": "jest --passWithNoTests",
     "test:ci": "npm test -- --coverage=false",

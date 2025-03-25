@@ -39,6 +39,11 @@ const config: Config = {
   projects: [
     {
       ...commonConfig,
+      displayName: "validate-route-data",
+      roots: ["<rootDir>/src/modules/validate-route-data"],
+    },
+    {
+      ...commonConfig,
       displayName: "cors",
       roots: ["<rootDir>/src/modules/cors"],
     },

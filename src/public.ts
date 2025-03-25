@@ -14,6 +14,7 @@ import { swaggerUi } from "./modules/swagger-ui";
 import { mime } from "./modules/mime";
 import { serveStaticFile } from "./modules/serve-static-file";
 import { loadEnv } from "./modules/load-env";
+import { validateRouteData } from "./modules/validate-route-data";
 import {
   dateToString,
   html,
@@ -90,4 +91,5 @@ export {
   randomUUID,
   regexMatch,
   stringToDate,
+  validateRouteData,
 };
