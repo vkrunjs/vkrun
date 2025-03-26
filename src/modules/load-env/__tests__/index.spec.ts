@@ -1,5 +1,5 @@
 import { writeFileSync, unlinkSync, existsSync, resolve } from "../../runtime";
-import { schema } from "../../..";
+import { CheckType, InferOut, schema } from "../../..";
 import { loadEnv } from "..";
 import { LoadEnvError } from "../../errors";
 
@@ -141,6 +141,41 @@ EXAMPLE_12={ "key": "value" }`;
     console.log({ envSchema });
 
     expect(() => loadEnv({ path: tempEnvPath, schema: envSchema })).not.toThrow();
+  });
+
+  it("Should check return types", () => {
+    const envContent = `
+      NAME="John Doe"
+      ENABLED=true
+      COUNT=42
+      SETTINGS={"key":"value"}
+    `;
+    createEnvFile(envContent);
+
+    const envSchema = schema().object({
+      NAME: schema().string(),
+      ENABLED: schema().boolean(),
+      COUNT: schema().number(),
+      SETTINGS: schema().object({
+        key: schema().string(),
+      }),
+    });
+
+    const envs = loadEnv<InferOut<typeof envSchema>>({ path: tempEnvPath, schema: envSchema });
+
+    type CheckedTypes = CheckType<
+      typeof envs,
+      {
+        NAME: string;
+        ENABLED: boolean;
+        COUNT: number;
+        SETTINGS: {
+          key: string;
+        };
+      }
+    >;
+
+    const checked: CheckedTypes = true;
   });
 
   it("Should throw an error if schema validation fails", () => {
