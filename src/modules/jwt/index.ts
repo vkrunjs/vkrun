@@ -1,71 +1,71 @@
-import * as crypto from 'crypto'
-import { JwtEncryptConfig, JwtToken, JwtTokenData, VkrunJwt } from '../types'
-import { convertExpiresIn, validateSecretKey, validateTimeFormat } from '../utils'
+import { randomBytes, createCipheriv, createDecipheriv } from "../runtime";
+import { JwtEncryptConfig, JwtToken, JwtTokenData, VkrunJwt } from "../types";
+import { convertExpiresIn, validateSecretKey, validateTimeFormat } from "../utils";
 
 class JwtSetup implements VkrunJwt {
-  encrypt (data: any, config: JwtEncryptConfig): JwtToken {
-    const { secretKey, expiresIn } = config
-    validateSecretKey(secretKey, 'jwt')
-    validateTimeFormat(expiresIn, 'jwt')
+  encrypt(data: any, config: JwtEncryptConfig): JwtToken {
+    const { secretKey, expiresIn } = config;
+    validateSecretKey(secretKey, "jwt");
+    validateTimeFormat(expiresIn, "jwt");
 
-    const convertedExpiresIn = convertExpiresIn(expiresIn)
-    const keys = Array.isArray(secretKey) ? secretKey : [secretKey]
-    const selectedKey = keys[Math.floor(Math.random() * keys.length)]
+    const convertedExpiresIn = convertExpiresIn(expiresIn);
+    const keys = Array.isArray(secretKey) ? secretKey : [secretKey];
+    const selectedKey = keys[Math.floor(Math.random() * keys.length)];
 
     const params: JwtTokenData = {
       data,
       config: {
         createdAt: Date.now(),
-        expiresIn: convertedExpiresIn
-      }
-    }
+        expiresIn: convertedExpiresIn,
+      },
+    };
 
-    const token: JwtToken = this.encryptData(JSON.stringify(params), selectedKey)
+    const token: JwtToken = this.encryptData(JSON.stringify(params), selectedKey);
 
-    return token
+    return token;
   }
 
-  decrypt (token: JwtToken, secretKey: string | string[]): any | null {
-    validateSecretKey(secretKey, 'jwt')
-    const keys = Array.isArray(secretKey) ? secretKey : [secretKey]
+  decrypt(token: JwtToken, secretKey: string | string[]): any | null {
+    validateSecretKey(secretKey, "jwt");
+    const keys = Array.isArray(secretKey) ? secretKey : [secretKey];
 
     for (const key of keys) {
       try {
-        const { data, config } = this.decryptData(token, key)
+        const { data, config } = this.decryptData(token, key);
 
         if (!this.tokenHasExpired(config.createdAt, config.expiresIn)) {
-          return data
+          return data;
         }
       } catch (err) {
         // Ignore errors and try the next key
       }
     }
 
-    return null
+    return null;
   }
 
-  private encryptData (tokenData: string, secretKey: string): string {
-    const iv = crypto.randomBytes(16)
-    const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(secretKey, 'hex'), iv)
-    let encryptedData = cipher.update(tokenData, 'utf-8', 'hex')
-    encryptedData += cipher.final('hex')
-    return `${iv.toString('hex')}:${encryptedData}`
+  private encryptData(tokenData: string, secretKey: string): string {
+    const iv = randomBytes(16);
+    const cipher = createCipheriv("aes-256-cbc", Buffer.from(secretKey, "hex"), iv);
+    let encryptedData = cipher.update(tokenData, "utf-8", "hex");
+    encryptedData += cipher.final("hex");
+    return `${iv.toString("hex")}:${encryptedData}`;
   }
 
-  private decryptData (token: string, secretKey: string): JwtTokenData {
-    const [ivHex, encryptedDataHex] = token.split(':')
-    const iv = Buffer.from(ivHex, 'hex')
-    const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(secretKey, 'hex'), iv)
-    let decryptedData = decipher.update(encryptedDataHex, 'hex', 'utf-8')
-    decryptedData += decipher.final('utf-8')
-    const tokenData = JSON.parse(decryptedData)
-    return tokenData
+  private decryptData(token: string, secretKey: string): JwtTokenData {
+    const [ivHex, encryptedDataHex] = token.split(":");
+    const iv = Buffer.from(ivHex, "hex");
+    const decipher = createDecipheriv("aes-256-cbc", Buffer.from(secretKey, "hex"), iv);
+    let decryptedData = decipher.update(encryptedDataHex, "hex", "utf-8");
+    decryptedData += decipher.final("utf-8");
+    const tokenData = JSON.parse(decryptedData);
+    return tokenData;
   }
 
-  private tokenHasExpired (createdAt: number, expiresIn: number): boolean {
-    const now = Date.now()
-    const expirationTime = createdAt + expiresIn
-    return now > expirationTime
+  private tokenHasExpired(createdAt: number, expiresIn: number): boolean {
+    const now = Date.now();
+    const expirationTime = createdAt + expiresIn;
+    return now > expirationTime;
   }
 }
 
@@ -87,4 +87,4 @@ class JwtSetup implements VkrunJwt {
  * const token = jwt().encrypt(data, config)
  * console.log(token) // token string
  */
-export const jwt = (): VkrunJwt => new JwtSetup()
+export const jwt = (): VkrunJwt => new JwtSetup();

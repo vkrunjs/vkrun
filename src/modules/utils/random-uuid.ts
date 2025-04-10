@@ -1,5 +1,5 @@
-import { randomUUID as _randomUUID } from 'crypto'
+import { randomUUID as _randomUUID } from "../runtime";
 
 export const randomUUID = (): string => {
-  return _randomUUID()
-}
+  return _randomUUID();
+};

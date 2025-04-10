@@ -1,13 +1,31 @@
 # VkrunJS Releases
 
+## 3.0.0
+
+- add jsDoc to all methods of the schema module
+- add oneOf method to validate multiple schemas
+- add parseTo method to schema module
+- add custom method to schema module
+- add infer type to schema module
+- add validate route data module
+- refactor with new eslint configuration
+- refactor util isEqual to check more data types
+- separate node dependencies into an isolated module
+- fix logger not generating physical log when daysToStoreLogs is equal to 0
+- create options routes for cors when starting the server
+- return error with error handler using asynchronous handlers
+
 ## 2.1.1
+
 - export only utils that are not from the exclusive usage context of vkrun
 
 ## 2.1.0
+
 - add html response and redirect to route module
 - add html utility to render html template string with html color palette
 
 ## 2.0.0
+
 - add constomizable messages to schema methods
 - migrate setLocation to Location module so that other modules can share the context of custom informational messages
 - loadEnv must return the parsed env itself
@@ -16,15 +34,18 @@
 - streaming with response pipe in superRequest module
 
 ## 1.9.5
+
 - add custom error message to string method of schema module
 - add loadEnv module
 - fix saveFileToDisk returning fieldName instead of originalName
 - add custom error message to UUID method of schema module
 
 ## 1.9.1
+
 - remove config removeComments
 
 ## 1.9.0
+
 - change rateLimit sanitation method for superRequest and production with createServer
 - add jsDoc to App module
 - add jsDoc to CORS module
@@ -41,6 +62,7 @@
 - add jsDoc to schema module
 
 ## 1.8.0
+
 - separate min array and max array validations from validate-array file
 - add isEmail util
 - add isBuffer util
@@ -50,12 +72,15 @@
 - add function validation method to schema module
 
 ## 1.7.1
+
 - migrating documents to the official website and removing export default vkrun
 
 ## 1.7.0
+
 - change build from commonjs to ESNext
 
 ## 1.6.0
+
 - oneOf and notOneOf methods of schema module must accept schemas as comparison
 - add compileRegex util
 - add to schema module validation of min, max, oneOf and notOneOf for arrays
@@ -63,15 +88,18 @@
 - change the default export of vkrun to the App module
 
 ## 1.5.0
+
 - remove the use of customResponse from the app server, leaving it only for use by superRequest
 - route matching refactoring
 
 ## 1.4.0
+
 - add to the upload module greater flexibility in managing files in memory, validations and custom returns by error type
 - remove all tests with axios
 - parse form data return file size
 
 ## 1.3.0
+
 - replace wildcard imports with explicit imports for modularization and change type names to avoid duplication between modules
 - add singleFile and multipleFiles methods to the upload module with configuration options
 - add to parseData return fieldName when content type is form data
@@ -79,19 +107,23 @@
 - add benchmark example
 
 ## 1.2.0
+
 - fix superRequest does not work with async handlers
 - adjust setHeader to return vkrun custom response and all additional vkrun methods should return this
 
 ## 1.1.0
+
 - swagger builder should accept default path change api-docs
 - change the way to inject error handling into the app
 - change variable name and export httpStatus
 - ensure that all methods in the schema module replace valueName and value in the error message
 
 ## 1.0.0
+
 - official release
 
 ## 0.45.2
+
 - updating incomplete package
 
 ## 0.45.0
@@ -203,7 +235,6 @@
 ## 0.38.1
 
 - remove default parameters from setCookie method
-
 
 ## 0.38.0
 

@@ -16,10 +16,10 @@ jobs:
     - name: Set Timezone to Brasilia, Brazil
       run: sudo ln -fs /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && sudo dpkg-reconfigure --frontend noninteractive tzdata
 
-    - name: Use Node.js 18.18.0
+    - name: Use Node.js 22.14.0
       uses: actions/setup-node@v2
       with:
-        node-version: '18.18.0'
+        node-version: '22.14.0'
 
     - name: Install dependencies
       env:

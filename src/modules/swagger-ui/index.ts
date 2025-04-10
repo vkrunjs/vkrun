@@ -1,5 +1,4 @@
-import { existsSync, readFileSync } from 'fs'
-import { join } from 'path'
+import { existsSync, readFileSync, join } from "../runtime";
 import {
   Request,
   Response,
@@ -8,107 +7,99 @@ import {
   SwaggerOpenAPIDocument,
   SwaggerOperation,
   SwaggerRouteBuilder,
-  VkrunSwaggerUi
-} from '../types'
+  VkrunSwaggerUi,
+} from "../types";
 
 export class SwaggerUiSetup implements VkrunSwaggerUi {
-  private readonly doc: SwaggerOpenAPIConfig & SwaggerOpenAPIDocument
-  private currentPath: string
-  private swaggerUiPath: string
-  private baseUrl: string
+  private readonly doc: SwaggerOpenAPIConfig & SwaggerOpenAPIDocument;
+  private currentPath: string;
+  private swaggerUiPath: string;
+  private baseUrl: string;
 
-  constructor (config?: SwaggerOpenAPIConfig | SwaggerOpenAPIConfig & SwaggerOpenAPIDocument) {
+  constructor(config?: SwaggerOpenAPIConfig | (SwaggerOpenAPIConfig & SwaggerOpenAPIDocument)) {
     this.doc = {
-      openapi: '3.0.0',
+      openapi: "3.0.0",
       info: {
-        title: '',
-        version: '',
-        description: ''
+        title: "",
+        version: "",
+        description: "",
       },
       paths: {},
       components: {
-        securitySchemes: {}
+        securitySchemes: {},
       },
       servers: [],
-      security: []
-    }
-    this.baseUrl = ''
-    this.currentPath = ''
-    this.swaggerUiPath = ''
+      security: [],
+    };
+    this.baseUrl = "";
+    this.currentPath = "";
+    this.swaggerUiPath = "";
 
     if (config) {
-      this.doc = { ...this.doc, ...config }
+      this.doc = { ...this.doc, ...config };
     }
   }
 
-  public route (path: string): SwaggerRouteBuilder {
-    const swaggerPath = path.replace(/:([a-zA-Z0-9_]+)/g, '{$1}')
+  public route(path: string): SwaggerRouteBuilder {
+    const swaggerPath = path.replace(/:([a-zA-Z0-9_]+)/g, "{$1}");
 
     if (!this.doc.paths[swaggerPath]) {
-      this.doc.paths[swaggerPath] = {}
+      this.doc.paths[swaggerPath] = {};
     }
-    this.currentPath = swaggerPath
+    this.currentPath = swaggerPath;
 
     const routeBuilder: SwaggerRouteBuilder = {
       post: (options: SwaggerOperation) => {
-        this.addMethod('post', options)
-        return routeBuilder
+        this.addMethod("post", options);
+        return routeBuilder;
       },
       put: (options: SwaggerOperation) => {
-        this.addMethod('put', options)
-        return routeBuilder
+        this.addMethod("put", options);
+        return routeBuilder;
       },
       patch: (options: SwaggerOperation) => {
-        this.addMethod('patch', options)
-        return routeBuilder
+        this.addMethod("patch", options);
+        return routeBuilder;
       },
       get: (options: SwaggerOperation) => {
-        this.addMethod('get', options)
-        return routeBuilder
+        this.addMethod("get", options);
+        return routeBuilder;
       },
       delete: (options: SwaggerOperation) => {
-        this.addMethod('delete', options)
-        return routeBuilder
+        this.addMethod("delete", options);
+        return routeBuilder;
       },
       options: (options: SwaggerOperation) => {
-        this.addMethod('options', options)
-        return routeBuilder
-      }
-    }
+        this.addMethod("options", options);
+        return routeBuilder;
+      },
+    };
 
-    return routeBuilder
+    return routeBuilder;
   }
 
-  private addMethod (method: string, options: SwaggerOperation): this {
+  private addMethod(method: string, options: SwaggerOperation): this {
     if (!this.doc.paths[this.currentPath]) {
-      this.doc.paths[this.currentPath] = {}
+      this.doc.paths[this.currentPath] = {};
     }
-    this.doc.paths[this.currentPath][method] = options
-    return this
+    this.doc.paths[this.currentPath][method] = options;
+    return this;
   }
 
-  private getConfig (): SwaggerOpenAPIConfig & SwaggerOpenAPIDocument {
-    return this.doc
+  private getConfig(): SwaggerOpenAPIConfig & SwaggerOpenAPIDocument {
+    return this.doc;
   }
 
-  private generateSwaggerHTML (): string {
-    const swaggerUiCssPath = join(this.swaggerUiPath, 'swagger-ui.css')
-    const indexCssPath = join(this.swaggerUiPath, 'index.css')
-    const jsBundlePath = join(this.swaggerUiPath, 'swagger-ui-bundle.js')
-    const jsStandalonePresetPath = join(this.swaggerUiPath, 'swagger-ui-standalone-preset.js')
+  private generateSwaggerHTML(): string {
+    const swaggerUiCssPath = join(this.swaggerUiPath, "swagger-ui.css");
+    const indexCssPath = join(this.swaggerUiPath, "index.css");
+    const jsBundlePath = join(this.swaggerUiPath, "swagger-ui-bundle.js");
+    const jsStandalonePresetPath = join(this.swaggerUiPath, "swagger-ui-standalone-preset.js");
 
-    const swaggerUiCss = existsSync(swaggerUiCssPath)
-      ? readFileSync(swaggerUiCssPath, 'utf-8')
-      : ''
-    const indexCss = existsSync(indexCssPath)
-      ? readFileSync(indexCssPath, 'utf-8')
-      : ''
-    const jsBundle = existsSync(jsBundlePath)
-      ? readFileSync(jsBundlePath, 'utf-8')
-      : ''
-    const jsStandalonePreset = existsSync(jsStandalonePresetPath)
-      ? readFileSync(jsStandalonePresetPath, 'utf-8')
-      : ''
+    const swaggerUiCss = existsSync(swaggerUiCssPath) ? readFileSync(swaggerUiCssPath, "utf-8") : "";
+    const indexCss = existsSync(indexCssPath) ? readFileSync(indexCssPath, "utf-8") : "";
+    const jsBundle = existsSync(jsBundlePath) ? readFileSync(jsBundlePath, "utf-8") : "";
+    const jsStandalonePreset = existsSync(jsStandalonePresetPath) ? readFileSync(jsStandalonePresetPath, "utf-8") : "";
 
     return `
       <!DOCTYPE html>
@@ -116,8 +107,8 @@ export class SwaggerUiSetup implements VkrunSwaggerUi {
       <head>
         <meta charset="UTF-8">
         <title>Swagger UI</title>
-        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(this.swaggerUiPath, 'favicon-32x32.png')) ? readFileSync(join(this.swaggerUiPath, 'favicon-32x32.png')).toString('base64') : ''}" sizes="32x32" />
-        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(this.swaggerUiPath, 'favicon-16x16.png')) ? readFileSync(join(this.swaggerUiPath, 'favicon-16x16.png')).toString('base64') : ''}" sizes="16x16" />
+        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(this.swaggerUiPath, "favicon-32x32.png")) ? readFileSync(join(this.swaggerUiPath, "favicon-32x32.png")).toString("base64") : ""}" sizes="32x32" />
+        <link rel="icon" type="image/png" href="data:image/png;base64,${existsSync(join(this.swaggerUiPath, "favicon-16x16.png")) ? readFileSync(join(this.swaggerUiPath, "favicon-16x16.png")).toString("base64") : ""}" sizes="16x16" />
         <style>${swaggerUiCss}</style>
         <style>${indexCss}</style>
       </head>
@@ -178,111 +169,90 @@ export class SwaggerUiSetup implements VkrunSwaggerUi {
         </script>
       </body>
       </html>
-    `
+    `;
   }
 
-  private serveSwaggerJSON (req: Request, res: Response): void {
-    const url = req.url ?? ''
-    const param = decodeURIComponent(url.replace(this.baseUrl, '').trim())
+  private serveSwaggerJSON(req: Request, res: Response): void {
+    const url = req.url ?? "";
+    const param = decodeURIComponent(url.replace(this.baseUrl, "").trim());
 
-    const filteredDoc = param
-      ? this.filterSwaggerDoc(param)
-      : this.getConfig()
-    res.setHeader('Content-Type', 'application/json')
-    res.status(200).send(JSON.stringify(filteredDoc, null, 2))
+    const filteredDoc = param ? this.filterSwaggerDoc(param) : this.getConfig();
+    res.setHeader("Content-Type", "application/json");
+    res.status(200).send(JSON.stringify(filteredDoc, null, 2));
   }
 
-  private filterSwaggerDoc (param: string): SwaggerOpenAPIConfig & SwaggerOpenAPIDocument {
-    const config = this.getConfig()
+  private filterSwaggerDoc(param: string): SwaggerOpenAPIConfig & SwaggerOpenAPIDocument {
+    const config = this.getConfig();
     return {
       ...config,
-      paths: Object.keys(config.paths).reduce < typeof config.paths >((acc, path) => {
-        const methods = config.paths[path]
+      paths: Object.keys(config.paths).reduce<typeof config.paths>((acc, path) => {
+        const methods = config.paths[path];
 
-        const filteredMethods = Object.entries(methods)
-          .reduce<Record<string, SwaggerOperation>>(
+        const filteredMethods = Object.entries(methods).reduce<Record<string, SwaggerOperation>>(
           (methodAcc, [method, spec]) => {
-            const specTyped = spec
+            const specTyped = spec;
 
-            const matchesPath = path.includes(param)
-            const matchesDescription = specTyped.description
-              ?.toLowerCase()
-              .includes(param.replace('/', '')
-                .toLowerCase())
-            const matchesSummary = specTyped.summary
-              ?.toLowerCase()
-              .includes(param.replace('/', '').toLowerCase())
-            const matchesTags = specTyped.tags
-              ?.some(tag =>
-                tag.toLowerCase()
-                  .includes(param.replace('/', '')
-                    .toLowerCase())
-              )
+            const matchesPath = path.includes(param);
+            const matchesDescription = specTyped.description?.toLowerCase().includes(param.replace("/", "").toLowerCase());
+            const matchesSummary = specTyped.summary?.toLowerCase().includes(param.replace("/", "").toLowerCase());
+            const matchesTags = specTyped.tags?.some((tag) => tag.toLowerCase().includes(param.replace("/", "").toLowerCase()));
 
             if (
-              (
-                matchesPath ||
-                matchesDescription ||
-                // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-                matchesSummary ||
-                matchesTags
-              )
+              matchesPath ||
+              matchesDescription ||
+              // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+              matchesSummary ||
+              matchesTags
             ) {
-              methodAcc[method] = specTyped
+              methodAcc[method] = specTyped;
             }
 
-            return methodAcc
-          }, {})
+            return methodAcc;
+          },
+          {},
+        );
 
         if (Object.keys(filteredMethods).length > 0) {
-          acc[path] = filteredMethods
+          acc[path] = filteredMethods;
         }
 
-        return acc
-      }, {})
-    }
+        return acc;
+      }, {}),
+    };
   }
 
-  private serveStaticFiles (req: Request, res: Response, next: NextFunction): void {
-    const url = req.url ?? ''
-    const filePath = join(this.swaggerUiPath, url.replace(this.baseUrl, ''))
+  private serveStaticFiles(req: Request, res: Response, next: NextFunction): void {
+    const url = req.url ?? "";
+    const filePath = join(this.swaggerUiPath, url.replace(this.baseUrl, ""));
     if (existsSync(filePath)) {
-      const fileData = readFileSync(filePath)
-      const mimeType = url.endsWith('.css')
-        ? 'text/css'
-        : url.endsWith('.js')
-          ? 'application/javascript'
-          : 'text/plain'
-      res.setHeader('Content-Type', mimeType)
-      res.status(200).end(fileData)
+      const fileData = readFileSync(filePath);
+      const mimeType = url.endsWith(".css") ? "text/css" : url.endsWith(".js") ? "application/javascript" : "text/plain";
+      res.setHeader("Content-Type", mimeType);
+      res.status(200).end(fileData);
     } else {
-      return this.serveSwaggerJSON(req, res)
+      return this.serveSwaggerJSON(req, res);
     }
   }
 
-  private setupSwaggerHTML (req: Request, res: Response): void {
-    const html = this.generateSwaggerHTML()
-    res.setHeader('Content-Type', 'text/html')
-    res.status(200).end(html)
+  private setupSwaggerHTML(req: Request, res: Response): void {
+    const html = this.generateSwaggerHTML();
+    res.setHeader("Content-Type", "text/html");
+    res.status(200).end(html);
   }
 
-  public serve (absolutePath: string): (req: Request, res: Response, next: NextFunction) => void {
-    this.swaggerUiPath = absolutePath
+  public serve(absolutePath: string): (req: Request, res: Response, next: NextFunction) => void {
+    this.swaggerUiPath = absolutePath;
 
     return (req: Request, res: Response, next: NextFunction) => {
-      const url = req.url ?? ''
-      if (
-        url.includes('/index.html') ||
-        (url.endsWith('/') && !this.baseUrl) ||
-        (url.endsWith('/') && url === this.baseUrl)
-      ) {
-        this.baseUrl = url.replace('/index.html', '/')
-        return this.setupSwaggerHTML(req, res)
-      } else if (url.includes('/swagger.json')) {
-        return this.serveSwaggerJSON(req, res)
+      const url = req.url ?? "";
+      if (url.includes("/index.html") || (url.endsWith("/") && !this.baseUrl) || (url.endsWith("/") && url === this.baseUrl)) {
+        this.baseUrl = url.replace("/index.html", "/");
+        return this.setupSwaggerHTML(req, res);
+      } else if (url.includes("/swagger.json")) {
+        return this.serveSwaggerJSON(req, res);
       }
-      return this.serveStaticFiles(req, res, next)
-    }
+      return this.serveStaticFiles(req, res, next);
+    };
   }
 }
 
@@ -351,5 +321,5 @@ export class SwaggerUiSetup implements VkrunSwaggerUi {
  * app.get("/api-docs/*", swaggerUi(swaggerJSON).serve(swaggerUiDist.absolutePath()));
  */
 export const swaggerUi = (config?: SwaggerOpenAPIConfig): VkrunSwaggerUi => {
-  return new SwaggerUiSetup(config)
-}
+  return new SwaggerUiSetup(config);
+};

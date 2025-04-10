@@ -1,333 +1,333 @@
-import { ResponseHttpStatus } from '../../types'
+import { ResponseHttpStatus } from "../../types";
 
 export const httpStatus = {
   // 100 - CONTINUE
   continue: (content: any): ResponseHttpStatus => ({
     statusCode: 100,
-    content
+    content,
   }),
 
   // 101 - SWITCHING_PROTOCOLS
   switchingProtocols: (content: any): ResponseHttpStatus => ({
     statusCode: 101,
-    content
+    content,
   }),
 
   // 200 - OK
   ok: (content: any): ResponseHttpStatus => ({
     statusCode: 200,
-    content
+    content,
   }),
 
   // 201 - CREATED
   created: (content: any): ResponseHttpStatus => ({
     statusCode: 201,
-    content
+    content,
   }),
 
   // 202 - ACCEPTED
   accepted: (content: any): ResponseHttpStatus => ({
     statusCode: 202,
-    content
+    content,
   }),
 
   // 203 - NON_AUTHORITATIVE_INFORMATION
   nonAuthoritativeInformation: (content: any): ResponseHttpStatus => ({
     statusCode: 203,
-    content
+    content,
   }),
 
   // 204 - NO_CONTENT
   noContent: (content: any): ResponseHttpStatus => ({
     statusCode: 204,
-    content
+    content,
   }),
 
   // 205 - RESET_CONTENT
   resetContent: (content: any): ResponseHttpStatus => ({
     statusCode: 205,
-    content
+    content,
   }),
 
   // 206 - PARTIAL_CONTENT
   partialContent: (content: any): ResponseHttpStatus => ({
     statusCode: 206,
-    content
+    content,
   }),
 
   // 300 - MULTIPLE_CHOICES
   multipleChoices: (content: any): ResponseHttpStatus => ({
     statusCode: 300,
-    content
+    content,
   }),
 
   // 301 - MOVED_PERMANENTLY
   movedPermanently: (content: any): ResponseHttpStatus => ({
     statusCode: 301,
-    content
+    content,
   }),
 
   // 302 - MOVED_TEMPORARILY
   movedTemporarily: (content: any): ResponseHttpStatus => ({
     statusCode: 302,
-    content
+    content,
   }),
 
   // 303 - SEE_OTHER
   seeOther: (content: any): ResponseHttpStatus => ({
     statusCode: 303,
-    content
+    content,
   }),
 
   // 304 - NOT_MODIFIED
   notModified: (content: any): ResponseHttpStatus => ({
     statusCode: 304,
-    content
+    content,
   }),
 
   // 305 - USE_PROXY
   useProxy: (content: any): ResponseHttpStatus => ({
     statusCode: 305,
-    content
+    content,
   }),
 
   // 307 - TEMPORARY_REDIRECT
   temporaryRedirect: (content: any): ResponseHttpStatus => ({
     statusCode: 307,
-    content
+    content,
   }),
 
   // 308 - PERMANENT_REDIRECT
   permanentRedirect: (content: any): ResponseHttpStatus => ({
     statusCode: 308,
-    content
+    content,
   }),
 
   // 400 - BAD_REQUEST
   badRequest: (content: any): ResponseHttpStatus => ({
     statusCode: 400,
-    content
+    content,
   }),
 
   // 401 - UNAUTHORIZED
   unauthorized: (content: any): ResponseHttpStatus => ({
     statusCode: 401,
-    content
+    content,
   }),
 
   // 402 - PAYMENT_REQUIRED
   paymentRequired: (content: any): ResponseHttpStatus => ({
     statusCode: 402,
-    content
+    content,
   }),
 
   // 403 - FORBIDDEN
   forbidden: (content: any): ResponseHttpStatus => ({
     statusCode: 403,
-    content
+    content,
   }),
 
   // 404 - NOT_FOUND
   notFound: (content: any): ResponseHttpStatus => ({
     statusCode: 404,
-    content
+    content,
   }),
 
   // 405 - METHOD_NOT_ALLOWED
   methodNotAllowed: (content: any): ResponseHttpStatus => ({
     statusCode: 405,
-    content
+    content,
   }),
 
   // 406 - NOT_ACCEPTABLE
   notAcceptable: (content: any): ResponseHttpStatus => ({
     statusCode: 406,
-    content
+    content,
   }),
 
   // 407 - PROXY_AUTHENTICATION_REQUIRED
   proxyAuthenticationRequired: (content: any): ResponseHttpStatus => ({
     statusCode: 407,
-    content
+    content,
   }),
 
   // 408 - REQUEST_TIMEOUT
   requestTimeout: (content: any): ResponseHttpStatus => ({
     statusCode: 408,
-    content
+    content,
   }),
 
   // 409 - CONFLICT
   conflict: (content: any): ResponseHttpStatus => ({
     statusCode: 409,
-    content
+    content,
   }),
 
   // 410 - GONE
   gone: (content: any): ResponseHttpStatus => ({
     statusCode: 410,
-    content
+    content,
   }),
 
   // 411 - LENGTH_REQUIRED
   lengthRequired: (content: any): ResponseHttpStatus => ({
     statusCode: 411,
-    content
+    content,
   }),
 
   // 412 - PRECONDITION_FAILED
   preconditionFailed: (content: any): ResponseHttpStatus => ({
     statusCode: 412,
-    content
+    content,
   }),
 
   // 413 - REQUEST_TOO_LONG
   requestTooLong: (content: any): ResponseHttpStatus => ({
     statusCode: 413,
-    content
+    content,
   }),
 
   // 414 - REQUEST_URI_TOO_LONG
   requestURITooLong: (content: any): ResponseHttpStatus => ({
     statusCode: 414,
-    content
+    content,
   }),
 
   // 415 - UNSUPPORTED_MEDIA_TYPE
   unsupportedMediaType: (content: any): ResponseHttpStatus => ({
     statusCode: 415,
-    content
+    content,
   }),
 
   // 416 - REQUESTED_RANGE_NOT_SATISFIABLE
   requestedRangeNotSatisfiable: (content: any): ResponseHttpStatus => ({
     statusCode: 416,
-    content
+    content,
   }),
 
   // 417 - EXPECTATION_FAILED
   expectationFailed: (content: any): ResponseHttpStatus => ({
     statusCode: 417,
-    content
+    content,
   }),
 
   // 418 - IM_A_TEAPOT
   imATeapot: (content: any): ResponseHttpStatus => ({
     statusCode: 418,
-    content
+    content,
   }),
 
   // 419 - INSUFFICIENT_SPACE_ON_RESOURCE
   insufficientSpaceOnResource: (content: any): ResponseHttpStatus => ({
     statusCode: 419,
-    content
+    content,
   }),
 
   // 420 - METHOD_FAILURE
   methodFailure: (content: any): ResponseHttpStatus => ({
     statusCode: 420,
-    content
+    content,
   }),
 
   // 421 - MISDIRECTED_REQUEST
   misdirectedRequest: (content: any): ResponseHttpStatus => ({
     statusCode: 421,
-    content
+    content,
   }),
 
   // 422 - UNPROCESSABLE_ENTITY
   unprocessableEntity: (content: any): ResponseHttpStatus => ({
     statusCode: 422,
-    content
+    content,
   }),
 
   // 423 - LOCKED
   locked: (content: any): ResponseHttpStatus => ({
     statusCode: 423,
-    content
+    content,
   }),
 
   // 424 - FAILED_DEPENDENCY
   failedDependency: (content: any): ResponseHttpStatus => ({
     statusCode: 424,
-    content
+    content,
   }),
 
   // 426 - UPGRADE_REQUIRED
   upgradeRequired: (content: any): ResponseHttpStatus => ({
     statusCode: 426,
-    content
+    content,
   }),
 
   // 428 - PRECONDITION_REQUIRED
   preconditionRequired: (content: any): ResponseHttpStatus => ({
     statusCode: 428,
-    content
+    content,
   }),
 
   // 429 - TOO_MANY_REQUESTS
   tooManyRequests: (content: any): ResponseHttpStatus => ({
     statusCode: 429,
-    content
+    content,
   }),
 
   // 431 - REQUEST_HEADER_FIELDS_TOO_LARGE
   requestHeaderFieldsTooLarge: (content: any): ResponseHttpStatus => ({
     statusCode: 431,
-    content
+    content,
   }),
 
   // 451 - UNAVAILABLE_FOR_LEGAL_REASONS
   unavailableForLegalReasons: (content: any): ResponseHttpStatus => ({
     statusCode: 451,
-    content
+    content,
   }),
 
   // 500 - INTERNAL_SERVER_ERROR
   internalServerError: (content: any): ResponseHttpStatus => ({
     statusCode: 500,
-    content
+    content,
   }),
 
   // 501 - NOT_IMPLEMENTED
   notImplemented: (content: any): ResponseHttpStatus => ({
     statusCode: 501,
-    content
+    content,
   }),
 
   // 502 - BAD_GATEWAY
   badGateway: (content: any): ResponseHttpStatus => ({
     statusCode: 502,
-    content
+    content,
   }),
 
   // 503 - SERVICE_UNAVAILABLE
   serviceUnavailable: (content: any): ResponseHttpStatus => ({
     statusCode: 503,
-    content
+    content,
   }),
 
   // 504 - GATEWAY_TIMEOUT
   gatewayTimeout: (content: any): ResponseHttpStatus => ({
     statusCode: 504,
-    content
+    content,
   }),
 
   // 505 - HTTP_VERSION_NOT_SUPPORTED
   httpVersionNotSupported: (content: any): ResponseHttpStatus => ({
     statusCode: 505,
-    content
+    content,
   }),
 
   // 507 - INSUFFICIENT_STORAGE
   insufficientStorage: (content: any): ResponseHttpStatus => ({
     statusCode: 507,
-    content
+    content,
   }),
 
   // 511 - NETWORK_AUTHENTICATION_REQUIRED
   networkAuthenticationRequired: (content: any): ResponseHttpStatus => ({
     statusCode: 511,
-    content
-  })
-}
+    content,
+  }),
+};

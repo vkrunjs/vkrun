@@ -1,9 +1,9 @@
-import { SchemaReturn } from './schema-types'
+import { SchemaReturnCommonMethods } from "./schema-types";
 
 export interface LoadEnvOptions {
-  path?: string | string[]
-  encoding?: BufferEncoding
-  override?: boolean
-  debug?: boolean
-  schema?: SchemaReturn
+  path?: string | string[];
+  encoding?: BufferEncoding;
+  override?: boolean;
+  debug?: boolean;
+  schema?: SchemaReturnCommonMethods;
 }

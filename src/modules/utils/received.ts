@@ -1,1 +1,3 @@
-export const received = (value: any): any => value === undefined ? 'undefined' : value
+export const received = (value: any): any => {
+  return value === undefined ? "undefined" : value;
+};

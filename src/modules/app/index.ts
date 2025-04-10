@@ -1,11 +1,12 @@
-import { RouterSetup } from '../router'
-import { createServer, routeExists } from '../router/helpers'
-import { loggerSanitizeInterval } from '../logger'
-import { RouterHandler } from '../router/helpers/router-handler'
-import { ParseDataSetup } from '../parse-data'
-import { cors } from '../cors'
-import { rateLimit } from '../rate-limit'
-import { compileRegex } from '../utils'
+import { RouterSetup } from "../router";
+import { createServer } from "../runtime";
+import { routeExists } from "../router/helpers";
+import { loggerSanitizeInterval } from "../logger";
+import { RouterHandler } from "../router/helpers/router-handler";
+import { ParseDataSetup } from "../parse-data";
+import { cors, CorsSetup } from "../cors";
+import { rateLimit } from "../rate-limit";
+import { compileRegex } from "../utils";
 import {
   AppCreateServer,
   ParseDataConfig,
@@ -16,196 +17,199 @@ import {
   CorsSetOptions,
   VkrunApp,
   VkrunParseData,
-  NextFunction
-} from '../types'
+  NextFunction,
+} from "../types";
 
 class AppSetup implements VkrunApp {
-  private instance: 'server' | '_reqWithoutServer' | 'closed' | undefined
-  private routes: Route[] = []
-  private readonly routerHandler: RouterHandler
-  private readonly globalMiddlewares: any[]
-  private createdServer: any
-  private timers: any[]
-  private _parseData?: VkrunParseData
-  private errorHandler: ((
-    error: any,
-    request: Request,
-    response: Response
-  ) => void) | null
+  private instance: "server" | "_reqWithoutServer" | "closed" | undefined;
+  private routes: Route[] = [];
+  private readonly routerHandler: RouterHandler;
+  private readonly globalMiddlewares: any[];
+  private createdServer: any;
+  private timers: any[];
+  private _parseData?: VkrunParseData;
+  private errorHandler: ((error: any, request: Request, response: Response) => Promise<void> | void) | null;
 
-  constructor () {
-    this.instance = undefined
-    this.routerHandler = new RouterHandler()
-    this.globalMiddlewares = []
-    this.timers = []
-    this.errorHandler = null
+  constructor() {
+    this.instance = undefined;
+    this.routerHandler = new RouterHandler();
+    this.globalMiddlewares = [];
+    this.timers = [];
+    this.errorHandler = null;
   }
 
   // Timeout management
 
-  private setTimer (callback: () => void, ms: number): NodeJS.Timeout {
-    const timeout = setTimeout(callback, ms)
-    this.timers.push(timeout)
-    return timeout
+  private setTimer(callback: () => void, ms: number): NodeJS.Timeout {
+    const timeout = setTimeout(callback, ms);
+    this.timers.push(timeout);
+    return timeout;
   }
 
-  private clearTimers (): void {
-    this.timers.forEach((timerId: NodeJS.Timeout) => clearTimeout(timerId))
-    this.timers = []
-    if (loggerSanitizeInterval) clearInterval(loggerSanitizeInterval)
+  private clearTimers(): void {
+    this.timers.forEach((timerId: NodeJS.Timeout) => clearTimeout(timerId));
+    this.timers = [];
+    if (loggerSanitizeInterval) clearInterval(loggerSanitizeInterval);
   }
 
   // Server Nodejs
 
-  public server (): AppCreateServer {
+  public server(): AppCreateServer {
+    this.addRoutesOptionsWithCors();
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.createdServer = createServer(async (request, response) => {
-      this.instance = 'server'
+      this.instance = "server";
+
       if (this.errorHandler) {
         try {
-          await this.routerHandler.handleRequest(
-            request as Request,
-            response,
-            this.routes,
-            this.globalMiddlewares
-          )
+          await this.routerHandler.handleRequest(request as Request, response, this.routes, this.globalMiddlewares);
         } catch (error: any) {
-          this.errorHandler(error, request as Request, response)
+          await this.errorHandler(error, request as Request, response);
         }
       } else {
-        await this.routerHandler.handleRequest(
-          request as Request,
-          response,
-          this.routes,
-          this.globalMiddlewares
-        )
+        await this.routerHandler.handleRequest(request as Request, response, this.routes, this.globalMiddlewares);
       }
-    })
+    });
 
-    return this.createdServer
+    return this.createdServer;
   }
 
-  public close (): void {
-    if (this.instance === 'server') this.createdServer.close()
-    this.createdServer = null
-    this.clearTimers()
-    this.instance = 'closed'
+  public close(): void {
+    if (this.instance === "server") this.createdServer.close();
+    this.createdServer = null;
+    this.clearTimers();
+    this.instance = "closed";
   }
 
   // Method to simulate a request with superRequest
 
-  public async _reqWithoutServer (
+  public async _reqWithoutServer(
     request: Request & { setTimer: (callback: () => void, ms: number) => NodeJS.Timeout },
-    response: Response & { _ended: boolean }
+    response: Response & { _ended: boolean },
   ): Promise<Response> {
-    this.instance = '_reqWithoutServer'
-    const _request = request
-    _request.setTimer = this.setTimer.bind(this)
+    this.instance = "_reqWithoutServer";
+    const _request = request;
+    _request.setTimer = this.setTimer.bind(this);
+    this.addRoutesOptionsWithCors();
 
     if (this.errorHandler) {
       try {
-        await this.routerHandler.handleRequest(
-          _request,
-          response,
-          this.routes,
-          this.globalMiddlewares
-        )
+        await this.routerHandler.handleRequest(_request, response, this.routes, this.globalMiddlewares);
       } catch (error: any) {
-        this.errorHandler(error, _request, response)
+        await this.errorHandler(error, _request, response);
       }
     } else {
-      await this.routerHandler.handleRequest(
-        _request,
-        response,
-        this.routes,
-        this.globalMiddlewares
-      )
+      await this.routerHandler.handleRequest(_request, response, this.routes, this.globalMiddlewares);
     }
 
     return await new Promise<Response>((resolve) => {
       const monitor = setInterval(() => {
         if (response._ended) {
-          clearInterval(monitor)
-          resolve(response)
+          clearInterval(monitor);
+          resolve(response);
         }
-      }, 5)
-    })
+      }, 5);
+    });
   }
 
   // Middleware management
 
-  public use (middleware: Record<string, any> | ((request: Request, response: Response, next: NextFunction) => any)): void {
+  public use(middleware: Record<string, any> | ((request: Request, response: Response, next: NextFunction) => any)): void {
     if (middleware instanceof RouterSetup) {
-      this.routes = [...this.routes, ...middleware._routes()]
+      this.routes = [...this.routes, ...middleware._routes()];
     } else {
-      this.globalMiddlewares.push(middleware)
+      this.globalMiddlewares.push(middleware);
     }
   }
 
   // Error Handler
 
-  public error (
-    errorHandler: (error: any, request: Request, response: Response) => void
-  ): void {
-    this.errorHandler = errorHandler
+  public error(errorHandler: (error: any, request: Request, response: Response) => Promise<void> | void): void {
+    this.errorHandler = errorHandler;
   }
 
   // Parse data
 
-  public parseData (config?: ParseDataConfig): void {
+  public parseData(config?: ParseDataConfig): void {
     if (!this._parseData) {
-      this._parseData = new ParseDataSetup(config)
-      this.globalMiddlewares.unshift(this._parseData)
+      this._parseData = new ParseDataSetup(config);
+      this.globalMiddlewares.unshift(this._parseData);
     }
   }
 
   // Cors
 
-  public cors (options?: CorsSetOptions): void {
-    this.globalMiddlewares.unshift(cors(options))
+  public cors(options?: CorsSetOptions): void {
+    this.globalMiddlewares.unshift(cors(options));
+  }
+
+  private addRoutesOptionsWithCors(): void {
+    const corsMiddleware = this.globalMiddlewares.find((middleware) => middleware instanceof CorsSetup);
+
+    if (corsMiddleware) {
+      const routeGroups = new Map<string, string[]>();
+
+      this.routes.forEach((route) => {
+        if (route.method !== "OPTIONS") {
+          const existingMethods = routeGroups.get(route.path) ?? [];
+          existingMethods.push(route.method);
+          routeGroups.set(route.path, existingMethods);
+        }
+      });
+
+      routeGroups.forEach((_methods, path) => {
+        const optionsRouteExists = !!this.routes.find((route) => route.path === path && route.method === "OPTIONS");
+
+        if (!optionsRouteExists) {
+          const handlers: any[] = [() => null];
+          this.routes.push({ path, method: "OPTIONS", handlers, regex: compileRegex(path) });
+        }
+      });
+    }
   }
 
   // Rate limit
 
-  public rateLimit (config?: RateLimitConfig): void {
-    this.globalMiddlewares.push(rateLimit(config))
+  public rateLimit(config?: RateLimitConfig): void {
+    this.globalMiddlewares.push(rateLimit(config));
   }
 
   // Routing
 
-  public get (path: string, ...handlers: any): void {
-    routeExists(path, 'GET', this.routes)
-    this.routes.push({ path, method: 'GET', handlers, regex: compileRegex(path) })
+  public get(path: string, ...handlers: any): void {
+    routeExists(path, "GET", this.routes);
+    this.routes.push({ path, method: "GET", handlers, regex: compileRegex(path) });
   }
 
-  public head (path: string, ...handlers: any): void {
-    routeExists(path, 'HEAD', this.routes)
-    this.routes.push({ path, method: 'HEAD', handlers, regex: compileRegex(path) })
+  public head(path: string, ...handlers: any): void {
+    routeExists(path, "HEAD", this.routes);
+    this.routes.push({ path, method: "HEAD", handlers, regex: compileRegex(path) });
   }
 
-  public post (path: string, ...handlers: any): void {
-    routeExists(path, 'POST', this.routes)
-    this.routes.push({ path, method: 'POST', handlers, regex: compileRegex(path) })
+  public post(path: string, ...handlers: any): void {
+    routeExists(path, "POST", this.routes);
+    this.routes.push({ path, method: "POST", handlers, regex: compileRegex(path) });
   }
 
-  public put (path: string, ...handlers: any): void {
-    routeExists(path, 'PUT', this.routes)
-    this.routes.push({ path, method: 'PUT', handlers, regex: compileRegex(path) })
+  public put(path: string, ...handlers: any): void {
+    routeExists(path, "PUT", this.routes);
+    this.routes.push({ path, method: "PUT", handlers, regex: compileRegex(path) });
   }
 
-  public patch (path: string, ...handlers: any): void {
-    routeExists(path, 'PATCH', this.routes)
-    this.routes.push({ path, method: 'PATCH', handlers, regex: compileRegex(path) })
+  public patch(path: string, ...handlers: any): void {
+    routeExists(path, "PATCH", this.routes);
+    this.routes.push({ path, method: "PATCH", handlers, regex: compileRegex(path) });
   }
 
-  public delete (path: string, ...handlers: any): void {
-    routeExists(path, 'DELETE', this.routes)
-    this.routes.push({ path, method: 'DELETE', handlers, regex: compileRegex(path) })
+  public delete(path: string, ...handlers: any): void {
+    routeExists(path, "DELETE", this.routes);
+    this.routes.push({ path, method: "DELETE", handlers, regex: compileRegex(path) });
   }
 
-  public options (path: string, ...handlers: any): void {
-    routeExists(path, 'OPTIONS', this.routes)
-    this.routes.push({ path, method: 'OPTIONS', handlers, regex: compileRegex(path) })
+  public options(path: string, ...handlers: any): void {
+    routeExists(path, "OPTIONS", this.routes);
+    this.routes.push({ path, method: "OPTIONS", handlers, regex: compileRegex(path) });
   }
 }
 
@@ -259,5 +263,5 @@ class AppSetup implements VkrunApp {
  * })
  */
 export const App = (): VkrunApp => {
-  return new AppSetup()
-}
+  return new AppSetup();
+};

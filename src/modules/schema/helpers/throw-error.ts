@@ -1,20 +1,20 @@
-import { SchemaErrorTypes, SchemaTests } from '../../types'
+import { SchemaErrorTypes, SchemaTests } from "../../types";
 
 export const throwError = (tests: SchemaTests, ClassError: SchemaErrorTypes): void => {
   if (tests.errors.length > 0) {
     if (ClassError) {
-      let extendsError
+      let extendsError;
       try {
-        const TestClassError = new ClassError('')
-        extendsError = TestClassError instanceof Error
+        const TestClassError = new ClassError("");
+        extendsError = TestClassError instanceof Error;
       } catch (error) {
-        throw new Error('vkrun: provided class does not extend Error!')
+        throw new Error("vkrun: provided class does not extend Error!");
       }
       if (extendsError) {
-        throw new ClassError(tests.errors[0].message)
+        throw new ClassError(tests.errors[0].message);
       }
     } else {
-      throw new Error(tests.errors[0].message)
+      throw new Error(tests.errors[0].message);
     }
   }
-}
+};

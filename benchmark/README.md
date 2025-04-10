@@ -39,11 +39,11 @@ Use Autocannon to test Vkrun's performance with 100 simultaneous connections for
 ##### NPM
 
 ```bash
-npm autocannon -c 100 -d 20 -p 10 http://localhost:3000
+npm autocannon -c 100 -d 20 -p 10 http://localhost:3000/hello-world'
 ```
 
 ##### YARN
 
 ```bash
-yarn autocannon -c 100 -d 20 -p 10 http://localhost:3000
+yarn autocannon -c 100 -d 20 -p 10 http://localhost:3000/hello-world'
 ```
