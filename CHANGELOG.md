@@ -3,6 +3,7 @@
 ## 3.0.0
 
 - add jsDoc to all methods of the schema module
+- add oneOf method to validate multiple schemas
 - add parseTo method to schema module
 - add custom method to schema module
 - add infer type to schema module
