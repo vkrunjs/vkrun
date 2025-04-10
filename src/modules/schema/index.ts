@@ -61,6 +61,10 @@ export class SchemaSetup implements type.VkrunSchema {
     return helper.objectMethod(this.schemaMethodParams(), schema, config);
   }
 
+  oneOf<Items extends Array<type.SchemaType<any, any>>>(comparisonItems: Items, config?: type.SchemaConfig) {
+    return helper.oneOfMethod(this.schemaMethodParams(), comparisonItems, config);
+  }
+
   any() {
     return helper.anyMethod(this.schemaMethodParams());
   }

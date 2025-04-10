@@ -7,4 +7,5 @@ export * from "./function-method";
 export * from "./date-method";
 export * from "./array-method";
 export * from "./object-method";
+export * from "./one-of-method";
 export * from "./any-method";

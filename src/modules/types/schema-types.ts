@@ -311,6 +311,53 @@ export interface VkrunSchema {
   ) => SchemaGenericObjectType<Shape, SchemaDefaultObjectOptions, SchemaDefaultObjectFlags>;
 
   /**
+   * Returns a schema that validates if the value matches **at least one** of the given schemas.
+   *
+   * This is useful when a field can accept multiple possible types or validation rules.
+   * The value is considered valid if **any one** of the provided schemas pass validation.
+   *
+   * @param {SchemaType[]} comparisonItems - An array of schemas to validate against. The value must match at least one of them.
+   * @param {SchemaConfig} [config] - Optional configuration object.
+   *
+   * @param {string} [config.message] - A custom error message template for validation failures.
+   *   It can include the following placeholders:
+   *     - `[valueName]`: Replaced with the name of the field being validated.
+   *     - `[value]`: Replaced with the actual value received.
+   *   For example, if the message is `"[valueName] [value] is invalid"` and the value `true` is validated for the field `"input"`,
+   *   the resulting error message will be `"input true is invalid"`. If not provided, the default message is:
+   *   `"[valueName] does not have a match!"`.
+   *
+   * @returns {SchemaGenericOneOfType} A schema that accepts any value matching at least one of the provided schemas.
+   *
+   * @example
+   * const schemaOneOf = schema().oneOf([
+   *   schema().string(),
+   *   schema().number()
+   * ]);
+   *
+   * console.log(schemaOneOf.validate("hello")); // true
+   * console.log(schemaOneOf.validate(42));      // true
+   * console.log(schemaOneOf.validate(true));    // false
+   *
+   * @example
+   * // Using a custom error message:
+   * const schemaWithMessage = schema().oneOf([
+   *   schema().string(),
+   *   schema().number()
+   * ], {
+   *   message: "[valueName] [value] must be string or number"
+   * });
+   *
+   * const result = schemaWithMessage.test(true, "input");
+   * console.log(result.errors[0].message);
+   * // "input true must be string or number"
+   */
+  oneOf: <Items extends Array<SchemaType<any, any>>>(
+    comparisonItems: Items,
+    config?: SchemaConfig,
+  ) => SchemaGenericOneOfType<Items, SchemaDefaultObjectOptions, SchemaDefaultObjectFlags>;
+
+  /**
    * Returns a schema for validating any type of data.
    *
    * This schema accepts any value regardless of its type.
@@ -6530,6 +6577,202 @@ export type SchemaGenericObjectType<
       >
     >
   >;
+
+// OneOf Method Types
+
+export type SchemaDefaultOneOfOptions = {
+  nullable: boolean;
+  required: boolean;
+  default: boolean;
+};
+
+export interface SchemaOneOfFlags {
+  aliasApplied: boolean;
+  defaultApplied: boolean;
+  notRequiredApplied: boolean;
+  nullableApplied: boolean;
+}
+
+export type SchemaDefaultOneOfFlags = {
+  aliasApplied: false;
+  defaultApplied: false;
+  notRequiredApplied: false;
+  nullableApplied: false;
+};
+
+export type SchemaAllowedOneOfMethods<
+  Items extends Array<SchemaType<any, any>>,
+  Opts extends {
+    nullable: boolean;
+    required: boolean;
+    default: boolean;
+  },
+  Flags extends SchemaOneOfFlags,
+  I = any,
+> = (Flags["defaultApplied"] extends false
+  ? {
+      /**
+       * Sets a default value for a oneOf schema.
+       *
+       * This method specifies a default value that is applied when the input is undefined.
+       * When validating, if the input is `undefined`, the schema will automatically return the provided default value.
+       *
+       * @param {any} value - The default value to be used when the input is undefined.
+       *
+       * @example
+       * // If the input is undefined, the default value 123 is used:
+       * const defaultSchema = schema().oneOf([
+       *   schema().string(),
+       *   schema().number()
+       * ]).default(123);
+       *
+       * console.log(defaultSchema.parse(undefined)); // 123
+       *
+       * // If a valid value is provided, it is used instead:
+       * console.log(defaultSchema.parse("abc")); // "abc"
+       */
+
+      default: (
+        value: I,
+      ) => SchemaGenericOneOfType<
+        Items,
+        SchemaMerge<Opts, { default: true; required: false }>,
+        SchemaMerge<Flags, { defaultApplied: true; notRequiredApplied: true }>
+      >;
+    }
+  : {}) &
+  (Flags["aliasApplied"] extends false
+    ? {
+        /**
+         * Adds an alias to a schema property.
+         *
+         * This method allows you to rename the field key in error messages for clearer output
+         * when validating values. When used, the alias value will replace the original key
+         * name in validation error messages.
+         *
+         * @param {string} valueName - The alias name to be used in error messages.
+         * @returns {SchemaAliasMethod} Chainable alias schema.
+         *
+         * @example
+         * // Without alias, the error message uses the actual key name.
+         * const schemaWithoutAlias = schema().object({
+         *   key: schema().oneOf([
+         *     schema().string(),
+         *     schema().number()
+         *   ])
+         * });
+         *
+         * const testWithoutAlias = schemaWithoutAlias.test({ key: true });
+         *
+         * console.log(testWithoutAlias.errors[0].message);
+         * // "value does not have a match!"
+         *
+         * // With alias, the error message uses the provided alias.
+         * const schemaWithAlias = schema().object({
+         *   key: schema().oneOf([
+         *     schema().string(),
+         *     schema().number()
+         *   ]).alias("oneOf key")
+         * }, { message: "[valueName] does not have a match!" });
+         *
+         * const testWithAlias = schemaWithAlias.test({ key: true });
+         *
+         * console.log(testWithAlias.errors[0].message);
+         * // "oneOf key does not have a match!"
+         */
+        alias: (valueName: string) => SchemaGenericOneOfType<Items, Opts, SchemaMerge<Flags, { aliasApplied: true }>>;
+      }
+    : {}) &
+  (Flags["notRequiredApplied"] extends false
+    ? {
+        /**
+         * Marks the oneOf schema as not required.
+         *
+         * This method makes the schema accept `undefined` as a valid value.
+         * Use this when the input value is optional. If `default()` is used, this is applied automatically.
+         *
+         * @example
+         * const optionalSchema = schema().oneOf([
+         *   schema().string(),
+         *   schema().number()
+         * ]).notRequired();
+         *
+         * console.log(optionalSchema.validate("text")); // true
+         * console.log(optionalSchema.validate(undefined)); // true
+         * console.log(optionalSchema.validate(null)); // false
+         */
+
+        notRequired: () => SchemaGenericOneOfType<
+          Items,
+          SchemaMerge<Opts, { required: false }>,
+          SchemaMerge<Flags, { notRequiredApplied: true }>
+        >;
+      }
+    : {}) &
+  (Flags["nullableApplied"] extends false
+    ? {
+        /**
+         * Marks the oneOf schema as nullable.
+         *
+         * This method makes the schema accept `null` as a valid value.
+         * Use this when you want to explicitly allow `null` inputs alongside the defined types.
+         *
+         * @example
+         * const nullableSchema = schema().oneOf([
+         *   schema().string(),
+         *   schema().number()
+         * ]).nullable();
+         *
+         * console.log(nullableSchema.validate("abc")); // true
+         * console.log(nullableSchema.validate(null));  // true
+         * console.log(nullableSchema.validate(undefined)); // false unless combined with `notRequired()`
+         */
+
+        nullable: () => SchemaGenericOneOfType<
+          Items,
+          SchemaMerge<Opts, { nullable: true }>,
+          SchemaMerge<Flags, { nullableApplied: true }>
+        >;
+      }
+    : {});
+
+type UnionOfInferOut<Items extends any[]> = {
+  [K in keyof Items]: Items[K] extends SchemaType<any, any> ? InferOut<Items[K]> : never;
+}[number];
+
+type SchemaOneOfOutput<
+  Items extends any[],
+  Options extends { nullable: boolean; required: boolean; default: boolean },
+> = Options["default"] extends true
+  ? Options["nullable"] extends true
+    ? UnionOfInferOut<Items> | null
+    : UnionOfInferOut<Items>
+  : Options["required"] extends false
+    ? Options["nullable"] extends true
+      ? UnionOfInferOut<Items> | null | undefined
+      : UnionOfInferOut<Items> | undefined
+    : Options["nullable"] extends true
+      ? UnionOfInferOut<Items> | null
+      : UnionOfInferOut<Items>;
+
+export type SchemaOneOfInput<
+  Items extends SchemaType<any, any>[],
+  Options extends { nullable: boolean; required: boolean; default: boolean },
+> = Options["required"] extends false
+  ? Options["nullable"] extends true
+    ? { [K in keyof Items]: InferIn<Items[K]> }[number] | null | undefined
+    : { [K in keyof Items]: InferIn<Items[K]> }[number] | undefined
+  : Options["nullable"] extends true
+    ? { [K in keyof Items]: InferIn<Items[K]> }[number] | null
+    : { [K in keyof Items]: InferIn<Items[K]> }[number];
+
+export type SchemaGenericOneOfType<
+  Items extends SchemaType<any, any>[],
+  Opts extends { nullable: boolean; required: boolean; default: boolean },
+  Flags extends SchemaOneOfFlags,
+> = SchemaType<SchemaOneOfOutput<Items, Opts>, SchemaOneOfInput<Items, Opts>> &
+  SchemaAllowedOneOfMethods<Items, Opts, Flags> &
+  SchemaReturnCommonMethods<any, SchemaOneOfOutput<Items, Opts>>;
 
 // Any Method Types
 
