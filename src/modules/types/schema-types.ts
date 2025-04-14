@@ -847,13 +847,12 @@ export type SchemaArrayTypes =
   | Record<string, any>;
 
 export abstract class SchemaType<Output, Input = Output> {
-  protected _output!: Output;
-  protected _input!: Input;
+  _output!: Output;
+  _input!: Input;
 }
 
 export type OmitMethods<T, K extends keyof any> = Omit<T, K>;
 
-/* eslint-disable */
 /**
  * Infers the expected input type from a given schema.
  *
@@ -862,7 +861,6 @@ export type OmitMethods<T, K extends keyof any> = Omit<T, K>;
  *
  * type StringInput = InferIn<typeof stringSchema>; // string
  */
-// @ts-ignore
 export type InferIn<T extends SchemaType<any, any>> = T["_input"];
 /**
  * Infers the output type from a given schema.
@@ -872,9 +870,7 @@ export type InferIn<T extends SchemaType<any, any>> = T["_input"];
  *
  * type NumberOutput = InferOut<typeof transformedSchema>; // number
  */
-// @ts-ignore
 export type InferOut<T extends SchemaType<any, any>> = T["_output"];
-/* eslint-enable */
 export type CheckType<TypeA, TypeB> =
   (<T>() => T extends TypeA ? 1 : 2) extends <T>() => T extends TypeB ? 1 : 2 ? true : false;
 
