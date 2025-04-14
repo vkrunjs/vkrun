@@ -1,5 +1,10 @@
 # VkrunJS Releases
 
+## 3.0.1
+
+- fix custom method not executed with any method in schema module
+- fix error when building projects using InferIn and InferOut typing
+
 ## 3.0.0
 
 - add jsDoc to all methods of the schema module

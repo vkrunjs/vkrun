@@ -231,6 +231,11 @@ export const runValidatorBlockAsync = async (
 
   if (hasMethod(validateMethodParams.methods, "any")) {
     validateAny(validateMethodParams);
+    await Promise.all(
+      validateMethodParams.methods.map(async (rule: any) => {
+        await validateOtherMethods(rule);
+      }),
+    );
     return;
   }
 
