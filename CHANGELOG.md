@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.0.1
+
+- fix custom method not executed with any method in schema module
+
 ## 3.0.0
 
 - add jsDoc to all methods of the schema module
