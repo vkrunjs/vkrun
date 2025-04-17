@@ -10,7 +10,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `GET` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple GET route
@@ -35,7 +35,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `HEAD` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple HEAD route
@@ -59,7 +59,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `POST` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple POST route
@@ -84,7 +84,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users/:id`).
    * @param {...any} handlers - The handler functions to be executed for the `PUT` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple PUT route
@@ -110,7 +110,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users/:id`).
    * @param {...any} handlers - The handler functions to be executed for the `PATCH` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple PATCH route
@@ -136,7 +136,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users/:id`).
    * @param {...any} handlers - The handler functions to be executed for the `DELETE` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple DELETE route
@@ -161,7 +161,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `OPTIONS` request.
    *
-   * @see [Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
    *
    * @example
    * // Example of a simple OPTIONS route
@@ -192,7 +192,7 @@ export interface VkrunRouter {
  *
  * @param {T} [T] - A generic type for the request body, allowing the user to specify the shape of the request's body.
  *
- * @see [Router Request Documentation](https://vkrunjs.com/router/handlers/router-request)
+ * @see Router Request Documentation](https://vkrunjs.com/router/handlers/router-request)
  *
  * @example
  * // Example usage of `Request` in route handler
@@ -230,7 +230,7 @@ export interface Request<T = any> extends IncomingMessage {
  *
  * **`_body`**: Contains the body data of the response before sending.
  *
- * @see [Router Response Documentation](https://vkrunjs.com/router/handlers/router-response)
+ * @see Router Response Documentation](https://vkrunjs.com/router/handlers/router-response)
  *
  * @example
  * // Example usage of `Response` in a route handler
@@ -241,7 +241,7 @@ export interface Request<T = any> extends IncomingMessage {
  *   res.clearCookie('token') // Clearing a cookie
  * }
  */
-export type Response = ServerResponse;
+export type Response = ServerResponse & RouterCustomResponseMethods;
 
 export interface RouterCustomResponseMethods {
   /**
@@ -261,7 +261,7 @@ export interface RouterCustomResponseMethods {
    *   res.status(404).send('Resource not found')
    * }
    */
-  status: (statusCode: number) => Response;
+  status: (status: number) => Omit<ServerResponse, "redirect">;
 
   /**
    * @method json
@@ -280,7 +280,54 @@ export interface RouterCustomResponseMethods {
    *   res.json(responseData) // Sends a JSON response
    * }
    */
-  json: (data: object) => Response;
+  json: (data: object) => ServerResponse;
+
+  /**
+   * @method html
+   *
+   * Sends an HTML response using template literals. Useful for dynamically
+   * generating HTML content.
+   *
+   * @param {TemplateStringsArray} strings - Template literal strings array.
+   * @param {unknown[]} values - Template literal interpolated values.
+   * @returns {ServerResponse} - The updated ServerResponse instance for chaining.
+   *
+   * @example
+   * response.html`
+   *   <html>
+   *     <body>
+   *       <h1>Hello, ${name}!</h1>
+   *     </body>
+   *   </html>
+   * `;
+   */
+  html: (strings: TemplateStringsArray, ...values: unknown[]) => ServerResponse;
+
+  /**
+   * @method redirect
+   *
+   * Redirects the request to the specified URL. Makes an HTTP request to the target URL,
+   * and forwards the response headers and body back to the client.
+   *
+   * **Important:** The URL must include the protocol (`http://` or `https://`) at the beginning.
+   * Without the protocol, the method will not know whether to use HTTP or HTTPS for the request.
+   *
+   * @param {string} url - The fully qualified URL (must include `http://` or `https://`) to redirect the request to.
+   * @returns {ServerResponse} - Returns the response object for chaining.
+   *
+   * @example
+   * // Example of redirecting to an external domain
+   * app.get('/google', (req, res) => {
+   *   res.redirect('https://www.my-domain.com');
+   * });
+   *
+   * @example
+   * // Example of redirecting to an internal service
+   * app.get('/service', (req, res) => {
+   *   res.redirect('http://localhost:4000/api');
+   * });
+   */
+  redirect: (url: string) => ServerResponse;
 
   /**
    * @method send
@@ -299,7 +346,7 @@ export interface RouterCustomResponseMethods {
    *   res.send('Hello, world!') // Sends a plain text response
    * }
    */
-  send: (data: any) => Response;
+  send: (data: any) => ServerResponse;
 
   /**
    * @method setCookie
@@ -350,7 +397,7 @@ export interface RouterCustomResponseMethods {
    *   })
    * }
    */
-  setCookie: (name: string, value: string, options?: RouterCookieOptions) => Response;
+  setCookie: (name: string, value: string, options?: RouterCookieOptions) => ServerResponse;
 
   /**
    * @method clearCookie
@@ -368,8 +415,7 @@ export interface RouterCustomResponseMethods {
    *   res.clearCookie('sessionId') // Clears the 'sessionId' cookie
    * }
    */
-  clearCookie: (name: string) => Response;
-  _body: any;
+  clearCookie: (name: string) => ServerResponse;
 }
 
 export interface RouterCookieOptions {
