@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.0.2
+
+- fix response type
+
 ## 3.0.1
 
 - fix custom method not executed with any method in schema module
