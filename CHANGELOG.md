@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.0.3
+
+- fix missing lib folder
+
 ## 3.0.2
 
 - fix response type
