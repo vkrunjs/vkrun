@@ -24,7 +24,7 @@ import { isArray, isObject } from "../utils";
 
 declare module "http" {
   interface ServerResponse {
-    status: (status: number) => Omit<ServerResponse, "redirect">;
+    status: (status: number) => Omit<ServerResponse, "status">;
     json: (data: object) => ServerResponse;
     html: (strings: TemplateStringsArray, ...values: unknown[]) => ServerResponse;
     redirect: (url: string) => ServerResponse;
@@ -35,7 +35,7 @@ declare module "http" {
   }
 }
 
-ServerResponse.prototype.status = function (status: number): Omit<ServerResponse, "redirect"> {
+ServerResponse.prototype.status = function (status: number): Omit<ServerResponse, "status"> {
   this.statusCode = status;
   return this;
 };

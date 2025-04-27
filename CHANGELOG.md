@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.0.4
+
+- fix router response in status method not chaining other methods
+
 ## 3.0.3
 
 - fix missing lib folder
