@@ -261,7 +261,7 @@ export interface RouterCustomResponseMethods {
    *   res.status(404).send('Resource not found')
    * }
    */
-  status: (status: number) => Omit<ServerResponse, "redirect">;
+  status: (status: number) => Omit<Response, "status">;
 
   /**
    * @method json
