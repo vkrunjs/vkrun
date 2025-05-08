@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.0.5
+
+- fix enable and disable printing in the console log of the logger module
+
 ## 3.0.4
 
 - fix router response in status method not chaining other methods
