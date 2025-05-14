@@ -2,31 +2,79 @@ import { NextFunction, Request, Response } from "./router-types";
 
 export type SwaggerSchemaType = "string" | "number" | "integer" | "boolean" | "array" | "object" | "null";
 
-export interface SwaggerSchema {
-  $ref?: string;
-  type?: SwaggerSchemaType;
+interface SwaggerBaseSchema {
   description?: string;
   example?: any;
-  format?: "date" | "date-time" | string;
-  required?: boolean | string[];
-  enum?: any[];
   default?: any;
+  enum?: any[];
+  allOf?: SwaggerSchema[];
+  oneOf?: SwaggerSchema[];
+  anyOf?: SwaggerSchema[];
+  not?: SwaggerSchema;
+}
+
+export interface SwaggerGenericRefSchema {
+  $ref: string;
+}
+
+export interface SwaggerStringSchema extends SwaggerBaseSchema {
+  type: "string";
+  format?: "date" | "date-time" | string;
   minLength?: number;
   maxLength?: number;
   pattern?: string;
+}
+
+export interface SwaggerNumberSchema extends SwaggerBaseSchema {
+  type: "number";
   minimum?: number;
   maximum?: number;
   exclusiveMinimum?: boolean;
   exclusiveMaximum?: boolean;
   multipleOf?: number;
-  items?: SwaggerSchema;
+}
+
+export interface SwaggerIntegerSchema extends SwaggerBaseSchema {
+  type: "integer";
+  minimum?: number;
+  maximum?: number;
+  exclusiveMinimum?: boolean;
+  exclusiveMaximum?: boolean;
+  multipleOf?: number;
+}
+
+export interface SwaggerBooleanSchema extends SwaggerBaseSchema {
+  type: "boolean";
+}
+
+export interface SwaggerNullSchema extends SwaggerBaseSchema {
+  type: "null";
+}
+
+export interface SwaggerArraySchema extends SwaggerBaseSchema {
+  type: "array";
+  items: SwaggerSchema;
+  minItems?: number;
+  maxItems?: number;
+  uniqueItems?: boolean;
+}
+
+export interface SwaggerObjectSchema extends SwaggerBaseSchema {
+  type: "object";
+  required?: string[];
   properties?: Record<string, SwaggerSchema>;
   additionalProperties?: boolean | SwaggerSchema;
-  anyOf?: SwaggerSchema[];
-  oneOf?: SwaggerSchema[];
-  allOf?: SwaggerSchema[];
-  not?: SwaggerSchema;
 }
+
+export type SwaggerSchema =
+  | SwaggerStringSchema
+  | SwaggerNumberSchema
+  | SwaggerIntegerSchema
+  | SwaggerBooleanSchema
+  | SwaggerArraySchema
+  | SwaggerObjectSchema
+  | SwaggerNullSchema
+  | SwaggerGenericRefSchema;
 
 export type SwaggerHttpStatusCode =
   | 100
