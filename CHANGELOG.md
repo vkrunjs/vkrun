@@ -1,5 +1,11 @@
 # VkrunJS Releases
 
+## 3.0.7
+
+- refactor logger remove MAX_OUTPUT_LENGTH
+- refactor rate limit isolate instance data using instanceId and cleanup global timers
+- fix swagger ui types
+
 ## 3.0.5
 
 - fix enable and disable printing in the console log of the logger module
