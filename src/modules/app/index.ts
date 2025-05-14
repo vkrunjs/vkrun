@@ -5,7 +5,7 @@ import { loggerSanitizeInterval } from "../logger";
 import { RouterHandler } from "../router/helpers/router-handler";
 import { ParseDataSetup } from "../parse-data";
 import { cors, CorsSetup } from "../cors";
-import { rateLimit } from "../rate-limit";
+import { clearGlobalRateLimit, rateLimit } from "../rate-limit";
 import { compileRegex } from "../utils";
 import {
   AppCreateServer,
@@ -26,7 +26,6 @@ class AppSetup implements VkrunApp {
   private readonly routerHandler: RouterHandler;
   private readonly globalMiddlewares: any[];
   private createdServer: any;
-  private timers: any[];
   private _parseData?: VkrunParseData;
   private errorHandler: ((error: any, request: Request, response: Response) => Promise<void> | void) | null;
 
@@ -34,22 +33,7 @@ class AppSetup implements VkrunApp {
     this.instance = undefined;
     this.routerHandler = new RouterHandler();
     this.globalMiddlewares = [];
-    this.timers = [];
     this.errorHandler = null;
-  }
-
-  // Timeout management
-
-  private setTimer(callback: () => void, ms: number): NodeJS.Timeout {
-    const timeout = setTimeout(callback, ms);
-    this.timers.push(timeout);
-    return timeout;
-  }
-
-  private clearTimers(): void {
-    this.timers.forEach((timerId: NodeJS.Timeout) => clearTimeout(timerId));
-    this.timers = [];
-    if (loggerSanitizeInterval) clearInterval(loggerSanitizeInterval);
   }
 
   // Server Nodejs
@@ -78,19 +62,15 @@ class AppSetup implements VkrunApp {
   public close(): void {
     if (this.instance === "server") this.createdServer.close();
     this.createdServer = null;
-    this.clearTimers();
+    clearGlobalRateLimit();
     this.instance = "closed";
   }
 
   // Method to simulate a request with superRequest
 
-  public async _reqWithoutServer(
-    request: Request & { setTimer: (callback: () => void, ms: number) => NodeJS.Timeout },
-    response: Response & { _ended: boolean },
-  ): Promise<Response> {
+  public async _reqWithoutServer(request: Request, response: Response & { _ended: boolean }): Promise<Response> {
     this.instance = "_reqWithoutServer";
     const _request = request;
-    _request.setTimer = this.setTimer.bind(this);
     this.addRoutesOptionsWithCors();
 
     if (this.errorHandler) {
