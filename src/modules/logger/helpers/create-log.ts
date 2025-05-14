@@ -104,16 +104,20 @@ export const createLog = (log: LoggerLog): void => {
     }
 
     const logPrintEnabled = log.config.print.enabled;
-    const MAX_OUTPUT_LENGTH = 1500;
-
     if (logPrintEnabled && logLevel <= logLevelConfig) {
       const jsonString = log.config.print.format === "default" ? JSON.stringify(logData) : JSON.stringify(logData, null, 2);
 
       const coloredOutput = colorizeJSON(jsonString, log.config.colors, log.config.print.colors);
-      const output =
-        coloredOutput.length <= MAX_OUTPUT_LENGTH ? coloredOutput : coloredOutput.substring(0, MAX_OUTPUT_LENGTH) + "...";
 
-      console.log(output);
+      try {
+        console.log(coloredOutput);
+      } catch (err) {
+        try {
+          console.log(jsonString);
+        } catch {
+          // ignore prints with error
+        }
+      }
     }
 
     sanitizeLogs(log.config);
