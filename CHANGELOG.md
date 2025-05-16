@@ -1,5 +1,14 @@
 # VkrunJS Releases
 
+## 3.1.0
+
+- add dynamic typing to request headers and session
+- remove unused loggerSanitizeInterval variable
+- fix bug in logger module that is creating logs folder even when it will not generate the log in the physical file
+- replaced the manual serialization logic in the logger module with safeSerialize to better support complex structures like Error, Buffer, functions, symbols, and circular references. This improves log safety and reduces custom parsing code
+- add decodeURIComponent to the url before injecting into routerHandler.handleRequest and superReuqest should do encodeURIComponent to simulate behavior of requests that apply encodeURIComponent to the url
+- add missing head method in swagger.route
+
 ## 3.0.7
 
 - refactor logger remove MAX_OUTPUT_LENGTH
