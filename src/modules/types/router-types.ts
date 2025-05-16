@@ -1,4 +1,4 @@
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage, ServerResponse, IncomingHttpHeaders } from "http";
 
 export interface VkrunRouter {
   /**
@@ -208,10 +208,11 @@ export interface Request<T = any> extends IncomingMessage {
   request: { handlers: any[]; params: Record<string, string> };
   requestId?: string;
   route?: Route;
+  headers: T extends { headers: infer H } ? H & IncomingHttpHeaders : Record<string, string> & IncomingHttpHeaders;
   body: T extends { body: infer B } ? B : Record<string, string | number | boolean | Date> | JSON | string | undefined | any;
   params: T extends { params: infer P } ? P : Record<string, string | number | boolean | Date> | undefined;
   query: T extends { query: infer Q } ? Q : Record<string, string | number | boolean | Date> | undefined;
-  session?: any;
+  session: T extends { session: infer S } ? S : Record<string, string | number | boolean | Date> | undefined;
   files: T extends { files: infer F } ? F : RouterFile[];
 }
 
