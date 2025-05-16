@@ -69,6 +69,10 @@ export class SwaggerUiSetup implements VkrunSwaggerUi {
         this.addMethod("delete", options);
         return routeBuilder;
       },
+      head: (options: SwaggerOperation) => {
+        this.addMethod("head", options);
+        return routeBuilder;
+      },
       options: (options: SwaggerOperation) => {
         this.addMethod("options", options);
         return routeBuilder;

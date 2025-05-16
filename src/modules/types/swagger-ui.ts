@@ -426,6 +426,7 @@ export interface SwaggerRouteBuilder {
   patch: (options: SwaggerOperation) => SwaggerRouteBuilder;
   get: (options: SwaggerOperation) => SwaggerRouteBuilder;
   delete: (options: SwaggerOperation) => SwaggerRouteBuilder;
+  head: (options: SwaggerOperation) => SwaggerRouteBuilder;
   options: (options: SwaggerOperation) => SwaggerRouteBuilder;
 }
 
