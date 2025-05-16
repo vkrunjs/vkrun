@@ -3,8 +3,6 @@ import { isArray, isObject } from "../utils";
 import { configLogger } from "./helpers/config-logger";
 import { createLog } from "./helpers/create-log";
 
-export let loggerSanitizeInterval: NodeJS.Timeout;
-
 export const LoggerSetup = (configParams: LoggerSetConfig): VkrunLogger => {
   const config = configLogger();
 

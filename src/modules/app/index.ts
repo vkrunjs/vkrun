@@ -1,7 +1,6 @@
 import { RouterSetup } from "../router";
 import { createServer } from "../runtime";
 import { routeExists } from "../router/helpers";
-import { loggerSanitizeInterval } from "../logger";
 import { RouterHandler } from "../router/helpers/router-handler";
 import { ParseDataSetup } from "../parse-data";
 import { cors, CorsSetup } from "../cors";
