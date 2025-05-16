@@ -43,6 +43,7 @@ class AppSetup implements VkrunApp {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.createdServer = createServer(async (request, response) => {
       this.instance = "server";
+      request.url = decodeURIComponent(request.url ?? "");
 
       if (this.errorHandler) {
         try {
@@ -70,6 +71,7 @@ class AppSetup implements VkrunApp {
   public async _reqWithoutServer(request: Request, response: Response & { _ended: boolean }): Promise<Response> {
     this.instance = "_reqWithoutServer";
     const _request = request;
+    _request.url = decodeURIComponent(_request.url ?? "");
     this.addRoutesOptionsWithCors();
 
     if (this.errorHandler) {

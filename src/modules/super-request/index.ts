@@ -101,9 +101,16 @@ export const superRequest = (app: VkrunApp): SuperRequest => {
   const request = async (method: string, path: any, data: any, options?: Record<string, any>): Promise<SuperRequestSuccess> => {
     // eslint-disable-next-line no-async-promise-executor, @typescript-eslint/no-misused-promises
     return await new Promise(async (resolve, reject) => {
+      const fakeBase = "http://localhost";
+      const url = new URL(path, fakeBase);
+
+      const encodedPath = url.pathname.split("/").map(encodeURIComponent).join("/");
+
+      const fullPath = url.search ? `${encodedPath}${url.search}` : encodedPath;
+
       const httpRequest: any = createHttpRequest({
         method,
-        path,
+        path: fullPath,
         headers: options?.headers ?? {},
         data,
         host: "localhost",
