@@ -7,6 +7,11 @@ import { sendToSyslog } from "./send-to-syslog";
 
 export const createLog = (log: LoggerLog): void => {
   try {
+    const logLevel = log.config.levels[log.level];
+    const logLevelConfig = log.config.levels[log.config.level];
+
+    if (logLevel > logLevelConfig) return;
+
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -66,45 +71,39 @@ export const createLog = (log: LoggerLog): void => {
       message: logMessage(),
     };
 
-    const logLevel = log.config.levels[log.level];
-    const logLevelConfig = log.config.levels[log.config.level];
+    sendToSyslog(logData, log.config);
 
-    if (logLevel <= logLevelConfig) {
-      sendToSyslog(logData, log.config);
+    if (log.config.extension === "json") {
+      let logs: any[] = [];
 
-      if (log.config.extension === "json") {
-        let logs: any[] = [];
-
-        if (existsSync(logFilePath)) {
-          const fileContent = readFileSync(logFilePath, "utf-8");
-          logs = JSON.parse(fileContent);
-        }
-
-        logs.push(logData);
-        let formattedLogs;
-        if (log.config.format === "indented") {
-          formattedLogs = JSON.stringify(logs, null, 2);
-        } else {
-          formattedLogs = JSON.stringify(logs);
-        }
-        writeFileSync(logFilePath, formattedLogs);
-      } else {
-        if (!existsSync(logFilePath)) {
-          writeFileSync(logFilePath, "");
-        }
-
-        let formattedLog;
-        if (log.config.format === "indented") {
-          formattedLog = JSON.stringify(logData, null, 2) + "\n";
-        } else {
-          formattedLog = JSON.stringify(logData) + "\n";
-        }
-        appendFileSync(logFilePath, formattedLog);
+      if (existsSync(logFilePath)) {
+        const fileContent = readFileSync(logFilePath, "utf-8");
+        logs = JSON.parse(fileContent);
       }
+
+      logs.push(logData);
+      let formattedLogs;
+      if (log.config.format === "indented") {
+        formattedLogs = JSON.stringify(logs, null, 2);
+      } else {
+        formattedLogs = JSON.stringify(logs);
+      }
+      writeFileSync(logFilePath, formattedLogs);
+    } else {
+      if (!existsSync(logFilePath)) {
+        writeFileSync(logFilePath, "");
+      }
+
+      let formattedLog;
+      if (log.config.format === "indented") {
+        formattedLog = JSON.stringify(logData, null, 2) + "\n";
+      } else {
+        formattedLog = JSON.stringify(logData) + "\n";
+      }
+      appendFileSync(logFilePath, formattedLog);
     }
 
-    const logPrintEnabled = log.config.print.enabled;
-    if (logPrintEnabled && logLevel <= logLevelConfig) {
+    if (log.config.print.enabled) {
       const jsonString = log.config.print.format === "default" ? JSON.stringify(logData) : JSON.stringify(logData, null, 2);
 
       const coloredOutput = colorizeJSON(jsonString, log.config.colors, log.config.print.colors);
