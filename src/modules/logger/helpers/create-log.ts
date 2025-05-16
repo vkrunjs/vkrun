@@ -2,8 +2,9 @@ import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync, joi
 import { colorizeJSON } from "./colorize-json";
 import { sanitizeLogs } from "./sanitize-logs";
 import { LoggerLog } from "../../types";
-import { dateToString, isArray, isObject } from "../../utils";
+import { dateToString } from "../../utils";
 import { sendToSyslog } from "./send-to-syslog";
+import { safeSerialize } from "./safe-serialize";
 
 export const createLog = (log: LoggerLog): void => {
   try {
@@ -44,31 +45,10 @@ export const createLog = (log: LoggerLog): void => {
       return dateToString(currentDate, "MM/DD/YYYY HH:MM:SS");
     };
 
-    const logMessage = (): string | object => {
-      if (log.message instanceof Error) {
-        const error: Record<string, string> = {};
-
-        Object.getOwnPropertyNames(log.message).forEach((prop) => {
-          if (prop !== "constructor" && prop !== "toString") {
-            const value = log.message[prop];
-            if (isObject(value) || isArray(value)) {
-              error[prop] = JSON.stringify(value);
-            } else {
-              error[prop] = String(value);
-            }
-          }
-        });
-
-        return { error };
-      }
-
-      return log.message;
-    };
-
     const logData = {
       level: log.level,
       date: getDateToString(currentDate),
-      message: logMessage(),
+      message: safeSerialize(log.message),
     };
 
     sendToSyslog(logData, log.config);
