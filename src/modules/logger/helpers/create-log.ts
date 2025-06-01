@@ -40,7 +40,7 @@ export const createLog = (log: LoggerLog): void => {
 
     const getDateToString = (date: Date): string => {
       if (log.config.dateType === "DD-MM-YYYY") {
-        return dateToString(currentDate, "MM/DD/YYYY HH:MM:SS");
+        return dateToString(currentDate, "DD/MM/YYYY HH:MM:SS");
       }
       return dateToString(currentDate, "MM/DD/YYYY HH:MM:SS");
     };

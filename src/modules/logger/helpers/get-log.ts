@@ -4,6 +4,7 @@ import { LoggerLogExtension } from "../../types";
 export const getLog = (
   format: "default" | "indented",
   extension: LoggerLogExtension,
+  dateType: "MM-DD-YYYY" | "DD-MM-YYYY" = "MM-DD-YYYY",
 ): {
   year: number;
   month: string;
@@ -23,7 +24,7 @@ export const getLog = (
   const seconds = currentDate.getSeconds().toString().padStart(2, "0");
   const nextHour = (currentDate.getHours() + 1).toString().padStart(2, "0");
 
-  const logFolderPath = `logs/${month}-${day}-${year}`;
+  const logFolderPath = dateType === "MM-DD-YYYY" ? `logs/${month}-${day}-${year}` : `logs/${day}-${month}-${year}`;
   const logFileName = `${hour}00-${nextHour}00.${extension}`;
   const logFilePath = `${logFolderPath}/${logFileName}`;
 
