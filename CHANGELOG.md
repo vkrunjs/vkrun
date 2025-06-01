@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.1.1
+
+- fix log in dd-mm-yyyy date format
+
 ## 3.1.0
 
 - add dynamic typing to request headers and session
