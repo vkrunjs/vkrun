@@ -425,4 +425,24 @@ describe("Create log", () => {
       message: { error: "Any Text" },
     });
   });
+
+  it("Should create a log with date type DD/MM/YYYY", async () => {
+    const logger = Logger({
+      level: "silly",
+      daysToStoreLogs: 1,
+      extension: "log",
+      format: "indented",
+      dateType: "DD-MM-YYYY",
+    });
+
+    logger.error({ error: "Any Text" });
+
+    const log = getLog("indented", "log", "DD-MM-YYYY");
+
+    expect(log.content).toEqual({
+      level: "error",
+      date: `${log.day}/${log.month}/${log.year} ${log.hour}:${log.minutes}:${log.seconds}`,
+      message: { error: "Any Text" },
+    });
+  });
 });
