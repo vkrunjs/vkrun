@@ -133,6 +133,31 @@ describe("Super Request - end to end testing", () => {
     app.close();
   });
 
+  it("Should parse JWT token authentication header in POST method", async () => {
+    let requestHeaders;
+
+    const app = App();
+    app.parseData();
+
+    app.post("/auth", (req: Request, res: Response) => {
+      requestHeaders = req.headers;
+      res.status(200).end();
+    });
+
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
+
+    const response = await superRequest(app).post("/auth", undefined, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    validateSuccess(response);
+
+    expect(requestHeaders).toBeDefined();
+    expect(requestHeaders!.authorization).toBeDefined();
+    expect(requestHeaders!.authorization).toEqual(`Bearer ${token}`);
+  });
+
   it("Should handle PUT requests", async () => {
     let requestBody;
 
