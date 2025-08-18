@@ -50,7 +50,7 @@ describe("Validate Route Data - end to end testing using super request", () => {
         headers: {
           authorization: "success",
           "content-type": "application/json",
-          "x-custom-header": "customvalue",
+          "x-custom-header": "customValue",
         },
         params: {
           string: "any@mail.com",

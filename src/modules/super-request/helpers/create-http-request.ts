@@ -39,7 +39,7 @@ export const createHttpRequest = (params: {
     if (Object.prototype.hasOwnProperty.call(headers, key)) {
       const lowercaseKey = key.toLowerCase();
       const value = headers[key];
-      lowercaseHeaders[lowercaseKey] = value.toLowerCase();
+      lowercaseHeaders[lowercaseKey] = value;
     }
   }
 
