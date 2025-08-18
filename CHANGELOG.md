@@ -1,5 +1,11 @@
 # VkrunJS Releases
 
+## 3.2.0
+
+- fix header value converted to lowercase
+- fix load-env correctly parse quoted values containing equals sign in .env files
+- changed domain vkrunjs.com to vkrunjs.org in all documentation
+
 ## 3.1.1
 
 - fix log in dd-mm-yyyy date format
