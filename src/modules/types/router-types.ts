@@ -10,7 +10,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `GET` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple GET route
@@ -35,7 +35,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `HEAD` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple HEAD route
@@ -59,7 +59,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `POST` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple POST route
@@ -84,7 +84,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users/:id`).
    * @param {...any} handlers - The handler functions to be executed for the `PUT` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple PUT route
@@ -110,7 +110,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users/:id`).
    * @param {...any} handlers - The handler functions to be executed for the `PATCH` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple PATCH route
@@ -136,7 +136,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users/:id`).
    * @param {...any} handlers - The handler functions to be executed for the `DELETE` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple DELETE route
@@ -161,7 +161,7 @@ export interface VkrunRouter {
    * @param {string} path - The path for the route (e.g., `/users`).
    * @param {...any} handlers - The handler functions to be executed for the `OPTIONS` request.
    *
-   * @see Router Methods Documentation](https://vkrunjs.com/router/router-methods)
+   * @see Router Methods Documentation](https://vkrunjs.org/router/router-methods)
    *
    * @example
    * // Example of a simple OPTIONS route
@@ -192,7 +192,7 @@ export interface VkrunRouter {
  *
  * @param {T} [T] - A generic type for the request body, allowing the user to specify the shape of the request's body.
  *
- * @see Router Request Documentation](https://vkrunjs.com/router/handlers/router-request)
+ * @see Router Request Documentation](https://vkrunjs.org/router/handlers/router-request)
  *
  * @example
  * // Example usage of `Request` in route handler
@@ -231,7 +231,7 @@ export interface Request<T = any> extends IncomingMessage {
  *
  * **`_body`**: Contains the body data of the response before sending.
  *
- * @see Router Response Documentation](https://vkrunjs.com/router/handlers/router-response)
+ * @see Router Response Documentation](https://vkrunjs.org/router/handlers/router-response)
  *
  * @example
  * // Example usage of `Response` in a route handler

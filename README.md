@@ -14,7 +14,7 @@
 
 > Simplyfing the development of applications with support for JavaScript and TypeScript. Vkrun also provides a robust, opinion-free, and scalable solution for your needs.
 
-VkrunJs documentation, visit [vkrunjs.com](https://vkrunjs.com/)
+VkrunJs documentation, visit [vkrunjs.org](https://vkrunjs.org/)
 
 ### Installation:
 
