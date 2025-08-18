@@ -37,7 +37,8 @@ EXAMPLE_8="false"
 EXAMPLE_9=42
 EXAMPLE_10="42"
 EXAMPLE_11=["42", true, 123, { "key": "value" }]
-EXAMPLE_12={ "key": "value" }`;
+EXAMPLE_12={ "key": "value" }
+EXAMPLE_13="abc=123"`;
 
     createEnvFile(envContent);
 
@@ -54,6 +55,7 @@ EXAMPLE_12={ "key": "value" }`;
       EXAMPLE_10: string;
       EXAMPLE_11: any[];
       EXAMPLE_12: Record<string, any>;
+      EXAMPLE_13: string;
     }>({ path: tempEnvPath });
 
     expect(process.env.EXAMPLE_1).toEqual("John Doe");
@@ -81,6 +83,7 @@ EXAMPLE_12={ "key": "value" }`;
     expect(envs.EXAMPLE_10).toEqual("42");
     expect(envs.EXAMPLE_11).toEqual(["42", true, 123, { key: "value" }]);
     expect(envs.EXAMPLE_12).toEqual({ key: "value" });
+    expect(envs.EXAMPLE_13).toEqual("abc=123");
   });
 
   it("Should load variables from a real .env file with comments", () => {

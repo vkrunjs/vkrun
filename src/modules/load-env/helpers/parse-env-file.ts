@@ -23,7 +23,8 @@ export const parseEnvFile = (
       return;
     }
 
-    const [key, value] = cleanedLine.split("=");
+    const [key, ...rest] = cleanedLine.split("=");
+    const value = rest.join("=");
 
     if (key && value) {
       const trimmedKey = key.trim();
