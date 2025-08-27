@@ -1,107 +1,109 @@
-import { parseEscapeSQL } from "../parse-escape-sql";
+import { escape, parseEscapeSQL } from "../parse-escape-sql";
 
 describe("parseEscapeSQL", () => {
-  it("Do not escape chars if there is no sql word", () => {
-    expect(parseEscapeSQL("\0")).toBe("\0");
-    expect(parseEscapeSQL("\b")).toBe("\b");
-    expect(parseEscapeSQL("\t")).toBe("\t");
-    expect(parseEscapeSQL("\n")).toBe("\n");
-    expect(parseEscapeSQL("\r")).toBe("\r");
-    expect(parseEscapeSQL("\x1a")).toBe("\x1a");
-    expect(parseEscapeSQL('"')).toBe('"');
-    expect(parseEscapeSQL("'")).toBe("'");
-    expect(parseEscapeSQL("\\")).toBe("\\");
+  it("Should escape special characters even without SQL keywords", () => {
+    // Mapping of characters to their escaped equivalents
+    const chars = {
+      "\0": "\\0",
+      "\b": "\\b",
+      "\t": "\\t",
+      "\n": "\\n",
+      "\r": "\\r",
+      "\x1a": "\\Z",
+      '"': '\\"',
+      "'": "''", // duplicated single quote
+      "\\": "\\\\",
+      "`": "\\`",
+    };
+
+    for (const [input, escaped] of Object.entries(chars)) {
+      expect(parseEscapeSQL(input)).toBe(`'${escaped}'`);
+    }
   });
 
-  it("Should escape SQL special characters when SQL word is present", () => {
-    expect(parseEscapeSQL("SELECT \0")).toBe("'SELECT \\0'");
-    expect(parseEscapeSQL("SELECT \b")).toBe("'SELECT \\b'");
-    expect(parseEscapeSQL("SELECT \t")).toBe("'SELECT \\t'");
-    expect(parseEscapeSQL("SELECT \n")).toBe("'SELECT \\n'");
-    expect(parseEscapeSQL("SELECT \r")).toBe("'SELECT \\r'");
-    expect(parseEscapeSQL("SELECT \x1a")).toBe("'SELECT \\Z'");
-    expect(parseEscapeSQL('SELECT "')).toBe("'SELECT \\\"'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("SELECT '")).toBe("'SELECT \\\''");
-    expect(parseEscapeSQL("SELECT \\")).toBe("'SELECT \\\\'");
+  it("Should escape SQL special characters when SQL keyword is present", () => {
+    // Test all common SQL keywords combined with special characters
+    const words = ["SELECT", "INSERT", "UPDATE", "DELETE", "FROM", "WHERE", "OR", "AND", "UNION", "WAITFOR", "SLEEP"];
+    const specialChars = ["\0", "\b", "\t", "\n", "\r", "\x1a", '"', "'", "\\"];
 
-    expect(parseEscapeSQL("INSERT \0")).toBe("'INSERT \\0'");
-    expect(parseEscapeSQL("INSERT \b")).toBe("'INSERT \\b'");
-    expect(parseEscapeSQL("INSERT \t")).toBe("'INSERT \\t'");
-    expect(parseEscapeSQL("INSERT \n")).toBe("'INSERT \\n'");
-    expect(parseEscapeSQL("INSERT \r")).toBe("'INSERT \\r'");
-    expect(parseEscapeSQL("INSERT \x1a")).toBe("'INSERT \\Z'");
-    expect(parseEscapeSQL('INSERT "')).toBe("'INSERT \\\"'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("INSERT '")).toBe("'INSERT \\\''");
-    expect(parseEscapeSQL("INSERT \\")).toBe("'INSERT \\\\'");
-    expect(parseEscapeSQL("UPDATE \0")).toBe("'UPDATE \\0'");
-    expect(parseEscapeSQL("UPDATE \b")).toBe("'UPDATE \\b'");
-    expect(parseEscapeSQL("UPDATE \t")).toBe("'UPDATE \\t'");
-    expect(parseEscapeSQL("UPDATE \n")).toBe("'UPDATE \\n'");
-    expect(parseEscapeSQL("UPDATE \r")).toBe("'UPDATE \\r'");
-    expect(parseEscapeSQL("UPDATE \x1a")).toBe("'UPDATE \\Z'");
-    expect(parseEscapeSQL('UPDATE "')).toBe("'UPDATE \\\"'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("UPDATE '")).toBe("'UPDATE \\\''");
-    expect(parseEscapeSQL("UPDATE \\")).toBe("'UPDATE \\\\'");
-    expect(parseEscapeSQL("DELETE \0")).toBe("'DELETE \\0'");
-    expect(parseEscapeSQL("DELETE \b")).toBe("'DELETE \\b'");
-    expect(parseEscapeSQL("DELETE \t")).toBe("'DELETE \\t'");
-    expect(parseEscapeSQL("DELETE \n")).toBe("'DELETE \\n'");
-    expect(parseEscapeSQL("DELETE \r")).toBe("'DELETE \\r'");
-    expect(parseEscapeSQL("DELETE \x1a")).toBe("'DELETE \\Z'");
-    expect(parseEscapeSQL('DELETE "')).toBe("'DELETE \\\"'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("DELETE '")).toBe("'DELETE \\\''");
-    expect(parseEscapeSQL("DELETE \\")).toBe("'DELETE \\\\'");
-    expect(parseEscapeSQL("FROM \0")).toBe("'FROM \\0'");
-    expect(parseEscapeSQL("FROM \b")).toBe("'FROM \\b'");
-    expect(parseEscapeSQL("FROM \t")).toBe("'FROM \\t'");
-    expect(parseEscapeSQL("FROM \n")).toBe("'FROM \\n'");
-    expect(parseEscapeSQL("FROM \r")).toBe("'FROM \\r'");
-    expect(parseEscapeSQL("FROM \x1a")).toBe("'FROM \\Z'");
-    expect(parseEscapeSQL('FROM "')).toBe("'FROM \\\"'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("FROM '")).toBe("'FROM \\\''");
-    expect(parseEscapeSQL("FROM \\")).toBe("'FROM \\\\'");
-    expect(parseEscapeSQL("WHERE \0")).toBe("'WHERE \\0'");
-    expect(parseEscapeSQL("WHERE \b")).toBe("'WHERE \\b'");
-    expect(parseEscapeSQL("WHERE \t")).toBe("'WHERE \\t'");
-    expect(parseEscapeSQL("WHERE \n")).toBe("'WHERE \\n'");
-    expect(parseEscapeSQL("WHERE \r")).toBe("'WHERE \\r'");
-    expect(parseEscapeSQL("WHERE \x1a")).toBe("'WHERE \\Z'");
-    expect(parseEscapeSQL('WHERE "')).toBe("'WHERE \\\"'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("WHERE '")).toBe("'WHERE \\\''");
-    expect(parseEscapeSQL("WHERE \\")).toBe("'WHERE \\\\'");
-    expect(parseEscapeSQL("SELECT")).toBe("'SELECT'");
-    expect(parseEscapeSQL("SELECT \0 end")).toBe("'SELECT \\0 end'");
-    expect(parseEscapeSQL("SELECT \b end")).toBe("'SELECT \\b end'");
-    expect(parseEscapeSQL("SELECT \t end")).toBe("'SELECT \\t end'");
-    expect(parseEscapeSQL("SELECT \n end")).toBe("'SELECT \\n end'");
-    expect(parseEscapeSQL("SELECT \r end")).toBe("'SELECT \\r end'");
-    expect(parseEscapeSQL("SELECT \x1a end")).toBe("'SELECT \\Z end'");
-    expect(parseEscapeSQL('SELECT " end')).toBe("'SELECT \\\" end'");
-    // eslint-disable-next-line no-useless-escape
-    expect(parseEscapeSQL("SELECT ' end")).toBe("'SELECT \\\' end'");
-    expect(parseEscapeSQL("SELECT \\ end")).toBe("'SELECT \\\\ end'");
+    for (const word of words) {
+      for (const char of specialChars) {
+        const input = `${word}${char}`;
+        const escapedChar = escape.ESCAPE_CHARS[char as keyof typeof escape.ESCAPE_CHARS] ?? char;
+        const expected = `'${word}${escapedChar}'`;
+        expect(parseEscapeSQL(input)).toBe(expected);
+      }
+    }
   });
 
-  it("Should escape special characters in SQL string containing SQL keywords", () => {
-    expect(parseEscapeSQL("SELECT * FROM table WHERE column = 'value'")).toBe(
-      "'SELECT * FROM table WHERE column = \\'value\\''",
-    );
-    expect(parseEscapeSQL("SELECT 'value'")).toBe("'SELECT \\'value\\''");
-    expect(parseEscapeSQL("SELECT")).toBe("'SELECT'");
-    expect(parseEscapeSQL("SELECT 'value' end")).toBe("'SELECT \\'value\\' end'");
+  it("Should return original string if it does not contain SQL keywords or special chars", () => {
+    // Strings without risk should remain unchanged
+    const safeStrings = ["Hello World", "123456", "normal_text", ""];
+    for (const str of safeStrings) {
+      expect(parseEscapeSQL(str)).toBe(str);
+    }
   });
 
-  it("Should return original string if it does not contain SQL keywords", () => {
-    expect(parseEscapeSQL("This is a test string")).toBe("This is a test string");
+  it("Should return non-string values as is", () => {
+    // Non-string inputs are returned as-is
+    expect(parseEscapeSQL(123 as any)).toBe(123);
+    expect(parseEscapeSQL(true as any)).toBe(true);
+    expect(parseEscapeSQL(null as any)).toBe(null);
+    expect(parseEscapeSQL(undefined as any)).toBe(undefined);
   });
 
-  it("Should return original string if it is empty", () => {
-    expect(parseEscapeSQL("")).toBe("");
+  it("Should escape dangerous SQL injection attempts (unique extended set)", () => {
+    // Unique and complex SQL injection payloads
+    const injections: [string, string][] = [
+      ["mario'; DROP TABLE users; --", "'mario''; DROP TABLE users; --'"],
+      ["admin'/*", "'admin''/*'"],
+
+      // Complex comments and stacked queries
+      ["1;-- -", "'1;-- -'"],
+      ["0; EXEC xp_cmdshell('dir');", "'0; EXEC xp_cmdshell(''dir'');'"],
+
+      // Time-based injections
+      ["1' WAITFOR DELAY '0:0:5' --", "'1'' WAITFOR DELAY ''0:0:5'' --'"],
+      ["' OR pg_sleep(5)--", "''' OR pg_sleep(5)--'"],
+
+      // Subquery / function abuse
+      ["' AND EXISTS(SELECT * FROM users WHERE name='admin')--", "''' AND EXISTS(SELECT * FROM users WHERE name=''admin'')--'"],
+      ["' OR DATABASE() LIKE 'test' --", "''' OR DATABASE() LIKE ''test'' --'"],
+
+      // Nested payloads
+      ["')); EXEC sp_who--", "''')); EXEC sp_who--'"],
+
+      // JSON & XML injections
+      ["' OR JSON_EXTRACT(data, '$.role') = 'admin' --", "''' OR JSON_EXTRACT(data, ''$.role'') = ''admin'' --'"],
+    ];
+
+    for (const [input, expected] of injections) {
+      expect(parseEscapeSQL(input)).toBe(expected);
+    }
+  });
+
+  it("Should escape extended SQL injection scenarios including case variations, Unicode, comments, and table/column contexts", () => {
+    const allTests: [string, string][] = [
+      // Case variations in SQL keywords
+      ["select * from users where nome='admin';", "'select * from users where nome=''admin'';'"],
+      ["SeLeCt * FrOm uSeRs WhErE NoMe='AdMiN';", "'SeLeCt * FrOm uSeRs WhErE NoMe=''AdMiN'';'"],
+
+      // Unicode / multi-byte characters
+      ["' OR 1=1\u00A0--", "''' OR 1=1\u00A0--'"], // non-breaking space
+      ["' OR \u041E\u0420 1=1 --", "''' OR \u041E\u0420 1=1 --'"], // Cyrillic letters
+
+      // Comments and alternative whitespace
+      ["' AND 1=1/**/--", "''' AND 1=1/**/--'"],
+      ["' OR 1=1 \r\n --", "''' OR 1=1 \\r\\n --'"],
+      ["' OR ''= ''", "''' OR ''''= '''''"],
+
+      // Table/column contexts
+      ["users", "users"], // safe
+      ["users; DROP TABLE users;", "'users; DROP TABLE users;'"],
+    ];
+
+    for (const [input, expected] of allTests) {
+      expect(parseEscapeSQL(input)).toBe(expected);
+    }
   });
 });

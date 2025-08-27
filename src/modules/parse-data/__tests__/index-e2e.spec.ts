@@ -543,6 +543,284 @@ describe("Parse Data - end to end testing using super request", () => {
     app.close();
   });
 
+  it("Should escape simple tautology injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "1' OR '1'='1",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({ sql: "'1'' OR ''1''=''1'" });
+
+    app.close();
+  });
+
+  it("Should escape UNION SELECT injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "UNION SELECT username, password FROM users --",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'UNION SELECT username, password FROM users --'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape DROP TABLE injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "DROP TABLE users; --",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'DROP TABLE users; --'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape stacked query injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "SELECT * FROM users; DROP TABLE logs;",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'SELECT * FROM users; DROP TABLE logs;'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape comment-based injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "admin' --",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'admin'' --'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape boolean-based blind injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "admin' AND '1'='1",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'admin'' AND ''1''=''1'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape time-based injection with SLEEP", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "admin' OR IF(1=1, SLEEP(5), 0)--",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'admin'' OR IF(1=1, SLEEP(5), 0)--'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape advanced UNION SELECT injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "' UNION SELECT null, CONCAT(username, ':', password) FROM users --",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "''' UNION SELECT null, CONCAT(username, '':'', password) FROM users --'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape encoded SQL injection (hex)", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "SELECT * FROM users WHERE name = 0x61646d696e", // "admin" em hex
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'SELECT * FROM users WHERE name = 0x61646d696e'",
+    });
+
+    app.close();
+  });
+
+  it("Should escape MSSQL time-based injection", async () => {
+    let requestBody;
+
+    const app = App();
+    app.use(parseData({ escapeSQL: true }));
+    const router = Router();
+
+    router.post("/body-post", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const data = {
+      sql: "admin'; WAITFOR DELAY '00:00:05'--",
+    };
+
+    const response = await superRequest(app).post("/body-post", data);
+
+    validateSuccess(response);
+    expect(requestBody).toEqual({
+      sql: "'admin''; WAITFOR DELAY ''00:00:05''--'",
+    });
+
+    app.close();
+  });
+
   it("Return bad request if invalid request data", async () => {
     const app = App();
     app.use(parseData());
