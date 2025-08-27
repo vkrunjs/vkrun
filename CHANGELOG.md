@@ -1,5 +1,9 @@
 # VkrunJS Releases
 
+## 3.3.0
+
+- FIX improve SQL escaping to prevent injection attacks
+
 ## 3.2.0
 
 - fix header value converted to lowercase
