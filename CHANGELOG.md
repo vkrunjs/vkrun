@@ -1,8 +1,15 @@
 # VkrunJS Releases
 
+## 3.3.1
+
+- fix logger handle Error and subclasses in safeSerialize  
+  Ensure that Error objects (including custom subclasses) are serialized
+  with message, name, stack, and custom properties preserved. This
+  prevents loss of error details in logger output.
+
 ## 3.3.0
 
-- FIX improve SQL escaping to prevent injection attacks
+- fix improve SQL escaping to prevent injection attacks
 
 ## 3.2.0
 
