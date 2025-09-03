@@ -65,4 +65,43 @@ describe("safeSerialize", () => {
       self: "Circular [Unserializable]",
     });
   });
+
+  it("should serialize Error objects with all properties", () => {
+    const error = new Error("Something went wrong");
+    (error as any).customProp = 123;
+
+    const result = safeSerialize(error);
+
+    expect(result).toMatchObject({
+      message: "Something went wrong",
+      stack: expect.any(String),
+      customProp: 123,
+    });
+  });
+
+  it("should serialize custom Error subclasses with all properties", () => {
+    class CustomError extends Error {
+      statusCode: number;
+      details: string;
+
+      constructor(message: string, statusCode: number, details: string) {
+        super(message);
+        this.name = "CustomError";
+        this.statusCode = statusCode;
+        this.details = details;
+      }
+    }
+
+    const error = new CustomError("Not Found", 404, "Resource does not exist");
+
+    const result = safeSerialize(error);
+
+    expect(result).toMatchObject({
+      message: "Not Found",
+      name: "CustomError",
+      stack: expect.any(String),
+      statusCode: 404,
+      details: "Resource does not exist",
+    });
+  });
 });

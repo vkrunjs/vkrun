@@ -1,6 +1,20 @@
 export function safeSerialize(value: any, seen = new WeakSet()): any {
   const type = typeof value;
 
+  if (value instanceof Error) {
+    const errorData: Record<string, any> = {};
+
+    for (const key of Object.getOwnPropertyNames(value)) {
+      try {
+        errorData[key] = (value as any)[key];
+      } catch {
+        errorData[key] = "[Unserializable]";
+      }
+    }
+
+    return errorData;
+  }
+
   if (value === null || type === "string" || type === "number" || type === "boolean") {
     return value;
   }
