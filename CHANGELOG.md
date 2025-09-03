@@ -1,5 +1,15 @@
 # VkrunJS Releases
 
+## 3.3.2
+
+- feat rate-limit add custom onError handler for exceeded requests  
+  Allows developers to define a custom function to handle requests that exceed
+  the rate limit, instead of using the default 429 response.
+- Remove duplicate route checks during route creation in RouterSetup.
+- Centralize validation in AppSetup when handling requests (\_reqWithoutServer or server).
+- Ensures all routes, whether added via routers or directly on app, are validated consistently.
+- Simplifies tests and avoids false positives on route duplication.
+
 ## 3.3.1
 
 - fix logger handle Error and subclasses in safeSerialize  
