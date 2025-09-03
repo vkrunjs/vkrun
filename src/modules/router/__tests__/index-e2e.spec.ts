@@ -194,137 +194,38 @@ describe("Router", () => {
     app.close();
   });
 
-  it("throw new Error when duplicate route in GET method", async () => {
-    try {
-      const app = App();
-      const router = Router();
+  it("should throw an error when duplicate GET route is registered via multiple routers", async () => {
+    const app = App();
+    const router1 = Router();
+    const router2 = Router();
 
-      router.get("/get-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
+    router1.get("/get-route", (_req: Request, res: Response) => res.status(200).end());
+    router2.get("/get-route", (_req: Request, res: Response) => res.status(200).end());
 
-      router.get("/get-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
+    app.use(router1);
+    app.use(router2);
 
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /get-route route is duplicated for GET method.");
-    }
+    await expect((app as any)._reqWithoutServer({ url: "/get-route" } as any, { _ended: true } as any)).rejects.toThrow(
+      "vkrun-app: route duplicated for GET /get-route",
+    );
   });
 
-  it("throw new Error when duplicate route in HEAD method", async () => {
-    try {
-      const app = App();
-      const router = Router();
+  it("should throw an error when GET route is duplicated between router and app", async () => {
+    const app = App();
+    const router1 = Router();
+    const router2 = Router();
 
-      router.head("/head-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
+    router1.get("/get-route", (_req: Request, res: Response) => res.status(200).end());
+    router2.get("/get-route-b", (_req: Request, res: Response) => res.status(200).end());
 
-      router.head("/head-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
+    app.use(router1);
+    app.use(router2);
 
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /head-route route is duplicated for HEAD method.");
-    }
-  });
+    app.get("/get-route", (_req: Request, res: Response) => res.status(200).end());
 
-  it("throw new Error when duplicate route in POST method", async () => {
-    try {
-      const app = App();
-      const router = Router();
-
-      router.post("/post-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      router.post("/post-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /post-route route is duplicated for POST method.");
-    }
-  });
-
-  it("throw new Error when duplicate route in PUT method", async () => {
-    try {
-      const app = App();
-      const router = Router();
-
-      router.put("/put-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      router.put("/put-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /put-route route is duplicated for PUT method.");
-    }
-  });
-
-  it("throw new Error when duplicate route in PATCH method", async () => {
-    try {
-      const app = App();
-      const router = Router();
-
-      router.patch("/patch-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      router.patch("/patch-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /patch-route route is duplicated for PATCH method.");
-    }
-  });
-
-  it("throw new Error when duplicate route in DELETE method", async () => {
-    try {
-      const app = App();
-      const router = Router();
-
-      router.delete("/delete-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      router.delete("/delete-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /delete-route route is duplicated for DELETE method.");
-    }
-  });
-
-  it("throw new Error when duplicate route in OPTIONS method", async () => {
-    try {
-      const app = App();
-      const router = Router();
-
-      router.options("/options-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      router.options("/options-route", (_request: Request, response: Response) => {
-        response.status(200).end();
-      });
-
-      app.use(router);
-    } catch (error: any) {
-      expect(error.message).toEqual("vkrun-router: /options-route route is duplicated for OPTIONS method.");
-    }
+    await expect((app as any)._reqWithoutServer({ url: "/get-route" } as any, { _ended: true } as any)).rejects.toThrow(
+      "vkrun-app: route duplicated for GET /get-route",
+    );
   });
 
   it("Return not found if the route does not exist", async () => {

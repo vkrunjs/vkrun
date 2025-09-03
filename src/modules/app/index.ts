@@ -1,6 +1,5 @@
 import { RouterSetup } from "../router";
 import { createServer } from "../runtime";
-import { routeExists } from "../router/helpers";
 import { RouterHandler } from "../router/helpers/router-handler";
 import { ParseDataSetup } from "../parse-data";
 import { cors, CorsSetup } from "../cors";
@@ -39,6 +38,7 @@ class AppSetup implements VkrunApp {
 
   public server(): AppCreateServer {
     this.addRoutesOptionsWithCors();
+    this.validateRoutes();
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.createdServer = createServer(async (request, response) => {
@@ -73,6 +73,7 @@ class AppSetup implements VkrunApp {
     const _request = request;
     _request.url = decodeURIComponent(_request.url ?? "");
     this.addRoutesOptionsWithCors();
+    this.validateRoutes();
 
     if (this.errorHandler) {
       try {
@@ -159,38 +160,44 @@ class AppSetup implements VkrunApp {
   // Routing
 
   public get(path: string, ...handlers: any): void {
-    routeExists(path, "GET", this.routes);
     this.routes.push({ path, method: "GET", handlers, regex: compileRegex(path) });
   }
 
   public head(path: string, ...handlers: any): void {
-    routeExists(path, "HEAD", this.routes);
     this.routes.push({ path, method: "HEAD", handlers, regex: compileRegex(path) });
   }
 
   public post(path: string, ...handlers: any): void {
-    routeExists(path, "POST", this.routes);
     this.routes.push({ path, method: "POST", handlers, regex: compileRegex(path) });
   }
 
   public put(path: string, ...handlers: any): void {
-    routeExists(path, "PUT", this.routes);
     this.routes.push({ path, method: "PUT", handlers, regex: compileRegex(path) });
   }
 
   public patch(path: string, ...handlers: any): void {
-    routeExists(path, "PATCH", this.routes);
     this.routes.push({ path, method: "PATCH", handlers, regex: compileRegex(path) });
   }
 
   public delete(path: string, ...handlers: any): void {
-    routeExists(path, "DELETE", this.routes);
     this.routes.push({ path, method: "DELETE", handlers, regex: compileRegex(path) });
   }
 
   public options(path: string, ...handlers: any): void {
-    routeExists(path, "OPTIONS", this.routes);
     this.routes.push({ path, method: "OPTIONS", handlers, regex: compileRegex(path) });
+  }
+
+  private validateRoutes(): void {
+    const allRoutes = this.routes;
+    const seen = new Map<string, string>();
+
+    for (const route of allRoutes) {
+      const key = `${route.method}:${route.path}`;
+      if (seen.has(key)) {
+        throw new Error(`vkrun-app: route duplicated for ${route.method} ${route.path}`);
+      }
+      seen.set(key, key);
+    }
   }
 }
 
