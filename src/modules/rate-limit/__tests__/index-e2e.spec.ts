@@ -321,4 +321,38 @@ describe("Rate Limit - end to end testing using super request", () => {
 
     app.close();
   });
+
+  it("Should call custom onError when rate limit is exceeded", async () => {
+    const app = App();
+
+    const customOnError = jest.fn(async (req: Request, res: Response) => {
+      res.setHeader("Content-Type", "text/plain");
+      res.statusCode = 429;
+      res.end("Custom Too Many Requests");
+    });
+
+    app.use(rateLimit({ windowMs: 50, limit: 1, onError: customOnError }));
+
+    const router = Router();
+    router.get("/rate-limit", controllerAdapter(new RateLimitController()));
+    app.use(router);
+
+    await superRequest(app)
+      .get("/rate-limit")
+      .then((response) => {
+        expect(response.statusCode).toEqual(200);
+        expect(response.data).toEqual("rate limit");
+      });
+
+    await superRequest(app)
+      .get("/rate-limit")
+      .catch((error: SuperRequestError) => {
+        expect(error.response.statusCode).toEqual(429);
+        expect(error.response.data).toEqual("Custom Too Many Requests");
+      });
+
+    expect(customOnError).toHaveBeenCalledTimes(1);
+
+    app.close();
+  });
 });

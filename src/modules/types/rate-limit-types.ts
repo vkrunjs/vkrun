@@ -134,4 +134,10 @@ export interface RateLimitConfig {
    * Defaults to `"default"`. Useful to avoid request conflicts between different route groups.
    */
   namespace?: string;
+
+  /**
+   * Optional custom error handler when the request limit is exceeded.
+   * If provided, it replaces the default 429 response.
+   */
+  onError?: (request: Request, response: Response) => void | Promise<void>;
 }

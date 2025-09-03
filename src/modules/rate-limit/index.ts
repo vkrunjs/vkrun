@@ -45,6 +45,7 @@ class RateLimitSetup implements VkrunRateLimitSetup {
   public readonly legacyHeaders: boolean;
   public readonly minToNotification: number;
   public readonly notification?: (access: RateLimitAccessData) => void;
+  private readonly onError?: (request: Request, response: Response) => void | Promise<void>;
 
   private readonly namespace: string;
   private readonly instanceId: string;
@@ -58,6 +59,7 @@ class RateLimitSetup implements VkrunRateLimitSetup {
     this.legacyHeaders = config.legacyHeaders ?? false;
     this.minToNotification = config.minToNotification ?? 0;
     this.notification = config.notification;
+    this.onError = config.onError;
 
     this.namespace = config.namespace ?? "default";
     this.instanceId = config.instanceId ?? randomUUID();
@@ -79,7 +81,7 @@ class RateLimitSetup implements VkrunRateLimitSetup {
     this.expirationTimers = instanceTimerMap.get(this.instanceId)!;
   }
 
-  handle(request: Request, response: Response, next: NextFunction): void {
+  async handle(request: Request, response: Response, next: NextFunction): Promise<void> {
     const remoteAddress = request.socket.remoteAddress ?? "127.0.0.1";
     const remoteFamily = request.socket.remoteFamily ?? "";
     const userAgent = request.headers["user-agent"] ?? "";
@@ -126,9 +128,15 @@ class RateLimitSetup implements VkrunRateLimitSetup {
       }
 
       this.requests.set(key, info);
-      response.setHeader("Content-Type", "text/plain");
-      response.statusCode = 429;
-      response.end("Too Many Requests");
+
+      if (this.onError) {
+        await this.onError(request, response);
+      } else {
+        response.setHeader("Content-Type", "text/plain");
+        response.statusCode = 429;
+        response.end("Too Many Requests");
+      }
+
       return;
     }
 
