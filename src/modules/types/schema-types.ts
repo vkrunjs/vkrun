@@ -7218,3 +7218,11 @@ export type SchemaGenericNotEqualType<
     any,
     InferOut<SchemaType<SchemaWithOptionalAndNullable<T, Opts>, SchemaWithOptionalAndNullable<I, Opts>>>
   >;
+
+export interface ExecutionContext {
+  value: any;
+  valueName: string;
+  currentValue: any;
+  defaultValue: any;
+  tests: SchemaTests;
+}

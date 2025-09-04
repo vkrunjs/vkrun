@@ -2,26 +2,11 @@ import * as helper from "./helpers";
 import type * as type from "../types";
 
 export class SchemaSetup implements type.VkrunSchema {
-  private value: any;
-  private valueName: any;
-  private currentValue: any;
   private defaultValue: any;
   private readonly methods: type.SchemaMethods;
-  private tests: type.SchemaTests;
 
   constructor(config?: type.SchemaConfig) {
-    this.valueName = undefined;
     this.methods = [];
-    this.tests = {
-      passedAll: false,
-      passed: 0,
-      failed: 0,
-      totalTests: 0,
-      successes: [],
-      errors: [],
-      time: "",
-      value: undefined,
-    };
     this.methodBuild({ method: "required", config });
   }
 
@@ -113,63 +98,59 @@ export class SchemaSetup implements type.VkrunSchema {
     };
   }
 
-  private validateMethods(): void {
-    this.resetTests();
-
-    if (this.value === undefined && helper.hasMethod(this.methods, "default")) {
-      this.value = this.defaultValue;
+  private validateMethods(ctx: type.ExecutionContext): void {
+    if (ctx.value === undefined && helper.hasMethod(this.methods, "default")) {
+      ctx.value = ctx.defaultValue;
     }
 
-    this.currentValue = this.value;
+    ctx.currentValue = ctx.value;
     const blocks = helper.splitIntoMethodBlocks(this.methods);
-    this.tests.value = this.currentValue;
+    ctx.tests.value = ctx.currentValue;
 
     for (let i = 0; i < blocks.length; i++) {
       const block = blocks[i];
-      helper.runValidatorBlock(this.runValidatorBlockParams(), block);
+      helper.runValidatorBlock(this.runValidatorBlockParams(ctx), block);
       const nextBlock = blocks[i + 1];
 
       if (nextBlock) {
-        this.currentValue = helper.convertValueBlock(block, nextBlock, this.currentValue);
+        ctx.currentValue = helper.convertValueBlock(block, nextBlock, ctx.currentValue);
       }
     }
 
-    this.value = this.currentValue;
-    this.tests.value = this.currentValue;
+    ctx.value = ctx.currentValue;
+    ctx.tests.value = ctx.currentValue;
   }
 
-  private async validateMethodsAsync(): Promise<void> {
-    this.resetTests();
-
-    if (this.value === undefined && helper.hasMethod(this.methods, "default")) {
-      this.value = this.defaultValue;
+  private async validateMethodsAsync(ctx: type.ExecutionContext): Promise<void> {
+    if (ctx.value === undefined && helper.hasMethod(this.methods, "default")) {
+      ctx.value = ctx.defaultValue;
     }
 
-    this.currentValue = this.value;
+    ctx.currentValue = ctx.value;
     const blocks = helper.splitIntoMethodBlocks(this.methods);
-    this.tests.value = this.currentValue;
+    ctx.tests.value = ctx.currentValue;
 
     for (let i = 0; i < blocks.length; i++) {
       const block = blocks[i];
-      await helper.runValidatorBlockAsync(this.runValidatorBlockParams(), block);
+      await helper.runValidatorBlockAsync(this.runValidatorBlockParams(ctx), block);
       const nextBlock = blocks[i + 1];
 
       if (nextBlock) {
-        this.currentValue = helper.convertValueBlock(block, nextBlock, this.currentValue);
+        ctx.currentValue = helper.convertValueBlock(block, nextBlock, ctx.currentValue);
       }
     }
 
-    this.value = this.currentValue;
-    this.tests.value = this.currentValue;
+    ctx.value = ctx.currentValue;
+    ctx.tests.value = ctx.currentValue;
   }
 
-  private runValidatorBlockParams() {
+  private runValidatorBlockParams(ctx: type.ExecutionContext) {
     return {
-      currentValue: this.currentValue,
-      valueName: this.valueName,
-      updateTests: (test: type.SchemaTests) => this.updateTests(test),
-      addPassed: (success: type.SchemaSuccessTest) => this.addPassed(success),
-      addFailed: (error: type.SchemaErrorTest) => this.addFailed(error),
+      currentValue: ctx.currentValue,
+      valueName: ctx.valueName,
+      updateTests: (test: type.SchemaTests) => this.updateTests(ctx, test),
+      addPassed: (success: type.SchemaSuccessTest) => this.addPassed(ctx, success),
+      addFailed: (error: type.SchemaErrorTest) => this.addFailed(ctx, error),
     };
   }
 
@@ -177,112 +158,108 @@ export class SchemaSetup implements type.VkrunSchema {
     this.methods.push(build);
   }
 
-  private resetTests(): void {
-    this.tests = {
-      passedAll: false,
-      passed: 0,
-      failed: 0,
-      totalTests: 0,
-      successes: [],
-      errors: [],
-      time: "",
-      value: undefined,
+  private createExecutionContext(value: any, valueName?: string): type.ExecutionContext {
+    return {
+      value,
+      valueName: valueName ?? "value",
+      currentValue: value,
+      defaultValue: this.defaultValue,
+      tests: {
+        passedAll: false,
+        passed: 0,
+        failed: 0,
+        totalTests: 0,
+        successes: [],
+        errors: [],
+        time: "",
+        value: undefined,
+      },
     };
   }
 
-  private updateTests(test: type.SchemaTests): void {
-    this.tests.passed += test.passed;
-    this.tests.failed += test.failed;
-    this.tests.totalTests += test.totalTests;
-    test.successes.forEach((s) => this.tests.successes.push(s));
-    test.errors.forEach((e) => this.tests.errors.push(e));
-    this.tests.passedAll = this.tests.passed === this.tests.totalTests;
+  private updateTests(ctx: type.ExecutionContext, test: type.SchemaTests): void {
+    ctx.tests.passed += test.passed;
+    ctx.tests.failed += test.failed;
+    ctx.tests.totalTests += test.totalTests;
+    test.successes.forEach((s) => ctx.tests.successes.push(s));
+    test.errors.forEach((e) => ctx.tests.errors.push(e));
+    ctx.tests.passedAll = ctx.tests.passed === ctx.tests.totalTests;
   }
 
-  private addPassed(success: type.SchemaSuccessTest): void {
-    this.tests.passed++;
-    this.tests.totalTests++;
-    this.tests.successes.push(success);
-    this.tests.passedAll = this.tests.passed === this.tests.totalTests;
+  private addPassed(ctx: type.ExecutionContext, success: type.SchemaSuccessTest): void {
+    ctx.tests.passed++;
+    ctx.tests.totalTests++;
+    ctx.tests.successes.push(success);
+    ctx.tests.passedAll = ctx.tests.passed === ctx.tests.totalTests;
 
     if (success.newValue) {
-      this.currentValue = success.newValue;
+      ctx.currentValue = success.newValue;
     }
   }
 
-  private addFailed(error: type.SchemaErrorTest): void {
-    this.tests.failed++;
-    this.tests.totalTests++;
-    this.tests.errors.push(error);
-    this.tests.passedAll = this.tests.passed === this.tests.totalTests;
+  private addFailed(ctx: type.ExecutionContext, error: type.SchemaErrorTest): void {
+    ctx.tests.failed++;
+    ctx.tests.totalTests++;
+    ctx.tests.errors.push(error);
+    ctx.tests.passedAll = ctx.tests.passed === ctx.tests.totalTests;
   }
 
   private throw(value: any, valueName: string, ClassError?: type.SchemaErrorTypes): void {
-    this.value = value;
-    this.valueName = valueName;
-    this.validateMethods();
-    helper.throwError(this.tests, ClassError);
+    const ctx = this.createExecutionContext(value, valueName);
+    this.validateMethods(ctx);
+    helper.throwError(ctx.tests, ClassError);
   }
 
   private async throwAsync(value: any, valueName: string, ClassError?: type.SchemaErrorTypes): Promise<void> {
-    this.value = await value;
-    this.valueName = valueName;
-    await this.validateMethodsAsync();
-    helper.throwError(this.tests, ClassError);
+    const ctx = this.createExecutionContext(await value, valueName);
+    await this.validateMethodsAsync(ctx);
+    helper.throwError(ctx.tests, ClassError);
   }
 
   private test(value: any, valueName?: string): type.SchemaTests {
     const startTime = performance.now();
-    this.valueName = valueName ?? "value";
-    this.value = value;
-    this.validateMethods();
-    const endTime = performance.now();
-    const elapsedTime = endTime - startTime;
-    this.tests.time = `${elapsedTime.toFixed(3)}ms`;
-    return this.tests;
+    const ctx = this.createExecutionContext(value, valueName);
+    this.validateMethods(ctx);
+    ctx.tests.time = `${(performance.now() - startTime).toFixed(3)}ms`;
+    return ctx.tests;
   }
 
   private async testAsync(value: any, valueName?: string): Promise<type.SchemaTests> {
     const startTime = performance.now();
-    this.valueName = valueName ?? "value";
-    this.value = await value;
-    await this.validateMethodsAsync();
-    const endTime = performance.now();
-    const elapsedTime = endTime - startTime;
-    this.tests.time = `${elapsedTime.toFixed(3)}ms`;
-    return this.tests;
+    const ctx = this.createExecutionContext(await value, valueName);
+    await this.validateMethodsAsync(ctx);
+    ctx.tests.time = `${(performance.now() - startTime).toFixed(3)}ms`;
+    return ctx.tests;
   }
 
   private parse(value: any, valueName?: string) {
-    this.valueName = valueName ?? "value";
-    this.value = value;
-    this.validateMethods();
-    if (!this.tests.passedAll) {
-      throw new Error(this.tests.errors[0].message);
+    const ctx = this.createExecutionContext(value, valueName);
+    this.validateMethods(ctx);
+    if (!ctx.tests.passedAll) {
+      throw new Error(ctx.tests.errors[0].message);
     }
-    return this.tests.value;
+    return ctx.tests.value;
   }
 
   private async parseAsync(value: any, valueName?: string) {
-    this.valueName = valueName ?? "value";
-    this.value = await value;
-    await this.validateMethodsAsync();
-    if (!this.tests.passedAll) {
-      throw new Error(this.tests.errors[0].message);
+    const ctx = this.createExecutionContext(await value, valueName);
+    await this.validateMethodsAsync(ctx);
+    if (!ctx.tests.passedAll) {
+      throw new Error(ctx.tests.errors[0].message);
     }
-    return this.tests.value;
+    return ctx.tests.value;
   }
 
   private validate(value: any): boolean {
-    this.value = value;
-    this.validateMethods();
-    return this.tests.passedAll;
+    const ctx = this.createExecutionContext(value);
+    this.validateMethods(ctx);
+    return ctx.tests.passedAll;
   }
 
   private async validateAsync(value: any): Promise<boolean> {
-    this.value = await value;
-    await this.validateMethodsAsync();
-    return this.tests.passedAll;
+    const ctx = this.createExecutionContext(await value);
+    await this.validateMethodsAsync(ctx);
+    return ctx.tests.passedAll;
   }
 }
 
