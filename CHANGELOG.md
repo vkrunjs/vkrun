@@ -1,5 +1,12 @@
 # VkrunJS Releases
 
+## 3.3.3
+
+- Ensure `ExecutionContext` is instantiated fresh for each validation run
+- Keep schema methods immutable as the shared build contract
+- Prevent session data from leaking across concurrent validations
+- Prepare `default` value handling to be managed entirely within schema methods
+
 ## 3.3.2
 
 - feat rate-limit add custom onError handler for exceeded requests  
