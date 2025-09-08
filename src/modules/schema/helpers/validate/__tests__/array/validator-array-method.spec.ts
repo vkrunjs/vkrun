@@ -1,6 +1,37 @@
 import { schema } from "../../../../../../index";
 
 describe("Validator Array Method", () => {
+  it("Should not modify base schema when creating derived array schemas", () => {
+    // Base schema
+    const baseArraySchema = schema().array(schema().string());
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseArraySchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validArray = ["example"];
+
+    // --- Base schema should only validate arrays of strings and not allow null/undefined ---
+    expect(baseArraySchema.validate(validArray)).toBeTruthy();
+    expect(baseArraySchema.validate(null)).toBeFalsy();
+    expect(baseArraySchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validArray)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validArray)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseArraySchema.validate(null)).toBeFalsy();
+    expect(baseArraySchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should validate an array of any schema and return true for a valid array", () => {
     const validateA = schema().array(schema().any()).validate(["string"]);
     const validateB = schema().array(schema().string()).validate(["string"]);

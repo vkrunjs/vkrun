@@ -1,8 +1,38 @@
 import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
-import { InferIn, InferOut } from "../../../../../types";
 
 describe("Validator String Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseStringSchema = schema().string();
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseStringSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validString = "example";
+
+    // --- Base schema should only validate strings and not allow null/undefined ---
+    expect(baseStringSchema.validate(validString)).toBeTruthy();
+    expect(baseStringSchema.validate(null)).toBeFalsy();
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validString)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validString)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseStringSchema.validate(null)).toBeFalsy();
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the string method and return true if the value is of type string", () => {
     const value = "string";
 

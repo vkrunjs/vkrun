@@ -1,3 +1,4 @@
+import { SchemaSetup } from "../..";
 import {
   SchemaConfig,
   SchemaStringMinLengthConfig,
@@ -16,13 +17,32 @@ import {
   isString,
   SchemaErrorTypes,
   SchemaMethodParams,
+  SchemaMethodOptions,
 } from "../../../../index";
 import { customMethod } from "./custom-method";
 
-export const stringMethod = (params: SchemaMethodParams, config?: SchemaConfig) => {
-  params.methodBuild({ method: "string", config });
+function applyAndChain(method: string, methodParams: SchemaMethodParams, extra: Record<string, any> = {}) {
+  const next: any = methodParams.clone(methodParams.methods);
 
-  const that = params;
+  next.methodBuild({ method, ...extra });
+
+  const nextMethods: any = stringMethod({
+    params: next.schemaMethodParams(),
+    skipBase: true,
+  });
+
+  // Only delete method for chainable methods except notEqual
+  if (method !== "notEqual") {
+    delete nextMethods[method as keyof typeof nextMethods];
+  }
+
+  return nextMethods;
+}
+
+export const stringMethod = ({ params, config, skipBase = false }: SchemaMethodOptions) => {
+  if (!skipBase) {
+    params.methodBuild({ method: "string", config });
+  }
 
   const chain = {
     throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
@@ -37,76 +57,18 @@ export const stringMethod = (params: SchemaMethodParams, config?: SchemaConfig) 
     testAsync: async (value: any, valueName?: string) => await params.testAsync(value, valueName),
     parse: (value: any, valueName?: string) => params.parse(value, valueName),
     parseAsync: async (value: any, valueName?: string) => await params.parseAsync(value, valueName),
-
-    equal: <T = unknown>(valueToCompare: T, config?: SchemaConfig) => {
-      params.methodBuild({ method: "equal", valueToCompare, config });
-
-      delete (chain as any).equal;
-      return chain;
-    },
-
-    notEqual: (valueToCompare: string, config?: SchemaConfig) => {
-      params.methodBuild({ method: "notEqual", valueToCompare, config });
-      return chain;
-    },
-
-    oneOf: (comparisonItems: string[], config?: SchemaConfig) => {
-      params.methodBuild({ method: "oneOf", comparisonItems, config });
-
-      delete (chain as any).oneOf;
-      return chain;
-    },
-
-    minLength(config: SchemaStringMinLengthConfig) {
-      that.methodBuild({ method: "minLength", config });
-
-      delete (chain as any).minLength;
-      return chain;
-    },
-
-    maxLength(config: SchemaStringMaxLengthConfig) {
-      that.methodBuild({ method: "maxLength", config });
-
-      delete (chain as any).maxLength;
-      return chain;
-    },
-
-    minWord(config: SchemaStringMinWordConfig) {
-      that.methodBuild({ method: "minWord", config });
-
-      delete (chain as any).minWord;
-      return chain;
-    },
-
-    email(config: SchemaConfig) {
-      that.methodBuild({ method: "email", config });
-
-      delete (chain as any).email;
-      return chain;
-    },
-
-    UUID(config: SchemaStringUUIDConfig) {
-      that.methodBuild({ method: "UUID", config });
-
-      delete (chain as any).UUID;
-      return chain;
-    },
-
-    time(config: SchemaStringTimeConfig) {
-      that.methodBuild({ method: "time", config });
-
-      delete (chain as any).time;
-      return chain;
-    },
-
-    regex(config: SchemaStringRegexConfig) {
-      that.methodBuild({ method: "regex", config });
-
-      delete (chain as any).regex;
-      return chain;
-    },
-
-    date(config?: SchemaDateConfig) {
+    equal: <T = unknown>(valueToCompare: T, config?: SchemaConfig) =>
+      applyAndChain("equal", params, { valueToCompare, config }),
+    notEqual: (valueToCompare: string, config?: SchemaConfig) => applyAndChain("notEqual", params, { valueToCompare, config }),
+    oneOf: (comparisonItems: string[], config?: SchemaConfig) => applyAndChain("oneOf", params, { comparisonItems, config }),
+    minLength: (config: SchemaStringMinLengthConfig) => applyAndChain("minLength", params, { config }),
+    maxLength: (config: SchemaStringMaxLengthConfig) => applyAndChain("maxLength", params, { config }),
+    minWord: (config: SchemaStringMinWordConfig) => applyAndChain("minWord", params, { config }),
+    email: (config: SchemaConfig) => applyAndChain("email", params, { config }),
+    UUID: (config: SchemaStringUUIDConfig) => applyAndChain("UUID", params, { config }),
+    time: (config: SchemaStringTimeConfig) => applyAndChain("time", params, { config }),
+    regex: (config: SchemaStringRegexConfig) => applyAndChain("regex", params, { config }),
+    date: (config?: SchemaDateConfig) => {
       const dateTypes = [
         "ISO8601",
         "DD/MM/YYYY",
@@ -123,62 +85,47 @@ export const stringMethod = (params: SchemaMethodParams, config?: SchemaConfig) 
         throw Error("vkrun-schema: date method received invalid parameter!");
       }
 
-      that.methodBuild({ method: "date", config });
-
-      delete (chain as any).date;
-      return chain;
+      return applyAndChain("date", params, { config });
     },
-
-    notRequired() {
-      that.methodBuild({ method: "notRequired" });
-
-      delete (chain as any).notRequired;
-      return chain;
-    },
-
-    nullable() {
-      that.methodBuild({ method: "nullable" });
-
-      delete (chain as any).nullable;
-      return chain;
-    },
-
-    alias(valueName: string) {
+    notRequired: () => applyAndChain("notRequired", params),
+    nullable: () => applyAndChain("nullable", params),
+    alias: (valueName: string) => {
       if (!isString(valueName)) {
         throw Error("vkrun-schema: alias method received invalid parameter!");
       }
-
-      that.methodBuild({ method: "alias", alias: valueName });
-
-      delete (chain as any).alias;
-      return chain;
+      return applyAndChain("alias", params, { alias: valueName });
     },
-
     default(value: string) {
-      params.default(value);
-      delete (chain as any).default;
-      return chain;
-    },
+      const next: any = params.clone(params.methods);
+      next.schemaMethodParams().default(value);
 
+      const nextMethods: any = stringMethod({
+        params: next.schemaMethodParams(),
+        skipBase: true,
+      });
+
+      delete nextMethods.default;
+      return nextMethods;
+    },
     custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => {
       return customMethod(params, method);
     },
-
     parseTo() {
-      that.methodBuild({ method: "parseTo" });
+      const next: any = params.clone(params.methods);
+      const nextParams = next.schemaMethodParams();
+      nextParams.methodBuild({ method: "parseTo" });
 
       return {
-        number: (config?: SchemaConfig) => that.number(config),
-        bigInt: (config?: SchemaConfig) => that.bigInt(config),
-        boolean: (config?: SchemaConfig) => that.boolean(config),
-        buffer: (config?: SchemaConfig) => that.buffer(config),
-        date: (config?: SchemaDateConfig) => that.date(config),
-        array: <Item extends SchemaType<any, any>>(schema: Item, config?: SchemaArrayConfig) => {
-          return that.array(schema, config);
-        },
-        object: <Shape extends Record<string, SchemaType<any, any>>>(schema: Shape, config?: SchemaConfig) => {
-          return that.object(schema, config);
-        },
+        string: (config?: SchemaConfig) => nextParams.string(config),
+        number: (config?: SchemaConfig) => nextParams.number(config),
+        bigInt: (config?: SchemaConfig) => nextParams.bigInt(config),
+        boolean: (config?: SchemaConfig) => nextParams.boolean(config),
+        buffer: (config?: SchemaConfig) => nextParams.buffer(config),
+        date: (config?: SchemaDateConfig) => nextParams.date(config),
+        array: <Item extends SchemaType<any, any>>(schema: Item, config?: SchemaArrayConfig) =>
+          nextParams.array(schema, config),
+        object: <Shape extends Record<string, SchemaType<any, any>>>(schema: Shape, config?: SchemaConfig) =>
+          nextParams.object(schema, config),
       };
     },
   } as unknown as SchemaGenericStringType<SchemaDefaultStringOptions, SchemaDefaultStringFlags>;

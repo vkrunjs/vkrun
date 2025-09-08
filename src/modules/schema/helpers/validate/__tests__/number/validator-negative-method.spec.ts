@@ -2,6 +2,49 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Negative Method", () => {
+  it("Should not modify base schema when creating derived schema with negative, nullable and notRequired", () => {
+    // Base schema
+    const baseNumberSchema = schema().number();
+
+    // Derived schemas
+    const derivedNegativeSchema = baseNumberSchema.negative();
+    const derivedNullableSchema = derivedNegativeSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid and invalid values
+    const validValue = -1;
+    const invalidValue = 1;
+
+    // --- Base schema only validates numbers, not null/undefined ---
+    expect(baseNumberSchema.validate(validValue)).toBeTruthy();
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+    expect(baseNumberSchema.validate(invalidValue)).toBeTruthy(); // base schema does not know about negative yet
+
+    // --- Derived schema with negative ---
+    expect(derivedNegativeSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNegativeSchema.validate(invalidValue)).toBeFalsy();
+    expect(derivedNegativeSchema.validate(null)).toBeFalsy();
+    expect(derivedNegativeSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema negative + nullable ---
+    expect(derivedNullableSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+    expect(derivedNullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Derived schema negative + nullable + notRequired ---
+    expect(derivedNotRequiredNullableSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+    expect(baseNumberSchema.validate(invalidValue)).toBeTruthy(); // still only validates number type
+  });
+
   it("Should be able to validate the negative method and return true if the value is negative", () => {
     expect(schema().number().negative().validate(-1)).toBeTruthy();
 

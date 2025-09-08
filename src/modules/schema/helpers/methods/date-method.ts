@@ -9,11 +9,29 @@ import {
   isString,
   SchemaErrorTypes,
   SchemaMethodParams,
+  SchemaMethodOptions,
 } from "../../../../index";
 import { customMethod } from "./custom-method";
 
-export const dateMethod = (params: SchemaMethodParams, config?: SchemaConfig) => {
-  params.methodBuild({ method: "date", config });
+function applyAndChainDate(method: string, methodParams: SchemaMethodParams, extra: Record<string, any> = {}) {
+  const next: any = methodParams.clone(methodParams.methods);
+
+  next.methodBuild({ method, ...extra });
+
+  const nextMethods: any = dateMethod({ params: next, skipBase: true });
+
+  // Only delete chainable methods for dates if not "notEqual"
+  if (method !== "notEqual") {
+    delete nextMethods[method as keyof typeof nextMethods];
+  }
+
+  return nextMethods;
+}
+
+export const dateMethod = ({ params, config, skipBase = false }: SchemaMethodOptions) => {
+  if (!skipBase) {
+    params.methodBuild({ method: "date", config });
+  }
   const that = params;
 
   const chain = {
@@ -29,88 +47,51 @@ export const dateMethod = (params: SchemaMethodParams, config?: SchemaConfig) =>
     testAsync: async (value: any, valueName?: string) => await params.testAsync(value, valueName),
     parse: (value: any, valueName?: string) => params.parse(value, valueName),
     parseAsync: async (value: any, valueName?: string) => await params.parseAsync(value, valueName),
-
-    equal: <T = unknown>(valueToCompare: T, config?: SchemaConfig) => {
-      params.methodBuild({ method: "equal", valueToCompare, config });
-
-      delete (chain as any).equal;
-      return chain;
-    },
-
-    notEqual: (valueToCompare: Date, config?: SchemaConfig) => {
-      params.methodBuild({ method: "notEqual", valueToCompare, config });
-      return chain;
-    },
-
-    oneOf: (comparisonItems: Date[], config?: SchemaConfig) => {
-      params.methodBuild({ method: "oneOf", comparisonItems, config });
-
-      delete (chain as any).oneOf;
-      return chain;
-    },
-
-    min(config: SchemaDateMinConfig) {
+    equal: (valueToCompare: Date, config?: SchemaConfig) => applyAndChainDate("equal", params, { valueToCompare, config }),
+    notEqual: (valueToCompare: Date, config?: SchemaConfig) =>
+      applyAndChainDate("notEqual", params, { valueToCompare, config }),
+    oneOf: (comparisonItems: Date[], config?: SchemaConfig) => applyAndChainDate("oneOf", params, { comparisonItems, config }),
+    min: (config: SchemaDateMinConfig) => {
       if (!(config.min instanceof Date)) {
         throw Error("vkrun-schema: min method received invalid parameter!");
       }
-      that.methodBuild({ method: "min", config });
-
-      delete (chain as any).min;
-      return chain;
+      return applyAndChainDate("min", params, { config });
     },
-
-    max(config: SchemaDateMaxConfig) {
+    max: (config: SchemaDateMaxConfig) => {
       if (!(config.max instanceof Date)) {
         throw Error("vkrun-schema: max method received invalid parameter!");
       }
-      that.methodBuild({ method: "max", config });
-
-      delete (chain as any).max;
-      return chain;
+      return applyAndChainDate("max", params, { config });
     },
-
-    alias(valueName: string) {
-      if (!isString(valueName)) {
-        throw Error("vkrun-schema: alias method received invalid parameter!");
-      }
-
-      that.methodBuild({ method: "alias", alias: valueName });
-
-      delete (chain as any).alias;
-      return chain;
+    alias: (valueName: string) => {
+      if (!isString(valueName)) throw Error("vkrun-schema: alias method received invalid parameter!");
+      return applyAndChainDate("alias", params, { alias: valueName });
     },
+    default: (value: Date) => {
+      const next: any = params.clone(params.methods);
+      next.schemaMethodParams().default(value);
 
-    default(value: Date) {
-      params.default(value);
-      delete (chain as any).default;
-      return chain;
+      const nextMethods: any = dateMethod({
+        params: next.schemaMethodParams(),
+        skipBase: true,
+      });
+
+      delete nextMethods.default;
+      return nextMethods;
     },
+    notRequired: () => applyAndChainDate("notRequired", params),
+    nullable: (config?: SchemaConfig) => applyAndChainDate("nullable", params, { config }),
+    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => customMethod(params, method),
+    parseTo: () => {
+      const next: any = params.clone(params.methods);
+      const nextParams = next.schemaMethodParams();
+      nextParams.methodBuild({ method: "parseTo" });
 
-    notRequired() {
-      that.methodBuild({ method: "notRequired" });
-
-      delete (chain as any).notRequired;
-      return chain;
-    },
-
-    nullable(config?: SchemaConfig) {
-      that.methodBuild({ method: "nullable", config });
-
-      delete (chain as any).nullable;
-      return chain;
-    },
-
-    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => {
-      return customMethod(params, method);
-    },
-
-    parseTo() {
-      that.methodBuild({ method: "parseTo" });
       return {
-        string: (config?: SchemaConfig) => that.string(config),
-        number: (config?: SchemaConfig) => that.number(config),
-        bigInt: (config?: SchemaConfig) => that.bigInt(config),
-        boolean: (config?: SchemaConfig) => that.boolean(config),
+        string: (config?: SchemaConfig) => nextParams.string(config),
+        number: (config?: SchemaConfig) => nextParams.number(config),
+        bigInt: (config?: SchemaConfig) => nextParams.bigInt(config),
+        boolean: (config?: SchemaConfig) => nextParams.boolean(config),
       };
     },
   } as unknown as SchemaGenericDateType<SchemaDefaultDateOptions, SchemaDefaultDateFlags>;

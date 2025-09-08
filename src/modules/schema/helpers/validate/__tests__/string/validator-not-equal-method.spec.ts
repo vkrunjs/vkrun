@@ -1,6 +1,32 @@
 import { schema } from "../../../../index";
 
 describe("Validator String NotEqual Method", () => {
+  it("Should not modify base schema when creating derived schema with notEqual", () => {
+    // Base schema that only validates strings
+    const baseStringSchema = schema().string();
+
+    // Derived schema adding notEqual validation
+    const derivedNotEqualSchema = baseStringSchema.notEqual("hello");
+
+    // Example test values
+    const valueMatching = "hello";
+    const valueNotMatching = "world";
+
+    // --- Base schema should remain unchanged ---
+    expect(baseStringSchema.validate(valueMatching)).toBeTruthy(); // base schema still validates any string
+    expect(baseStringSchema.validate(valueNotMatching)).toBeTruthy(); // base schema does not check notEqual
+    expect(baseStringSchema.validate(null)).toBeFalsy();
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema applies notEqual validation ---
+    expect(derivedNotEqualSchema.validate(valueMatching)).toBeFalsy();
+    expect(derivedNotEqualSchema.validate(valueNotMatching)).toBeTruthy();
+
+    // --- Ensure base schema still unaffected after derived schema usage ---
+    expect(baseStringSchema.validate(valueMatching)).toBeTruthy();
+    expect(baseStringSchema.validate(valueNotMatching)).toBeTruthy();
+  });
+
   it("Should be able to validate the notEqual method and return true if the value is not equal to the comparison value", () => {
     const valueToCompare = "hello";
     const value = "world";

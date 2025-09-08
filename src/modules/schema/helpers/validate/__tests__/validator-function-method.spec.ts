@@ -2,6 +2,37 @@ import { schema } from "../../../index";
 import { AnyError } from "../../../../errors";
 
 describe("Validator Function Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseFunctionSchema = schema().function();
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseFunctionSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validFunction = (): void => {};
+
+    // --- Base schema should only validate functions and not allow null/undefined ---
+    expect(baseFunctionSchema.validate(validFunction)).toBeTruthy();
+    expect(baseFunctionSchema.validate(null)).toBeFalsy();
+    expect(baseFunctionSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validFunction)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validFunction)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseFunctionSchema.validate(null)).toBeFalsy();
+    expect(baseFunctionSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the function method and return true if the value is of type function", () => {
     const valueIsFunction = (): void => {};
 

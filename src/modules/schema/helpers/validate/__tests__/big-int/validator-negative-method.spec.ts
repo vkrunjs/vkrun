@@ -2,6 +2,41 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Negative BigInt Method", () => {
+  it("Should not modify base schema when creating derived schema with negative", () => {
+    // Base schema
+    const baseBigIntSchema = schema().bigInt().negative();
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseBigIntSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid negative value
+    const validNegative = -5n;
+
+    // --- Base schema should only validate negative bigint and not allow null/undefined/positive ---
+    expect(baseBigIntSchema.validate(validNegative)).toBeTruthy();
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+    expect(baseBigIntSchema.validate(5n)).toBeFalsy(); // positive value
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validNegative)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+    expect(derivedNullableSchema.validate(5n)).toBeFalsy(); // positive value
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validNegative)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(5n)).toBeFalsy(); // positive value
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+    expect(baseBigIntSchema.validate(5n)).toBeFalsy(); // positive value
+  });
+
   it("Should be able to validate the negative method and return true if the value is negative", () => {
     expect(schema().bigInt().negative().validate(-1n)).toBeTruthy();
 

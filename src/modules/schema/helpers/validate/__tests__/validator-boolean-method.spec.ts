@@ -2,6 +2,37 @@ import { schema } from "../../../index";
 import { AnyError } from "../../../../errors";
 
 describe("Validator Boolean Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseBooleanSchema = schema().boolean();
+
+    // Derived schema applying additional methods
+    const derivedNotRequiredSchema = baseBooleanSchema.notRequired();
+    const derivedNullableSchema = derivedNotRequiredSchema.nullable();
+
+    // Valid values to test
+    const validBoolean = true;
+
+    // --- Base schema should only validate booleans and not allow null/undefined ---
+    expect(baseBooleanSchema.validate(validBoolean)).toBeTruthy();
+    expect(baseBooleanSchema.validate(null)).toBeFalsy();
+    expect(baseBooleanSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows undefined ---
+    expect(derivedNotRequiredSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredSchema.validate(validBoolean)).toBeTruthy();
+    expect(derivedNotRequiredSchema.validate(null)).toBeFalsy();
+
+    // --- Derived schema with nullable allows null and notRequired allows undefined ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validBoolean)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseBooleanSchema.validate(null)).toBeFalsy();
+    expect(baseBooleanSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the boolean method and return true if the value is of type boolean", () => {
     const value = true;
 

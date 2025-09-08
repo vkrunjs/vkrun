@@ -2,6 +2,37 @@ import { schema } from "../../../index";
 import { AnyError } from "../../../../errors";
 
 describe("Validator Buffer Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseBufferSchema = schema().buffer();
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseBufferSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validBuffer = Buffer.from("example");
+
+    // --- Base schema should only validate Buffer and not allow null/undefined ---
+    expect(baseBufferSchema.validate(validBuffer)).toBeTruthy();
+    expect(baseBufferSchema.validate(null)).toBeFalsy();
+    expect(baseBufferSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validBuffer)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validBuffer)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseBufferSchema.validate(null)).toBeFalsy();
+    expect(baseBufferSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the buffer method and return true if the value is of type Buffer", () => {
     const value = Buffer.from("test");
 

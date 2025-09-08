@@ -377,6 +377,7 @@ export interface VkrunSchema {
 }
 
 export interface SchemaMethodParams extends SchemaReturnCommonMethods {
+  clone: (methods: SchemaMethods) => VkrunSchema;
   string: (config?: SchemaConfig) => SchemaGenericStringType<SchemaDefaultStringOptions, SchemaDefaultStringFlags>;
   number: (config?: SchemaConfig) => SchemaGenericNumberType<SchemaDefaultNumberOptions, SchemaDefaultNumberFlags>;
   bigInt: (config?: SchemaConfig) => SchemaGenericBigIntType<SchemaDefaultBigIntOptions, SchemaDefaultBigIntFlags>;
@@ -7219,10 +7220,16 @@ export type SchemaGenericNotEqualType<
     InferOut<SchemaType<SchemaWithOptionalAndNullable<T, Opts>, SchemaWithOptionalAndNullable<I, Opts>>>
   >;
 
-export interface ExecutionContext {
+export interface SchemaExecutionContext {
   value: any;
   valueName: string;
   currentValue: any;
   defaultValue: any;
   tests: SchemaTests;
+}
+
+export interface SchemaMethodOptions {
+  params: SchemaMethodParams;
+  config?: SchemaConfig;
+  skipBase?: boolean;
 }

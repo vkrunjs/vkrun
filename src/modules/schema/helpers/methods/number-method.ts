@@ -10,130 +10,78 @@ import {
   isString,
   SchemaErrorTypes,
   SchemaMethodParams,
+  SchemaMethodOptions,
 } from "../../../../index";
 import { customMethod } from "./custom-method";
 
-export const numberMethod = (params: SchemaMethodParams, config?: SchemaConfig) => {
-  params.methodBuild({ method: "number", config });
-  const that = params;
+function applyAndChain(method: string, methodParams: SchemaMethodParams, extra: Record<string, any> = {}) {
+  const next: any = methodParams.clone(methodParams.methods);
+
+  next.methodBuild({ method, ...extra });
+
+  const nextMethods: any = numberMethod({ params: next, skipBase: true });
+
+  // Only delete chainable methods for numbers if not "notEqual"
+  if (method !== "notEqual") {
+    delete nextMethods[method as keyof typeof nextMethods];
+  }
+
+  return nextMethods;
+}
+
+export const numberMethod = ({ params, config, skipBase = false }: SchemaMethodOptions) => {
+  if (!skipBase) {
+    params.methodBuild({ method: "number", config });
+  }
 
   const chain = {
-    throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
-      params.throw(value, valueName, ClassError);
-    },
-    throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
-      await params.throwAsync(value, valueName, ClassError);
-    },
+    throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => params.throw(value, valueName, ClassError),
+    throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) =>
+      await params.throwAsync(value, valueName, ClassError),
     validate: (value: any) => params.validate(value),
     validateAsync: async (value: any) => await params.validateAsync(value),
     test: (value: any, valueName?: string) => params.test(value, valueName),
     testAsync: async (value: any, valueName?: string) => await params.testAsync(value, valueName),
     parse: (value: any, valueName?: string) => params.parse(value, valueName),
     parseAsync: async (value: any, valueName?: string) => await params.parseAsync(value, valueName),
-
-    equal: <T = unknown>(valueToCompare: T, config?: SchemaConfig) => {
-      params.methodBuild({ method: "equal", valueToCompare, config });
-
-      delete (chain as any).equal;
-      return chain;
+    equal: (valueToCompare: number, config?: SchemaConfig) => applyAndChain("equal", params, { valueToCompare, config }),
+    notEqual: (valueToCompare: number, config?: SchemaConfig) => applyAndChain("notEqual", params, { valueToCompare, config }),
+    oneOf: (comparisonItems: number[], config?: SchemaConfig) => applyAndChain("oneOf", params, { comparisonItems, config }),
+    float: (config?: SchemaConfig) => applyAndChain("float", params, { config }),
+    integer: (config?: SchemaConfig) => applyAndChain("integer", params, { config }),
+    min: (config: SchemaNumberMinConfig) => applyAndChain("min", params, { config }),
+    max: (config: SchemaNumberMaxConfig) => applyAndChain("max", params, { config }),
+    positive: (config?: SchemaConfig) => applyAndChain("positive", params, { config }),
+    negative: (config?: SchemaConfig) => applyAndChain("negative", params, { config }),
+    alias: (valueName: string) => {
+      if (!isString(valueName)) throw Error("vkrun-schema: alias method received invalid parameter!");
+      return applyAndChain("alias", params, { alias: valueName });
     },
+    default: (value: number) => {
+      const next: any = params.clone(params.methods);
+      next.schemaMethodParams().default(value);
 
-    notEqual: (valueToCompare: number, config?: SchemaConfig) => {
-      params.methodBuild({ method: "notEqual", valueToCompare, config });
-      return chain;
+      const nextMethods: any = numberMethod({
+        params: next.schemaMethodParams(),
+        skipBase: true,
+      });
+
+      delete nextMethods.default;
+      return nextMethods;
     },
+    notRequired: () => applyAndChain("notRequired", params),
+    nullable: () => applyAndChain("nullable", params),
+    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => customMethod(params, method),
+    parseTo: () => {
+      const next: any = params.clone(params.methods);
+      const nextParams = next.schemaMethodParams();
+      nextParams.methodBuild({ method: "parseTo" });
 
-    oneOf: (comparisonItems: string[], config?: SchemaConfig) => {
-      params.methodBuild({ method: "oneOf", comparisonItems, config });
-
-      delete (chain as any).oneOf;
-      return chain;
-    },
-
-    float(config?: SchemaConfig) {
-      that.methodBuild({ method: "float", config });
-
-      delete (chain as any).float;
-      return chain;
-    },
-
-    integer(config?: SchemaConfig) {
-      that.methodBuild({ method: "integer", config });
-
-      delete (chain as any).integer;
-      return chain;
-    },
-
-    min(config: SchemaNumberMinConfig) {
-      that.methodBuild({ method: "min", config });
-
-      delete (chain as any).min;
-      return chain;
-    },
-
-    max(config: SchemaNumberMaxConfig) {
-      that.methodBuild({ method: "max", config });
-
-      delete (chain as any).max;
-      return chain;
-    },
-
-    positive(config?: SchemaConfig) {
-      that.methodBuild({ method: "positive", config });
-
-      delete (chain as any).positive;
-      return chain;
-    },
-
-    negative(config?: SchemaConfig) {
-      that.methodBuild({ method: "negative", config });
-
-      delete (chain as any).negative;
-      return chain;
-    },
-
-    alias(valueName: string) {
-      if (!isString(valueName)) {
-        throw Error("vkrun-schema: alias method received invalid parameter!");
-      }
-
-      that.methodBuild({ method: "alias", alias: valueName });
-
-      delete (chain as any).alias;
-      return chain;
-    },
-
-    default(value: number) {
-      params.default(value);
-      delete (chain as any).default;
-      return chain;
-    },
-
-    notRequired() {
-      that.methodBuild({ method: "notRequired" });
-
-      delete (chain as any).notRequired;
-      return chain;
-    },
-
-    nullable() {
-      that.methodBuild({ method: "nullable" });
-
-      delete (chain as any).nullable;
-      return chain;
-    },
-
-    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => {
-      return customMethod(params, method);
-    },
-
-    parseTo() {
-      that.methodBuild({ method: "parseTo" });
       return {
-        string: (config?: SchemaConfig) => that.string(config),
-        bigInt: (config?: SchemaConfig) => that.bigInt(config),
-        boolean: (config?: SchemaConfig) => that.boolean(config),
-        date: (config?: SchemaDateConfig) => that.date(config),
+        string: (config?: SchemaConfig) => nextParams.string(config),
+        bigInt: (config?: SchemaConfig) => nextParams.bigInt(config),
+        boolean: (config?: SchemaConfig) => nextParams.boolean(config),
+        date: (config?: SchemaDateConfig) => nextParams.date(config),
       };
     },
   } as unknown as SchemaGenericNumberType<SchemaDefaultNumberOptions, SchemaDefaultNumberFlags>;

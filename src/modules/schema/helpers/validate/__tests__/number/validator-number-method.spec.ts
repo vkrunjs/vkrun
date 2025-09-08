@@ -3,6 +3,37 @@ import { AnyError } from "../../../../../errors";
 import { InferIn, InferOut } from "../../../../../types";
 
 describe("Validator Number Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseNumberSchema = schema().number();
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseNumberSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validNumber = 123;
+
+    // --- Base schema should only validate numbers and not allow null/undefined ---
+    expect(baseNumberSchema.validate(validNumber)).toBeTruthy();
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validNumber)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validNumber)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the number method and return true if the value is of type number", () => {
     const value = 1;
 

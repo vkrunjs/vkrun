@@ -2,6 +2,37 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator BigInt Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseBigIntSchema = schema().bigInt();
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseBigIntSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validBigInt = 123n;
+
+    // --- Base schema should only validate bigint and not allow null/undefined ---
+    expect(baseBigIntSchema.validate(validBigInt)).toBeTruthy();
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validBigInt)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validBigInt)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the bigInt method and return true if the value is of type bigint", () => {
     const value = 1n;
 

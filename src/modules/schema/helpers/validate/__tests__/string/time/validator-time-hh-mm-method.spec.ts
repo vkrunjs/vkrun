@@ -2,6 +2,31 @@ import { schema } from "../../../../../index";
 import { AnyError } from "../../../../../../errors";
 
 describe("Validator Time HH:MM Method", () => {
+  it("Should not modify base schema when creating derived schema with time HH:MM", () => {
+    const baseSchema = schema().string();
+    const derivedSchema = baseSchema.time({ type: "HH:MM" });
+    const derivedNotRequired = derivedSchema.notRequired();
+
+    // Base schema should accept any string
+    expect(baseSchema.validate("any_string")).toBeTruthy();
+    expect(baseSchema.validate("12:34")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema validates time in HH:MM format
+    expect(derivedSchema.validate("23:59")).toBeTruthy();
+    expect(derivedSchema.validate("invalid_time")).toBeFalsy();
+    expect(derivedSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema with notRequired allows undefined
+    expect(derivedNotRequired.validate("00:00")).toBeTruthy();
+    expect(derivedNotRequired.validate("invalid_time")).toBeFalsy();
+    expect(derivedNotRequired.validate(undefined)).toBeTruthy();
+
+    // Ensure the base schema remains unchanged
+    expect(baseSchema.validate("any_string")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the time method and return true if list is valid", () => {
     const setList = new Set();
     for (let hour = 0; hour <= 23; hour++) {

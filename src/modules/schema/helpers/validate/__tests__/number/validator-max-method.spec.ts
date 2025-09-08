@@ -2,6 +2,47 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Max Number Method", () => {
+  it("Should not modify base schema when creating derived schemas with max, nullable and notRequired", () => {
+    const baseSchema = schema().number();
+
+    // Criando schemas derivados
+    const maxSchema = baseSchema.max({ max: 5 });
+    const nullableSchema = maxSchema.nullable();
+    const notRequiredSchema = nullableSchema.notRequired();
+
+    const validValue = 5;
+    const invalidValue = 6;
+
+    // --- Base schema apenas valida number ---
+    expect(baseSchema.validate(validValue)).toBeTruthy();
+    expect(baseSchema.validate(null)).toBeFalsy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+    expect(baseSchema.validate(invalidValue)).toBeTruthy(); // base schema não conhece max ainda
+
+    // --- Schema com max ---
+    expect(maxSchema.validate(validValue)).toBeTruthy();
+    expect(maxSchema.validate(invalidValue)).toBeFalsy();
+    expect(maxSchema.validate(null)).toBeFalsy();
+    expect(maxSchema.validate(undefined)).toBeFalsy();
+
+    // --- Schema max + nullable ---
+    expect(nullableSchema.validate(validValue)).toBeTruthy();
+    expect(nullableSchema.validate(null)).toBeTruthy();
+    expect(nullableSchema.validate(undefined)).toBeFalsy();
+    expect(nullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Schema max + nullable + notRequired ---
+    expect(notRequiredSchema.validate(validValue)).toBeTruthy();
+    expect(notRequiredSchema.validate(null)).toBeTruthy();
+    expect(notRequiredSchema.validate(undefined)).toBeTruthy();
+    expect(notRequiredSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Garantir que o schema base não foi modificado ---
+    expect(baseSchema.validate(null)).toBeFalsy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+    expect(baseSchema.validate(invalidValue)).toBeTruthy();
+  });
+
   it("Should be able to validate the max method and return true if the value is less than or equal to the reference", () => {
     expect(schema().number().max({ max: 5 }).validate(5)).toBeTruthy();
     expect(schema().number().min({ min: 1 }).max({ max: 5 }).validate(5)).toBeTruthy();

@@ -2,6 +2,36 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Min Date Method", () => {
+  it("Should not modify base schema when creating derived schema with min", () => {
+    const baseDateSchema = schema()
+      .date()
+      .min({ min: new Date("2000-02-03T02:00:00.000Z") });
+
+    const derivedNullableSchema = baseDateSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    const validDate = new Date("2000-02-04T02:00:00.000Z");
+
+    // --- Base schema ---
+    expect(baseDateSchema.validate(validDate)).toBeTruthy();
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with nullable ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validDate)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with nullable + notRequired ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validDate)).toBeTruthy();
+
+    // --- Base schema remains unmodified ---
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the min method and return true if the date is greater than the reference date", () => {
     const date = new Date("2000-02-04T02:00:00.000Z");
     const refDate = new Date("2000-02-03T02:00:00.000Z");

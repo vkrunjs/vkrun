@@ -2,6 +2,39 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator MinWord Method", () => {
+  it("Should not modify base schema when creating derived schema with minWord", () => {
+    // Base schema
+    const baseStringSchema = schema().string();
+
+    // Derived schema with minWord
+    const derivedMinWordSchema = baseStringSchema.minWord({ min: 2 });
+    const derivedNotRequiredMinWordSchema = derivedMinWordSchema.notRequired();
+
+    const validValue = "Full Name";
+
+    // Base schema should validate only strings without null/undefined
+    expect(baseStringSchema.validate(validValue)).toBeTruthy();
+    expect(baseStringSchema.validate(null)).toBeFalsy();
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+    expect(baseStringSchema.validate("Full")).toBeTruthy(); // Only checks string type, no word count
+
+    // Derived schema should validate minWord
+    expect(derivedMinWordSchema.validate(validValue)).toBeTruthy();
+    expect(derivedMinWordSchema.validate("Full")).toBeFalsy();
+    expect(derivedMinWordSchema.validate(null)).toBeFalsy();
+    expect(derivedMinWordSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema with notRequired should allow undefined
+    expect(derivedNotRequiredMinWordSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNotRequiredMinWordSchema.validate("Full")).toBeFalsy();
+    expect(derivedNotRequiredMinWordSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredMinWordSchema.validate(null)).toBeFalsy();
+
+    // Base schema remains unaltered
+    expect(baseStringSchema.validate("Full")).toBeTruthy(); // still does not enforce minWord
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the minWord method and return true if the value has the minimum words", () => {
     const value = "Full Name";
 

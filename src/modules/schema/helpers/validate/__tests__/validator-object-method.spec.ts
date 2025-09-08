@@ -3,6 +3,42 @@ import { AnyError } from "../../../../errors";
 import { InferIn, InferOut } from "../../../../types";
 
 describe("Validator Object Method", () => {
+  it("Should not modify base schema when creating derived object schema", () => {
+    // Base schema
+    const baseSchema = schema().object({
+      valueA: schema().string(),
+      valueB: schema().number(),
+    });
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Values to test
+    const validString = "hello";
+    const validNumber = 123;
+
+    // --- Base schema should only validate object with valid keys, not null/undefined ---
+    expect(baseSchema.validate({ valueA: validString, valueB: validNumber })).toBeTruthy();
+    expect(baseSchema.validate(null)).toBeFalsy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+    expect(baseSchema.validate({ valueA: validString, valueB: "wrong type" as any })).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate({ valueA: validString, valueB: validNumber })).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate({ valueA: validString, valueB: validNumber })).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseSchema.validate(null)).toBeFalsy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the object method and return true if the value is valid", () => {
     const objectSchema = schema().object({
       valueA: schema().string(),

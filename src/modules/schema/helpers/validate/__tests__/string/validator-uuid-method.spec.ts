@@ -2,6 +2,41 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator UUID Method", () => {
+  it("Should not modify base schema when creating derived UUID schema", () => {
+    // Base schema without UUID method
+    const baseStringSchema = schema().string();
+
+    // Derived schema with UUID applied
+    const derivedUUIDSchema = baseStringSchema.UUID();
+
+    // Derived schema with UUID + notRequired + nullable
+    const derivedUUIDOptionalSchema = derivedUUIDSchema.notRequired().nullable();
+
+    const validUUID = "550e8400-e29b-41d4-a716-446655440000";
+    const invalidUUID = "123-invalid-uuid";
+
+    // --- Base schema should still only validate string ---
+    expect(baseStringSchema.validate(validUUID)).toBeTruthy(); // valid string passes
+    expect(baseStringSchema.validate(null)).toBeFalsy(); // null fails
+    expect(baseStringSchema.validate(undefined)).toBeFalsy(); // undefined fails
+    expect(baseStringSchema.validate(invalidUUID)).toBeTruthy(); // invalid UUID passes as string
+
+    // --- Derived schema with UUID applied ---
+    expect(derivedUUIDSchema.validate(validUUID)).toBeTruthy(); // valid UUID passes
+    expect(derivedUUIDSchema.validate(invalidUUID)).toBeFalsy(); // invalid UUID fails
+    expect(derivedUUIDSchema.validate(null)).toBeFalsy(); // null fails (nullable not applied)
+
+    // --- Derived schema with notRequired + nullable ---
+    expect(derivedUUIDOptionalSchema.validate(validUUID)).toBeTruthy(); // valid UUID passes
+    expect(derivedUUIDOptionalSchema.validate(undefined)).toBeTruthy(); // undefined passes due to notRequired
+    expect(derivedUUIDOptionalSchema.validate(null)).toBeTruthy(); // null passes due to nullable
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseStringSchema.validate(invalidUUID)).toBeTruthy(); // still passes as string
+    expect(baseStringSchema.validate(null)).toBeFalsy(); // still fails for null
+    expect(baseStringSchema.validate(undefined)).toBeFalsy(); // still fails for undefined
+  });
+
   it("Should be able to validate the UUID method and return true if list is valid", () => {
     const validList = [
       "550e8400-e29b-41d4-a716-446655440000",

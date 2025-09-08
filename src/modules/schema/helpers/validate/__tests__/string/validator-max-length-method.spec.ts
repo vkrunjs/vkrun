@@ -2,6 +2,32 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator MaxLength Method", () => {
+  it("Should not modify base schema when creating derived schema with maxLength", () => {
+    const baseSchema = schema().string();
+
+    const derivedSchema = baseSchema.maxLength({ max: 5 });
+    const derivedNotRequired = derivedSchema.notRequired();
+
+    // Base schema validates any string regardless of length
+    expect(baseSchema.validate("abc")).toBeTruthy();
+    expect(baseSchema.validate("abcdef")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema enforces maxLength
+    expect(derivedSchema.validate("abc")).toBeTruthy();
+    expect(derivedSchema.validate("abcdef")).toBeFalsy();
+    expect(derivedSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema with notRequired allows undefined
+    expect(derivedNotRequired.validate("abc")).toBeTruthy();
+    expect(derivedNotRequired.validate("abcdef")).toBeFalsy();
+    expect(derivedNotRequired.validate(undefined)).toBeTruthy();
+
+    // Base schema remains unchanged
+    expect(baseSchema.validate("abcdef")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the maxLength method and return true if the value does not exceed the maximum number of characters", () => {
     const value = "abcde";
 

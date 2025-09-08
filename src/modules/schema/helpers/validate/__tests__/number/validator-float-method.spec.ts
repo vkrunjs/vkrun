@@ -2,6 +2,34 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Float Method", () => {
+  it("Should not modify base schema when chaining float method", () => {
+    // Ensure that chaining the float method does not mutate the original base schema.
+    const baseSchema = schema().number();
+
+    // Creating new schemas from the baseSchema
+    const floatSchema = baseSchema.float();
+    const minSchema = baseSchema.min({ min: 1 });
+    const maxSchema = baseSchema.max({ max: 10 });
+
+    // baseSchema should not enforce float, min, or max constraints
+    expect(baseSchema.validate(1)).toBeTruthy(); // integer, number only
+    expect(baseSchema.validate(1.5)).toBeTruthy(); // float, number only
+    expect(baseSchema.validate(0)).toBeTruthy();
+    expect(baseSchema.validate(11)).toBeTruthy();
+
+    // floatSchema validates float numbers
+    expect(floatSchema.validate(1.5)).toBeTruthy();
+    expect(floatSchema.validate(1)).toBeFalsy();
+
+    // minSchema validates minimum value
+    expect(minSchema.validate(1)).toBeTruthy();
+    expect(minSchema.validate(0)).toBeFalsy();
+
+    // maxSchema validates maximum value
+    expect(maxSchema.validate(10)).toBeTruthy();
+    expect(maxSchema.validate(11)).toBeFalsy();
+  });
+
   it("Should be able to validate the float method and return true if the value is float", () => {
     const value = 1.5;
 

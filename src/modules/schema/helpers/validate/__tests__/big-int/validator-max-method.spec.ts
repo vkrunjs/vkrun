@@ -2,6 +2,41 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Max BigInt Method", () => {
+  it("Should not modify base schema when creating derived schema with max", () => {
+    // Base schema
+    const baseBigIntSchema = schema().bigInt().max({ max: 5n });
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseBigIntSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validBigInt = 3n; // less than max
+
+    // --- Base schema should only validate bigint less than or equal to max and not allow null/undefined ---
+    expect(baseBigIntSchema.validate(validBigInt)).toBeTruthy();
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+    expect(baseBigIntSchema.validate(6n)).toBeFalsy(); // above max
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validBigInt)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+    expect(derivedNullableSchema.validate(6n)).toBeFalsy(); // above max
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validBigInt)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(6n)).toBeFalsy(); // above max
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+    expect(baseBigIntSchema.validate(6n)).toBeFalsy(); // above max
+  });
+
   it("Should be able to validate the max method and return true if the value is less than or equal to the reference", () => {
     expect(schema().bigInt().max({ max: 5n }).validate(5n)).toBeTruthy();
     expect(schema().bigInt().min({ min: 1n }).max({ max: 5n }).validate(5n)).toBeTruthy();

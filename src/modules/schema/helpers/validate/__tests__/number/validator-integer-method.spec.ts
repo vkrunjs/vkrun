@@ -2,6 +2,34 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Integer Method", () => {
+  it("Should not modify base schema when chaining methods", () => {
+    // Ensure that chaining methods (integer, min, max) does not mutate the original base schema.
+    // Each chained schema should be independent and maintain immutability.
+    const baseSchema = schema().number();
+
+    // Creating new schemas from the baseSchema
+    const intSchema = baseSchema.integer();
+    const minSchema = baseSchema.min({ min: 1 });
+    const maxSchema = baseSchema.max({ max: 10 });
+
+    // The baseSchema should not validate integer or min/max constraints
+    expect(baseSchema.validate(1.5)).toBeTruthy(); // only checks number type
+    expect(baseSchema.validate(0)).toBeTruthy();
+    expect(baseSchema.validate(11)).toBeTruthy();
+
+    // intSchema validates integer
+    expect(intSchema.validate(1)).toBeTruthy();
+    expect(intSchema.validate(1.5)).toBeFalsy();
+
+    // minSchema validates minimum value
+    expect(minSchema.validate(1)).toBeTruthy();
+    expect(minSchema.validate(0)).toBeFalsy();
+
+    // maxSchema validates maximum value
+    expect(maxSchema.validate(10)).toBeTruthy();
+    expect(maxSchema.validate(11)).toBeFalsy();
+  });
+
   it("Should be able to validate the integer method and return true if the value is integer", () => {
     const value = 1;
 

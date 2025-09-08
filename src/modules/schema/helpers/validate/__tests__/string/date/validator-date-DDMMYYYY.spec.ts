@@ -2,6 +2,31 @@ import { schema } from "../../../../../index";
 import { AnyError } from "../../../../../../errors";
 
 describe("Validator String Date (DD-MM-YYYY and DD/MM/YYYY) Method", () => {
+  it("Should not modify base schema when creating derived schema with date DD-MM-YYYY/DD/MM/YYYY", () => {
+    const baseSchema = schema().string();
+    const derivedSchema = baseSchema.date({ type: "DD-MM-YYYY" });
+    const derivedNotRequired = derivedSchema.notRequired();
+
+    // Base schema should accept any string
+    expect(baseSchema.validate("any_string")).toBeTruthy();
+    expect(baseSchema.validate("30-12-2000")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema validates DD-MM-YYYY date format
+    expect(derivedSchema.validate("30-12-2000")).toBeTruthy();
+    expect(derivedSchema.validate("invalid_date")).toBeFalsy();
+    expect(derivedSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema with notRequired allows undefined
+    expect(derivedNotRequired.validate("30-12-2000")).toBeTruthy();
+    expect(derivedNotRequired.validate("invalid_date")).toBeFalsy();
+    expect(derivedNotRequired.validate(undefined)).toBeTruthy();
+
+    // Ensure the base schema remains unchanged
+    expect(baseSchema.validate("any_string")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the date method and return true if the value is of type DD-MM-YYYY date", () => {
     const value = "30-12-2000";
 

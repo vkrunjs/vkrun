@@ -4,58 +4,103 @@ import type * as type from "../types";
 export class SchemaSetup implements type.VkrunSchema {
   private defaultValue: any;
   private readonly methods: type.SchemaMethods;
+  private readonly config?: type.SchemaConfig;
 
   constructor(config?: type.SchemaConfig) {
+    this.config = config;
     this.methods = [];
     this.methodBuild({ method: "required", config });
   }
 
+  private clone(methods: type.SchemaMethods): SchemaSetup {
+    const copy = new SchemaSetup(this.config);
+    copy.defaultValue = this.defaultValue;
+    copy.methods.push(...methods);
+    return copy;
+  }
+
   string(config?: type.SchemaConfig) {
-    return helper.stringMethod(this.schemaMethodParams(), config);
+    return helper.stringMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   number(config?: type.SchemaConfig) {
-    return helper.numberMethod(this.schemaMethodParams(), config);
+    return helper.numberMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   bigInt(config?: type.SchemaConfig) {
-    return helper.bigIntMethod(this.schemaMethodParams(), config);
+    return helper.bigIntMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   boolean(config?: type.SchemaConfig) {
-    return helper.booleanMethod(this.schemaMethodParams(), config);
+    return helper.booleanMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   buffer(config?: type.SchemaConfig) {
-    return helper.bufferMethod(this.schemaMethodParams(), config);
+    return helper.bufferMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   function(config?: type.SchemaConfig) {
-    return helper.functionMethod(this.schemaMethodParams(), config);
+    return helper.functionMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   date(config?: type.SchemaConfig) {
-    return helper.dateMethod(this.schemaMethodParams(), config);
+    return helper.dateMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+    });
   }
 
   array<Item extends type.SchemaType<any, any>>(schema: Item, config?: type.SchemaArrayConfig) {
-    return helper.arrayMethod(this.schemaMethodParams(), schema, config);
+    return helper.arrayMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+      schema,
+    });
   }
 
   object<Shape extends Record<string, type.SchemaType<any, any>>>(schema: Shape, config?: type.SchemaConfig) {
-    return helper.objectMethod(this.schemaMethodParams(), schema, config);
+    return helper.objectMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+      schema,
+    });
   }
 
   oneOf<Items extends Array<type.SchemaType<any, any>>>(comparisonItems: Items, config?: type.SchemaConfig) {
-    return helper.oneOfMethod(this.schemaMethodParams(), comparisonItems, config);
+    return helper.oneOfMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+      config,
+      comparisonItems,
+    });
   }
 
   any() {
-    return helper.anyMethod(this.schemaMethodParams());
+    return helper.anyMethod({
+      params: this.clone(this.methods).schemaMethodParams(),
+    });
   }
 
   private schemaMethodParams() {
     return {
+      clone: (methods: type.SchemaMethods): type.VkrunSchema => this.clone(methods),
       string: (config?: type.SchemaConfig) => this.string(config),
       number: (config?: type.SchemaConfig) => this.number(config),
       bigInt: (config?: type.SchemaConfig) => this.bigInt(config),
@@ -98,7 +143,7 @@ export class SchemaSetup implements type.VkrunSchema {
     };
   }
 
-  private validateMethods(ctx: type.ExecutionContext): void {
+  private validateMethods(ctx: type.SchemaExecutionContext): void {
     if (ctx.value === undefined && helper.hasMethod(this.methods, "default")) {
       ctx.value = ctx.defaultValue;
     }
@@ -121,7 +166,7 @@ export class SchemaSetup implements type.VkrunSchema {
     ctx.tests.value = ctx.currentValue;
   }
 
-  private async validateMethodsAsync(ctx: type.ExecutionContext): Promise<void> {
+  private async validateMethodsAsync(ctx: type.SchemaExecutionContext): Promise<void> {
     if (ctx.value === undefined && helper.hasMethod(this.methods, "default")) {
       ctx.value = ctx.defaultValue;
     }
@@ -144,7 +189,7 @@ export class SchemaSetup implements type.VkrunSchema {
     ctx.tests.value = ctx.currentValue;
   }
 
-  private runValidatorBlockParams(ctx: type.ExecutionContext) {
+  private runValidatorBlockParams(ctx: type.SchemaExecutionContext) {
     return {
       currentValue: ctx.currentValue,
       valueName: ctx.valueName,
@@ -158,7 +203,7 @@ export class SchemaSetup implements type.VkrunSchema {
     this.methods.push(build);
   }
 
-  private createExecutionContext(value: any, valueName?: string): type.ExecutionContext {
+  private createExecutionContext(value: any, valueName?: string): type.SchemaExecutionContext {
     return {
       value,
       valueName: valueName ?? "value",
@@ -177,7 +222,7 @@ export class SchemaSetup implements type.VkrunSchema {
     };
   }
 
-  private updateTests(ctx: type.ExecutionContext, test: type.SchemaTests): void {
+  private updateTests(ctx: type.SchemaExecutionContext, test: type.SchemaTests): void {
     ctx.tests.passed += test.passed;
     ctx.tests.failed += test.failed;
     ctx.tests.totalTests += test.totalTests;
@@ -186,7 +231,7 @@ export class SchemaSetup implements type.VkrunSchema {
     ctx.tests.passedAll = ctx.tests.passed === ctx.tests.totalTests;
   }
 
-  private addPassed(ctx: type.ExecutionContext, success: type.SchemaSuccessTest): void {
+  private addPassed(ctx: type.SchemaExecutionContext, success: type.SchemaSuccessTest): void {
     ctx.tests.passed++;
     ctx.tests.totalTests++;
     ctx.tests.successes.push(success);
@@ -197,7 +242,7 @@ export class SchemaSetup implements type.VkrunSchema {
     }
   }
 
-  private addFailed(ctx: type.ExecutionContext, error: type.SchemaErrorTest): void {
+  private addFailed(ctx: type.SchemaExecutionContext, error: type.SchemaErrorTest): void {
     ctx.tests.failed++;
     ctx.tests.totalTests++;
     ctx.tests.errors.push(error);

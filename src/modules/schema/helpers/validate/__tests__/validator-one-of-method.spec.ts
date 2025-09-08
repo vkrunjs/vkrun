@@ -1,6 +1,42 @@
 import { schema } from "../../../index";
 
 describe("Validator OneOf Method", () => {
+  it("Should not modify base schema when creating derived oneOf schema", () => {
+    // Base schema
+    const baseSchema = schema().oneOf([schema().string(), schema().number()]);
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Values to test
+    const validString = "hello";
+    const validNumber = 123;
+
+    // --- Base schema should only validate string or number, not null/undefined ---
+    expect(baseSchema.validate(validString)).toBeTruthy();
+    expect(baseSchema.validate(validNumber)).toBeTruthy();
+    expect(baseSchema.validate(null)).toBeFalsy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+    expect(baseSchema.validate(true)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validString)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validNumber)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validString)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validNumber)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseSchema.validate(null)).toBeFalsy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should return true if the value matches one of the schemas or values", () => {
     const value = "hello";
     const comparisonItems = [schema().string(), schema().number()];

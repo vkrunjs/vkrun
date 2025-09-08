@@ -2,6 +2,30 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Number Equal Method", () => {
+  it("Should not modify base schema when chaining equal method", () => {
+    // Base schema
+    const baseSchema = schema().number();
+
+    // Derived schemas
+    const equal123 = baseSchema.equal(123);
+    const equal456 = baseSchema.equal(456);
+
+    // baseSchema should not enforce equal constraints
+    expect(baseSchema.validate(123)).toBeTruthy();
+    expect(baseSchema.validate(456)).toBeTruthy();
+    expect(baseSchema.validate(0)).toBeTruthy();
+
+    // equal123 validates only 123
+    expect(equal123.validate(123)).toBeTruthy();
+    expect(equal123.validate(456)).toBeFalsy();
+    expect(equal123.validate(0)).toBeFalsy();
+
+    // equal456 validates only 456
+    expect(equal456.validate(456)).toBeTruthy();
+    expect(equal456.validate(123)).toBeFalsy();
+    expect(equal456.validate(0)).toBeFalsy();
+  });
+
   it("Should be able to validate the equal method and return true if the value is equal to the comparison value", () => {
     const valueToCompare = 123;
     const value = valueToCompare;

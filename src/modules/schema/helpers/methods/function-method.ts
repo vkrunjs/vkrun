@@ -7,61 +7,57 @@ import {
   isString,
   SchemaErrorTypes,
   SchemaMethodParams,
+  SchemaMethodOptions,
 } from "../../../../index";
 import { customMethod } from "./custom-method";
 
-export const functionMethod = (params: SchemaMethodParams, config?: SchemaConfig) => {
-  params.methodBuild({ method: "function", config });
-  const that = params;
+function applyAndChainFunction(method: string, methodParams: SchemaMethodParams, extra: Record<string, any> = {}) {
+  const next: any = methodParams.clone(methodParams.methods);
+
+  next.methodBuild({ method, ...extra });
+
+  const nextMethods: any = functionMethod({ params: next, skipBase: true });
+
+  // Remove chainable method unless it's a special case (if needed)
+  delete nextMethods[method as keyof typeof nextMethods];
+
+  return nextMethods;
+}
+
+export const functionMethod = ({ params, config, skipBase = false }: SchemaMethodOptions & { params: SchemaMethodParams }) => {
+  if (!skipBase) {
+    params.methodBuild({ method: "function", config });
+  }
 
   const chain = {
-    throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
-      params.throw(value, valueName, ClassError);
-    },
-    throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
-      await params.throwAsync(value, valueName, ClassError);
-    },
+    throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => params.throw(value, valueName, ClassError),
+    throwAsync: async (value: any, valueName: string, ClassError?: SchemaErrorTypes) =>
+      await params.throwAsync(value, valueName, ClassError),
     validate: (value: any) => params.validate(value),
     validateAsync: async (value: any) => await params.validateAsync(value),
     test: (value: any, valueName?: string) => params.test(value, valueName),
     testAsync: async (value: any, valueName?: string) => await params.testAsync(value, valueName),
     parse: (value: any, valueName?: string) => params.parse(value, valueName),
     parseAsync: async (value: any, valueName?: string) => await params.parseAsync(value, valueName),
-
-    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => {
-      return customMethod(params, method);
+    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => customMethod(params, method),
+    alias: (valueName: string) => {
+      if (!isString(valueName)) throw Error("vkrun-schema: alias method received invalid parameter!");
+      return applyAndChainFunction("alias", params, { alias: valueName });
     },
+    default: (value: Function) => {
+      const next: any = params.clone(params.methods);
+      next.schemaMethodParams().default(value);
 
-    alias(valueName: string) {
-      if (!isString(valueName)) {
-        throw Error("vkrun-schema: alias method received invalid parameter!");
-      }
+      const nextMethods: any = functionMethod({
+        params: next.schemaMethodParams(),
+        skipBase: true,
+      });
 
-      that.methodBuild({ method: "alias", alias: valueName });
-
-      delete (chain as any).alias;
-      return chain;
+      delete nextMethods.default;
+      return nextMethods;
     },
-
-    default(value: Function) {
-      params.default(value);
-      delete (chain as any).default;
-      return chain;
-    },
-
-    notRequired() {
-      that.methodBuild({ method: "notRequired" });
-
-      delete (chain as any).notRequired;
-      return chain;
-    },
-
-    nullable(config?: SchemaConfig) {
-      that.methodBuild({ method: "nullable", config });
-
-      delete (chain as any).nullable;
-      return chain;
-    },
+    notRequired: () => applyAndChainFunction("notRequired", params),
+    nullable: (config?: SchemaConfig) => applyAndChainFunction("nullable", params, { config }),
   } as unknown as SchemaGenericFunctionType<SchemaDefaultFunctionOptions, SchemaDefaultFunctionFlags>;
 
   return chain;

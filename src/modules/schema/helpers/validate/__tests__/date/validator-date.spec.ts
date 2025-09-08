@@ -2,6 +2,37 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Date (default) Method", () => {
+  it("Should not modify base schema when creating derived schema", () => {
+    // Base schema
+    const baseDateSchema = schema().date();
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseDateSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validDate = new Date();
+
+    // --- Base schema should only validate Date and not allow null/undefined ---
+    expect(baseDateSchema.validate(validDate)).toBeTruthy();
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validDate)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validDate)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the date method and return true if list is valid", () => {
     const validList = [
       new Date(),

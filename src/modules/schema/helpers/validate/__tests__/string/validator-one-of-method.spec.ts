@@ -1,6 +1,32 @@
 import { schema } from "../../../../index";
 
 describe("Validator String OneOf Method", () => {
+  it("Should not modify base schema when creating derived schema with oneOf", () => {
+    // Base schema that only validates strings
+    const baseStringSchema = schema().string();
+
+    // Derived schema adding oneOf validation
+    const derivedOneOfSchema = baseStringSchema.oneOf(["hello", "world"]);
+
+    // Example test values
+    const validValue = "hello";
+    const invalidValue = "hi";
+
+    // --- Base schema should remain unchanged ---
+    expect(baseStringSchema.validate(validValue)).toBeTruthy(); // base schema still validates any string
+    expect(baseStringSchema.validate(invalidValue)).toBeTruthy(); // base schema does not check oneOf
+    expect(baseStringSchema.validate(null)).toBeFalsy();
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema applies oneOf validation ---
+    expect(derivedOneOfSchema.validate(validValue)).toBeTruthy();
+    expect(derivedOneOfSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Ensure base schema still unaffected after derived schema usage ---
+    expect(baseStringSchema.validate(invalidValue)).toBeTruthy();
+    expect(baseStringSchema.validate(validValue)).toBeTruthy();
+  });
+
   it("Should return true if the value matches one of the schemas or values", () => {
     const value = "hello";
     const comparisonItems = ["hello", "world"];

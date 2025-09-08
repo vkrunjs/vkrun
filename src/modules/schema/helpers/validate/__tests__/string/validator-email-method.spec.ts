@@ -2,6 +2,31 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Email Method", () => {
+  it("Should not modify base schema when creating derived schema with email", () => {
+    const baseSchema = schema().string();
+    const derivedSchema = baseSchema.email();
+    const derivedNotRequired = derivedSchema.notRequired();
+
+    // Base schema should accept any string
+    expect(baseSchema.validate("any_string")).toBeTruthy();
+    expect(baseSchema.validate("any_email@domain.com")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema validates email addresses
+    expect(derivedSchema.validate("any_email@domain.com")).toBeTruthy();
+    expect(derivedSchema.validate("invalid_email")).toBeFalsy();
+    expect(derivedSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema with notRequired allows undefined
+    expect(derivedNotRequired.validate("any_email@domain.com")).toBeTruthy();
+    expect(derivedNotRequired.validate("invalid_email")).toBeFalsy();
+    expect(derivedNotRequired.validate(undefined)).toBeTruthy();
+
+    // Ensure the base schema remains unchanged
+    expect(baseSchema.validate("any_string")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the email method and return true if list is valid", () => {
     const validList = ["any_email@domain.com", "any-email@domain.com", "any.email@domain.com", "any_123_email@domain.com"];
 

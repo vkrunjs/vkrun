@@ -2,6 +2,38 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Max Date Method", () => {
+  it("Should not modify base schema when creating derived schema with max", () => {
+    // Base schema
+    const baseDateSchema = schema()
+      .date()
+      .max({ max: new Date("2000-02-03T02:00:00.000Z") });
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseDateSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    const validDate = new Date("2000-02-02T02:00:00.000Z");
+
+    // --- Base schema should only validate Date less than or equal to max and not allow null/undefined ---
+    expect(baseDateSchema.validate(validDate)).toBeTruthy();
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validDate)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validDate)).toBeTruthy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the max method and return true if the date is less than the reference date", () => {
     const date = new Date("2000-02-02T02:00:00.000Z");
     const refDate = new Date("2000-02-03T02:00:00.000Z");

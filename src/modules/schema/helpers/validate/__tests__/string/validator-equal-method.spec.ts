@@ -2,6 +2,31 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator String Equal Method", () => {
+  it("Should not modify base schema when creating derived schema with equal", () => {
+    const baseSchema = schema().string();
+    const derivedSchema = baseSchema.equal("test");
+    const derivedNotRequired = derivedSchema.notRequired();
+
+    // Base schema accepts any string
+    expect(baseSchema.validate("abc")).toBeTruthy();
+    expect(baseSchema.validate("test")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema enforces equality
+    expect(derivedSchema.validate("test")).toBeTruthy();
+    expect(derivedSchema.validate("abc")).toBeFalsy();
+    expect(derivedSchema.validate(undefined)).toBeFalsy();
+
+    // Derived schema with notRequired allows undefined
+    expect(derivedNotRequired.validate("test")).toBeTruthy();
+    expect(derivedNotRequired.validate("abc")).toBeFalsy();
+    expect(derivedNotRequired.validate(undefined)).toBeTruthy();
+
+    // Base schema remains unchanged
+    expect(baseSchema.validate("abc")).toBeTruthy();
+    expect(baseSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the equal method and return true if the value is equal to the comparison value", () => {
     const valueToCompare = "string";
     const value = valueToCompare;

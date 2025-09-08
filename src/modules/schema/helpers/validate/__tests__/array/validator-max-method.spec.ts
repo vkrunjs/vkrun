@@ -1,6 +1,41 @@
 import { schema } from "../../../../../../index";
 
 describe("Validator Array Max Method", () => {
+  it("Should not modify base schema when creating derived array schemas with max method", () => {
+    // Base schema
+    const baseArraySchema = schema().array(schema().string()).max({ max: 2 });
+
+    // Derived schema applying additional methods
+    const derivedNullableSchema = baseArraySchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value to test
+    const validArray = ["example", "test"];
+
+    // --- Base schema should validate arrays up to max 2 and not allow null/undefined ---
+    expect(baseArraySchema.validate(validArray)).toBeTruthy();
+    expect(baseArraySchema.validate(["a", "b", "c"])).toBeFalsy(); // exceeds max
+    expect(baseArraySchema.validate(null)).toBeFalsy();
+    expect(baseArraySchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validArray)).toBeTruthy();
+    expect(derivedNullableSchema.validate(["a", "b", "c"])).toBeFalsy(); // still fails max
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validArray)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(["a", "b", "c"])).toBeFalsy(); // max still enforced
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseArraySchema.validate(null)).toBeFalsy();
+    expect(baseArraySchema.validate(undefined)).toBeFalsy();
+    expect(baseArraySchema.validate(["a", "b", "c"])).toBeFalsy();
+  });
+
   it("Should be able to validate the max method and return true if the list has the maximum value", () => {
     const sut = schema().array(schema().string()).max({ max: 1 }).validate(["string"]);
     expect(sut).toBeTruthy();

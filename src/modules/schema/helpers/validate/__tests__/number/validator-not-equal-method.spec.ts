@@ -1,6 +1,49 @@
 import { schema } from "../../../../index";
 
 describe("Validator Number NotEqual Method", () => {
+  it("Should not modify base schema when creating derived schema with notEqual, nullable and notRequired", () => {
+    // Base schema
+    const baseNumberSchema = schema().number();
+
+    // Derived schemas
+    const derivedNotEqualSchema = baseNumberSchema.notEqual(321);
+    const derivedNullableSchema = derivedNotEqualSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid and invalid values
+    const validValue = 123;
+    const invalidValue = 321;
+
+    // --- Base schema only validates numbers, not null/undefined ---
+    expect(baseNumberSchema.validate(validValue)).toBeTruthy();
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+    expect(baseNumberSchema.validate(invalidValue)).toBeTruthy(); // base schema does not know about notEqual yet
+
+    // --- Derived schema with notEqual ---
+    expect(derivedNotEqualSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNotEqualSchema.validate(invalidValue)).toBeFalsy();
+    expect(derivedNotEqualSchema.validate(null)).toBeFalsy();
+    expect(derivedNotEqualSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema notEqual + nullable ---
+    expect(derivedNullableSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+    expect(derivedNullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Derived schema notEqual + nullable + notRequired ---
+    expect(derivedNotRequiredNullableSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+    expect(baseNumberSchema.validate(invalidValue)).toBeTruthy(); // still only validates number type
+  });
+
   it("Should be able to validate the notEqual method and return true if the value is not equal to the comparison value", () => {
     const valueToCompare = 321;
     const value = 123;

@@ -1,6 +1,90 @@
 import { schema } from "../../../index";
 
 describe("Schema Default Method", () => {
+  it("should not modify base schema for any type when creating derived schema with default", () => {
+    const testCases: Array<{
+      type: string;
+      base: any;
+      defaultValue: any;
+      derivedMethods?: (s: any) => any;
+      validValue: any;
+    }> = [
+      {
+        type: "string",
+        base: schema().string(),
+        defaultValue: "default",
+        validValue: "hello",
+        derivedMethods: (s) => s.minLength({ min: 1 }).nullable().notRequired(),
+      },
+      {
+        type: "number",
+        base: schema().number(),
+        defaultValue: 123,
+        validValue: 456,
+        derivedMethods: (s) => s.min({ min: 1 }).nullable().notRequired(),
+      },
+      {
+        type: "boolean",
+        base: schema().boolean(),
+        defaultValue: true,
+        validValue: false,
+        derivedMethods: (s) => s.notRequired(),
+      },
+      { type: "bigInt", base: schema().bigInt(), defaultValue: 100n, validValue: 200n, derivedMethods: (s) => s.notRequired() },
+      {
+        type: "function",
+        base: schema().function(),
+        defaultValue: () => "def",
+        validValue: () => "real",
+        derivedMethods: (s) => s.notRequired(),
+      },
+      {
+        type: "buffer",
+        base: schema().buffer(),
+        defaultValue: Buffer.from("def"),
+        validValue: Buffer.from("real"),
+        derivedMethods: (s) => s.notRequired(),
+      },
+      {
+        type: "date",
+        base: schema().date(),
+        defaultValue: new Date("2025-01-01"),
+        validValue: new Date("2024-01-01"),
+        derivedMethods: (s) => s.notRequired(),
+      },
+      {
+        type: "object",
+        base: schema().object({ field: schema().string().minLength({ min: 1 }) }),
+        defaultValue: { field: "default" },
+        validValue: { field: "hello" },
+        derivedMethods: (s) => s.notRequired(),
+      },
+      {
+        type: "array",
+        base: schema().array(schema().object({ field: schema().string().minLength({ min: 1 }) })),
+        defaultValue: [{ field: "default" }],
+        validValue: [{ field: "hello" }],
+        derivedMethods: (s) => s.notRequired(),
+      },
+    ];
+
+    testCases.forEach(({ type, base, defaultValue, derivedMethods, validValue }) => {
+      // Derived schema with default and other optional methods
+      const derived = derivedMethods ? derivedMethods(base.default(defaultValue)) : base.default(defaultValue);
+
+      // --- Base schema must remain unmodified ---
+      expect(base.test(undefined).value).toBeUndefined();
+
+      // --- Derived schema applies default when input is undefined ---
+      const testResult = derived.test(undefined);
+      expect(testResult.value).toEqual(defaultValue);
+
+      // --- Derived schema preserves valid input ---
+      const testValid = derived.test(validValue);
+      expect(testValid.value).toEqual(validValue);
+    });
+  });
+
   it("Should handle default for string", () => {
     // Without default
     expect(schema().string().test(undefined).value).toBeUndefined();

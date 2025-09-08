@@ -2,6 +2,39 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator MinLength Method", () => {
+  it("Should not modify base schema when creating derived schema with minLength", () => {
+    // Base schema
+    const baseStringSchema = schema().string();
+
+    // Derived schema with minLength
+    const derivedMinLengthSchema = baseStringSchema.minLength({ min: 5 });
+    const derivedNotRequiredMinLengthSchema = derivedMinLengthSchema.notRequired();
+
+    const validValue = "abcde";
+
+    // Base schema should validate only strings
+    expect(baseStringSchema.validate(validValue)).toBeTruthy();
+    expect(baseStringSchema.validate("abcd")).toBeTruthy(); // only string type, no minLength
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+    expect(baseStringSchema.validate(null)).toBeFalsy();
+
+    // Derived schema should enforce minLength
+    expect(derivedMinLengthSchema.validate(validValue)).toBeTruthy();
+    expect(derivedMinLengthSchema.validate("abcd")).toBeFalsy();
+    expect(derivedMinLengthSchema.validate(undefined)).toBeFalsy();
+    expect(derivedMinLengthSchema.validate(null)).toBeFalsy();
+
+    // Derived schema with notRequired allows undefined
+    expect(derivedNotRequiredMinLengthSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNotRequiredMinLengthSchema.validate("abcd")).toBeFalsy();
+    expect(derivedNotRequiredMinLengthSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredMinLengthSchema.validate(null)).toBeFalsy();
+
+    // Base schema remains unaltered
+    expect(baseStringSchema.validate("abcd")).toBeTruthy(); // still does not enforce minLength
+    expect(baseStringSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the minLength method and return true if the value has the minimum number of characters", () => {
     const value = "abcde";
 

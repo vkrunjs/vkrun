@@ -10,12 +10,32 @@ import {
   isString,
   SchemaErrorTypes,
   SchemaMethodParams,
+  SchemaMethodOptions,
 } from "../../../../index";
 import { customMethod } from "./custom-method";
 
-export const bufferMethod = (params: SchemaMethodParams, config?: SchemaConfig) => {
-  params.methodBuild({ method: "buffer", config });
-  const that = params;
+function applyAndChain(method: string, params: SchemaMethodParams, extra: Record<string, any> = {}) {
+  const next: any = params.clone(params.methods);
+
+  next.methodBuild({ method, ...extra });
+
+  const nextMethods: any = bufferMethod({
+    params: next.schemaMethodParams(),
+    skipBase: true,
+  });
+
+  // Only delete method for chainable methods except notEqual
+  if (method !== "notEqual") {
+    delete nextMethods[method as keyof typeof nextMethods];
+  }
+
+  return nextMethods;
+}
+
+export const bufferMethod = ({ params, config, skipBase = false }: SchemaMethodOptions) => {
+  if (!skipBase) {
+    params.methodBuild({ method: "buffer", config });
+  }
 
   const chain = {
     throw: (value: any, valueName: string, ClassError?: SchemaErrorTypes) => {
@@ -31,71 +51,46 @@ export const bufferMethod = (params: SchemaMethodParams, config?: SchemaConfig) 
     parse: (value: any, valueName?: string) => params.parse(value, valueName),
     parseAsync: async (value: any, valueName?: string) => await params.parseAsync(value, valueName),
 
-    equal: <T = unknown>(valueToCompare: T, config?: SchemaConfig) => {
-      params.methodBuild({ method: "equal", valueToCompare, config });
+    equal: <T = unknown>(valueToCompare: T, config?: SchemaConfig) =>
+      applyAndChain("equal", params, { valueToCompare, config }),
 
-      delete (chain as any).equal;
-      return chain;
+    notEqual: (valueToCompare: Buffer, config?: SchemaConfig) => applyAndChain("notEqual", params, { valueToCompare, config }),
+
+    oneOf: (comparisonItems: Buffer[], config?: SchemaConfig) => applyAndChain("oneOf", params, { comparisonItems, config }),
+    alias: (valueName: string) => {
+      if (!isString(valueName)) throw Error("vkrun-schema: alias method received invalid parameter!");
+      return applyAndChain("alias", params, { alias: valueName });
     },
-
-    notEqual: (valueToCompare: Buffer, config?: SchemaConfig) => {
-      params.methodBuild({ method: "notEqual", valueToCompare, config });
-      return chain;
-    },
-
-    oneOf: (comparisonItems: Buffer[], config?: SchemaConfig) => {
-      params.methodBuild({ method: "oneOf", comparisonItems, config });
-
-      delete (chain as any).oneOf;
-      return chain;
-    },
-
-    alias(valueName: string) {
-      if (!isString(valueName)) {
-        throw Error("vkrun-schema: alias method received invalid parameter!");
-      }
-
-      that.methodBuild({ method: "alias", alias: valueName });
-
-      delete (chain as any).alias;
-      return chain;
-    },
-
     default(value: Buffer) {
-      params.default(value);
-      delete (chain as any).default;
-      return chain;
+      const next: any = params.clone(params.methods);
+      next.schemaMethodParams().default(value);
+
+      const nextMethods: any = bufferMethod({
+        params: next.schemaMethodParams(),
+        skipBase: true,
+      });
+
+      delete nextMethods.default;
+      return nextMethods;
     },
+    notRequired: () => applyAndChain("notRequired", params),
+    nullable: (config?: SchemaConfig) => applyAndChain("nullable", params, { config }),
+    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => customMethod(params, method),
+    parseTo: () => {
+      const next: any = params.clone(params.methods);
+      const nextParams = next.schemaMethodParams();
+      nextParams.methodBuild({ method: "parseTo" });
 
-    notRequired() {
-      that.methodBuild({ method: "notRequired" });
-
-      delete (chain as any).notRequired;
-      return chain;
-    },
-
-    nullable(config?: SchemaConfig) {
-      that.methodBuild({ method: "nullable", config });
-
-      delete (chain as any).nullable;
-      return chain;
-    },
-
-    custom: <O = any, I = any>(method: SchemaCustomMethod<I, O>) => {
-      return customMethod(params, method);
-    },
-
-    parseTo() {
-      that.methodBuild({ method: "parseTo" });
       return {
-        string: (config?: SchemaConfig) => that.string(config),
-        number: (config?: SchemaConfig) => that.number(config),
-        bigInt: (config?: SchemaConfig) => that.bigInt(config),
-        boolean: (config?: SchemaConfig) => that.boolean(config),
-        date: (config?: SchemaDateConfig) => that.date(config),
-        array: <Item extends SchemaType<any, any>>(schema: Item, config?: SchemaArrayConfig) => that.array(schema, config),
+        string: (config?: SchemaConfig) => nextParams.string(config),
+        number: (config?: SchemaConfig) => nextParams.number(config),
+        bigInt: (config?: SchemaConfig) => nextParams.bigInt(config),
+        boolean: (config?: SchemaConfig) => nextParams.boolean(config),
+        date: (config?: SchemaDateConfig) => nextParams.date(config),
+        array: <Item extends SchemaType<any, any>>(schema: Item, config?: SchemaArrayConfig) =>
+          nextParams.array(schema, config),
         object: <Shape extends Record<string, SchemaType<any, any>>>(schema: Shape, config?: SchemaConfig) =>
-          that.object(schema, config),
+          nextParams.object(schema, config),
       };
     },
   } as unknown as SchemaGenericBufferType<SchemaDefaultBufferOptions, SchemaDefaultBufferFlags>;

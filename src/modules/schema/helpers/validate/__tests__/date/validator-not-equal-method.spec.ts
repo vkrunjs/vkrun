@@ -1,6 +1,42 @@
 import { schema } from "../../../../index";
 
 describe("Validator Date NotEqual Method", () => {
+  it("Should not modify base schema when creating derived schema with notEqual", () => {
+    // Base schema
+    const baseDateSchema = schema().date().notEqual(new Date("2020-01-01T00:00:00+02:00"));
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseDateSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    const validDate = new Date("2020-02-01T00:00:00+02:00");
+    const invalidDate = new Date("2020-01-01T00:00:00+02:00");
+
+    // --- Base schema should only validate Date not equal to comparison and not allow null/undefined ---
+    expect(baseDateSchema.validate(validDate)).toBeTruthy();
+    expect(baseDateSchema.validate(invalidDate)).toBeFalsy();
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validDate)).toBeTruthy();
+    expect(derivedNullableSchema.validate(invalidDate)).toBeFalsy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validDate)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(invalidDate)).toBeFalsy();
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseDateSchema.validate(null)).toBeFalsy();
+    expect(baseDateSchema.validate(undefined)).toBeFalsy();
+    expect(baseDateSchema.validate(invalidDate)).toBeFalsy();
+    expect(baseDateSchema.validate(validDate)).toBeTruthy();
+  });
+
   it("Should be able to validate the notEqual method and return true if the value is not equal to the comparison value", () => {
     const valueToCompare = new Date("2020-01-01T00:00:00+02:00");
     const value = new Date("2020-02-01T00:00:00+02:00");

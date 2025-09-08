@@ -282,4 +282,101 @@ describe("Schema ParseTo Method", () => {
     const sut = exampleSchema.test(undefined, "testName");
     expect(sut.value).toEqual("undefined");
   });
+
+  // --- String base schema ---
+  it("Should allow multiple parseTo conversions from a string base schema", () => {
+    const base = schema().string().parseTo();
+
+    const toNumber = base.number();
+    const toBoolean = base.boolean();
+    const toBuffer = base.buffer();
+    const toDate = base.date();
+    const toObject = base.object({ foo: schema().string() });
+    const toArray = base.array(schema().string());
+
+    expect(toNumber.test("123", "test").value).toEqual(123);
+    expect(toBoolean.test("true", "test").value).toEqual(true);
+    expect(toBuffer.test("hello", "test").value).toEqual(Buffer.from("hello"));
+    expect(toDate.test("2025-01-01T00:00:00Z", "test").value).toEqual(new Date("2025-01-01T00:00:00Z"));
+    expect(toObject.test('{"foo":"bar"}', "test").value).toEqual({ foo: "bar" });
+    expect(toArray.test('["a","b"]', "test").value).toEqual(["a", "b"]);
+
+    // Base schema ainda funcional
+    expect(base.number().test("456", "test").value).toEqual(456);
+  });
+
+  // --- Number base schema ---
+  it("Should allow multiple parseTo conversions from a number base schema", () => {
+    const base = schema().number().parseTo();
+
+    expect(base.string().test(123, "test").value).toEqual("123");
+    expect(base.boolean().test(0, "test").value).toEqual(false);
+    expect(base.bigInt().test(999, "test").value).toEqual(BigInt(999));
+    expect(base.date().test(0, "test").value).toEqual(new Date(0));
+
+    // Base ainda funcional
+    expect(base.string().test(42, "test").value).toEqual("42");
+  });
+
+  // --- BigInt base schema ---
+  it("Should allow multiple parseTo conversions from a bigInt base schema", () => {
+    const base = schema().bigInt().parseTo();
+
+    expect(base.string().test(BigInt(123), "test").value).toEqual("123");
+    expect(base.number().test(BigInt(456), "test").value).toEqual(456);
+    expect(base.boolean().test(BigInt(0), "test").value).toEqual(false);
+
+    expect(base.string().test(BigInt(999), "test").value).toEqual("999");
+  });
+
+  // --- Buffer base schema ---
+  it("Should allow multiple parseTo conversions from a buffer base schema", () => {
+    const base = schema().buffer().parseTo();
+
+    expect(base.string().test(Buffer.from("abc"), "test").value).toEqual("abc");
+    expect(base.number().test(Buffer.from("123"), "test").value).toEqual(123);
+    expect(base.bigInt().test(Buffer.from("456"), "test").value).toEqual(BigInt(456));
+    expect(base.boolean().test(Buffer.from("true"), "test").value).toEqual(true);
+    expect(base.date().test(Buffer.from("2025-01-01"), "test").value).toEqual(new Date("2025-01-01"));
+    expect(base.object({ foo: schema().string() }).test(Buffer.from('{"foo":"bar"}'), "test").value).toEqual({ foo: "bar" });
+    expect(base.array(schema().string()).test(Buffer.from('["a","b"]'), "test").value).toEqual(["a", "b"]);
+
+    expect(base.string().test(Buffer.from("xyz"), "test").value).toEqual("xyz");
+  });
+
+  // --- Date base schema ---
+  it("Should allow multiple parseTo conversions from a date base schema", () => {
+    const base = schema().date().parseTo();
+    const d = new Date("2025-01-01T00:00:00Z");
+
+    expect(base.string().test(d, "test").value).toEqual(d.toISOString());
+    expect(base.number().test(d, "test").value).toEqual(d.getTime());
+    expect(base.bigInt().test(d, "test").value).toEqual(BigInt(d.getTime()));
+    expect(base.boolean().test(d, "test").value).toEqual(true);
+
+    expect(base.string().test(d, "test").value).toEqual(d.toISOString());
+  });
+
+  // --- Array base schema ---
+  it("Should allow multiple parseTo conversions from an array base schema", () => {
+    const base = schema().array(schema().string()).parseTo();
+
+    const arr = ["a", "b"];
+    expect(base.string().test(arr, "test").value).toEqual(JSON.stringify(arr));
+    expect(base.boolean().test(arr, "test").value).toEqual(true);
+    expect(base.buffer().test(arr, "test").value).toEqual(Buffer.from(arr as any));
+
+    expect(base.string().test(arr, "test").value).toEqual(JSON.stringify(arr));
+  });
+
+  // --- Object base schema ---
+  it("Should allow multiple parseTo conversions from an object base schema", () => {
+    const base = schema().object({ foo: schema().string() }).parseTo();
+    const obj = { foo: "bar" };
+
+    expect(base.string().test(obj, "test").value).toEqual(JSON.stringify(obj));
+    expect(base.boolean().test(obj, "test").value).toEqual(true);
+
+    expect(base.string().test(obj, "test").value).toEqual(JSON.stringify(obj));
+  });
 });

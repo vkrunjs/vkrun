@@ -1,6 +1,49 @@
 import { schema } from "../../../../index";
 
 describe("Validator Number OneOf Method", () => {
+  it("Should not modify base schema when creating derived schema with oneOf, nullable and notRequired", () => {
+    // Base schema
+    const baseNumberSchema = schema().number();
+
+    // Derived schemas
+    const derivedOneOfSchema = baseNumberSchema.oneOf([123, 321]);
+    const derivedNullableSchema = derivedOneOfSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid value
+    const validValue = 123;
+    const invalidValue = 2;
+
+    // --- Base schema only validates numbers, not null/undefined ---
+    expect(baseNumberSchema.validate(validValue)).toBeTruthy();
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+    expect(baseNumberSchema.validate(invalidValue)).toBeTruthy(); // 2 is number, but not in oneOf yet
+
+    // --- Derived schema with oneOf ---
+    expect(derivedOneOfSchema.validate(validValue)).toBeTruthy();
+    expect(derivedOneOfSchema.validate(invalidValue)).toBeFalsy();
+    expect(derivedOneOfSchema.validate(null)).toBeFalsy();
+    expect(derivedOneOfSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema oneOf + nullable ---
+    expect(derivedNullableSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+    expect(derivedNullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Derived schema oneOf + nullable + notRequired ---
+    expect(derivedNotRequiredNullableSchema.validate(validValue)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(invalidValue)).toBeFalsy();
+
+    // --- Ensure base schema is unchanged ---
+    expect(baseNumberSchema.validate(null)).toBeFalsy();
+    expect(baseNumberSchema.validate(undefined)).toBeFalsy();
+    expect(baseNumberSchema.validate(invalidValue)).toBeTruthy(); // still only checks for number type
+  });
+
   it("Should return true if the value matches one of the schemas or values", () => {
     const value = 123;
     const comparisonItems = [123, 321];

@@ -2,6 +2,41 @@ import { schema } from "../../../../index";
 import { AnyError } from "../../../../../errors";
 
 describe("Validator Positive BigInt Method", () => {
+  it("Should not modify base schema when creating derived schema with positive", () => {
+    // Base schema
+    const baseBigIntSchema = schema().bigInt().positive();
+
+    // Derived schemas applying additional methods
+    const derivedNullableSchema = baseBigIntSchema.nullable();
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Valid positive value
+    const validPositive = 5n;
+
+    // --- Base schema should only validate positive bigint and not allow null/undefined/negative ---
+    expect(baseBigIntSchema.validate(validPositive)).toBeTruthy();
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+    expect(baseBigIntSchema.validate(-5n)).toBeFalsy(); // negative value
+
+    // --- Derived schema allows null ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validPositive)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+    expect(derivedNullableSchema.validate(-5n)).toBeFalsy(); // negative value
+
+    // --- Derived schema with notRequired allows null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validPositive)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(-5n)).toBeFalsy(); // negative value
+
+    // --- Ensure base schema remains unmodified ---
+    expect(baseBigIntSchema.validate(null)).toBeFalsy();
+    expect(baseBigIntSchema.validate(undefined)).toBeFalsy();
+    expect(baseBigIntSchema.validate(-5n)).toBeFalsy(); // negative value
+  });
+
   it("Should be able to validate the positive method and return true if the value is positive", () => {
     expect(schema().bigInt().positive().validate(1n)).toBeTruthy();
 

@@ -4,6 +4,41 @@ import { AnyError } from "../../../../../errors";
 describe("Validator Regex Method", () => {
   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+  it("Should not modify base schema when creating derived schema with regex", () => {
+    // Create a base schema that validates email strings using regex
+    const baseEmailSchema = schema().string().regex({
+      regExp: regex,
+    });
+
+    // Create a derived schema by adding nullable
+    const derivedNullableSchema = baseEmailSchema.nullable();
+
+    // Further derive by adding notRequired
+    const derivedNotRequiredNullableSchema = derivedNullableSchema.notRequired();
+
+    // Example valid email for testing
+    const validEmail = "test_user@domain.com";
+
+    // --- Base schema should only accept valid email strings ---
+    expect(baseEmailSchema.validate(validEmail)).toBeTruthy();
+    expect(baseEmailSchema.validate(null)).toBeFalsy();
+    expect(baseEmailSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema allows null but still requires valid strings ---
+    expect(derivedNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNullableSchema.validate(validEmail)).toBeTruthy();
+    expect(derivedNullableSchema.validate(undefined)).toBeFalsy();
+
+    // --- Derived schema with notRequired allows both null and undefined ---
+    expect(derivedNotRequiredNullableSchema.validate(null)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(undefined)).toBeTruthy();
+    expect(derivedNotRequiredNullableSchema.validate(validEmail)).toBeTruthy();
+
+    // --- Ensure the base schema remains unmodified ---
+    expect(baseEmailSchema.validate(null)).toBeFalsy();
+    expect(baseEmailSchema.validate(undefined)).toBeFalsy();
+  });
+
   it("Should be able to validate the regex method and return true if list is valid", () => {
     const validList = ["any_email@domain.com", "any-email@domain.com", "any.email@domain.com", "any_123_email@domain.com"];
 
