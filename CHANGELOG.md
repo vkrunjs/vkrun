@@ -1,5 +1,12 @@
 # VkrunJS Releases
 
+## 3.4.0
+
+- Ensure that applying methods like nullable(), notRequired(), or parseTo() on a schema
+  creates a new derived schema without modifying the original base schema.
+- Added comprehensive tests for string, number, bigInt, buffer, date, array, and object schemas.
+- Improves reliability when reusing schemas for multiple conversions or transformations.
+
 ## 3.3.3
 
 - Ensure `ExecutionContext` is instantiated fresh for each validation run
