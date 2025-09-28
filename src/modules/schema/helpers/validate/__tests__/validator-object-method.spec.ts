@@ -843,4 +843,48 @@ describe("Validator Object Method", () => {
       expect(sut.message).toEqual("vkrun-schema: object method received invalid parameter!");
     }
   });
+
+  it("should not duplicate UUID validation errors when field is notRequired", () => {
+    const objScehama = schema()
+      .object({
+        foo: schema().string().UUID().notRequired(),
+      })
+      .notRequired();
+
+    const testResult = objScehama.test({ foo: "UUID" });
+    const erros = testResult.errors;
+
+    expect(erros).toEqual([
+      {
+        method: "UUID",
+        type: "invalid value",
+        name: "foo",
+        expect: "format UUID",
+        received: "UUID",
+        message: "foo must be a UUID type!",
+      },
+    ]);
+  });
+
+  it("should not duplicate UUID validation errors when field is nullable", () => {
+    const objScehama = schema()
+      .object({
+        foo: schema().string().UUID().notRequired(),
+      })
+      .nullable();
+
+    const testResult = objScehama.test({ foo: "UUID" });
+    const erros = testResult.errors;
+
+    expect(erros).toEqual([
+      {
+        method: "UUID",
+        type: "invalid value",
+        name: "foo",
+        expect: "format UUID",
+        received: "UUID",
+        message: "foo must be a UUID type!",
+      },
+    ]);
+  });
 });

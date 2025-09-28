@@ -33,7 +33,7 @@ function applyAndChain<Shape extends Record<string, SchemaType<any, any>>>(
 
   const nextMethods: any = objectMethod({
     params: next,
-    schema: extra.schema || {},
+    schema: {},
     config: extra.config,
   });
 
