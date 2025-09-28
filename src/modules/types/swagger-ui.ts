@@ -11,6 +11,21 @@ interface SwaggerBaseSchema {
   oneOf?: SwaggerSchema[];
   anyOf?: SwaggerSchema[];
   not?: SwaggerSchema;
+  nullable?: boolean;
+  readOnly?: boolean;
+  writeOnly?: boolean;
+  deprecated?: boolean;
+  xml?: {
+    name?: string;
+    namespace?: string;
+    prefix?: string;
+    attribute?: boolean;
+    wrapped?: boolean;
+  };
+  discriminator?: {
+    propertyName: string;
+    mapping?: Record<string, string>;
+  };
 }
 
 export interface SwaggerGenericRefSchema {
