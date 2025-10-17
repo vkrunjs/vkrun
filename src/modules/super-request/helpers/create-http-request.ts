@@ -1,5 +1,6 @@
-import { RequestOptions, request, Socket } from "../../runtime";
+import { RequestOptions, request } from "../../runtime";
 import { isObject } from "../../utils";
+import { FakeSocket } from "./fake-socket";
 
 export const createHttpRequest = (params: {
   method: any;
@@ -9,8 +10,8 @@ export const createHttpRequest = (params: {
   host: string;
   port: number;
 }): any => {
-  const { method, path, headers, host, port } = params;
-  const { data } = params;
+  const { method, path, headers, host, port, data } = params;
+
   const options: RequestOptions = {
     ...new URL(`http://${host}${path}`),
     method,
@@ -19,33 +20,28 @@ export const createHttpRequest = (params: {
     port,
     path,
   };
-  let fakeRequest: any;
 
+  let fakeRequest: any;
   try {
     fakeRequest = request(options);
   } catch (error: any) {
     throw new Error(`vkrun-superRequest: ${error?.message}`);
   }
 
-  // The `Socket` instance is created as a placeholder for compatibility with `superRequest`.
-  // Used exclusively for E2E testing.
-  // No real network connections are established.
-  fakeRequest.socket = new Socket();
+  fakeRequest.socket = new FakeSocket();
   fakeRequest.method = method;
   fakeRequest.url = path.replaceAll(" ", "%20");
-  const lowercaseHeaders: any = {};
 
+  const lowercaseHeaders: Record<string, any> = {};
   for (const key in headers) {
     if (Object.prototype.hasOwnProperty.call(headers, key)) {
-      const lowercaseKey = key.toLowerCase();
-      const value = headers[key];
-      lowercaseHeaders[lowercaseKey] = value;
+      lowercaseHeaders[key.toLowerCase()] = headers[key];
     }
   }
-
   fakeRequest.headers = lowercaseHeaders;
 
   const headerContentType = fakeRequest.headers["content-type"];
+  const headerContentEncoding = fakeRequest.headers["content-encoding"];
 
   if (!headerContentType && isObject(data)) {
     fakeRequest.headers["content-type"] = "application/json";
@@ -53,6 +49,18 @@ export const createHttpRequest = (params: {
     fakeRequest.headers["content-type"] = "text/plain";
   }
 
+  // ✅ Preserve binary buffer when compressed (gzip/deflate/br)
+  if (Buffer.isBuffer(data) && headerContentEncoding) {
+    fakeRequest.on = (event: string, listener: any) => {
+      if (event === "data") listener(data);
+      if (event === "end") listener();
+      return fakeRequest;
+    };
+    fakeRequest.abort();
+    return fakeRequest;
+  }
+
+  // Legacy payload builder (unchanged)
   const generateBufferData = (): Buffer => {
     if (headerContentType?.includes("multipart/form-data") || (data?._boundary && data?._streams)) {
       if (!headerContentType) {
@@ -68,8 +76,7 @@ export const createHttpRequest = (params: {
 
       for (let i = 0; i < filteredData.length; i += 2) {
         const header = Buffer.from(filteredData[i], "utf-8");
-        const value = typeof filteredData[i + 1] === "string" ? Buffer.from(filteredData[i + 1], "utf-8") : filteredData[i + 1]; // assume Buffer if not string
-
+        const value = typeof filteredData[i + 1] === "string" ? Buffer.from(filteredData[i + 1], "utf-8") : filteredData[i + 1];
         parts.push(header, value, Buffer.from("\r\n", "utf-8"));
       }
 
@@ -80,14 +87,13 @@ export const createHttpRequest = (params: {
       return data ? Buffer.from(data.toString(), "utf-8") : Buffer.alloc(0);
     }
   };
+
   const bufferData = generateBufferData();
 
   fakeRequest.on = (event: string, listener: any) => {
-    if (event === "data") {
-      listener(bufferData);
-    } else if (event === "end") {
-      listener();
-    }
+    if (event === "data") listener(bufferData);
+    if (event === "end") listener();
+    return fakeRequest;
   };
 
   fakeRequest.abort();
