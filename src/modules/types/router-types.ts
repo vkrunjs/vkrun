@@ -214,6 +214,12 @@ export interface Request<T = any> extends IncomingMessage {
   query: T extends { query: infer Q } ? Q : Record<string, string | number | boolean | Date> | undefined;
   session: T extends { session: infer S } ? S : Record<string, string | number | boolean | Date> | undefined;
   files: T extends { files: infer F } ? F : RouterFile[];
+  /**
+   * Contains the **unparsed raw request body** as a Buffer.
+   *
+   * Only available when `parseData({ rawBody: true })` is used.
+   */
+  rawBody?: Buffer;
 }
 
 /**

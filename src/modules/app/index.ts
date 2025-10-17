@@ -1,7 +1,7 @@
 import { RouterSetup } from "../router";
 import { createServer } from "../runtime";
 import { RouterHandler } from "../router/helpers/router-handler";
-import { ParseDataSetup } from "../parse-data";
+import { parseData } from "../parse-data";
 import { cors, CorsSetup } from "../cors";
 import { clearGlobalRateLimit, rateLimit } from "../rate-limit";
 import { compileRegex } from "../utils";
@@ -14,7 +14,6 @@ import {
   Route,
   CorsSetOptions,
   VkrunApp,
-  VkrunParseData,
   NextFunction,
 } from "../types";
 
@@ -24,7 +23,6 @@ class AppSetup implements VkrunApp {
   private readonly routerHandler: RouterHandler;
   private readonly globalMiddlewares: any[];
   private createdServer: any;
-  private _parseData?: VkrunParseData;
   private errorHandler: ((error: any, request: Request, response: Response) => Promise<void> | void) | null;
 
   constructor() {
@@ -114,16 +112,15 @@ class AppSetup implements VkrunApp {
   // Parse data
 
   public parseData(config?: ParseDataConfig): void {
-    if (!this._parseData) {
-      this._parseData = new ParseDataSetup(config);
-      this.globalMiddlewares.unshift(this._parseData);
-    }
+    this.globalMiddlewares.unshift(parseData(config));
+    delete (this as any).parseData;
   }
 
   // Cors
 
   public cors(options?: CorsSetOptions): void {
     this.globalMiddlewares.unshift(cors(options));
+    delete (this as any).cors;
   }
 
   private addRoutesOptionsWithCors(): void {
@@ -155,6 +152,7 @@ class AppSetup implements VkrunApp {
 
   public rateLimit(config?: RateLimitConfig): void {
     this.globalMiddlewares.push(rateLimit(config));
+    delete (this as any).rateLimit;
   }
 
   // Routing
