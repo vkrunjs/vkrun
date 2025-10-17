@@ -1,5 +1,67 @@
 # VkrunJS Releases
 
+## 3.5.0
+
+### 🚀 New Features
+
+- **feat(parse-data): add route-level override and advanced body parsing options**  
+  `parseData()` can now be used globally (`app.use(parseData())`) or per route (`router.post("/x", parseData(...))`), allowing fine-grained control over request parsing.
+
+- Added `body.inflate` option for automatic decompression of gzip, deflate, and br-encoded request bodies.
+- Added `body.type` filter to restrict parsing to specific MIME types (string or RegExp).
+- Added `body.raw` option to store the unparsed request body (`Buffer`) in `req.rawBody`, useful for signature verification (e.g., HMAC webhooks).
+- Added `body.limit` to enforce a maximum request body size (default **10 MB**).
+- Added `security.verify` callback to perform custom request verification before parsing (ideal for webhook authentication).
+- Added unified MIME-type matching via the new `matchMimeType` helper function.
+
+### 🛡 Security Enhancements
+
+- Improved `security.escapeSQL` to consistently sanitize data across:
+
+  - Query strings
+  - Route parameters
+  - JSON body
+  - URL-encoded and multipart form data
+
+- Protection against common SQL injection patterns:
+  - Tautology (`' OR '1'='1`)
+  - `UNION SELECT`
+  - Comment-based and stacked queries
+  - Time-based injections (`SLEEP`, `WAITFOR DELAY`)
+
+### ⚙️ Improvements
+
+- `parseData` is now fully compatible with Express body-parser behavior, supporting:
+
+  - JSON (`application/json`)
+  - URL-encoded (`application/x-www-form-urlencoded`)
+  - Multipart form-data (`multipart/form-data`)
+  - Raw (`application/octet-stream`) and text (`text/*`)
+
+- Standardized error responses:
+
+  - `400 Invalid Request Data`
+  - `400 Invalid Compressed Data`
+  - `415 Unsupported Content-Encoding`
+  - `413 Payload Too Large`
+
+- Internal refactor for async-safe stream reading and memory usage.
+- Partial parsing support when type does not match (only params and query are processed).
+- Enhanced error handling for invalid compression and oversized payloads.
+
+### 🧪 Tests
+
+- Expanded end-to-end test coverage for:
+
+  - Global and route-level parsing
+  - Compression (gzip, deflate, br)
+  - Raw body capture (`rawBody`)
+  - Payload limit enforcement
+  - MIME type filtering
+  - SQL injection sanitization and malformed payloads
+
+- Achieved **100% test coverage** for all parsing modes and error scenarios in the `parse-data` module.
+
 ## 3.4.0
 
 - Ensure that applying methods like nullable(), notRequired(), or parseTo() on a schema
