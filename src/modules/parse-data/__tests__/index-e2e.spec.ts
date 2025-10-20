@@ -1,5 +1,6 @@
 import { writeFileSync, unlinkSync, readFileSync, existsSync, join } from "../../runtime";
 import FormData from "form-data";
+import zlib from "zlib";
 import { isString, isUUID } from "../../utils";
 import { App } from "../../app";
 import { parseData } from "..";
@@ -227,7 +228,6 @@ describe("Parse Data - end to end testing using super request", () => {
     const response = await superRequest(app).put("/body-put", urlencoded, {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
-
     validateSuccess(response);
     expect(requestBody).toEqual({
       string: "any@mail.com",
@@ -442,7 +442,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (request: Request, response: Response) => {
@@ -468,7 +474,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (request: Request, response: Response) => {
@@ -494,7 +506,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (request: Request, response: Response) => {
@@ -521,7 +539,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (request: Request, response: Response) => {
@@ -547,7 +571,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -573,7 +603,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -601,7 +637,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -629,7 +671,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -657,7 +705,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -685,7 +739,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -713,7 +773,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -741,7 +807,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -769,7 +841,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -797,7 +875,13 @@ describe("Parse Data - end to end testing using super request", () => {
     let requestBody;
 
     const app = App();
-    app.use(parseData({ escapeSQL: true }));
+    app.use(
+      parseData({
+        security: {
+          escapeSQL: true,
+        },
+      }),
+    );
     const router = Router();
 
     router.post("/body-post", (req: Request, res: Response) => {
@@ -886,12 +970,16 @@ describe("Parse Data - end to end testing using super request", () => {
     const app = App();
     app.use(
       parseData({
-        urlencoded: false,
-        params: false,
-        query: false,
-        json: false,
-        formData: false,
-        escapeSQL: false,
+        parse: {
+          urlencoded: false,
+          params: false,
+          query: false,
+          json: false,
+          formData: false,
+        },
+        security: {
+          escapeSQL: false,
+        },
       }),
     );
     const router = Router();
@@ -955,5 +1043,682 @@ describe("Parse Data - end to end testing using super request", () => {
     });
 
     app.close();
+  });
+
+  it("Should be able to parse params, query, and JSON body using route-level parseData", async () => {
+    let requestParams;
+    let requestQuery;
+    let requestBody;
+
+    const app = App();
+    const router = Router();
+
+    router.post("/parse/:param1/:param2", parseData(), (request: Request, response: Response) => {
+      requestQuery = request.query;
+      requestParams = request.params;
+      requestBody = request.body;
+      response.status(200).end();
+    });
+
+    app.use(router);
+
+    const path = "/parse/value1/value2?query1=example@mail.com&query2=123";
+
+    const data = {
+      string: "any@mail.com",
+      integer: 123,
+      float: 1.56,
+      boolean: true,
+      date: new Date("2000-02-03T02:00:00.000Z"),
+      nested: { key: "value" },
+    };
+
+    const response = await superRequest(app).post(path, data, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(response);
+
+    expect(requestParams).toEqual({
+      param1: "value1",
+      param2: "value2",
+    });
+
+    expect(requestQuery).toEqual({
+      query1: "example@mail.com",
+      query2: "123",
+    });
+
+    expect(requestBody).toEqual(data);
+
+    app.close();
+  });
+
+  it("Should be able to read rawBody when enabled", async () => {
+    let requestRawBody: any;
+
+    const app = App();
+    const router = Router();
+
+    router.post(
+      "/route",
+      parseData({
+        body: {
+          raw: true,
+        },
+      }),
+      (request: Request, response: Response) => {
+        requestRawBody = request.rawBody as Buffer;
+        response.status(200).end();
+      },
+    );
+
+    app.use(router);
+
+    const jsonBody = { string: "any@mail.com" };
+    const expectedRaw = JSON.stringify(jsonBody);
+
+    const response = await superRequest(app).post("/route", jsonBody, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(response);
+
+    expect(requestRawBody?.toString("utf-8")).toEqual(expectedRaw);
+
+    app.close();
+  });
+
+  it("Should reject requests exceeding bodyLimit with 413 Payload Too Large", async () => {
+    const app = App();
+    app.use(
+      parseData({
+        body: {
+          limit: 1024,
+        },
+      }),
+    ); // 1KB = 1024 bytes
+    const router = Router();
+
+    let requestBody;
+
+    router.post("/large-body", (req: Request, res: Response) => {
+      requestBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const bigData = {
+      content: "X".repeat(5 * 1024), // 5KB
+    };
+
+    await superRequest(app)
+      .post("/large-body", bigData, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .catch((error) => {
+        expect(error.response.statusCode).toEqual(413);
+        expect(error.response.statusMessage).toEqual("Payload Too Large");
+        expect(error.response.data).toEqual("Payload Too Large");
+        expect(error.response.headers["content-type"]).toEqual("text/plain");
+        expect(error.response.headers["access-control-allow-origin"]).toEqual("*");
+        expect(error.response.headers.connection).toEqual("close");
+        expect(isString(error.response.headers.date)).toBeTruthy();
+      });
+
+    expect(requestBody).toBeUndefined();
+
+    app.close();
+  });
+
+  it("Should skip body parsing when Content-Type does not match 'type' filter", async () => {
+    let requestBody;
+
+    const app = App();
+    const router = Router();
+
+    router.post(
+      "/skip-type",
+      parseData({
+        body: {
+          type: "application/xml",
+        },
+      }),
+      (req: Request, res: Response) => {
+        requestBody = req.body;
+        res.status(200).end();
+      },
+    );
+
+    app.use(router);
+
+    const jsonData = { message: "should not be parsed" };
+
+    const response = await superRequest(app).post("/skip-type", jsonData, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(response);
+    expect(requestBody).toBeUndefined();
+
+    app.close();
+  });
+
+  it("Should reject request when verify callback throws error", async () => {
+    const app = App();
+    const router = Router();
+
+    const verifyMock = jest.fn(() => {
+      throw new Error("Invalid signature");
+    });
+
+    router.post(
+      "/verify",
+      parseData({
+        security: {
+          verify: verifyMock,
+        },
+      }),
+      (_req: Request, _res: Response) => {
+        throw new Error("Should not reach here");
+      },
+    );
+
+    app.use(router);
+
+    const jsonBody = { msg: "hello" };
+
+    await superRequest(app)
+      .post("/verify", jsonBody, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .catch((error) => {
+        expect(error.response.statusCode).toEqual(400);
+        expect(error.response.statusMessage).toEqual("Bad Request");
+        expect(error.response.data).toEqual("Invalid Request Verification");
+        expect(error.response.headers["content-type"]).toEqual("text/plain");
+      });
+
+    expect(verifyMock).toHaveBeenCalled();
+
+    app.close();
+  });
+
+  it("Should accept request when verify callback succeeds", async () => {
+    let requestBody;
+    const app = App();
+    const router = Router();
+
+    const verifyMock = jest.fn((_req, rawBuffer) => {
+      expect(Buffer.isBuffer(rawBuffer)).toBeTruthy();
+    });
+
+    router.post(
+      "/verify-success",
+      parseData({
+        security: {
+          verify: verifyMock,
+        },
+      }),
+      (req: Request, res: Response) => {
+        requestBody = req.body;
+        res.status(200).end();
+      },
+    );
+
+    app.use(router);
+
+    const jsonBody = { msg: "ok" };
+    const response = await superRequest(app).post("/verify-success", jsonBody, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(response);
+    expect(requestBody).toEqual(jsonBody);
+    expect(verifyMock).toHaveBeenCalledTimes(1);
+
+    app.close();
+  });
+
+  it("Should reject compressed request when inflate is disabled", async () => {
+    const app = App();
+    const router = Router();
+
+    router.post(
+      "/no-inflate",
+      parseData({
+        body: {
+          inflate: false,
+        },
+      }),
+      (_req: Request, _res: Response) => {
+        throw new Error("Should not reach handler");
+      },
+    );
+
+    app.use(router);
+
+    const jsonBody = { msg: "compressed" };
+    await superRequest(app)
+      .post("/no-inflate", jsonBody, {
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Encoding": "gzip",
+        },
+      })
+      .catch((error) => {
+        expect(error.response.statusCode).toEqual(415);
+        expect(error.response.statusMessage).toEqual("Unsupported Media Type");
+        expect(error.response.data).toEqual("Unsupported Content-Encoding");
+        expect(error.response.headers["content-type"]).toEqual("text/plain");
+      });
+
+    app.close();
+  });
+
+  it("Should decompress gzip body when inflate=true (success case)", async () => {
+    let requestBody;
+
+    const app = App();
+    const router = Router();
+
+    router.post(
+      "/inflate-success",
+      parseData({
+        body: {
+          inflate: true,
+        },
+      }),
+      (req: Request, res: Response) => {
+        requestBody = req.body;
+        res.status(200).end();
+      },
+    );
+
+    app.use(router);
+
+    const jsonBody = { msg: "Hello compressed world" };
+    const compressed = zlib.gzipSync(JSON.stringify(jsonBody));
+
+    const response = await superRequest(app).post("/inflate-success", compressed, {
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Encoding": "gzip",
+      },
+    });
+
+    validateSuccess(response);
+    expect(requestBody).toEqual(jsonBody);
+
+    app.close();
+  });
+
+  it("Should reject invalid gzip body when inflate=true (failure case)", async () => {
+    const app = App();
+    const router = Router();
+
+    router.post(
+      "/inflate-fail",
+      parseData({
+        body: {
+          inflate: true,
+        },
+      }),
+      (_req: Request, _res: Response) => {
+        throw new Error("Should not reach handler");
+      },
+    );
+
+    app.use(router);
+
+    const invalidBody = Buffer.from("not a real gzip stream");
+
+    await superRequest(app)
+      .post("/inflate-fail", invalidBody, {
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Encoding": "gzip",
+        },
+      })
+      .catch((error) => {
+        expect(error.response.statusCode).toEqual(400);
+        expect(error.response.statusMessage).toEqual("Bad Request");
+        expect(error.response.data).toEqual("Invalid Compressed Data");
+        expect(error.response.headers["content-type"]).toEqual("text/plain");
+        expect(error.response.headers["access-control-allow-origin"]).toEqual("*");
+      });
+
+    app.close();
+  });
+
+  it("Should ignore global parseData when route defines its own parseData instance (acts like raw)", async () => {
+    let globalParsedBody: any = null;
+    let localRawBody: any = null;
+
+    const app = App();
+
+    app.parseData();
+
+    const router = Router();
+
+    router.post(
+      "/raw",
+      parseData({
+        body: {
+          raw: true,
+        },
+      }),
+      (req: Request, res: Response) => {
+        localRawBody = req.rawBody?.toString("utf-8");
+        res.status(200).end();
+      },
+    );
+
+    router.post("/json", (req: Request, res: Response) => {
+      globalParsedBody = req.body;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const jsonBody = { email: "test@domain.com" };
+    const expectedRaw = JSON.stringify(jsonBody);
+
+    const rawResponse = await superRequest(app).post("/raw", jsonBody, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(rawResponse);
+    expect(localRawBody).toEqual(expectedRaw);
+
+    const jsonResponse = await superRequest(app).post("/json", jsonBody, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(jsonResponse);
+    expect(globalParsedBody).toEqual(jsonBody);
+
+    expect(globalParsedBody).not.toEqual(localRawBody);
+
+    app.close();
+  });
+
+  it("Should correctly respect 'type' filter and still parse query and params", async () => {
+    let received = {
+      body: undefined as any,
+      query: undefined as any,
+      params: undefined as any,
+    };
+
+    const app = App();
+    const router = Router();
+
+    router.post("/parse/:param1/:param2", parseData({ body: { type: "application/xml" } }), (req: Request, res: Response) => {
+      received.body = req.body;
+      received.query = req.query;
+      received.params = req.params;
+      res.status(200).end();
+    });
+
+    app.use(router);
+
+    const jsonBody = { msg: "not parsed" };
+    const path = "/parse/value1/value2?query1=abc&query2=123";
+
+    const response = await superRequest(app).post(path, jsonBody, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    validateSuccess(response);
+
+    expect(received.body).toBeUndefined();
+
+    expect(received.params).toEqual({
+      param1: "value1",
+      param2: "value2",
+    });
+
+    expect(received.query).toEqual({
+      query1: "abc",
+      query2: "123",
+    });
+
+    app.close();
+  });
+
+  describe("Parse Data - type filter advanced tests", () => {
+    const validateSuccess = (response: any): void => {
+      expect(response.statusCode).toEqual(200);
+      expect(response.statusMessage).toEqual("OK");
+    };
+
+    it("Should correctly match when Content-Type has charset and matches the type string", async () => {
+      let requestBody;
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/charset-json",
+        parseData({
+          body: { type: "application/json" },
+        }),
+        (req: Request, res: Response) => {
+          requestBody = req.body;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const json = { message: "ok" };
+      const response = await superRequest(app).post("/charset-json", json, {
+        headers: { "Content-Type": "application/json; charset=utf-8" },
+      });
+
+      validateSuccess(response);
+      expect(requestBody).toEqual(json);
+
+      app.close();
+    });
+
+    it("Should correctly match type using RegExp (e.g. /^text\\//)", async () => {
+      let requestBody;
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/regex-type",
+        parseData({
+          body: { type: /^text\// },
+        }),
+        (req: Request, res: Response) => {
+          requestBody = req.body;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const plainText = "Hello from regex type!";
+      const response = await superRequest(app).post("/regex-type", plainText, {
+        headers: { "Content-Type": "text/plain" },
+      });
+
+      validateSuccess(response);
+      expect(requestBody).toEqual(plainText);
+
+      app.close();
+    });
+
+    it("Should skip body parsing for regex type when Content-Type does not match", async () => {
+      let requestBody;
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/regex-skip",
+        parseData({
+          body: { type: /^text\// },
+        }),
+        (req: Request, res: Response) => {
+          requestBody = req.body;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const jsonBody = { message: "not parsed" };
+      const response = await superRequest(app).post("/regex-skip", jsonBody, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      validateSuccess(response);
+      expect(requestBody).toBeUndefined();
+
+      app.close();
+    });
+
+    it("Should still parse query and params even if Content-Type does not match type filter", async () => {
+      let received: any = { body: null, query: null, params: null };
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/test/:param",
+        parseData({
+          body: { type: "application/xml" },
+        }),
+        (req: Request, res: Response) => {
+          received.body = req.body;
+          received.query = req.query;
+          received.params = req.params;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const path = "/test/value1?search=ok";
+      const jsonBody = { msg: "json ignored" };
+
+      const response = await superRequest(app).post(path, jsonBody, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      validateSuccess(response);
+      expect(received.body).toBeUndefined();
+      expect(received.params).toEqual({ param: "value1" });
+      expect(received.query).toEqual({ search: "ok" });
+
+      app.close();
+    });
+
+    it("Should handle multipart/form-data when type explicitly matches", async () => {
+      let requestBody: any;
+      let requestFiles: any;
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/multipart-ok",
+        parseData({
+          body: { type: "multipart/form-data" },
+        }),
+        (req: Request, res: Response) => {
+          requestBody = req.body;
+          requestFiles = req.files;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const form = new FormData();
+      form.append("username", "john");
+      form.append("file", Buffer.from("test-file"), "test.txt");
+
+      const response = await superRequest(app).post("/multipart-ok", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      validateSuccess(response);
+      expect(requestBody).toEqual({ username: "john" });
+      expect(requestFiles?.[0].filename).toEqual("test.txt");
+
+      app.close();
+    });
+
+    it("Should skip multipart/form-data when type does not match", async () => {
+      let requestBody;
+      let requestFiles;
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/multipart-skip",
+        parseData({
+          body: { type: "application/json" },
+        }),
+        (req: Request, res: Response) => {
+          requestBody = req.body;
+          requestFiles = req.files;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const form = new FormData();
+      form.append("username", "john");
+      form.append("file", Buffer.from("abc"), "test.txt");
+
+      const response = await superRequest(app).post("/multipart-skip", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      validateSuccess(response);
+      expect(requestBody).toBeUndefined();
+      expect(requestFiles).toBeUndefined();
+
+      app.close();
+    });
+
+    it("Should accept wildcard type via RegExp and parse any text-based body", async () => {
+      let requestBody;
+
+      const app = App();
+      const router = Router();
+
+      router.post(
+        "/wildcard",
+        parseData({
+          body: { type: /^.*/ },
+        }),
+        (req: Request, res: Response) => {
+          requestBody = req.body;
+          res.status(200).end();
+        },
+      );
+
+      app.use(router);
+
+      const xmlData = "<xml><user>john</user></xml>";
+      const response = await superRequest(app).post("/wildcard", xmlData, {
+        headers: { "Content-Type": "application/xml" },
+      });
+
+      validateSuccess(response);
+      expect(requestBody).toEqual(xmlData);
+
+      app.close();
+    });
   });
 });

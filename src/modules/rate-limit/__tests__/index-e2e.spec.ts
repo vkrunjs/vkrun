@@ -294,7 +294,7 @@ describe("Rate Limit - end to end testing using super request", () => {
 
   it("Should be able to call any route with default config", async () => {
     const app = App();
-    app.use(rateLimit());
+    app.rateLimit();
     const router = Router();
     router.get("/rate-limit", controllerAdapter(new RateLimitController()));
     app.use(router);
