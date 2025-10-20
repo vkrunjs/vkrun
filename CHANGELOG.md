@@ -62,6 +62,11 @@
 
 - Achieved **100% test coverage** for all parsing modes and error scenarios in the `parse-data` module.
 
+## 3.4.1
+
+- fix(schema): prevent duplicate validation errors for UUID fields with `notRequired` and `nullable`.
+- feat(swagger): add support for `nullable`, `readOnly`, `writeOnly`, `deprecated`, `xml`, and `discriminator` in base schema for improved OpenAPI compatibility.
+
 ## 3.4.0
 
 - Ensure that applying methods like nullable(), notRequired(), or parseTo() on a schema
